@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Node Satsus</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="../screen.css" rel="stylesheet" type="text/css" />
+
+</head>
+<body>
+<div id="header">
+  <h1><img src="../images/logo.gif" alt="pgpoolAdmin" /></h1>
+</div>
+<div id="menu">
+  <ul>
+    <li><a href="../index_en.html">Introduction</a></li>
+    <li><a href="install.html">Install</a></li>
+    <li><a href="login.html">Login</a></li>
+    <li><a href="status.html">pgpool Status</a></li>
+    <li><a href="nodeServerStatus.html">Node Status</a></li>
+    <li><a href="queryCache.html">Query Cache</a></li>
+    <li><a href="systemDb.html">Partitioning Rule</a></li>
+    <li><a href="pgconfig.html">pgpool.conf Setting</a></li>
+    <li><a href="config.html">pgpoolAdmin Setting</a></li>
+    <li><a href="changePassword.html">Change Password</a></li>
+    <li><a href="logout.html">Logout</a></li>
+    <li><a href="errorCode.html">Error Code</a></li>
+  </ul>
+</div>
+<div id="content">
+
+<h2>Node Status</h2>
+<h3>Summary</h3>
+On the node status screen,
+<ul><li>IP Address</li>
+  <li>Port</li>
+  <li>Status</li>
+  <li>Detail</li>
+  </ul>
+<p>can be acquired for each nodes.</p>
+<p><img src="images/nodestatus.jpg" /></p>
+<h3>Feature</h3>
+<table>
+  <tr>
+    <th class="right_border"><label>IP Address</label></th>
+    <td>The IP address of the node.</td>
+  </tr>
+  <tr>
+    <th class="right_border"><label>Port</label></th>
+
+    <td>The port number that the postmaster runs on.</td>
+  </tr>
+  <tr>
+    <th class="right_border"><label>Status</label></th>
+    <td>It is displayed whether postmaster is operating.</td>
+  </tr>
+  <tr>
+
+    <th class="right_border"><label>Detail</label></th>
+    <td>When the postmaster runs on, it will be displayed.<br />
+Pg_settings information is displayed for PostgreSQL, and pool_status is displayed for pgpool. 
+    </td>
+    </tr>
+
+</table>
+    </td>
+  </tr>
+</div>
+
+<div id="footer">
+  <address>
+  Version 1.0 Alpha<br />
+  Copyright &copy; 2006 <a href="http://pgpool.projects.postgresql.org/">pgpool Global Development Group</a>. All rights reserved.
+  </address></div>
+</body>
+</html>

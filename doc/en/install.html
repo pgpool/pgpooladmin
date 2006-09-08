@@ -1,0 +1,424 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Installing Pgpool Management Tool</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link href="../screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="header">
+  <h1><img src="../images/logo.gif" alt="pgpoolAdmin" /></h1>
+</div>
+<div id="menu">
+  <ul>
+    <li><a href="../index_en.html">Introduction</a></li>
+    <li><a href="install.html">Install</a></li>
+    <li><a href="login.html">Login</a></li>
+    <li><a href="status.html">pgpool Status</a></li>
+    <li><a href="nodeServerStatus.html">Node Status</a></li>
+    <li><a href="queryCache.html">Query Cache</a></li>
+    <li><a href="systemDb.html">Partitioning Rule</a></li>
+    <li><a href="pgconfig.html">pgpool.conf Setting</a></li>
+    <li><a href="config.html">pgpoolAdmin Setting</a></li>
+    <li><a href="changePassword.html">Change Password</a></li>
+    <li><a href="logout.html">Logout</a></li>
+    <li><a href="errorCode.html">Error Code</a></li>
+  </ul>
+</div>
+<div id="content">
+  <h2>Installing Pgpool Administration Tool</h2>
+  <h3>Preface</h3>
+Please confirm pgpool normally can be installed, and operates before starting the installation of the pgpool management tool. <p />
+The following software is at least installed in the server that operates pgpool when the pgpool management tool is installed, and it should be normally operating. 
+
+<ul>
+  <li>HTTP Server(Apache)</li>
+  <li>PHP4.4.2 and higher</li>
+  <li>pgpool</li>
+</ul>
+Before starting the install, be sure to have:
+<ul>
+  <li>Setup the HTTP, PHP and pgpool properly.</li>
+  <li>Turn cookie and JavaScript? support in your browser on.</li>
+</ul>
+  <h3>Precondition</h3>
+It explains on the assumption of being set it here as follows. 
+<p />
+<table>
+<tr>
+<th><label>Aapche document root directory</label></th>
+<td>/var/www/html</td>
+</tr>
+<tr>
+<th><label>Aapche process user</label></th>
+<td>apache</td>
+</tr>
+<tr>
+<th><label>pgpoolAdmin installation directory</label></th>
+<td>/var/www/html/admin-tool</td>
+</tr>
+<tr>
+<th><label>Pgpool command pass</label></th>
+<td>/usr/local/bin/pgpool</td>
+</tr>
+<tr>
+<th><label>pcp_attach_node command pass</label></th>
+<td>/usr/local/bin/pcp_attach_node</td>
+</tr>
+<tr>
+<th><label>pcp_detach_node command pass</label></th>
+<td>/usr/local/bin/pcp_detach_node</td>
+</tr>
+<tr>
+<th><label>pcp_node_count command pass</label></th>
+<td>/usr/local/bin/pcp_node_count</td>
+</tr>
+<tr>
+<th><label>pcp_node_info command pass</label></th>
+<td>/usr/local/bin/pcp_node_info</td>
+</tr>
+<tr>
+<th><label>pcp_proc_count command pass</label></th>
+<td>/usr/local/bin/pcp_proc_count</td>
+</tr>
+<tr>
+<th><label>pcp_proc_info command pass</label></th>
+<td>/usr/local/bin/pcp_proc_info</td>
+</tr>
+<tr>
+<th><label>pcp_stop_pgpool command pass</label></th>
+<td>/usr/local/bin/pcp_stop_pgpool</td>
+</tr>
+<tr>
+<th><label>pcp_systemdb_info command pass</label></th>
+<td>/usr/local/bin/pcp_systemdb_info</td>
+</tr>
+<tr>
+<th><label>pg_md5 command pass</label></th>
+<td>/usr/local/bin/pg_md5</td>
+</tr>
+<tr>
+<th><label>pgpool.conf file pass</label></th>
+<td>/usr/local/etc/pgpool.conf</td>
+</tr>
+<tr>
+<th><label>pcp.conf file pass</label></th>
+<td>/usr/local/etc/pcp.conf</td>
+</tr>
+</table>
+  <h3>Install</h3>
+It explains the installation of the management tool as follows. 
+  <ol>
+    <li>To execute pgpool and the pcp tool set up from the Apach user, the right of access is set.</li>
+		<div id="cmd_window"><table>
+		<tr><td>cd /usr/local/bin</td></tr>
+		<tr><td>ls</td></tr>
+		</table>
+		</div>
+    It is confirmed that there is the following files. 
+　　<ul>
+			<li>pgpool</li>
+			<li>pcp_attach_node</li>
+			<li>pcp_detach_node</li>
+			<li>pcp_node_count</li>
+			<li>pcp_node_info</li>
+			<li>pcp_proc_count</li>
+			<li>pcp_proc_info</li>
+			<li>pcp_stop_pgpool</li>
+			<li>pcp_systemdb_info</li>
+			<li>pg_md5</li>
+		</ul>
+		<div id="cmd_window"><table>
+		<tr><td>chmod 755 /usr/local/bin/pgpool</td></tr>
+		<tr><td>chmod 755 /usr/local/bin/pcp_*</td></tr>
+		</table>
+		</div>
+    <li>
+The login user is registered in the pcp.conf file.The turning md5 password is obtained. 
+<div id="cmd_window"><table>
+<tr><td class="cmd_window">pg_md5 password_string</td></tr>
+</table>
+</div>
+Next, the obtained character string write on pcp.conf as follows.
+<p>username:md5 password</p>
+    </li>
+    <li>
+Admin-tools.tar.gz that is the management tool program file is developed below the html directory of Apache. <br />
+<div id="cmd_window"><table>
+<tr><td class="cmd_window">mv admin-tool.tar.gz /tmp</td></tr>
+<tr><td class="cmd_window">cd /tmp</td></tr>
+<tr><td class="cmd_window">tar xzf admin-tool.tar.gz</td></tr>
+<tr><td class="cmd_window">mv admin-tool /var/www/html</td></tr>
+<tr><td class="cmd_window">rm admin-tool.tar.gz</td></tr>
+</table>
+</div>
+    </li>
+		<li>
+The file is confirmed. 
+<div id="cmd_window"><table>
+<tr><td class="cmd_window">find /var/www/html/admin-tool -print</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/install</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/install/finish.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/install/defaultParameter.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/install/setLang.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/install/checkDirectory.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/install/images</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/install/images/Thumbs.db</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/install/images/ng.gif</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/install/images/ok.gif</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/install/index.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/install/checkParameter.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/install/lang</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/install/lang/ja.lang.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/install/lang/en.lang.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/Smarty.class.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/function.counter.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/modifier.escape.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/modifier.replace.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/modifier.count_characters.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/block.textformat.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/modifier.spacify.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/modifier.date_format.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/modifier.regex_replace.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/modifier.lower.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/modifier.debug_print_var.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/function.eval.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/function.html_image.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/modifier.nl2br.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/modifier.strip_tags.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/outputfilter.trimwhitespace.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/function.assign_debug_info.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/modifier.strip.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/shared.make_timestamp.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/function.html_select_date.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/modifier.truncate.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/compiler.assign.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/modifier.capitalize.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/modifier.wordwrap.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/modifier.indent.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/function.html_checkboxes.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/shared.escape_special_chars.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/function.cycle.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/function.math.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/modifier.cat.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/function.html_select_time.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/function.html_options.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/function.fetch.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/modifier.count_paragraphs.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/function.config_load.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/function.popup_init.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/modifier.string_format.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/modifier.count_sentences.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/modifier.count_words.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/modifier.default.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/function.popup.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/modifier.upper.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/function.html_table.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/function.debug.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/function.html_radios.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/plugins/function.mailto.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/internals</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/internals/core.write_cache_file.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/internals/core.display_debug_console.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/internals/core.load_resource_plugin.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/internals/core.is_trusted.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/internals/core.is_secure.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/internals/core.assemble_plugin_filepath.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/internals/core.get_microtime.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/internals/core.load_plugins.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/internals/core.rmdir.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/internals/core.smarty_include_php.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/internals/core.process_compiled_include.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/internals/core.run_insert_handler.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/internals/core.process_cached_inserts.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/internals/core.write_file.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/internals/core.write_compiled_include.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/internals/core.rm_auto.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/internals/core.get_include_path.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/internals/core.write_compiled_resource.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/internals/core.get_php_resource.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/internals/core.read_cache_file.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/internals/core.create_dir_structure.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/internals/core.assign_smarty_interface.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/Smarty_Compiler.class.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/debug.tpl</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/libs/Config_File.class.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/nodeServerStatus.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/login.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/innerSystemCatalog.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/definePgpoolConfParam.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/systemDb.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/setLang.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/queryCache.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/pgconfig.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/common.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/status.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/config.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/command.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/templates</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/templates/pgmgtNotFound.tpl</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/templates/changePassword.tpl</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/templates/systemDb.tpl</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/templates/pleaseInstall.tpl</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/templates/nodeStatus.tpl</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/templates/login.tpl</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/templates/queryCache.tpl</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/templates/procInfo.tpl</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/templates/status.tpl</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/templates/innerSystemCatalog.tpl</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/templates/pgconfig.tpl</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/templates/help</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/templates/help/ja</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/templates/help/ja/changePassword.tpl</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/templates/help/ja/systemDb.tpl</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/templates/help/ja/login.tpl</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/templates/help/ja/queryCache.tpl</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/templates/help/ja/status.tpl</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/templates/help/ja/pgconfig.tpl</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/templates/help/ja/config.tpl</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/templates/help/ja/nodeServerStatus.tpl</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/templates/help/en</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/templates/help/en/changePassword.tpl</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/templates/help/en/systemDb.tpl</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/templates/help/en/login.tpl</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/templates/help/en/queryCache.tpl</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/templates/help/en/status.tpl</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/templates/help/en/pgconfig.tpl</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/templates/help/en/config.tpl</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/templates/help/en/nodeServerStatus.tpl</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/templates/footer.tpl</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/templates/innerError.tpl</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/templates/innerNodeServerStatus.tpl</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/templates/menu.tpl</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/templates/config.tpl</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/templates/nodeServerStatus.tpl</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/templates/error.tpl</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/screen.css</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/conf</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/conf/pgmgt.conf.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/innerNodeServerStatus.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/changePassword.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/images</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/images/question.gif</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/images/background.gif</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/images/descending.gif</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/images/ascending.gif</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/images/elephant.gif</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/images/Thumbs.db</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/images/spacer.gif</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/images/logo.gif</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/images/back.gif</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/images/marker.gif</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/images/seaen.jpg</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/images/turtle.gif</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/index.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/templates_c</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/lang</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/lang/ja.lang.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/lang/en.lang.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/procInfo.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/nodeStatus.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/help.php</td></tr>
+<tr><td class="cmd_window">/var/www/html/admin-tool/logout.php</td></tr>
+</table>
+<li>
+It accesses install/phpinfo.php from Web a browser. It is confirmed that the function of php_mstring and php_pgsql is effective. 
+<ul>
+<li>"Multibyte Support" is "enabled". </li>
+<li>"PostgreSQL Support" is "enabled".</li>
+</ul>
+<p>Please confirm the setting of PHP again when these items are not "enabled".</p>
+</li>
+</li>
+<li>
+The writing right of access is set to the "templates_c" directory in the progressing directory and the "conf/pgmgt.conf.php" file. 
+
+<div id="cmd_window"><table>
+<tr><td class="cmd_window">cd /var/www/html/admin-tool</td></tr>
+<tr><td class="cmd_window">chmod 777 templates_c</td></tr>
+</table>
+</div>
+    </li>
+    <li>
+The writing authority to pgmgt.conf.php is set to apache process user.
+<div id="cmd_window"><table>
+<tr><td class="cmd_window">cd /var/www/html/admin-tool/conf</td></tr>
+<tr><td class="cmd_window">chown apache pgmgt.conf.php</td></tr>
+<tr><td class="cmd_window">chmod 644 pgmgt.conf.php</td></tr>
+</table>
+</div>
+    </li>
+    <li>
+The writing right is set to the pgpool.conf file and the pcp.conf file that is the configuration file of pgpool. 
+<div id="cmd_window"><table>
+<tr><td class="cmd_window">cd /usr/local/etc</td></tr>
+<tr><td class="cmd_window">chown apache pgpool.conf</td></tr>
+<tr><td class="cmd_window">chmod 644 pgpool.conf</td></tr>
+<tr><td class="cmd_window">chown apache pcp.conf</td></tr>
+<tr><td class="cmd_window">chmod 644 pcp.conf</td></tr>
+</table>
+</div>
+    </li>
+    <li>
+    The Multi byte and the PostgreSQL library is confirmed. Following URL is accessed from a browser.
+    <p>http://ServerName/admin-tool/install/phpinfo.php</p>
+	It is confirmed that the set up information of PHP is displayed. 
+	Whether Multibyte Support and PostgreSQL Support are enabled is confirmed to them. Please confirm the setting of PHP again when not becoming it. 
+	</li>
+	<li>
+It accesses the installer. URL is as follows. 
+<p>http://ServerName/admin-tool/install/index.php</p>
+    </li>
+    <li>
+The display language is selected. 
+<p><img src="images/1.jpg"></p>
+    </li>
+    <li>
+The right of access of the directory is confirmed. When <img src="images/ok.gif"> is displayed right, it is appropriately set. Please click "Next" button. 
+Please it is not appropriately set when <img src="images/ng.gif"> is displayed, and confirm the error message, correct, and push "Check" button. 
+<p><img src="images/2.jpg"></p>
+    </li>
+    <li>
+The management tool is set. When <img src="images/ok.gif"> is displayed right, it is appropriately set. Please click "Next" button. 
+Please it is not appropriately set when <img src="images/ng.gif"> is displayed, and confirm the error message, correct, and push "Check" button. 
+<p>
+		<dl>
+		<dt>pgpool.conf</dt>
+		<dd>The full path of the pgpool.conf file is specified. </dd>
+		<dt>Password File</dt>
+		<dd>The full path of the pcp.conf file is specified. </dd>
+		<dt>pgpool Command</dt>
+		<dd>The full path of the pgpool command file is specified. </dd>
+		<dt>PCP Directory</dt>
+		<dd>The full path of the directory that the PCP command group has installed is specified. </dd>
+		<dt>PCP Hostname</dt>
+		<dd>The host name that has installed the PCP command is specified. </dd>
+		<dt>Refresh Time</dt>
+		<dd>The interval when the status of pgpool is updated automatically is set every second. It doesn't update it automatically in case of 0. </dd>
+		</dl>
+</p>
+<p><img src="images/3.jpg"></p>
+    </li>
+    <li>
+The installation of the management tool finished. At last, The "install" directory is deleted.
+<p><img src="images/4.jpg"></p>
+<div id="cmd_window"><table>
+<tr><td class="cmd_window">rm -Rf /var/www/html/admin-tool/install</td></tr>
+</table>
+</div>
+    </li>
+  </ol>
+<h3>Display of login screen</h3>
+When "top" is clicked on the installation completion screen, the login screen of the management tool is displayed. The username and the password set according to installation procedure 2 are input and it logs it in. 
+</div>
+<div id="footer">
+<address>
+Version 1.0 Alpha<br />
+Copyright &copy; 2006 <a href="http://pgpool.projects.postgresql.org/">pgpool Global Development Group</a>. All rights reserved.
+</address>
+</div>
+</body>
+</html>

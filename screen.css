@@ -1,0 +1,151 @@
+body {
+  margin: 0;
+  font: x-small Verdana, Arial, Helvetica, sans-serif;
+}
+h1 {
+  margin: 0;
+}
+h2 {
+  padding-bottom: 4px;
+  border-bottom: 1px solid red;
+  color: red;
+  font-size: small;
+}
+h3 {
+  color: red;
+  font-size: x-small;
+}
+ul {
+  list-style: square;
+}
+table {
+  border-top: 1px solid lightsteelblue;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 4px 8px;
+  border-bottom: 1px solid lightsteelblue;
+}
+thead th, thead td, tfoot th, tfoot td {
+  background: ghostwhite;
+}
+tbody th {
+  font-weight: normal;
+  text-align: left;
+}
+a:link {
+  color: red;
+  text-decoration: none;
+}
+a:visited {
+  color: maroon;
+  text-decoration: none;
+}
+a:link:hover, a:visited:hover {
+  color: orangered;
+  text-decoration: underline;
+}
+a img {
+  border: none;
+}
+input {
+  font: x-small Verdana, Arial, Helvetica, sans-serif;
+}
+label {
+  font-weight: bold;
+}
+#header {
+  padding: 8px;
+  border-bottom: 8px solid white;
+  background: steelblue url("images/sea.jpg") no-repeat bottom right;
+}
+#menu {
+  padding-bottom: 40px;
+  border-top: 1px solid lightsteelblue;
+  border-right: 1px solid lightsteelblue;
+  float: left;
+  width: 176px;
+  overflow: hidden;
+  background: ghostwhite;
+}
+#menu ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+#menu li {
+  border-bottom: 1px solid lightsteelblue;
+}
+#menu a:link, #menu a:visited {
+  padding: 8px 0;
+  display: block;
+  color: black;
+  background: url("images/marker.gif") no-repeat 8px;
+  text-indent: 16px;
+  text-decoration: none;
+}
+#menu a:hover {
+  background: antiquewhite url("images/marker.gif") no-repeat 8px;
+}
+#content {
+  padding: 8px 8px 40px 185px;
+  border-top: 1px solid lightsteelblue;
+  background: white url("images/background.gif") repeat-y left;
+}
+#submenu {
+  border: 1px solid lightsteelblue;
+  float: right;
+  background: ghostwhite;
+}
+#submenu h3 {
+  margin: 0;
+  padding: 4px 8px;
+  border-bottom: 4px solid white;
+  color: white;
+  background: steelblue;
+  text-align: center;
+}
+#submenu ul {
+  margin: 0;
+  padding: 8px;
+  border-top: 1px solid lightsteelblue;
+  list-style: square inside;
+}
+#footer {
+  padding: 8px 8px 20px;
+  clear: left;
+  color: white;
+  background: lightsteelblue;
+}
+#footer address {
+  font-style: normal;
+}
+#footer p {
+  margin: 0;
+  float: right;
+}
+#footer a:link, #footer a:visited {
+  color: white;
+  font-weight: bold;
+}
+.hidden {
+  display: none;
+}
+.odd {
+}  
+.even {
+  background: azure;
+}  
+.error {
+  font-weight: normal;
+  text-align: left;
+  background: red;
+}
+.right_border {
+  border-right: 1px solid lightsteelblue;
+  border-collapse: collapse;
+}
+
+#help {
+  float: right;
+}

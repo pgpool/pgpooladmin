@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>クエリキャッシュ</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="../screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="header">
+  <h1><img src="../images/logo.gif" alt="pgpoolAdmin" /></h1>
+</div>
+<div id="menu">
+  <ul>
+    <li><a href="../index_ja.html">はじめに</a></li>
+    <li><a href="install.html">インストール</a></li>
+    <li><a href="login.html">ログイン</a></li>
+    <li><a href="status.html">pgpoolステータス</a></li>
+    <li><a href="nodeServerStatus.html">ノードステータス</a></li>
+    <li><a href="#">クエリキャッシュ</a></li>
+    <li><a href="systemDb.html">分散ルール</a></li>
+    <li><a href="pgconfig.html">pgpool.conf設定</a></li>
+    <li><a href="config.html">管理ツール設定</a></li>
+    <li><a href="changePassword.html">パスワード変更</a></li>
+    <li><a href="logout.html">ログアウト</a></li>
+    <li><a href="errorCode.html">エラーコード</a></li>
+  </ul>
+</div>
+<div id="content">
+
+  <h2>クエリキャッシュ</h2>
+    <h3>概要</h3>
+    <p>enable_query_cache = true の場合に、SELECT 文の結果をキャッシュさせます。</p>
+	<h3>機能</h3>
+	<p>クエリキャッシュのデータを検索することができます。検索対象は、クエリ文字列とデータベース名で、部分一致検索を行うことができます。クエリ文字列とデータベース名はAND検索になります。</p>
+    <table>
+      <tbody>
+      <tr>
+        <td nowrap="nowrap" class="column">クエリ文字列</td>
+        <td><input name="qQueryStr" type="text" id="qQueryStr" size="50" value=""/>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap="nowrap" class="column">データベース名</td>
+        <td><input name="qDb" type="text" id="qDb" size="50" value=""/></td>
+      </tr>
+      </tbody>
+      <tfoot>
+      <tr><td colspan="2">
+      <input type="submit" name="search" value="検索" />
+      <input type="submit" name="clear" value="クリア" />
+      </td></tr>
+    </table>
+    <h3>クエリキャッシュリスト</h3>
+	<p>現在キャッシュされているクエリ文字列、データベース名、作成時刻が表示されます。「クエリ文字列」、「データベース名」および「作成時刻」をクリックすると、並べ替えが行われます。クリックするたびに、昇順または降順で並べ替えが行われます。</p>
+	<p>削除したいデータの左にあるチェックボックスにチェックを入れて、削除ボタンを押すと削除されます。一番上のチェックボックスにチェックするとすべてのレコードが選択されます。</p>
+    <table>
+      <tbody>
+        <tr>
+          <th><input type="checkbox" name="all" value="" /></th>
+          <th>クエリ文字列</th>
+          <th>データベース名</th>
+          <th>作成時刻</th>
+        </tr>
+      </tbody>
+      <tfoot>
+      <tr><td colspan="4">
+      <input type="button" name="ButtonName" value="削除"/>
+      </td></tr>
+    </table>
+</div>
+<div id="footer">
+  <address>
+  Version 1.0 Alpha<br />
+  Copyright &copy; 2006 <a href="http://pgpool.projects.postgresql.org/">pgpool Global Development Group</a>. All rights reserved.
+  </address>
+</div>
+</html>

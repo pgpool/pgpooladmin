@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Query Cache</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="../screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="header">
+  <h1><img src="../images/logo.gif" alt="pgpoolAdmin" /></h1>
+</div>
+<div id="menu">
+  <ul>
+    <li><a href="../index_en.html">Introduction</a></li>
+    <li><a href="install.html">Install</a></li>
+    <li><a href="login.html">Login</a></li>
+    <li><a href="status.html">pgpool Status</a></li>
+    <li><a href="nodeServerStatus.html">Node Status</a></li>
+    <li><a href="queryCache.html">Query Cache</a></li>
+    <li><a href="systemDb.html">Partitioning Rule</a></li>
+    <li><a href="pgconfig.html">pgpool.conf Setting</a></li>
+    <li><a href="config.html">pgpoolAdmin Setting</a></li>
+    <li><a href="changePassword.html">Change Password</a></li>
+    <li><a href="logout.html">Logout</a></li>
+    <li><a href="errorCode.html">Error Code</a></li>
+  </ul>
+</div>
+<div id="content">
+
+  <h2>Query Cache</h2>
+  <form action="queryCache.php" method="post" name="queryCache" id="queryCache">
+    <h3>Summary</h3>
+
+    <p>It is possible to cache the SELECT query, if enable_query_cache of pgpool.conf is true.</p>
+    <h3>Feature</h3>
+	<p>It is possible to search for the data that exists in the query cache. It searches for the query string and the database name, and it processes it by the partial agreement retrieval. It becomes a search for the logical product with the query string and the database name. 
+    <table>
+      <tbody>
+        <tr>       <tr>
+        <td nowrap="nowrap" class="column">Query</td>
+
+        <td><input name="qQueryStr" type="text" id="qQueryStr" size="50" value=""/>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap="nowrap" class="column">Database</td>
+        <td><input name="qDb" type="text" id="qDb" size="50" value=""/></td>
+      </tr>
+      </tbody>
+
+      <tfoot>
+      <tr><td colspan="2">
+      <input type="submit" name="search" value="Search" />
+      <input type="submit" name="clear" value="Clear" />
+      </td></tr>
+    </table>
+    <h3>Query cache list</h3>
+	<p>
+
+The query string, database name and create time which existing in cache is displayed. When "Query", "Database" and "Create Time" clicked, the records is sorted. Whenever clicking, it is sorted in the ascending order or the descending order. </p>
+
+	<p>When the check is put in the check box in the left of the data that wants to be deleted, and the deletion button is pushed, it is deleted.
+</p>
+    <table>
+      <tbody>
+        <tr>
+          <th><input type="checkbox" name="all" value="" /></th>
+          <th>Query</th>
+
+          <th>Database</th>
+          <th>Create Time</th>
+        </tr>
+            </tbody>
+      <tfoot>
+      <tr><td colspan="4">
+      <input type="submit" name="ButtonName" value="Delete" />
+      </td></tr>
+
+    </table>
+</div>
+<div id="footer">
+  <address>
+  Version 1.0 Alpha<br />
+  Copyright &copy; 2006 <a href="http://pgpool.projects.postgresql.org/">pgpool Global Development Group</a>. All rights reserved.
+  </address></div>
+</html>
