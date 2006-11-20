@@ -38,7 +38,7 @@ $pgpoolConfigParam[$key]['regexp'] = '^([0-9a-zA-Z\._\-]+|[\*]{1})$';
 $key = 'port';
 $pgpoolConfigParam[$key]['type'] ='N';
 $pgpoolConfigParam[$key]['default'] ='9999';
-$pgpoolConfigParam[$key]['max'] = 65355;
+$pgpoolConfigParam[$key]['max'] = 65535;
 $pgpoolConfigParam[$key]['min'] = 1024;
 
 $key = 'socket_dir';
@@ -55,31 +55,31 @@ $key = 'num_init_children';
 $pgpoolConfigParam[$key]['type'] ='N';
 $pgpoolConfigParam[$key]['default'] ='32';
 $pgpoolConfigParam[$key]['min'] = 1;
-$pgpoolConfigParam[$key]['max'] = 65355;
+$pgpoolConfigParam[$key]['max'] = 65535;
 
 $key = 'max_pool';
 $pgpoolConfigParam[$key]['type'] ='N';
 $pgpoolConfigParam[$key]['default'] ='4';
 $pgpoolConfigParam[$key]['min'] = 1;
-$pgpoolConfigParam[$key]['max'] = 65355;
+$pgpoolConfigParam[$key]['max'] = 65535;
 
 $key = 'child_life_time';
 $pgpoolConfigParam[$key]['type'] ='N';
 $pgpoolConfigParam[$key]['default'] ='300';
 $pgpoolConfigParam[$key]['min'] = 0;
-$pgpoolConfigParam[$key]['max'] = 65355;
+$pgpoolConfigParam[$key]['max'] = 65535;
 
 $key = 'connection_life_time';
 $pgpoolConfigParam[$key]['type'] ='N';
 $pgpoolConfigParam[$key]['default'] ='0';
 $pgpoolConfigParam[$key]['min'] = 0;
-$pgpoolConfigParam[$key]['max'] = 65355;
+$pgpoolConfigParam[$key]['max'] = 65535;
 
 $key = 'child_max_connections';
 $pgpoolConfigParam[$key]['type'] ='N';
 $pgpoolConfigParam[$key]['default'] ='0';
 $pgpoolConfigParam[$key]['min'] = 0;
-$pgpoolConfigParam[$key]['max'] = 65355;
+$pgpoolConfigParam[$key]['max'] = 65535;
 
 $key = 'logdir';
 $pgpoolConfigParam[$key]['type'] ='C';
@@ -90,7 +90,7 @@ $key = 'pcp_timeout';
 $pgpoolConfigParam[$key]['type'] ='N';
 $pgpoolConfigParam[$key]['default'] ='10';
 $pgpoolConfigParam[$key]['min'] = 0;
-$pgpoolConfigParam[$key]['max'] = 65355;
+$pgpoolConfigParam[$key]['max'] = 65535;
 
 $key = 'replication_mode';
 $pgpoolConfigParam[$key]['type'] ='B';
@@ -104,7 +104,7 @@ $key = 'replication_timeout';
 $pgpoolConfigParam[$key]['type'] ='N';
 $pgpoolConfigParam[$key]['default'] =5000;
 $pgpoolConfigParam[$key]['min'] = 0;
-$pgpoolConfigParam[$key]['max'] = 65355;
+$pgpoolConfigParam[$key]['max'] = 65535;
 
 $key = 'load_balance_mode';
 $pgpoolConfigParam[$key]['type'] ='B';
@@ -135,13 +135,13 @@ $key = 'health_check_timeout';
 $pgpoolConfigParam[$key]['type'] ='N';
 $pgpoolConfigParam[$key]['default'] =20;
 $pgpoolConfigParam[$key]['min'] = 0;
-$pgpoolConfigParam[$key]['max'] = 65355;
+$pgpoolConfigParam[$key]['max'] = 65535;
 
 $key = 'health_check_period';
 $pgpoolConfigParam[$key]['type'] ='N';
 $pgpoolConfigParam[$key]['default'] =0;
 $pgpoolConfigParam[$key]['min'] = 0;
-$pgpoolConfigParam[$key]['max'] = 65355;
+$pgpoolConfigParam[$key]['max'] = 65535;
 
 $key = 'health_check_user';
 $pgpoolConfigParam[$key]['type'] ='C';
@@ -177,7 +177,7 @@ $key = 'system_db_port';
 $pgpoolConfigParam[$key]['type'] ='N';
 $pgpoolConfigParam[$key]['default'] =5432;
 $pgpoolConfigParam[$key]['min'] = 1024;
-$pgpoolConfigParam[$key]['max'] = 65355;
+$pgpoolConfigParam[$key]['max'] = 65535;
 
 $key = 'system_db_dbname';
 $pgpoolConfigParam[$key]['type'] ='C';
@@ -203,7 +203,7 @@ $key = 'pcp_port';
 $pgpoolConfigParam[$key]['type'] ='N';
 $pgpoolConfigParam[$key]['default'] =9898;
 $pgpoolConfigParam[$key]['min'] = 1024;
-$pgpoolConfigParam[$key]['max'] = 65355;
+$pgpoolConfigParam[$key]['max'] = 65535;
 
 $key = 'pcp_socket_dir';
 $pgpoolConfigParam[$key]['type'] ='C';
@@ -224,7 +224,7 @@ $key = 'backend_port';
 $pgpoolConfigBackendParam[$key]['type'] ='N';
 $pgpoolConfigBackendParam[$key]['default'] ='5432';
 $pgpoolConfigBackendParam[$key]['min'] = 1024;
-$pgpoolConfigBackendParam[$key]['max'] = 65355;
+$pgpoolConfigBackendParam[$key]['max'] = 65535;
 
 $key = 'backend_weight';
 $pgpoolConfigBackendParam[$key]['type'] ='F';
