@@ -179,9 +179,6 @@ switch( $action ) {
                 $result = checkFloat  ($weight,
                                  $pgpoolConfigBackendParam['backend_weight']['min'],
                                  $pgpoolConfigBackendParam['backend_weight']['max']);
-                if($weight == 0) {
-                    $result = FALSE;
-                }
                 if(!$result) {
                     $error['backend_weight'][$i] = TRUE;
                 } else {
