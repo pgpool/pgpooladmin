@@ -4,7 +4,6 @@ Version:	1.0.0
 Release:	5%{?dist}
 License:	BSD
 Group:		Applications/Databases
-Vendor:		pgpool Global Development Group
 URL:		http://pgpool.projects.postgresql.org
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
