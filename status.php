@@ -201,6 +201,17 @@ switch ($action) {
         }
         break;
 
+    case 'recovery':
+	$ret = execPcp('PCP_RECOVERY_NODE', $nodeNumber);
+        if(!array_key_exists('SUCCESS', $ret)) {
+            $errorCode = 'e1012';
+            $tpl->assign('errorCode', $errorCode);
+            $tpl->display('error.tpl');
+            exit();
+        }
+        break;
+
+
     case 'detach':
         $ret = execPcp('PCP_DETACH_NODE', $nodeNumber);
         if(!array_key_exists('SUCCESS', $ret)) {

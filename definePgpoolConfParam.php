@@ -226,10 +226,25 @@ $pgpoolConfigBackendParam[$key]['default'] ='5432';
 $pgpoolConfigBackendParam[$key]['min'] = 1024;
 $pgpoolConfigBackendParam[$key]['max'] = 65535;
 
+$key = 'backend_data_directory';
+$pgpoolConfigBackendParam[$key]['type'] ='C';
+$pgpoolConfigBackendParam[$key]['default'] ='';
+$pgpoolConfigBackendParam[$key]['regexp'] = "$dirreg";
+
 $key = 'backend_weight';
 $pgpoolConfigBackendParam[$key]['type'] ='F';
 $pgpoolConfigBackendParam[$key]['default'] ='1';
 $pgpoolConfigBackendParam[$key]['min'] = 0.0;
 $pgpoolConfigBackendParam[$key]['max'] = 1.0;
+
+$key = 'recovery_user';
+$pgpoolConfigParam[$key]['type'] ='C';
+$pgpoolConfigParam[$key]['default'] ='nodoby';
+$pgpoolConfigParam[$key]['regexp'] = "^[0-9a-zA-Z_\.\-]+$";
+
+$key = 'recovery_password';
+$pgpoolConfigParam[$key]['type'] ='C';
+$pgpoolConfigParam[$key]['default'] ='';
+$pgpoolConfigParam[$key]['regexp'] = "^[0-9a-zA-Z_\.\-]+$";
 
 ?>

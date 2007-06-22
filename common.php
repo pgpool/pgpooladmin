@@ -360,6 +360,10 @@ function readConfigParams($paramList = FALSE) {
                 $num = str_replace('backend_weight', '', $key);
                 $configParam['backend_weight'][$num] = $value;
             }
+            else if(preg_match("/^backend_data_directory/", $key)) {
+                $num = str_replace('backend_data_directory', '', $key);
+                $configParam['backend_data_directory'][$num] = ereg_replace("'", "", $value);
+            }
             else {
                 $configParam[$key] = ereg_replace("'", "", $value);
             }
@@ -374,7 +378,8 @@ function readConfigParams($paramList = FALSE) {
                 include('definePgpoolConfParam.php');
                 if(!preg_match("/^backend_hostname/", $key)
                   && !preg_match("/^backend_port/", $key)
-                  && !preg_match("/^backend_weight/", $key)) {
+                  && !preg_match("/^backend_weight/", $key)
+				   && !preg_match("/^backend_data_directory/", $key)) {
                     $results[$key] = $pgpoolConfigParam[$key]['default'];
                 }
             }

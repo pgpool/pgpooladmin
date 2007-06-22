@@ -72,6 +72,7 @@ function cancelNode() {
       <li><a href="#logging">Logging</a></li>
       <li><a href="#replication">Replication</a></li>
       <li><a href="#health-check">Health Check</a></li>
+      <li><a href="#recovery">Online Recovery</a></li>
       <li><a href="#system-database">System Database</a></li>
       <li><a href="#others">Others</a></li>
     </ul>
@@ -248,6 +249,15 @@ function cancelNode() {
         <br />backend_weight{$smarty.section.num.index|escape} (float)</th>
         {/if}
         <td><input type="text" name="backend_weight[]" value="{$params.backend_weight[num]|escape}" /></td>
+      </tr>
+      <tr> {if $error.backend_data_directory[num] != null}
+        <th class="error"><label>{$message.descBackend_data_directory|escape}</label>
+        <br />backend_data_directory{$smarty.section.num.index|escape} (string)</th>
+        {else}
+        <th><label>{$message.descBackend_data_directory|escape}</label>
+        <br />backend_data_directory{$smarty.section.num.index|escape} (string)</th>
+        {/if}
+        <td><input type="text" name="backend_data_directory[]" value="{$params.backend_data_directory[num]|escape}" /></td>
       </tr>
       {/section}
       {if $isAdd == true}
@@ -460,6 +470,40 @@ function cancelNode() {
           <br />health_check_user (string)</th>
           {/if}
           <td><input type="text" name="health_check_user" value="{$params.health_check_user|escape}"/></td>
+        </tr>
+      </tbody>
+    </table>
+    <h3><a name="recovery" id="recovery">Online Recovery</a></h3>
+    <table>
+      <thead>
+        <tr>
+          <th>{$message.strParameter|escape}</th>
+          <th>{$message.strValue|escape}</th>
+        </tr>
+      </thead>
+      <tfoot>
+        <tr>
+          <td colspan="2"></td>
+        </tr>
+      </tfoot>
+      <tbody>
+        <tr> {if $error.recovery_user != null}
+          <th class="error"><label>{$message.descRecovery_user|escape}</label>
+          <br />health_check_timeout (integer)</th>
+          {else}
+          <th><label>{$message.descRecovery_user|escape}</label>
+          <br />health_check_timeout (integer)</th>
+          {/if}
+          <td><input type="text" name="recovery_user" value="{$params.recovery_user|escape}"/></td>
+        </tr>
+        <tr> {if $error.recovery_password != null}
+          <th class="error"><label>{$message.descRecovery_password|escape}</label>
+          <br />recovery_password (string)</th>
+          {else}
+          <th><label>{$message.descRecovery_password|escape}</label>
+          <br />recovery_password (string)</th>
+          {/if}
+          <td><input type="password" name="recovery_password" value="{$params.recovery_password|escape}"/></td>
         </tr>
       </tbody>
     </table>

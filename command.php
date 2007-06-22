@@ -53,7 +53,7 @@ function execPcp($command, $num='') {
 
     $param = readPcpInfo();
     $param['hostname'] = _PGPOOL2_PCP_HOSTNAME;
-    
+
     $args = " " . $param['pcp_timeout'] . " " . $param['hostname'] . " " . $param['pcp_port'] . " ". $_SESSION[SESSION_LOGIN_USER] . " " . $_SESSION[SESSION_LOGIN_USER_PASSWORD] . " " . $num;
 
     switch ($command) {
@@ -106,6 +106,11 @@ function execPcp($command, $num='') {
 
         case 'PCP_STOP_PGPOOL':
             $cmd = _PGPOOL2_PCP_DIR . '/pcp_stop_pgpool' . $args;
+            $ret = exec($cmd, $output, $return_var);
+            break;
+
+        case 'PCP_RECOVERY_NODE':
+            $cmd = _PGPOOL2_PCP_DIR . '/pcp_recovery_node' . $args;
             $ret = exec($cmd, $output, $return_var);
             break;
 

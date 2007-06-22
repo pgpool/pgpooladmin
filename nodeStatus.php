@@ -67,27 +67,25 @@ for($i=0; $i<$nodeCount; $i++) {
         array_push($nodeInfo[$i], 'none');
     } else {
         switch($nodeInfo[$i][2]) {
-            case 1:
-            case 2:
-                if($isReplicationMode || $isMasterSlaveMode) {
-                    array_push($nodeInfo[$i], 'disconnect');
-                } else {
-                    array_push($nodeInfo[$i], 'none');
+		case 1:
+		case 2:
+			if($isReplicationMode || $isMasterSlaveMode) {
+				array_push($nodeInfo[$i], 'disconnect');
+			} else {
+				array_push($nodeInfo[$i], 'none');
+			}
+			break; 
+		case 3:
+			if($isReplicationMode || $isMasterSlaveMode) {
+				if(NodeActive($i)) {
+					array_push($nodeInfo[$i], 'return');
+				} else {
+                    array_push($nodeInfo[$i], 'recovery');
                 }
-               break; 
-            case 3:
-               if(NodeActive($i)) {
-                if($isReplicationMode || $isMasterSlaveMode) {
-                    array_push($nodeInfo[$i], 'return');
-                } else {
-                    array_push($nodeInfo[$i], 'none');
-                }
-               break; 
-               }
-               else {
-                  array_push($nodeInfo[$i], 'none');
-               }
-               break; 
+			} else {
+				array_push($nodeInfo[$i], 'none');
+			}
+			break; 
         }
     }
 }

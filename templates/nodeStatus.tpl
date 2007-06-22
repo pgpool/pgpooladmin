@@ -43,6 +43,8 @@
     <input type="button" name="command" onclick="sendCommand('detach', {$smarty.section.num.index|escape})" value="{$message.strDisconnect|escape}" />
     {elseif $nodeInfo[num][4] == 'return'}
     <input type="button" name="command" onclick="sendCommand('return', {$smarty.section.num.index|escape})" value="{$message.strReturn|escape}" />
+    {elseif $nodeInfo[num][4] == 'recovery'}
+    <input type="button" name="command" onclick="sendCommand('recovery', {$smarty.section.num.index|escape})" value="{$message.strRecovery|escape}" />
     {/if}
     </td> 
     </tr>
