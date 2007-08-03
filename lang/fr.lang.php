@@ -56,6 +56,7 @@ $message = array(
     'descPrint_timestamp' => 'Si vrai, une date est ajoutée au début de chaque ligne de traces',
     'descReplication_mode' => 'Configurer ceci à vrai (true) si vous voulez utiliser la réplication',
     'descReplication_stop_on_mismatch' => 'Stopper le mode réplication en as de différence de données entre le maître et l\'esclave',
+    'descReplicate_select' => 'Si vrai, réplique les requêtes SELECT. Si faux, les envoit seulement au maître',
     'descReplication_strict' => 'Si vrai, pgpool attendra la fin de la requête sur le maître avant d\'envoyer une requête sur le serveur secondaire',
     'descReplication_timeout' => 'Dans le mode de réplication non strict, il y un risque de verrou mortel',
     'descReset_query_list' => 'Commandes SQL séparées par des points-virgules à exécuter à la fin de la session',
