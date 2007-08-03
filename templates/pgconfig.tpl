@@ -419,6 +419,18 @@ function cancelNode() {
           {else}
           <td><input type="checkbox" name="replication_stop_on_mismatch" id="replication_stop_on_mismatch" value="false" /></td>
           {/if} </tr>
+        <tr> {if $error.replicate_select != null}
+          <th class="error"><label>{$message.descReplicate_select|escape}</label>
+					<br />replicate_select</th>
+          {else}
+          <th><label>{$message.descReplicate_select|escape}</label>
+					<br />replicate_select</th>
+          {/if}
+          {if $params.replicate_select == 'true'}
+          <td><input type="checkbox" name="replicate_select" id="replicate_select" value="true" checked="checked" /></td>
+          {else}
+          <td><input type="checkbox" name="replicate_select" id="replicate_select" value="false" /></td>
+          {/if} </tr>
         <tr> {if $error.reset_query_list != null}
           <th class="error"><label>{$message.descReset_query_list|escape}</label>
           <br />reset_query_list (string)</th>

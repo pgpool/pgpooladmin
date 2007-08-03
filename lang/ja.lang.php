@@ -59,6 +59,7 @@ $message = array(
     'descRecovery_password' => 'リカバリを行うためのPostgreSQLユーザパスワード',
     'descReplication_mode' => 'レプリケーションモードの有効化',
     'descReplication_stop_on_mismatch' => 'trueを指定するとマスタとセカンダリの間でデータの不一致があった場合に強制的に縮退運転',
+	'descReplicate_select' => 'true ならば SELECT をレプリケーションし、false ならばマスタにのみ送信',
     'descReplication_strict' => 'masterの問い合わせ処理の完了を待ってからsecondaryの処理',
     'descReplication_timeout' => 'replication_strictがfalseのときにデッドロックを監視するためのタイムアウト時間',
     'descReset_query_list' => 'セッションが終了するときにコネクションを初期化するためのSQLコマンド',

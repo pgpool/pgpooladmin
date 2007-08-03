@@ -114,6 +114,10 @@ $key = 'replication_stop_on_mismatch';
 $pgpoolConfigParam[$key]['type'] ='B';
 $pgpoolConfigParam[$key]['default'] =false;
 
+$key = 'replicate_select';
+$pgpoolConfigParam[$key]['type'] ='B';
+$pgpoolConfigParam[$key]['default'] =false;
+
 $key = 'reset_query_list';
 $pgpoolConfigParam[$key]['type'] ='C';
 $pgpoolConfigParam[$key]['default'] ='ABORT; RESET ALL; SET SESSION AUTHORIZATION DEFAULT';
