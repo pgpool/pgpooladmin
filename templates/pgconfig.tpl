@@ -156,7 +156,8 @@ function cancelNode() {
           <br />connection_life_time (integer)</th>
           {/if}
           <td><input type="text" name="connection_life_time" value="{$params.connection_life_time|escape}"/></td>
-        </tr><tr> {if $error.child_max_connections != null}
+        </tr>
+	<tr> {if $error.child_max_connections != null}
           <th class="error"><label>{$message.descChild_max_connections|escape}</label>
           <br />child_max_connections (integer)</th>
           {else}
@@ -164,6 +165,24 @@ function cancelNode() {
           <br />child_max_connections (integer)</th>
           {/if}
           <td><input type="text" name="child_max_connections" value="{$params.child_max_connections|escape}"/></td>
+        </tr>
+	<tr> {if $error.client_idle_limit != null}
+          <th class="error"><label>{$message.descClient_idle_limit|escape}</label>
+          <br />client_idle_limit (integer)</th>
+          {else}
+          <th><label>{$message.descClient_idle_limit|escape}</label>
+          <br />client_idle_limit (integer)</th>
+          {/if}
+          <td><input type="text" name="client_idle_limit" value="{$params.client_idle_limit|escape}"/></td>
+        </tr>
+	<tr> {if $error.authentication_timeout != null}
+          <th class="error"><label>{$message.descAuthentication_timeout|escape}</label>
+          <br />authentication_timeout (integer)</th>
+          {else}
+          <th><label>{$message.descAuthentication_timeout|escape}</label>
+          <br />authentication_timeout (integer)</th>
+          {/if}
+          <td><input type="text" name="authentication_timeout" value="{$params.authentication_timeout|escape}"/></td>
         </tr>
         <tr> {if $error.connection_cache != null}
           <th class="error"><label>{$message.descConnection_cache|escape}</label>
@@ -517,6 +536,24 @@ function cancelNode() {
           {/if}
           <td><input type="password" name="recovery_password" value="{$params.recovery_password|escape}"/></td>
         </tr>
+        <tr> {if $error.recovery_1st_stage_command != null}
+          <th class="error"><label>{$message.descRecovery_1st_stage_command|escape}</label>
+          <br />recovery_1st_stage_command (string)</th>
+          {else}
+          <th><label>{$message.descRecovery_1st_stage_command|escape}</label>
+          <br />recovery_1st_stage_command (string)</th>
+          {/if}
+          <td><input type="text" name="recovery_1st_stage_command" value="{$params.recovery_1st_stage_command|escape}"/></td>
+        </tr>
+        <tr> {if $error.recovery_2nd_stage_command != null}
+          <th class="error"><label>{$message.descRecovery_2nd_stage_command|escape}</label>
+          <br />recovery_2nd_stage_command (string)</th>
+          {else}
+          <th><label>{$message.descRecovery_2nd_stage_command|escape}</label>
+          <br />recovery_2nd_stage_command (string)</th>
+          {/if}
+          <td><input type="text" name="recovery_2nd_stage_command" value="{$params.recovery_2nd_stage_command|escape}"/></td>
+        </tr>
       </tbody>
     </table>
     <h3><a name="system-database" id="system-database">System Database</a></h3>
@@ -687,6 +724,24 @@ function cancelNode() {
           {else}
           <td><input type="checkbox" name="enable_query_cache" id="enable_query_cache" /></td>
           {/if} </tr>
+        <tr> {if $error.failover_command != null}
+          <th class="error"><label>{$message.descFailover_command|escape}</label>
+          <br />failover_command (string)</th>
+          {else}
+          <th><label>{$message.descFailover_command|escape}</label>
+          <br />failover_command (string)</th>
+          {/if}
+          <td><input type="text" name="failover_command" value="{$params.failover_command|escape}"/></td>
+        </tr>
+        <tr> {if $error.failback_command != null}
+          <th class="error"><label>{$message.descFailback_command|escape}</label>
+          <br />failover_command (string)</th>
+          {else}
+          <th><label>{$message.descFailback_command|escape}</label>
+          <br />failover_command (string)</th>
+          {/if}
+          <td><input type="text" name="failback_command" value="{$params.failback_command|escape}"/></td>
+        </tr>
       </tbody>
     </table>
     <p>

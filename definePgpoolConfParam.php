@@ -81,6 +81,18 @@ $pgpoolConfigParam[$key]['default'] ='0';
 $pgpoolConfigParam[$key]['min'] = 0;
 $pgpoolConfigParam[$key]['max'] = 65535;
 
+$key = 'client_idle_limit';
+$pgpoolConfigParam[$key]['type'] ='N';
+$pgpoolConfigParam[$key]['default'] ='0';
+$pgpoolConfigParam[$key]['min'] = 0;
+$pgpoolConfigParam[$key]['max'] = 65535;
+
+$key = 'authentication_timeout';
+$pgpoolConfigParam[$key]['type'] ='N';
+$pgpoolConfigParam[$key]['default'] ='60';
+$pgpoolConfigParam[$key]['min'] = 0;
+$pgpoolConfigParam[$key]['max'] = 10000;
+
 $key = 'logdir';
 $pgpoolConfigParam[$key]['type'] ='C';
 $pgpoolConfigParam[$key]['default'] ='/tmp';
@@ -250,5 +262,25 @@ $key = 'recovery_password';
 $pgpoolConfigParam[$key]['type'] ='C';
 $pgpoolConfigParam[$key]['default'] ='';
 $pgpoolConfigParam[$key]['regexp'] = "^[0-9a-zA-Z_\.\-]+$";
+
+$key = 'recovery_1st_stage_command';
+$pgpoolConfigParam[$key]['type'] ='C';
+$pgpoolConfigParam[$key]['default'] ='';
+$pgpoolConfigParam[$key]['regexp'] = "^[0-9a-zA-Z_/\.\-]+$";
+
+$key = 'recovery_2nd_stage_command';
+$pgpoolConfigParam[$key]['type'] ='C';
+$pgpoolConfigParam[$key]['default'] ='';
+$pgpoolConfigParam[$key]['regexp'] = "^[0-9a-zA-Z_/\.\-]+$";
+
+$key = 'failover_command';
+$pgpoolConfigParam[$key]['type'] ='C';
+$pgpoolConfigParam[$key]['default'] ='';
+$pgpoolConfigParam[$key]['regexp'] = "^[0-9a-zA-Z_/\.\-]+$";
+
+$key = 'failback_command';
+$pgpoolConfigParam[$key]['type'] ='C';
+$pgpoolConfigParam[$key]['default'] ='';
+$pgpoolConfigParam[$key]['regexp'] = "^[0-9a-zA-Z_/\.\-]+$";
 
 ?>
