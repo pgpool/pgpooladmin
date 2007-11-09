@@ -261,26 +261,26 @@ $pgpoolConfigParam[$key]['regexp'] = "^[0-9a-zA-Z_\.\-]+$";
 $key = 'recovery_password';
 $pgpoolConfigParam[$key]['type'] ='C';
 $pgpoolConfigParam[$key]['default'] ='';
-$pgpoolConfigParam[$key]['regexp'] = "^[0-9a-zA-Z_\.\-]+$";
+$pgpoolConfigParam[$key]['regexp'] = ".*";
 
 $key = 'recovery_1st_stage_command';
 $pgpoolConfigParam[$key]['type'] ='C';
 $pgpoolConfigParam[$key]['default'] ='';
-$pgpoolConfigParam[$key]['regexp'] = "^[0-9a-zA-Z_/\.\-]+$";
+$pgpoolConfigParam[$key]['regexp'] = "^[0-9a-zA-Z_/\.\-]*$";
 
 $key = 'recovery_2nd_stage_command';
 $pgpoolConfigParam[$key]['type'] ='C';
 $pgpoolConfigParam[$key]['default'] ='';
-$pgpoolConfigParam[$key]['regexp'] = "^[0-9a-zA-Z_/\.\-]+$";
+$pgpoolConfigParam[$key]['regexp'] = "^[0-9a-zA-Z_/\.\-]*$";
 
 $key = 'failover_command';
 $pgpoolConfigParam[$key]['type'] ='C';
 $pgpoolConfigParam[$key]['default'] ='';
-$pgpoolConfigParam[$key]['regexp'] = "^[0-9a-zA-Z_/\.\-]+$";
+$pgpoolConfigParam[$key]['regexp'] = "^[0-9a-zA-Z_/\.\-]*$";
 
 $key = 'failback_command';
 $pgpoolConfigParam[$key]['type'] ='C';
 $pgpoolConfigParam[$key]['default'] ='';
-$pgpoolConfigParam[$key]['regexp'] = "^[0-9a-zA-Z_/\.\-]+$";
+$pgpoolConfigParam[$key]['regexp'] = "^[0-9a-zA-Z_/\.\-]*$";
 
 ?>
