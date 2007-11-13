@@ -23,6 +23,6 @@
  * @version    SVN: $Id$
  */
 
-$version = '2.0 beta1';
+$version = '2.0';
 
 ?>
