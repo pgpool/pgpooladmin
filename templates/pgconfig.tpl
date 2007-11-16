@@ -735,10 +735,10 @@ function cancelNode() {
         </tr>
         <tr> {if $error.failback_command != null}
           <th class="error"><label>{$message.descFailback_command|escape}</label>
-          <br />failover_command (string)</th>
+          <br />failover_back (string)</th>
           {else}
           <th><label>{$message.descFailback_command|escape}</label>
-          <br />failover_command (string)</th>
+          <br />failover_back (string)</th>
           {/if}
           <td><input type="text" name="failback_command" value="{$params.failback_command|escape}"/></td>
         </tr>
