@@ -15,6 +15,7 @@ var refreshTime = "{$refreshTime|escape}";
 var view = "{$viewPHP|escape}";
 var msgStopPgpool = "{$message.msgStopPgpool|escape}";
 var msgRestartPgpool = "{$message.msgRestartPgpool|escape}";
+var msgRestartPgpool = "{$message.msgReloadPgpool|escape}";
 
 {literal}
 function load() {
@@ -135,6 +136,13 @@ function execRestartPgpool() {
    }
 }
 
+function execReloadPgpool() {
+   if(window.confirm(msgReloadPgpool)){ 
+    document.Command.action.value= "reload";
+    document.Command.submit();
+   }
+}
+
 function execStopPgpool() {
    if(window.confirm(msgStopPgpool)){ 
     document.Command.action.value= "stop";
@@ -226,6 +234,7 @@ function changeView(chView){
     <div id="cmdBtn" style="visibility: visible">
     <input type="button" name="command" onclick="stopPgpool()" value="{$message.strStopPgpool|escape}" />
     <input type="button" name="command" onclick="restartPgpool()" value="{$message.strRestartPgpool|escape}" />
+    <input type="button" name="command" onclick="execReloadPgpool()" value="{$message.strReloadPgpool|escape}" />
     </div>
     <div id="stopOption" style="visibility: hidden; position: absolute">
     <table>

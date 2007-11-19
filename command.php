@@ -104,6 +104,20 @@ function execPcp($command, $num='') {
             }
             break;
 
+        case 'PCP_RELOAD_PGPOOL':
+            $cmdOption = $num;
+            $cmdOption = $cmdOption . ' -f ' . _PGPOOL2_CONFIG_FILE
+                                                    . ' -F ' . _PGPOOL2_PASSWORD_FILE . ' reload';
+            $cmd = _PGPOOL2_COMMAND . $cmdOption . ' 2>&1 &';
+            $ret = exec($cmd, $output, $return_var);
+            if($return_var == 0) {
+                return array($pcpStatus[$return_var] => $output);
+            } else {
+                return array('FAIL' => $output);
+            }
+            break;
+
+
         case 'PCP_STOP_PGPOOL':
             $cmd = _PGPOOL2_PCP_DIR . '/pcp_stop_pgpool' . $args;
             $ret = exec($cmd, $output, $return_var);

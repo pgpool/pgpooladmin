@@ -191,6 +191,34 @@ switch ($action) {
         }
         break;
 
+    case 'reload':
+        $m = $_POST['m'];
+
+        
+        /**
+         * Start Pgpool
+         */
+        $args = ' ';
+
+        if(isset($_POST['c'])) {
+            $args = $args . "-c ";
+        }
+        if(isset($_POST['d'])) {
+            $args = $args . "-d ";
+        }
+        if(isset($_POST['n'])) {
+            $pgpoolLog = _PGPOOL2_LOG_FILE;
+            if($pgpoolLog == '') {
+                $logDir = readLogDir();
+                $pgpoolLog = "$logDir/pgpool.log";
+            }
+
+            $args = "$args -n > $pgpoolLog ";
+        }
+        $ret = execPcp('PCP_RELOAD_PGPOOL', $args);
+        break;
+
+
     case 'return':
         $ret = execPcp('PCP_ATTACH_NODE', $nodeNumber);
         if(!array_key_exists('SUCCESS', $ret)) {

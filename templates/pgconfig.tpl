@@ -295,6 +295,11 @@ function cancelNode() {
           (float)</th>
         <td><input type="text" name="backend_weight[]" value="" /></td>
       </tr>
+      <tr>
+        <th><label>new backend_data_directory</label>
+          (float)</th>
+        <td><input type="text" name="backend_data_directory[]" value="" /></td>
+      </tr>
       {/if}
       </tbody>      
     </table>
