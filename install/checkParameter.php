@@ -417,7 +417,7 @@ echo '<input type="submit" value="' . $message['strNext'] . '" />';
 </div>
     <div id="footer">
       <address>Version <?php echo $version;?><br />
-      Copyright &copy; 2006 <a href="http://pgpool.projects.postgresql.org/">pgpool Global Development Group</a>. All rights reserved.</address>
+      Copyright &copy; 2006-2007 <a href="http://pgpool.projects.postgresql.org/">pgpool Global Development Group</a>. All rights reserved.</address>
     </div>
   </body>
 </html>
