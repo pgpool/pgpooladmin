@@ -50,6 +50,7 @@ $isReplicationMode = isReplicationMode();
 $isMasterSlaveMode = isMasterSlaveMode();
 
 $nodeInfo = array();
+$node_alive = false;
 
 for($i=0; $i<$nodeCount; $i++) {
     $ret = execPcp('PCP_NODE_INFO', $i);
@@ -63,7 +64,18 @@ for($i=0; $i<$nodeCount; $i++) {
     }
     $nodeInfo[$i] = split(" ", $ret);
     $nodeInfo[$i][3] =  sprintf('%.3f', $nodeInfo[$i][3] / $MAX_VALUE);
-    if( $isParallelMode ) {
+	/* node is active? */
+	if ($nodeInfo[$i][2] != 3)
+		$node_alive = true;
+}
+
+for ($i = 0; $i < $nodeCount; $i++) {
+	if ($node_alive == false) {
+		if ($isReplicationMode || $isMasterSlaveMode)
+			array_push($nodeInfo[$i], 'return');
+		else
+			array_push($nodeInfo[$i], 'none');
+	} else if( $isParallelMode ) {
         array_push($nodeInfo[$i], 'none');
     } else {
         switch($nodeInfo[$i][2]) {
