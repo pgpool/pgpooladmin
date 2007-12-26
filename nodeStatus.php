@@ -71,7 +71,8 @@ for($i=0; $i<$nodeCount; $i++) {
 
 for ($i = 0; $i < $nodeCount; $i++) {
 	if ($node_alive == false) {
-		if ($isReplicationMode || $isMasterSlaveMode)
+		if (($isReplicationMode || $isMasterSlaveMode) &&
+			NodeActive($i))
 			array_push($nodeInfo[$i], 'return');
 		else
 			array_push($nodeInfo[$i], 'none');
