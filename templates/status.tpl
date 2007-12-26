@@ -15,7 +15,7 @@ var refreshTime = "{$refreshTime|escape}";
 var view = "{$viewPHP|escape}";
 var msgStopPgpool = "{$message.msgStopPgpool|escape}";
 var msgRestartPgpool = "{$message.msgRestartPgpool|escape}";
-var msgRestartPgpool = "{$message.msgReloadPgpool|escape}";
+var msgReloadPgpool = "{$message.msgReloadPgpool|escape}";
 
 {literal}
 function load() {
