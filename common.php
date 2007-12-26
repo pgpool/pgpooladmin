@@ -128,11 +128,11 @@ function openDBConnection($param)
     $dbname = $param['dbname'];
     $user = $param['user'];
     $password = $param['password'];
-    
+
     if($host != '') {
         $conStr = "host=$host port=$port dbname=$dbname user=$user password=$password" ;
     } else {
-        $conStr = "port=$port dbname=$dbname" ;
+        $conStr = "port=$port dbname=$dbname user=$user password=$password" ;
     }
     
     $con = @pg_connect($conStr);
@@ -233,7 +233,7 @@ function NodeActive($num) {
     if($backendHostName != '') {
         $conStr = "dbname=$healthCheckDb user=$healthCheckUser host=$backendHostName port=$backendPort" ;
     } else {
-        $conStr = "dbname=$healthCheckDb port=$backendPort" ;
+        $conStr = "dbname=$healthCheckDb port=$backendPort user=$healthCheckUser" ;
     }
 
     $conn = @pg_connect($conStr);
