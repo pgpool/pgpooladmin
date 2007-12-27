@@ -98,7 +98,7 @@ switch ($action) {
         break;
 
     case 'stop':
-        $m = $_POST['m'];
+        $m = $_POST['stop_mode'];
 
         $ret = execPcp('PCP_STOP_PGPOOL', $m);
         if(!array_key_exists('SUCCESS', $ret)) {
@@ -127,7 +127,7 @@ switch ($action) {
         /**
          * Stop Pgpool
          */
-        $m = $_POST['m'];
+        $m = $_POST['restart_mode'];
 
         $ret = execPcp('PCP_STOP_PGPOOL', $m);
         if(!array_key_exists('SUCCESS', $ret)) {

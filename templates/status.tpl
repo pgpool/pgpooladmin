@@ -245,23 +245,23 @@ function changeView(chView){
     <input type="button" name="command" onclick="cancelCmd()" value="{$message.strCancel|escape}" />
     </td></tr></tfoot>
     <tbody>
-          <tr><td>{$message.strCmdM|escape}(-m)</td><td><select name="m">
+          <tr><td>{$message.strCmdM|escape}(-m)</td><td><select name="stop_mode">
           {if $m == 's'}
-               <option value="s" selected="selected">smart</optgroup>
-               <option value="f">fast</optgroup>
-               <option value="i">immediate</optgroup>
+               <option value="s" selected="selected">smart</option>
+               <option value="f">fast</option>
+               <option value="i">immediate</option>
           {elseif $m == 'f'}  
-               <option value="s">smart</optgroup>
-               <option value="f" selected="selected">fast</optgroup>
-               <option value="i">immediate</optgroup>
+               <option value="s">smart</option>
+               <option value="f" selected="selected">fast</option>
+               <option value="i">immediate</option>
           {elseif $m == 'i'}  
-               <option value="s">smart</optgroup>
-               <option value="f">fast</optgroup>
-               <option value="i" selected="selected">immediate</optgroup>
+               <option value="s">smart</option>
+               <option value="f">fast</option>
+               <option value="i" selected="selected">immediate</option>
           {else}  
-               <option value="s">smart</optgroup>
-               <option value="f">fast</optgroup>
-               <option value="i">immediate</optgroup>
+               <option value="s">smart</option>
+               <option value="f">fast</option>
+               <option value="i">immediate</option>
           {/if}  
           </td></tr>
     </tbody>
@@ -298,24 +298,25 @@ function changeView(chView){
           <td><input type="checkbox" name="d" /></td>
           {/if}
           </tr>
-          <tr><td>{$message.strCmdM|escape}(-m)</td><td><select name="m">
+          <tr><td>{$message.strCmdM|escape}(-m)</td><td><select name="restart_mode">
           {if $m == 's'}
-               <option value="s" selected="selected">smart</optgroup>
-               <option value="f">fast</optgroup>
-               <option value="i">immediate</optgroup>
+               <option value="s" selected="selected">smart</option>
+               <option value="f">fast</option>
+               <option value="i">immediate</option>
           {elseif $m == 'f'}  
-               <option value="s">smart</optgroup>
-               <option value="f" selected="selected">fast</optgroup>
-               <option value="i">immediate</optgroup>
+               <option value="s">smart</option>
+               <option value="f" selected="selected">fast</option>
+               <option value="i">immediate</option>
           {elseif $m == 'i'}  
-               <option value="s">smart</optgroup>
-               <option value="f">fast</optgroup>
-               <option value="i" selected="selected">immediate</optgroup>
+               <option value="s">smart</option>
+               <option value="f">fast</option>
+               <option value="i" selected="selected">immediate</option>
           {else}  
-               <option value="s">smart</optgroup>
-               <option value="f">fast</optgroup>
-               <option value="i">immediate</optgroup>
+               <option value="s">smart</option>
+               <option value="f">fast</option>
+               <option value="i">immediate</option>
           {/if}  
+	  </select>
           </td></tr>
           <tr><td>{$message.strCmdPgpoolFile|escape}(-f)</td>
           <td>{$pgpoolConf|escape}</td>
