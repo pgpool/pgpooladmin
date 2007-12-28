@@ -512,10 +512,10 @@ function cancelNode() {
       <tbody>
         <tr> {if $error.recovery_user != null}
           <th class="error"><label>{$message.descRecovery_user|escape}</label>
-          <br />health_check_timeout (integer)</th>
+          <br />recovery_user (string)</th>
           {else}
           <th><label>{$message.descRecovery_user|escape}</label>
-          <br />health_check_timeout (integer)</th>
+          <br />recovery_user (string)</th>
           {/if}
           <td><input type="text" name="recovery_user" value="{$params.recovery_user|escape}"/></td>
         </tr>
