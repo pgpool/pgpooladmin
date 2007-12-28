@@ -409,19 +409,6 @@ function cancelNode() {
           {else}
           <td><input type="checkbox" name="replication_mode" id="replication_mode" value="false" /></td>
           {/if} </tr>
-        <tr> {if $error.replication_strict != null}
-          <th class="error"><label>{$message.descReplication_strict|escape}</label>
-					<br />replication_strict</th>
-          {else}
-          <th><label>{$message.descReplication_strict|escape}</label>
-					<br />replication_strict</th>
-          {/if}
-          {if $params.replication_strict == 'true'}
-          <td><input type="checkbox" name="replication_strict" id="replication_strict" value="true" checked="checked" /></td>
-          {else}
-          <td><input type="checkbox" name="replication_strict" id="replication_strict" value="false" /></td>
-          {/if}
-        </tr>
         <tr> {if $error.replication_timeout != null}
           <th class="error"><label>{$message.descReplication_timeout|escape}</label>
           <br />replication_timeout (integer)</th>

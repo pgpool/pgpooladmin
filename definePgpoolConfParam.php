@@ -108,10 +108,6 @@ $key = 'replication_mode';
 $pgpoolConfigParam[$key]['type'] ='B';
 $pgpoolConfigParam[$key]['default'] =false;
 
-$key = 'replication_strict';
-$pgpoolConfigParam[$key]['type'] ='B';
-$pgpoolConfigParam[$key]['default'] =true;
-
 $key = 'replication_timeout';
 $pgpoolConfigParam[$key]['type'] ='N';
 $pgpoolConfigParam[$key]['default'] =5000;
@@ -170,7 +166,7 @@ $pgpoolConfigParam[$key]['default'] =false;
 
 $key = 'ignore_leading_white_space';
 $pgpoolConfigParam[$key]['type'] ='B';
-$pgpoolConfigParam[$key]['default'] =false;
+$pgpoolConfigParam[$key]['default'] =true;
 
 $key = 'parallel_mode';
 $pgpoolConfigParam[$key]['type'] ='B';

@@ -66,7 +66,6 @@ $message = array(
     'descReplication_mode' => 'Set this to true if you are going to use replication functionality',
     'descReplication_stop_on_mismatch' => 'Stop replication mode on data mismatch between master and secondary',
 	'descReplicate_select' => 'If true, replicate SELECT queries. If false, send only to master ',
-    'descReplication_strict' => 'If true, pgpool will wait for the completion of the master query before sending a query to the secondary server',
     'descReplication_timeout' => 'In non strict replication mode, there will be a risk of deadlock',
     'descReset_query_list' => 'Semicolon separated SQL commands to be issued at the end of session',
     'descSocket_dir' => 'The socket directory pgpool could connect',
