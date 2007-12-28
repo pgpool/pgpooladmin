@@ -49,6 +49,7 @@
       <li><a href="#logging">Logging</a></li>
       <li><a href="#replication">Replication</a></li>
       <li><a href="#health-check">Health Check</a></li>
+      <li><a href="#online-recovery">Online Recovery</a></li>
       <li><a href="#system-database">System Database</a></li>
       <li><a href="#others">Others</a></li>
     </ul>
@@ -115,6 +116,25 @@ TCP/IPコネクションを受け付けるアドレスをホスト名またはIP
           <td>各pgpool子プロセスへの接続回数がこの設定値を超えると、その子プロセスを終了します。child_life_timeやconnection_life_timeが効かないくらい忙しいサーバで、PostgreSQLバックエンドが肥大化するのを防ぐのに有効です。</td>
         </tr>
         <tr>
+          <th><label>クライアントからのクエリの最大待ち時間(秒)</label>
+					<br>client_idle_limit</th>
+          <td>前回クライアントから来たクエリから，client_idle_limit 秒
+        越えても次の クエリが届かない場合は，クライアントへの接続を強
+        制的に切断し，クライ アントからの次のコネクションを待つように
+        します。デフォルト値は 0(無効)です。このパラメータを変更した時
+        には設定ファイルを再読み込みしてください。</td>
+        </tr>
+
+        <tr>
+          <th><label>クライアント認証のタイムアウト時間(秒)</label>
+					<br>authentication_timeout</th>
+          <td>認証処理のタイムアウト時間を秒単位で指定します。0 を指定
+          するとタイ ムアウトを無効にします。authentication_timeout の
+          デフォルト値は 60 です。このパラメータを変更した時には設定ファ
+          イルを再読み込みしてください。</td>
+        </tr>
+
+        <tr>
           <th><label>コネクションをキャッシュ</label>
 					<br>connection_cache</th>
           <td>trueならコネクションをキャッシュします。デフォルトはtrueです。</td>
@@ -164,6 +184,17 @@ TCP/IPコネクションを受け付けるアドレスをホスト名またはIP
 		<td>ロードバランスモード時に振り分ける重みを0から1の値で設定します。すべてのバックエンドサーバで指定した値から相対的な重みを計算して振り分けます。</td>
 
       </tr>
+
+      <tr>
+        <th><label>PostgreSQL サーバのデータベースクラスタディレクトリ
+        名</label><br />backend_data_directory (string)</th> 
+		<td>使用する PostgreSQL サーバのデータベースクラスタの
+        パスを指定します。実際には、"backend_data_directory"の後にDBノー
+        ドIDを付加して使用する複数のPostgreSQLを区別します。このパラメー
+        タはオンラインリカバリの際に使用します。オンラインリカバリを使
+        用しない場合には設定する必要はありません。</td>
+      </tr>
+
 	  </tbody>
     </table>
     <h3><a name="pcp">PCP (pgpool Control Port)</a></h3>
@@ -247,17 +278,19 @@ TCP/IPコネクションを受け付けるアドレスをホスト名またはIP
 		  <td>レプリケーションモードで動作させる場合はtrueを指定してください。デフォルト値はfalseです。</td>
         </tr>
         <tr>
-          <th><label>masterの問い合わせ処理の完了を待ってからsecondaryの処理</label>
-
-					<br>replication_strict</th>
-		  <td>このオプションをtrueにすると、masterの問い合わせ処理の完了を待ってからsecondaryの処理に移ります。デッドロックの危険性はなくなりますが、masterとsecondaryの間で問い合わせの並列処理を行わなくなるので性能が低下する場合もあります。<br />なお、すべての問い合わせではなくて、SQLのコメントを使って一部の問い合わせのみstrict動作させることもできます。<br />このオプションのデフォルト値はtrueです</td>
-        </tr>
-        <tr>
-          <th><label>replication_strictがfalseのときにデッドロックを監視するためのタイムアウト時間</label>
+          <th><label>デッドロックを監視するためのタイムアウト時間</label>
           <br>replication_timeout (integer)</th>
 
 		  <td>replication_strictがfalseのときにデッドロックを監視するためのタイムアウト時間をミリ秒単位で指定します。デフォルト値は5000、すなわち5秒です。0を指定するとタイムアウトしなくなります。</td>
         </tr>
+
+        <tr>
+          <th><label>true ならば SELECT をレプリケーションし、false ならばマスタにのみ送信</label>
+		<br>replicate_select</th>
+		  <td>true を設定するとロードバランスされない SELECT
+          文をレプリケーションさせます。</td>
+	</tr>
+
         <tr>
           <th><label>trueを指定するとマスタとセカンダリの間でデータの不一致があった場合に強制的に縮退運転</label>
 					<br>replication_stop_on_mismatch</th>
@@ -317,6 +350,69 @@ PostgreSQLのバージョンによって使用できるSQLコマンドが違う�
       </tfoot>
 
     </table>
+
+    <h3><a name="online-recovery">Online Recovery</a></h3>
+    <table>
+      <thead>
+        <tr>
+          <th>項目</th>
+          <th>詳細</th>
+
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th><label>リカバリを行うためのPostgreSQLユーザ</label>
+          <br>recovery_user (string)</th>
+		  <td>オンラインリカバリを行うための PostgreSQL ユーザ名です。</td>
+        </tr>
+
+        <tr>
+          <th><label>リカバリを行うためのPostgreSQLユーザパスワード</label>
+          <br>recovery_password (string)</th>
+		  <td>オンラインリカバリを行うための PostgreSQL ユーザパスワードです。</td>
+        </tr>
+        <tr>
+          <th><label>オンラインリカバリ第1ステージで実行するコマンド</label>
+
+          <br>recovery_1st_stage_command (string)</th>
+		  <td>最初にオンラインリカバリ中に起動するコマンド名を
+		  指定します。コマンド ファイルはセキュリティ上の観点
+		  からデータベースクラスタ以下にあるコマ ンドやスクリ
+		  プトのみを呼び出します。 例えば、
+		  recovery_1st_stage_command = 'sync-command' と設定し
+		  てある場 合、$PGDATA/sync-command を起動しようとしま
+		  す。 recovery_1st_stage_command を実行している間は
+		  pgpool ではクライアン トからの接続を制限しません。参
+		  照や更新を行うことができます。</td>
+        </tr>
+        <tr>
+          <th><label>オンラインリカバリ第2ステージで実行するコマンド</label>
+          <br>recovery_2nd_stage_command (string)</th>
+		  <td>2 回目のオンラインリカバリ中に起動するコマンド名
+		  を指定します。コマン ドファイルはセキュリティ上の観
+		  点からデータベースクラスタ以下にあるコ マンドやスク
+		  リプトのみを呼び出します。 例えば、
+		  recovery_2nd_stage_command = 'sync-command' と設定し
+		  てある場 合、$PGDATA/sync-command を起動しようとしま
+		  す。 recovery_2nd_stage_command を実行している間は
+		  pgpool ではクライアン トから接続、参照、更新処理を一
+		  切受け付けません。また、バッチ 処理などによって接続
+		  しているクライアントが長時間存在している場合には コ
+		  マンドを起動しません。接続を制限し、現在の接続数が 0
+		  になった時点 でコマンドを起動します。</td>
+
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="2"></td>
+        </tr>
+
+      </tfoot>
+    </table>
+
+
     <h3><a name="system-database">System Database</a></h3>
     <table>
       <thead>
