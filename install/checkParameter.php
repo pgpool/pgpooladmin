@@ -84,7 +84,7 @@ if(!@is_file($pgpool_command)) {
         $error = true;
 }
 else if(!is_executable($pgpool_command)) {
-    $msgPgpoolCommand =  'pgppol command can\'t excutable';
+    $msgPgpoolCommand =  'pgpool command not executable';
     $error = true;
 }
 
@@ -127,7 +127,7 @@ else {
 			$error = true;
 		}
         else if(!is_executable($pcp_client_dir . "/" . $command[$i] )) {
-            $msgPcpClientDir = $command[$i] . ' can\'t excutable';
+            $msgPcpClientDir = $command[$i] . ' not executable';
 			$error = true;
         }
     }
@@ -293,7 +293,7 @@ if(!$error && $action == 'next') {
     </td>
   </tr>
   <tr>
-    <th colspan="3"><label><?php echo $message['strPgpoolCommandOption'] ?></label></th>
+    <th colspan="3"><h3><?php echo $message['strPgpoolCommandOption'] ?></h3></th>
   </tr>
   <tr>
     <th><label><?php echo $message['strCmdC'] ?></label></th>
