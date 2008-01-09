@@ -42,7 +42,7 @@ if( !$pgpool2_config_file)  {
     $pgpool2_config_file = _PGPOOL2_CONFIG_FILE;
 }
 if(!@is_file($pgpool2_config_file)) {
-    $msgPgpoolConfigFile = 'No file found';
+    $msgPgpoolConfigFile = 'File not found';
     $error = true;
 }
 else {
@@ -61,7 +61,7 @@ if( !$password_file)  {
     $password_file = _PGPOOL2_PASSWORD_FILE;
 }
 if(!@is_file($password_file)) {
-    $msgPasswordFile = 'No file found';
+    $msgPasswordFile = 'File not found';
         $error = true;
 }
 else {
@@ -80,11 +80,11 @@ if( !$pgpool_command)  {
     $pgpool_command = _PGPOOL2_COMMAND;
 }
 if(!@is_file($pgpool_command)) {
-    $msgPgpoolCommand = 'Pgpool not found';
+    $msgPgpoolCommand = 'pgpool command not found';
         $error = true;
 }
-if(!is_executable($pgpool_command)) {
-    $msgPgpoolCommand =  'Pgppol command can\'t excutable';
+else if(!is_executable($pgpool_command)) {
+    $msgPgpoolCommand =  'pgppol command can\'t excutable';
     $error = true;
 }
 
@@ -93,7 +93,7 @@ if( !$pgpool_logfile)  {
     $pgpool_logfile = _PGPOOL2_LOG_FILE;
 }
 if(!is_dir(dirname($pgpool_logfile))) {
-    $msgPgpoolLogFile = 'No Directory found';
+    $msgPgpoolLogFile = 'Directory not found';
     $error = true;
 }
 else {
@@ -122,9 +122,13 @@ else {
                             'pcp_systemdb_info');
     
     for($i=0; $i<count($command); $i++) {
-        if(!is_executable($pcp_client_dir . "/" . $command[$i] )) {
+		if(!@is_file($pcp_client_dir . "/" . $command[$i])) {
+			$msgPcpClientDir = $command[$i] . ' command not found';
+			$error = true;
+		}
+        else if(!is_executable($pcp_client_dir . "/" . $command[$i] )) {
             $msgPcpClientDir = $command[$i] . ' can\'t excutable';
-        $error = true;
+			$error = true;
         }
     }
 }
