@@ -77,7 +77,7 @@ switch ($action) {
         }
         $ret = execPcp('PCP_START_PGPOOL', $args);
         if(!array_key_exists('SUCCESS', $ret)) {
-            $tpl->assign('pgpoolStatus', 'Pgpool start failed.');
+            $tpl->assign('pgpoolStatus', 'pgpool start failed.');
             $tpl->assign('pgpoolMessage', $ret);
         } else {
             for($i=0; $i<10; $i++) {
@@ -88,9 +88,9 @@ switch ($action) {
                 }
             }
             if(DoesPgpoolPidExist()) {
-                $tpl->assign('pgpoolStatus', 'Pgpool start succeed');
+                $tpl->assign('pgpoolStatus', 'pgpool start succeed');
             } else {
-                $tpl->assign('pgpoolStatus', 'Pgpool start failed. Pgpool.pid not found');
+                $tpl->assign('pgpoolStatus', 'pgpool start failed. pgpool.pid not found');
             }
             $tpl->assign('pgpoolMessage', $ret['SUCCESS']);
         }
@@ -115,9 +115,9 @@ switch ($action) {
                 }
             }
             if(DoesPgpoolPidExist()) {
-                $tpl->assign('pgpoolStatus', 'Pgpool stop failed. pgpool.pid exists.');
+                $tpl->assign('pgpoolStatus', 'pgpool stop failed. pgpool.pid exists.');
             } else {
-                $tpl->assign('pgpoolStatus', 'Pgpool stop succeed');
+                $tpl->assign('pgpoolStatus', 'pgpool stop succeed');
             }
         }
 
@@ -125,7 +125,7 @@ switch ($action) {
 
     case 'restart':
         /**
-         * Stop Pgpool
+         * Stop pgpool
          */
         $m = $_POST['restart_mode'];
 
@@ -146,12 +146,12 @@ switch ($action) {
         }
         
         if(DoesPgpoolPidExist() ) {
-                $tpl->assign('pgpoolStatus', 'pgpool restart failed. Pgpool.pid exists.');
+                $tpl->assign('pgpoolStatus', 'pgpool restart failed. pgpool.pid exists.');
                 break;
         }
         
         /**
-         * Start Pgpool
+         * Start pgpool
          */
         $args = ' ';
 
@@ -173,19 +173,19 @@ switch ($action) {
 
         $ret = execPcp('PCP_START_PGPOOL', $args);
         if(!array_key_exists('SUCCESS', $ret)) {
-            $tpl->assign('pgpoolStatus', 'Pgpool restart failed.');
+            $tpl->assign('pgpoolStatus', 'pgpool restart failed.');
             $tpl->assign('pgpoolMessage', $ret);
         } else {
             for($i=0; $i<10; $i++) {
                 if(DoesPgpoolPidExist()) {
-                    $tpl->assign('pgpoolStatus', 'Pgpool restart succeed');
+                    $tpl->assign('pgpoolStatus', 'pgpool restart succeed');
                     break;
                 } else {
                     sleep(1);
                 }
             }
             if(!DoesPgpoolPidExist()) {
-                $tpl->assign('pgpoolStatus', 'Pgpool restart failed. Pgpool.pid not found');
+                $tpl->assign('pgpoolStatus', 'pgpool restart failed. pgpool.pid not found');
             }
             $tpl->assign('pgpoolMessage', $ret['SUCCESS']);
         }
@@ -196,7 +196,7 @@ switch ($action) {
 
         
         /**
-         * Start Pgpool
+         * Start pgpool
          */
         $args = ' ';
 

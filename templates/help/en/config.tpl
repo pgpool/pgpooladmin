@@ -40,14 +40,14 @@
           <td>When starting pgpool, the query cache is cleared.</td>
           </tr>
           <tr><td>{$message.strCmdN|escape}(-n)</td>
-          <td>Pgpool can be run in non-daemon mode. For display of pgpool log in this pool, it is necessary to turn on this item. </td>
+          <td>pgpool can be run in non-daemon mode. For display of pgpool log in this pool, it is necessary to turn on this item. </td>
           </tr>
           <tr><td>{$message.strCmdD|escape}(-d)</td>
-          <td>Pgpool can be run in debug mode. When the debugging log is necessary, it turns it on.</td>
+          <td>pgpool can be run in debug mode. When the debugging log is necessary, it turns it on.</td>
           </tr>
           <tr>
           <tr><td>{$message.strCmdM|escape}(-d)</td>
-          <td>All the processes of pgpool are stopped. The pgpool stop option is displayed, when "Pgpool Stop" is pushed. There are stop mode for pgpool as follows.
+          <td>All the processes of pgpool are stopped. The pgpool stop option is displayed, when "pgpool Stop" is pushed. There are stop mode for pgpool as follows.
           <ul>
           <li>smart</li>
           <li>fast</li>
