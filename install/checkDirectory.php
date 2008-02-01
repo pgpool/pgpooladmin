@@ -19,7 +19,7 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2007 PgPool Global Development Group
+ * @copyright  2003-2008 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
@@ -116,7 +116,7 @@ else
 </div>
     <div id="footer">
       <address>Version <?php echo $version;?><br />
-      Copyright &copy; 2006-2007 <a href="http://pgpool.projects.postgresql.org/">pgpool Global Development Group</a>. All rights reserved.</address>
+      Copyright &copy; 2006 - 2008 <a href="http://pgpool.projects.postgresql.org/">pgpool Global Development Group</a>. All rights reserved.</address>
     </div>
   </body>
 </html>
