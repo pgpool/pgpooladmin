@@ -89,13 +89,20 @@ function execPcp($command, $num='') {
             break;
             
         case 'PCP_START_PGPOOL':
-            $cmdOption = $num;
-            $cmdOption = $cmdOption . ' -f ' . _PGPOOL2_CONFIG_FILE
-                                                    . ' -F ' . _PGPOOL2_PASSWORD_FILE;
+			$configOption = ' -f ' . _PGPOOL2_CONFIG_FILE . ' -F ' . _PGPOOL2_PASSWORD_FILE;
+			
+			if(strpos($num, '|') !== FALSE) {
+				// pipe
+				$cmdOption = $configOption . $num . ' > /dev/null &';
+			} else {
+				$cmdOption = $configOption . $num . ' 2>&1 &';
+			}
+
             if(DoesPgpoolPidExist()) {
                 return array('FAIL'=> '');
             }
-            $cmd = _PGPOOL2_COMMAND . $cmdOption . ' 2>&1 &';
+            $cmd = _PGPOOL2_COMMAND . $cmdOption;
+			//var_dump($cmd);exit;
             $ret = exec($cmd, $output, $return_var);
             if($return_var == 0) {
                 return array($pcpStatus[$return_var] => $output);

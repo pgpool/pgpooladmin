@@ -177,7 +177,14 @@ switch ( $action ) {
         } else {
             $errors[$key] = $message['errNoDefined'];            
         }
-        if($params[$key] != '' && !is_writable(dirname($params[$key]))) {
+		if($params[$key] != '' && (strpos($params[$key], '|') !== FALSE)) {
+			// pipe
+			$tmp_str = trim($params[$key]);
+			if(($tmp_str[0] != '|') || ($tmp_str[strlen($tmp_str) - 1] == '|')) {
+				$errors[$key] = $message['errIllegalPipe'];
+			}					
+        } else if($params[$key] != '' && !is_writable(dirname($params[$key]))) {
+			// file
             $errors[$key] = $message['errFileNotWritable'];
         }
 

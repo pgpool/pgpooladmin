@@ -66,14 +66,16 @@ switch ($action) {
         if(isset($_POST['d'])) {
             $args = $args . "-d ";
         }
-         if(isset($_POST['n'])) {
+        if(isset($_POST['n'])) {
             $pgpoolLog = _PGPOOL2_LOG_FILE;
             if($pgpoolLog == '') {
                 $logDir = readLogDir();
                 $pgpoolLog = "$logDir/pgpool.log";
             }
-            
-            $args = "$args -n > $pgpoolLog ";
+			if(strpos($pgpoolLog, '|') !== FALSE) 
+				$args = "$args -n 2>&1 $pgpoolLog ";
+			else
+				$args = "$args -n > $pgpoolLog ";
         }
         $ret = execPcp('PCP_START_PGPOOL', $args);
         if(!array_key_exists('SUCCESS', $ret)) {
@@ -161,16 +163,17 @@ switch ($action) {
         if(isset($_POST['d'])) {
             $args = $args . "-d ";
         }
-         if(isset($_POST['n'])) {
+		if(isset($_POST['n'])) {
             $pgpoolLog = _PGPOOL2_LOG_FILE;
             if($pgpoolLog == '') {
                 $logDir = readLogDir();
                 $pgpoolLog = "$logDir/pgpool.log";
             }
-
-            $args = "$args -n > $pgpoolLog ";
-        }
-
+			if(strpos($pgpoolLog, '|') !== FALSE) 
+				$args = "$args -n 2>&1 $pgpoolLog ";
+			else
+				$args = "$args -n > $pgpoolLog ";
+		}
         $ret = execPcp('PCP_START_PGPOOL', $args);
         if(!array_key_exists('SUCCESS', $ret)) {
             $tpl->assign('pgpoolStatus', 'pgpool restart failed.');
@@ -192,29 +195,10 @@ switch ($action) {
         break;
 
     case 'reload':
-        $m = $_POST['m'];
-
-        
         /**
-         * Start pgpool
+         * reload pgpool
          */
         $args = ' ';
-
-        if(isset($_POST['c'])) {
-            $args = $args . "-c ";
-        }
-        if(isset($_POST['d'])) {
-            $args = $args . "-d ";
-        }
-        if(isset($_POST['n'])) {
-            $pgpoolLog = _PGPOOL2_LOG_FILE;
-            if($pgpoolLog == '') {
-                $logDir = readLogDir();
-                $pgpoolLog = "$logDir/pgpool.log";
-            }
-
-            $args = "$args -n > $pgpoolLog ";
-        }
         $ret = execPcp('PCP_RELOAD_PGPOOL', $args);
         break;
 
