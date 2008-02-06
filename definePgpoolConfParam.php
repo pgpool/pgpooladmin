@@ -172,11 +172,23 @@ $key = 'parallel_mode';
 $pgpoolConfigParam[$key]['type'] ='B';
 $pgpoolConfigParam[$key]['default'] =false;
 
+$key = 'log_connections';
+$pgpoolConfigParam[$key]['type'] = 'B';
+$pgpoolConfigParam[$key]['default'] = false;
+
+$key = 'log_hostname';
+$pgpoolConfigParam[$key]['type'] = 'B';
+$pgpoolConfigParam[$key]['default'] = false;
+
 $key = 'log_statement';
 $pgpoolConfigParam[$key]['type'] ='B';
 $pgpoolConfigParam[$key]['default'] =false;
 
 $key = 'enable_query_cache';
+$pgpoolConfigParam[$key]['type'] ='B';
+$pgpoolConfigParam[$key]['default'] =false;
+
+$key = 'enable_pool_hba';
 $pgpoolConfigParam[$key]['type'] ='B';
 $pgpoolConfigParam[$key]['default'] =false;
 

@@ -380,7 +380,47 @@ function cancelNode() {
           <td><input type="checkbox" name="print_timestamp" id="print_timestamp" value="true" checked="checked" /></td>
           {else}
           <td><input type="checkbox" name="print_timestamp" id="print_timestamp" value="false" /></td>
-          {/if} </tr>
+          {/if}
+		</tr>
+        <tr> {if $error.log_statement != null}
+          <th class="error"><label>{$message.descLog_statement|escape}</label>
+					<br />log_statement</th>
+          {else}
+          <th><label>{$message.descLog_statement|escape}</label>
+					<br />log_statement</th>
+          {/if}
+          {if $params.log_statement == 'true'}
+          <td><input type="checkbox" name="log_statement" id="log_statement" value="true" checked="checked" /></td>
+          {else}
+          <td><input type="checkbox" name="log_statement" id="log_statement" value="false" /></td>
+          {/if}
+		</tr>
+        <tr> {if $error.log_connections != null}
+          <th class="error"><label>{$message.descLog_connections|escape}</label>
+					<br />log_connections</th>
+          {else}
+          <th><label>{$message.descLog_connections|escape}</label>
+					<br />log_connections</th>
+          {/if}
+          {if $params.log_connections == 'true'}
+          <td><input type="checkbox" name="log_connections" id="log_connections" value="true" checked="checked" /></td>
+          {else}
+          <td><input type="checkbox" name="log_connections" id="log_connections" value="false" /></td>
+          {/if}
+		</tr>
+        <tr> {if $error.log_hostname != null}
+          <th class="error"><label>{$message.descLog_hostname|escape}</label>
+					<br />log_hostname</th>
+          {else}
+          <th><label>{$message.descLog_hostname|escape}</label>
+					<br />log_hostname</th>
+          {/if}
+          {if $params.log_hostname == 'true'}
+          <td><input type="checkbox" name="log_hostname" id="log_hostname" value="true" checked="checked" /></td>
+          {else}
+          <td><input type="checkbox" name="log_hostname" id="log_hostname" value="false" /></td>
+          {/if}
+		</tr>
       </tbody>
     </table>
     <h3><a name="replication" id="replication">Replication</a></h3>
@@ -680,18 +720,6 @@ function cancelNode() {
           {else}
           <td><input type="checkbox" name="ignore_leading_white_space" id="ignore_leading_white_space" value="false" /></td>
           {/if} </tr>
-        <tr> {if $error.log_statement != null}
-          <th class="error"><label>{$message.descLog_statement|escape}</label>
-					<br />log_statement</th>
-          {else}
-          <th><label>{$message.descLog_statement|escape}</label>
-					<br />log_statement</th>
-          {/if}
-          {if $params.log_statement == 'true'}
-          <td><input type="checkbox" name="log_statement" id="log_statement" value="true" checked="checked" /></td>
-          {else}
-          <td><input type="checkbox" name="log_statement" id="log_statement" value="false" /></td>
-          {/if} </tr>
         <tr> {if $error.parallel_mode != null}
           <th class="error"><label>{$message.descParallel_mode|escape}</label>
 					<br />parallel_mode</th>
@@ -715,6 +743,18 @@ function cancelNode() {
           <td><input type="checkbox" name="enable_query_cache" id="enable_query_cache" checked="checked" /></td>
           {else}
           <td><input type="checkbox" name="enable_query_cache" id="enable_query_cache" /></td>
+          {/if} </tr>
+        <tr> {if $error.enable_pool_hba != null}
+          <th class="error"><label>{$message.descEnable_pool_hba|escape}</label>
+					<br />enable_pool_hba</th>
+          {else}
+          <th><label>{$message.descEnable_pool_hba|escape}</label>
+					<br />enable_pool_hba</th>
+          {/if}
+          {if $params.enable_pool_hba == 'true'}
+          <td><input type="checkbox" name="enable_pool_hba" id="enable_pool_hba" checked="checked" /></td>
+          {else}
+          <td><input type="checkbox" name="enable_pool_hba" id="enable_pool_hba" /></td>
           {/if} </tr>
         <tr> {if $error.failover_command != null}
           <th class="error"><label>{$message.descFailover_command|escape}</label>
