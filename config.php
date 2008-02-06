@@ -177,7 +177,7 @@ switch ( $action ) {
         } else {
             $errors[$key] = $message['errNoDefined'];            
         }
-		if($params[$key] != '' && (strpos($params[$key], '|') !== FALSE)) {
+		if($params[$key] != '' && isPipe($params[$key])) {
 			// pipe
 			$tmp_str = trim($params[$key]);
 			if(($tmp_str[0] != '|') || ($tmp_str[strlen($tmp_str) - 1] == '|')) {

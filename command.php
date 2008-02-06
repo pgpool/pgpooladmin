@@ -91,8 +91,7 @@ function execPcp($command, $num='') {
         case 'PCP_START_PGPOOL':
 			$configOption = ' -f ' . _PGPOOL2_CONFIG_FILE . ' -F ' . _PGPOOL2_PASSWORD_FILE;
 			
-			if(strpos($num, '|') !== FALSE) {
-				// pipe
+			if(isPipe($num)) {
 				$cmdOption = $configOption . $num . ' > /dev/null &';
 			} else {
 				$cmdOption = $configOption . $num . ' 2>&1 &';

@@ -55,6 +55,10 @@ $tpl->assign('c', _PGPOOL2_CMD_OPTION_C);
 $tpl->assign('d', _PGPOOL2_CMD_OPTION_D);
 $tpl->assign('m', _PGPOOL2_CMD_OPTION_M);
 $tpl->assign('n', _PGPOOL2_CMD_OPTION_N);
+if(isPipe(_PGPOOL2_LOG_FILE)) 
+	$tpl->assign('pipe', 1);
+else
+	$tpl->assign('pipe', 0); 
 
 switch ($action) {
     case 'start':
@@ -72,7 +76,7 @@ switch ($action) {
                 $logDir = readLogDir();
                 $pgpoolLog = "$logDir/pgpool.log";
             }
-			if(strpos($pgpoolLog, '|') !== FALSE) 
+			if(isPipe($pgpoolLog))
 				$args = "$args -n 2>&1 $pgpoolLog ";
 			else
 				$args = "$args -n > $pgpoolLog ";
@@ -169,7 +173,7 @@ switch ($action) {
                 $logDir = readLogDir();
                 $pgpoolLog = "$logDir/pgpool.log";
             }
-			if(strpos($pgpoolLog, '|') !== FALSE) 
+			if(isPipe($pgpoolLog)) 
 				$args = "$args -n 2>&1 $pgpoolLog ";
 			else
 				$args = "$args -n > $pgpoolLog ";

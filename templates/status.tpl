@@ -177,7 +177,7 @@ function changeView(chView){
     <input type="button" name="command" onclick="changeView('summary')" value="{$message.strPgpoolSummary|escape}" />
     <input type="button" name="command" onclick="changeView('proc')" value="{$message.strProcInfo|escape}" />
     <input type="button" name="command" onclick="changeView('node')" value="{$message.strNodeInfo|escape}" />
-    {if $n == 1}
+    {if $n == 1 && $pipe == 0}
     <input type="button" name="command" onclick="changeView('log')" value="{$message.strLog|escape}" />
     {/if}
 </p>    
@@ -186,7 +186,7 @@ function changeView(chView){
     <input type="button" name="command" onclick="changeView('summary')" value="{$message.strPgpoolSummary|escape}" />
     <input type="button" name="command" onclick="changeView('proc')" value="{$message.strProcInfo|escape}" />
     <input type="button" name="command" onclick="changeView('node')" value="{$message.strNodeInfo|escape}" />
-    {if $n == 1}
+    {if $n == 1 && $pipe == 0}
     <input type="button" name="command" onclick="changeView('log')" value="{$message.strLog|escape}" />
     {/if}
 </p>

@@ -392,4 +392,9 @@ function readConfigParams($paramList = FALSE) {
     
 }
 
+function isPipe($str) 
+{
+	return (strpos($str, '|') !== FALSE);
+}
+
 ?>
