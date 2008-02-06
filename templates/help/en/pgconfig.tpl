@@ -209,15 +209,9 @@ number of connection pools each pgpool server process are keeping. pgpool will m
 		  <td>Set this true if you are going to use replication functionality. Default is false.</td>
         </tr>
         <tr>
-          <th><label>{$message.descReplication_strict|escape}</label>
-					<br>replication_strict</th>
-		  <td>If true, pgpool will wait for the completion of the master query before sending a query to the secondary server. This is the safest and default operating mode for pgpool. Default is true.
-</td>
-        </tr>
-        <tr>
           <th><label>{$message.descReplication_timeout|escape}</label>
           <br>replication_timeout (integer)</th>
-		  <td>In non strict replication mode, there will be a chance of deadlock. pgpool will abort the session if master or secondary does not respond within this milli seconds. if set to 0, timeout is disabled.</td>
+		  <td>pgpool will abort the session if a node does not respond (due to a inter-node deadlock) within this milli seconds. if set to 0, timeout is disabled.</td>
         </tr>
         <tr>
           <th><label>{$message.descReplication_stop_on_mismatch|escape}</label>

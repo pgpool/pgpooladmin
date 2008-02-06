@@ -233,16 +233,10 @@ TCP/IPコネクションを受け付けるアドレスをホスト名またはIP
 		  <td>レプリケーションモードで動作させる場合はtrueを指定してください。デフォルト値はfalseです。</td>
         </tr>
         <tr>
-          <th><label>{$message.descReplication_strict|escape}</label>
-
-					<br>replication_strict</th>
-		  <td>このオプションをtrueにすると、masterの問い合わせ処理の完了を待ってからsecondaryの処理に移ります。デッドロックの危険性はなくなりますが、masterとsecondaryの間で問い合わせの並列処理を行わなくなるので性能が低下する場合もあります。<br />なお、すべての問い合わせではなくて、SQLのコメントを使って一部の問い合わせのみstrict動作させることもできます。<br />このオプションのデフォルト値はtrueです</td>
-        </tr>
-        <tr>
           <th><label>{$message.descReplication_timeout|escape}</label>
           <br>replication_timeout (integer)</th>
 
-		  <td>replication_strictがfalseのときにデッドロックを監視するためのタイムアウト時間をミリ秒単位で指定します。デフォルト値は5000、すなわち5秒です。0を指定するとタイムアウトしなくなります。</td>
+		  <td>ノード間でのデッドロックを監視するためのタイムアウト時間をミリ秒単位で指定します。デフォルト値は5000、すなわち5秒です。0を指定するとタイムアウトしなくなります。</td>
         </tr>
         <tr>
           <th><label>{$message.descReplication_stop_on_mismatch|escape}</label>
