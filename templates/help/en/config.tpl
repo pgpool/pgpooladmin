@@ -64,7 +64,7 @@
         <tr>
           <th><label>{$message.strPgpoolLogFile|escape}</label>
             (string)</th>
-          <td>The log file used when starting in non-daemon mode is specified by the full path form. If this is not specified, pgpool.log file is created in the directory specified in the logdir item of pgpool.conf.</td></tr>
+          <td>The full-path log file name OR pipe command is specified. To assign a pipe command, make sure it starts with a bar ('|'). If it is left blank and pgpool is started in non-daemon mode, "pgpool.log" file is created in the directory specified by the logdir parameter of pgpool.conf.</td></tr>
         <tr>
           <th><label for="PcpDir">{$message.strPcpDir|escape}</label>
             (string)</th>

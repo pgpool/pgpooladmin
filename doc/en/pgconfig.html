@@ -219,9 +219,28 @@ Number of connection pools each pgpool server process are keeping. pgpool will m
         <tr>
           <th><label>If true timestamp is added to each log line</label>
 					<br>print_timestamp</th>
-		  <td>If true timestamp is added to each log line. Default value is true.</td>
+		  <td>If true timestamp is added to each log line. The default value is true.</td>
 
 		</tr>
+        <tr>
+          <th><label>If true, print all statements to the log</label>
+
+					<br>log_statement</th>
+		  <td>If true, print all statements to the log.  Like the log_statement option to PostgreSQL, this allows for observing queries without engaging in full debugging. The default value is false.</td>
+		</tr>
+        <tr>
+          <th><label>If true, incoming connections will be printed to the log. The default value is false.</label>
+
+					<br>log_connections</th>
+		  <td>If true, incoming connections will be printed to the log.</td>
+		</tr>
+        <tr>
+          <th><label>If true, client's hostname will be shown in ps status and in a connection log if log_connections is true</label>
+
+					<br>log_hostname</th>
+		  <td>If true, incoming client's hostname will be printed in the "ps" command result. Also, if log_connections is enabled, hostname will be printed with a connection log. Be aware that hostname lookup adds some overhead, and may slow down pgpool-II.</td>
+		</tr>
+
       </tbody>
       <tfoot>
         <tr>
@@ -420,19 +439,17 @@ automatically do the rewriting for you.
         <tr>
           <th><label>Run in parallel mode</label>
 					<br>parallel_mode</th>
-		  <td>When pgpool runs on parallel mode, true is specified. It is necessary to specify a partitioning rule in this case.</td>
-		</tr>
-        <tr>
-          <th><label>If true, print all statements to the log</label>
-
-					<br>log_statement</th>
-		  <td>If true, print all statements to the log.  Like the log_statement option to PostgreSQL, this allows for observing queries without engaging in full debugging.</td>
+		  <td>If true, pgpool runs in parallel mode. You must define partitioning rules to use parallel mode.</td>
 		</tr>
         <tr>
           <th><label>Perform query cache</label>
 					<br>enable_query_cache</th>
-		  <td>When the result of SELECT is cached, it makes it to true.</td>
-
+		  <td>If true, allow pgpool to cache SELECT query results.</td>
+		</tr>
+        <tr>
+          <th><label>Use host-based authentication (HBA)',</label>
+					<br>enable_pool_hba</th>
+		  <td>If true, incoming clients are authenticated based on the configuration written in pool_hba.conf.</td>
 		</tr>
       </tbody>
       <tfoot>

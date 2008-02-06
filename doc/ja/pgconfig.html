@@ -253,7 +253,21 @@ TCP/IPコネクションを受け付けるアドレスをホスト名またはIP
 					<br>print_timestamp</th>
 		  <td>trueならばpgpoolのログにタイムスタンプを追加します。デフォルトはtrueです。</td>
 		</tr>
-
+        <tr>
+          <th><label>trueならばSQL文をログ出力</label>
+					<br>log_statement</th>
+		  <td>trueならばSQL文をログ出力します。この役目はPostgreSQLのlog_statementオプションと似ていて、デバッグオプションがないときでも問い合わせをログ出力して調べることができるので便利です。</td>
+		</tr>
+        <tr>
+          <th><label>trueならば受信した接続のログを出力</label>
+					<br>log_connections</th>
+		  <td>trueならばクライアントから受信した接続ごとにログを出力します。デフォルトはfalseです。</td>
+		</tr>
+        <tr>
+          <th><label>trueならばクライアントのホスト名を"ps"ステータスに出力。log_connectionsがtrueであればログにも出力</label>
+					<br>log_hostname</th>
+		  <td>trueならばクライアントのホスト名を"ps"コマンドの結果に出力します。またlog_connectionsが有効になっている場合、クライアントから受信した接続のログと一緒にホスト名も出力されます。ただしホスト名の探索には負荷がかかりますので、有効にする場合には注意してください。</td>
+		</tr>
       </tbody>
       <tfoot>
         <tr>
@@ -524,15 +538,14 @@ COMMIT;
 
 		</tr>
         <tr>
-          <th><label>trueならばSQL文をログ出力</label>
-					<br>log_statement</th>
-		  <td>trueならばSQL文をログ出力します。この役目はPostgreSQLのlog_statementオプションと似ていて、デバッグオプションがないときでも問い合わせをログ出力して調べることができるので便利です。</td>
-		</tr>
-        <tr>
-
           <th><label>クエリキャッシュ機能の有効化</label>
 					<br>enable_query_cache</th>
 		  <td>SELECTの結果をキャッシュする場合にはtrueにします。</td>
+		</tr>
+        <tr>
+          <th><label>クライアント認証(HBA)の有効化</label>
+					<br>enable_pool_hba</th>
+		  <td>pool_hba.confを使ったクライアント認証機能を有効にする場合にはtrueにします。</td>
 		</tr>
       </tbody>
       <tfoot>
