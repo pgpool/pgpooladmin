@@ -35,6 +35,7 @@
       <li><a href="#logging">Logging</a></li>
       <li><a href="#replication">Replication</a></li>
       <li><a href="#health-check">Health Check</a></li>
+	  <li><a href="#online-recovery">Online Recovery</a></li>
       <li><a href="#system-database">System Database</a></li>
       <li><a href="#others">Others</a></li>
     </ul>
@@ -296,6 +297,66 @@ PostgreSQLのバージョンによって使用できるSQLコマンドが違う�
         </tr>
       </tfoot>
 
+    </table>
+    <h3><a name="online-recovery">Online Recovery</a></h3>
+    <table>
+      <thead>
+        <tr>
+          <th>{$message.strParameter|escape}</th>
+          <th>{$message.strDetail|escape}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th><label>{$message.descRecovery_user|escape}</label>
+          <br>recovery_user (string)</th>
+		  <td>オンラインリカバリを行うための PostgreSQL ユーザ名です。</td>
+        </tr>
+        <tr>
+          <th><label>{$message.descRecovery_password|escape}</label>
+          <br>recovery_password (string)</th>
+		  <td>オンラインリカバリを行うための PostgreSQL ユーザパスワードです。</td>
+        </tr>
+        <tr>
+          <th><label>{$message.descRecovery_1st_stage_command|escape}</label>
+          <br>recovery_1st_stage_command (string)</th>
+		  <td>最初にオンラインリカバリ中に起動するコマンド名を
+		  指定します。コマンド ファイルはセキュリティ上の観点
+		  からデータベースクラスタ以下にあるコマ ンドやスクリ
+		  プトのみを呼び出します。 例えば、
+		  recovery_1st_stage_command = 'sync-command' と設定し
+		  てある場 合、$PGDATA/sync-command を起動しようとしま
+		  す。 recovery_1st_stage_command を実行している間は
+		  pgpool ではクライアン トからの接続を制限しません。参
+		  照や更新を行うことができます。</td>
+        </tr>
+        <tr>
+          <th><label>{$message.descRecovery_2nd_stage_command|escape}</label>
+          <br>recovery_2nd_stage_command (string)</th>
+		  <td>2 回目のオンラインリカバリ中に起動するコマンド名
+		  を指定します。コマン ドファイルはセキュリティ上の観
+		  点からデータベースクラスタ以下にあるコ マンドやスク
+		  リプトのみを呼び出します。 例えば、
+		  recovery_2nd_stage_command = 'sync-command' と設定し
+		  てある場 合、$PGDATA/sync-command を起動しようとしま
+		  す。 recovery_2nd_stage_command を実行している間は
+		  pgpool ではクライアン トから接続、参照、更新処理を一
+		  切受け付けません。また、バッチ 処理などによって接続
+		  しているクライアントが長時間存在している場合には コ
+		  マンドを起動しません。接続を制限し、現在の接続数が 0
+		  になった時点 でコマンドを起動します。</td>
+        </tr>
+        <tr>
+          <th><label>{$message.descRecovery_timeout|escape}</label>
+          <br>recovery_timeout (integer)</th>
+		  <td>オンラインリカバリ処理の最大待ち時間を指定します。0 を指定すると待ち時間無しとなり、リカバリが一瞬で終了しない場合以外は失敗となります。</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="2"></td>
+        </tr>
+      </tfoot>
     </table>
     <h3><a name="system-database">System Database</a></h3>
     <table>

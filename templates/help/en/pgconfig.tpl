@@ -34,6 +34,7 @@
       <li><a href="#logging">Logging</a></li>
       <li><a href="#replication">Replication</a></li>
       <li><a href="#health-check">Health Check</a></li>
+	  <li><a href="#online-recovery">Online Recovery</a></li>
       <li><a href="#system-database">System Database</a></li>
       <li><a href="#others">Others</a></li>
     </ul>
@@ -253,6 +254,47 @@ number of connection pools each pgpool server process are keeping. pgpool will m
           <th><label>{$message.descHealth_check_user|escape}</label>
           <br>health_check_user (string)</th>
 		  <td>PostgreSQL user name for the health checking.</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="2"></td>
+        </tr>
+      </tfoot>
+    </table>
+    <h3><a name="online-recovery">Online Recovery</a></h3>
+    <table>
+      <thead>
+        <tr>
+          <th>{$message.strParameter|escape}</th>
+          <th>{$message.strDetail|escape}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th><label>{$message.descRecovery_user|escape}</label>
+          <br>recovery_user (string)</th>
+		  <td>A PostgreSQL user name to be used during online recovery process.</td>
+        </tr>
+        <tr>
+          <th><label>{$message.descRecovery_password|escape}</label>
+          <br>recovery_password (string)</th>
+		  <td>"recovery_user"'s password to be used during online recovery process.</td>
+        </tr>
+        <tr>
+          <th><label>{$message.descRecovery_1st_stage_command|escape}</label>
+          <br>recovery_1st_stage_command (string)</th>
+		  <td>Specifies a script name to be executed for the first stage of an online recovery process. The script needs to be placed in master node's database cluster($PGDATA) due to security issues.</td>
+        </tr>
+        <tr>
+          <th><label>{$message.descRecovery_2nd_stage_command|escape}</label>
+          <br>recovery_2nd_stage_command (string)</th>
+		  <td>Specifies a script name to be executed for the second stage of an online recovery process. The script needs to be placed in master node's database cluster ($PGDATA) due to security issues.</td>
+        </tr>
+        <tr>
+          <th><label>{$message.descRecovery_timeout|escape}</label>
+          <br>recovery_timeout (integer)</th>
+		  <td>Number of seconds to wait for online recovery to complete. Note that 0 means NO WAIT; not no timeout.</td>
         </tr>
       </tbody>
       <tfoot>

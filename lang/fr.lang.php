@@ -66,6 +66,7 @@ $message = array(
     'descRecovery_password' => 'Mot de passe de l\'utilisateur PostgreSQL pour la récupération en ligne',
     'descRecovery_1st_stage_command' => 'Commande de restauration à exécuter à la première étape',
     'descRecovery_2nd_stage_command' => 'Commande de restauration à exécuter à la deuxième étape',
+    'descRecovery_timeout' => 'Number of seconds to wait for online recovery to complete. 0 means no wait',
     'descReplication_mode' => 'Configurer ceci à vrai (true) si vous voulez utiliser la réplication',
     'descReplication_stop_on_mismatch' => 'Stopper le mode réplication en as de différence de données entre le maître et l\'esclave',
     'descReplicate_select' => 'Si vrai, réplique les requêtes SELECT. Si faux, les envoit seulement au maître',

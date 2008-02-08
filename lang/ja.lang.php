@@ -66,6 +66,7 @@ $message = array(
     'descRecovery_password' => 'リカバリを行うためのPostgreSQLユーザパスワード',
     'descRecovery_1st_stage_command' => 'オンラインリカバリ第1ステージで実行するコマンド',
     'descRecovery_2nd_stage_command' => 'オンラインリカバリ第2ステージで実行するコマンド',
+    'descRecovery_timeout' => 'オンラインリカバリ終了までの待ち時間(秒)。0 は待ち時間無し',
     'descReplication_mode' => 'レプリケーションモードの有効化',
     'descReplication_stop_on_mismatch' => 'trueを指定するとマスタとセカンダリの間でデータの不一致があった場合に強制的に縮退運転',
 	'descReplicate_select' => 'true ならば SELECT をレプリケーションし、false ならばマスタにのみ送信',

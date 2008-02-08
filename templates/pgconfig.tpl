@@ -586,6 +586,15 @@ function cancelNode() {
           {/if}
           <td><input type="text" name="recovery_2nd_stage_command" value="{$params.recovery_2nd_stage_command|escape}"/></td>
         </tr>
+        <tr> {if $error.recovery_timeout != null}
+          <th class="error"><label>{$message.descRecovery_timeout|escape}</label>
+          <br />recovery_timeout (integer)</th>
+          {else}
+          <th><label>{$message.descRecovery_timeout|escape}</label>
+          <br />recovery_timeout (integer)</th>
+          {/if}
+          <td><input type="text" name="recovery_timeout" value="{$params.recovery_timeout|escape}"/></td>
+        </tr>
       </tbody>
     </table>
     <h3><a name="system-database" id="system-database">System Database</a></h3>
