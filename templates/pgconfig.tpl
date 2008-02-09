@@ -297,7 +297,7 @@ function cancelNode() {
       </tr>
       <tr>
         <th><label>new backend_data_directory</label>
-          (float)</th>
+          (string)</th>
         <td><input type="text" name="backend_data_directory[]" value="" /></td>
       </tr>
       {/if}
