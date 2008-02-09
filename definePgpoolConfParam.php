@@ -259,7 +259,7 @@ $key = 'backend_weight';
 $pgpoolConfigBackendParam[$key]['type'] ='F';
 $pgpoolConfigBackendParam[$key]['default'] ='1';
 $pgpoolConfigBackendParam[$key]['min'] = 0.0;
-$pgpoolConfigBackendParam[$key]['max'] = 1.0;
+$pgpoolConfigBackendParam[$key]['max'] = 100.0;
 
 $key = 'recovery_user';
 $pgpoolConfigParam[$key]['type'] ='C';
