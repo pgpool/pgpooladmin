@@ -253,7 +253,7 @@ $pgpoolConfigBackendParam[$key]['max'] = 65535;
 $key = 'backend_data_directory';
 $pgpoolConfigBackendParam[$key]['type'] ='C';
 $pgpoolConfigBackendParam[$key]['default'] ='';
-$pgpoolConfigBackendParam[$key]['regexp'] = "$dirreg";
+$pgpoolConfigBackendParam[$key]['regexp'] = ".*";
 
 $key = 'backend_weight';
 $pgpoolConfigBackendParam[$key]['type'] ='F';
@@ -264,7 +264,7 @@ $pgpoolConfigBackendParam[$key]['max'] = 100.0;
 $key = 'recovery_user';
 $pgpoolConfigParam[$key]['type'] ='C';
 $pgpoolConfigParam[$key]['default'] ='nodoby';
-$pgpoolConfigParam[$key]['regexp'] = "^[0-9a-zA-Z_\.\-]+$";
+$pgpoolConfigParam[$key]['regexp'] = ".*";
 
 $key = 'recovery_password';
 $pgpoolConfigParam[$key]['type'] ='C';
@@ -290,11 +290,11 @@ $pgpoolConfigParam[$key]['max'] = 65535;
 $key = 'failover_command';
 $pgpoolConfigParam[$key]['type'] ='C';
 $pgpoolConfigParam[$key]['default'] ='';
-$pgpoolConfigParam[$key]['regexp'] = "^[0-9a-zA-Z_/\.\-]*$";
+$pgpoolConfigParam[$key]['regexp'] = ".*";
 
 $key = 'failback_command';
 $pgpoolConfigParam[$key]['type'] ='C';
 $pgpoolConfigParam[$key]['default'] ='';
-$pgpoolConfigParam[$key]['regexp'] = "^[0-9a-zA-Z_/\.\-]*$";
+$pgpoolConfigParam[$key]['regexp'] = ".*";
 
 ?>
