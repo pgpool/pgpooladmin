@@ -273,12 +273,6 @@ Number of connection pools each pgpool server process are keeping. pgpool will m
 </td>
         </tr>
         <tr>
-          <th><label>In non strict replication mode, there will be a chance of deadlock</label>
-          <br>replication_timeout (integer)</th>
-		  <td>In non strict replication mode, there will be a chance of deadlock. pgpool will abort the session if master or secondary does not respond within this milli seconds. if set to 0, timeout is disabled.</td>
-
-        </tr>
-        <tr>
           <th><label>Stop replication mode on data mismatch between master and secondary</label>
 					<br>replication_stop_on_mismatch</th>
 		  <td>Stop replication mode on data mismatch between master and secondary. Default is false.</td>
