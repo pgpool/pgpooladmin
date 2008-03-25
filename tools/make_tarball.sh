@@ -10,7 +10,7 @@ export CVSROOT
 
 case $# in
 0)
-	TAGOPT=
+	TAGOPT="-r HEAD"
 	VERSION=snapshot
 	;;
 2)
@@ -26,13 +26,10 @@ esac
 PACKAGE_DIR=pgpoolAdmin-$VERSION
 
 rm -rf $PACKAGE_DIR
-cvs checkout $TAGOPT -d $PACKAGE_DIR pgpoolAdmin
+cvs export $TAGOPT -d $PACKAGE_DIR pgpoolAdmin
 
 # create templates_c directory.
 mkdir $PACKAGE_DIR/templates_c
-
-# remove CVS and tools directory
-find $PACKAGE_DIR -name CVS -o -name tools -type d | xargs rm -rf
 
 # make tar ball
 tar czf $PACKAGE_DIR.tar.gz $PACKAGE_DIR
