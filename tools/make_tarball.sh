@@ -31,5 +31,8 @@ cvs export $TAGOPT -d $PACKAGE_DIR pgpoolAdmin
 # create templates_c directory.
 mkdir $PACKAGE_DIR/templates_c
 
+# remove tools directory
+find $PACKAGE_DIR -name tools -type d | xargs rm -rf
+
 # make tar ball
 tar czf $PACKAGE_DIR.tar.gz $PACKAGE_DIR
