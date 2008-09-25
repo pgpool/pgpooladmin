@@ -225,7 +225,7 @@ function cancelNode() {
       {else}
       <tfoot>
         <tr>
-          <td colspan="2"><input type="button" name="add" value="{$message.strAdd|escape}" onclick="addNode()" /></td>
+          <td colspan="3"><input type="button" name="add" value="{$message.strAdd|escape}" onclick="addNode()" /></td>
         </tr>
       </tfoot>
       {/if}
@@ -249,7 +249,7 @@ function cancelNode() {
         <br />backend_hostname{$smarty.section.num.index} (string)</th>
         {/if}
         <td><input type="text" name="backend_hostname[]" value="{$params.backend_hostname[num]|escape}" /></td>
-        <td rowspan="3"><input type="button" name="delete" value="{$message.strDelete|escape}" onclick="del({$smarty.section.num.index})" /></td>
+        <td rowspan="4"><input type="button" name="delete" value="{$message.strDelete|escape}" onclick="del({$smarty.section.num.index})" /></td>
       </tr>
       <tr> {if $error.backend_port[num] != null}
         <tr><th class="error"><label>{$message.descBackend_port|escape}</label>
