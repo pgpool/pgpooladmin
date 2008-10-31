@@ -262,6 +262,7 @@ $message = array(
     'e6003' => 'Impossible d\'écrire dans pcp.conf. ',
     'e7001' => 'pcp.conf inexistant.',
     'e8001' => 'Impossible de récupérer des informations détaillées.',
+    'cautionaryNote' => 'NOTE&nbsp;: mis à jour pour refléter les paramètres, les paramètres sont requis pour recharger la configuration. De plus, les éléments marqués [*] nécessitent un redémarrage.',
     
 );
 
