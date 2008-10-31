@@ -92,6 +92,16 @@ number of connection pools each pgpool server process are keeping. pgpool will m
           <td> If child_max_connections connections were received, child exits. 0 means no exit. The default value is 0.</td>
         </tr>
         <tr>
+          <th><label>{$message.descClient_idle_limit|escape}</label>
+	  <br>client_idle_limit (integer)</th>
+          <td>Queries from clients, in seconds, the maximum waiting time can be set. The default value is 0 (no effect). Did not receive a query within a set time, you force the connection disconnected. The waiting time is running command is not included in the command does not have to worry about orphaned.</td>
+        </tr>
+        <tr>
+          <th><label>{$message.descAuthentication_timeout|escape}</label>
+		<br>authentication_timeout (integer)</th>
+          <td>The parameters of the authentication timeout to set time.</td>
+        </tr>
+        <tr>
           <th><label>{$message.descConnection_cache|escape}</label>
 					<br>connection_cache</th>
           <td>If true, cache connections to PostgreSQL. Default value is true.</td>
@@ -135,6 +145,10 @@ number of connection pools each pgpool server process are keeping. pgpool will m
       <tr>
         <th><label>{$message.descBackend_weight|escape}</label><br />backend_weight (integer)</th>
 		<td>The weight at the load balance mode is set by the value from 0 to 1. Relative weight is calculated and distributed from the value specified with all the back end servers. </td>
+      </tr>
+      <tr>
+        <th><label>{$message.descBackend_data_directory|escape}</label><br />backend_data_directory (string)</th>
+		<td>PostgreSQL database server in the cluster to specify the full path location. </td>
       </tr>
 	  </tbody>
     </table>
@@ -188,6 +202,22 @@ number of connection pools each pgpool server process are keeping. pgpool will m
 					<br>print_timestamp</th>
 		  <td>If true timestamp is added to each log line. Default value is true.</td>
 		</tr>
+        <tr>
+          <th><label>{$message.descLog_statement|escape}</label>          <br>log_statement</th>
+          <td>If true, SQL statement logs.
+          <br>The role of the PostgreSQL log_statement options are similar, there is no option when you debug logging, but the inquiry be useful to examine.</td>
+        </tr>
+        <tr>
+          <th><label>{$message.descLog_connections|escape}</label>
+          <br>log_connections</th>
+          <td>If true, pgpool connect to the information in the log output. The default is false.</td>
+        </tr>
+        <tr>
+          <th><label>{$message.descLog_hostname|escape}</label>
+          <br>log_hostname</th>
+          <td>If true, the original host name in the log describes the connection. However, to resolve a name that takes overhead.</td>
+        </tr>
+
       </tbody>
       <tfoot>
         <tr>
@@ -219,6 +249,11 @@ number of connection pools each pgpool server process are keeping. pgpool will m
 					<br>replication_stop_on_mismatch</th>
 		  <td>Stop replication mode on data mismatch between master and secondary. Default is false.</td>
 		</tr>
+        <tr>
+          <th><label>{$message.descReplicate_select|escape}</label>
+          <br>replicate_select</th>
+		  <td>If true, "SELECT" sent to multiple end-to-back, false, you want to send only to master. The default is false.</td>
+        </tr>
         <tr>
           <th><label>{$message.descReset_query_list|escape}</label>
           <br>reset_query_list (string)</th>
@@ -404,15 +439,39 @@ automatically do the rewriting for you.
 		  <td>When pgpool runs on parallel mode, true is specified. It is necessary to specify a partitioning rule in this case. </td>
 		</tr>
         <tr>
-          <th><label>{$message.descLog_statement|escape}</label>
-					<br>log_statement</th>
-		  <td>If true, print all statements to the log.  Like the log_statement option to PostgreSQL, this allows for observing queries without engaging in full debugging.</td>
-		</tr>
-        <tr>
           <th><label>{$message.descEnable_query_cache|escape}</label>
-					<br>enable_query_cache</th>
-		  <td>When the result of SELECT is cached, it makes it to true.</td>
-		</tr>
+          <br>enable_query_cache</th>
+	  <td>When the result of SELECT is cached, it makes it to true.</td>
+	</tr>
+        <tr>
+          <th><label>{$message.descEnable_pool_hba|escape}</label>
+          <br>enable_pool_hba</th>
+          <td>"pg_hba.conf" in the same format as "pgpool" to allow the connection, you can refuse. However, hostssl connection, a designated group, IPv6 statement is not supported. In addition, the certification system as "trust", "reject", "pam" is supported only.</td>
+        </tr>
+        <tr>
+          <th><label>{$message.descFailover_command|escape}</label>
+          <br>failover_command</th>
+          <td>This is specified in the command, the node is automatically cut off when the runs. For example, when abnormalities were detected in the automatic start of standby and can be used when you do.
+          <br>And specify a special character, "pgpool" replaced with the information they need to run the command.
+          <br>　%d: Backend ID of a detached node.
+          <br>　%h: Hostname of a detached node.
+          <br>　%p: Port number of a detached node.
+          <br>　%D: Database cluster directory of a detached node.
+          <br>　%%: '%' character
+          </td>
+        </tr>
+        <tr>
+          <th><label>{$message.descFailback_command|escape}</label>
+          <br>failback_command</th>
+          <td>This is specified in the command, returned to the node will be run automatically. For example, the system automatically return to standby and can be used to convey.
+          <br>And specify a special character, "pgpool" replaced with the information they need to run the command.
+          <br>　%d: Backend ID of an attached node.
+          <br>　%h: Hostname of an attached node.
+          <br>　%p: Port number of an attached node.
+          <br>　%D: Database cluster path of an attached node.
+          <br>　%%: '%' character
+          </td>
+        </tr>
       </tbody>
       <tfoot>
         <tr>

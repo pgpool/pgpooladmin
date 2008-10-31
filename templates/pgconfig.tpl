@@ -96,46 +96,46 @@ function cancelNode() {
       <tbody>
         <tr> {if $error.listen_addresses != null}
           <th class="error"><label>{$message.descListen_addresses|escape}</label>
-          <br />listen_addresses (string)</th>
+          <br />listen_addresses (string) *</th>
           {else}
           <th><label>{$message.descListen_addresses|escape}</label>
-          <br />listen_addresses (string)</th>
+          <br />listen_addresses (string) *</th>
           {/if}
           <td><input type="text" name="listen_addresses" value="{$params.listen_addresses|escape}"/></td>
         </tr>
         <tr> {if $error.port != null}
           <th class="error"><label>{$message.descPort|escape}</label>
-          <br />port (integer)</th>
+          <br />port (integer) *</th>
           {else}
           <th><label>{$message.descPort|escape}</label>
-          <br />port (integer)</th>
+          <br />port (integer) *</th>
           {/if}
           <td><input type="text" name="port" value="{$params.port|escape}"/></td>
         </tr>
         <tr> {if $error.socket_dir != null}
           <th class="error"><label>{$message.descSocket_dir|escape}</label>
-          <br />socket_dir (string)</th>
+          <br />socket_dir (string) *</th>
           {else}
           <th><label>{$message.descSocket_dir|escape}</label>
-          <br />socket_dir (string)</th>
+          <br />socket_dir (string) *</th>
           {/if}
           <td><input type="text" name="socket_dir" value="{$params.socket_dir|escape}"/></td>
         </tr>
         <tr> {if $error.num_init_children != null}
           <th class="error"><label>{$message.descNum_init_children|escape}</label>
-          <br />num_init_children (integer)</th>
+          <br />num_init_children (integer) *</th>
           {else}
           <th><label>{$message.descNum_init_children|escape}</label>
-          <br />num_init_children (integer)</th>
+          <br />num_init_children (integer) *</th>
           {/if}
           <td><input type="text" name="num_init_children" value="{$params.num_init_children|escape}"/></td>
         </tr>
         <tr> {if $error.max_pool != null}
           <th class="error"><label>{$message.descMax_pool|escape}</label>
-          <br />max_pool (integer)</th>
+          <br />max_pool (integer) *</th>
           {else}
           <th><label>{$message.descMax_pool|escape}</label>
-          <br />max_pool (integer)</th>
+          <br />max_pool (integer) *</th>
           {/if}
           <td><input type="text" name="max_pool" value="{$params.max_pool|escape}"/></td>
         </tr>
@@ -186,10 +186,10 @@ function cancelNode() {
         </tr>
         <tr> {if $error.connection_cache != null}
           <th class="error"><label>{$message.descConnection_cache|escape}</label>
-					<br />connection_cache</th>
+					<br />connection_cache *</th>
           {else}
           <th><label>{$message.descConnection_cache|escape}</label>
-					<br />connection_cache</th>
+					<br />connection_cache *</th>
           {/if}
           {if $params.connection_cache == 'true'}
           <td><input type="checkbox" name="connection_cache" id="connection_cache" value="true" checked="checked" /></td>
@@ -198,10 +198,10 @@ function cancelNode() {
           {/if} </tr>
         <tr> {if $error.pgpool2_hostname != null}
           <th><label>{$message.descPgpool2_hostname|escape}</label>
-          <br />pgpool2_hostname (string)</th>
+          <br />pgpool2_hostname (string) *</th>
           {else}
           <th><label>{$message.descPgpool2_hostname|escape}</label>
-          <br />pgpool2_hostname (string)</th>
+          <br />pgpool2_hostname (string) *</th>
           {/if}
           <td><input type="text" name="pgpool2_hostname" value="{$params.pgpool2_hostname|escape}"/></td>
         </tr>
@@ -219,7 +219,7 @@ function cancelNode() {
       {if $isAdd == true}
       <tfoot>
         <tr>
-          <td colspan="2"><input type="button" name="cancel" value="{$message.strCancel|escape}" onclick="cancelNode()" /></td>
+           <td colspan="3"><input type="button" name="cancel" value="{$message.strCancel|escape}" onclick="cancelNode()" /></td>
         </tr>
       </tfoot>
       {else}
@@ -235,7 +235,7 @@ function cancelNode() {
           <br />backend_socket_dir (string)</th>
           {else}
           <th><label>{$message.descBackend_socket_dir|escape}</label>
-          <br />backend_socket_dir (string)</th>
+          <br />backend_socket_dir (string) *</th>
           {/if}
           <td><input type="text" name="backend_socket_dir" value="{$params.backend_socket_dir|escape}"/></td>
           <td></td>
@@ -252,7 +252,7 @@ function cancelNode() {
         <td rowspan="4"><input type="button" name="delete" value="{$message.strDelete|escape}" onclick="del({$smarty.section.num.index})" /></td>
       </tr>
       <tr> {if $error.backend_port[num] != null}
-        <tr><th class="error"><label>{$message.descBackend_port|escape}</label>
+        <th class="error"><label>{$message.descBackend_port|escape}</label>
         <br />backend_port{$smarty.section.num.index|escape} (integer)</th>
         {else}
         <th><label>{$message.descBackend_port|escape}</label>
@@ -284,7 +284,7 @@ function cancelNode() {
         <th><label>new backend_hostname</label>
           (string)</th>
         <td><input type="text" name="backend_hostname[]" value="" /></td>
-        <td rowspan="3"></td>
+        <td rowspan="4"></td>
       </tr>
       <tr><th><label>new backend_port</label>
           (integer)</th>
@@ -319,19 +319,19 @@ function cancelNode() {
       <tbody>
         <tr> {if $error.pcp_port != null}
           <th class="error"><label>{$message.descPcp_port|escape}</label>
-          <br />pcp_port (integer)</th>
+          <br />pcp_port (integer) *</th>
           {else}
           <th><label>{$message.descPcp_port|escape}</label>
-          <br />pcp_port (integer)</th>
+          <br />pcp_port (integer) *</th>
           {/if}
           <td><input type="text" name="pcp_port" value="{$params.pcp_port|escape}"/></td>
         </tr>
         <tr> {if $error.pcp_socket_dir != null}
           <th class="error"><label>{$message.descPcp_socket_dir|escape}</label>
-          <br />pcp_socket_dir (string)</th>
+          <br />pcp_socket_dir (string) *</th>
           {else}
           <th><label>{$message.descPcp_socket_dir|escape}</label>
-          <br />pcp_socket_dir (string)</th>
+          <br />pcp_socket_dir (string) *</th>
           {/if}
           <td><input type="text" name="pcp_socket_dir" value="{$params.pcp_socket_dir|escape}"/></td>
         </tr>
@@ -362,19 +362,19 @@ function cancelNode() {
       <tbody>
         <tr> {if $error.logdir != null}
           <th class="error"><label>{$message.descLogdir|escape}</label>
-          <br />logdir (string)</th>
+          <br />logdir (string) *</th>
           {else}
           <th><label>{$message.descLogdir|escape}</label>
-          <br />logdir (string)</th>
+          <br />logdir (string) *</th>
           {/if}
           <td><input type="text" name="logdir" value="{$params.logdir|escape}"/></td>
         </tr>
         <tr> {if $error.print_timestamp != null}
           <th><label>{$message.descPrint_timestamp|escape}</label>
-					<br />print_timestamp</th>
+					<br />print_timestamp *</th>
           {else}
           <th><label>{$message.descPrint_timestamp|escape}</label>
-					<br />print_timestamp</th>
+					<br />print_timestamp *</th>
           {/if}
           {if $params.print_timestamp == 'true'}
           <td><input type="checkbox" name="print_timestamp" id="print_timestamp" value="true" checked="checked" /></td>
@@ -439,10 +439,10 @@ function cancelNode() {
       <tbody>
         <tr> {if $error.replication_mode != null}
           <th class="error"><label>{$message.descReplication_mode|escape}</label>
-					<br />replication_mode</th>
+					<br />replication_mode *</th>
           {else}
           <th><label>{$message.descReplication_mode|escape}</label>
-					<br />replication_mode</th>
+					<br />replication_mode *</th>
           {/if}
           {if $params.replication_mode == 'true'}
           <td><input type="checkbox" name="replication_mode" id="replication_mode" value="true" checked="checked" /></td>
@@ -613,55 +613,55 @@ function cancelNode() {
       <tbody>
         <tr> {if $error.system_db_hostname != null}
           <th class="error"><label>{$message.descSystem_db_hostname|escape}</label>
-          <br />system_db_hostname (string)</th>
+          <br />system_db_hostname (string) *</th>
           {else}
           <th><label>{$message.descSystem_db_hostname|escape}</label>
-          <br />system_db_hostname (string)</th>
+          <br />system_db_hostname (string) *</th>
           {/if}
           <td><input type="text" name="system_db_hostname" value="{$params.system_db_hostname|escape}"/></td>
         </tr>
         <tr> {if $error.system_db_port != null}
           <th class="error"><label>{$message.descSystem_db_port|escape}</label>
-          <br />system_db_port (integer)</th>
+          <br />system_db_port (integer) *</th>
           {else}
           <th><label>{$message.descSystem_db_port|escape}</label>
-          <br />system_db_port (integer)</th>
+          <br />system_db_port (integer) *</th>
           {/if}
           <td><input type="text" name="system_db_port" value="{$params.system_db_port|escape}"/></td>
         </tr>
         <tr> {if $error.system_db_dbname != null}
           <th class="error"><label>{$message.descSystem_db_dbname|escape}</label>
-          <br />system_db_dbname (string)</th>
+          <br />system_db_dbname (string) *</th>
           {else}
           <th><label>{$message.descSystem_db_dbname|escape}</label>
-          <br />system_db_dbname (string)</th>
+          <br />system_db_dbname (string) *</th>
           {/if}
           <td><input type="text" name="system_db_dbname" value="{$params.system_db_dbname|escape}"/></td>
         </tr>
         <tr> {if $error.system_db_schema != null}
           <th class="error"><label>{$message.descSystem_db_schema|escape}</label>
-          <br />system_db_schema (string)</th>
+          <br />system_db_schema (string) *</th>
           {else}
           <th><label>{$message.descSystem_db_schema|escape}</label>
-          <br />system_db_schema (string)</th>
+          <br />system_db_schema (string) *</th>
           {/if}
           <td><input type="text" name="system_db_schema" value="{$params.system_db_schema|escape}"/></td>
         </tr>
         <tr> {if $error.system_db_user != null}
           <th class="error"><label>{$message.descSystem_db_user|escape}</label>
-          <br />system_db_user (string)</th>
+          <br />system_db_user (string) *</th>
           {else}
           <th><label>{$message.descSystem_db_user|escape}</label>
-          <br />system_db_user (string)</th>
+          <br />system_db_user (string) *</th>
           {/if}
           <td><input type="text" name="system_db_user" value="{$params.system_db_user|escape}"/></td>
         </tr>
         <tr> {if $error.system_db_password != null}
           <th class="error"><label>{$message.descSystem_db_password|escape}</label>
-          <br />system_db_password (string)</th>
+          <br />system_db_password (string) *</th>
           {else}
           <th><label>{$message.descSystem_db_password|escape}</label>
-          <br />system_db_password (string)</th>
+          <br />system_db_password (string) *</th>
           {/if}
           <td><input type="password" name="system_db_password" value="{$params.system_db_password|escape}"/></td>
         </tr>
@@ -683,10 +683,10 @@ function cancelNode() {
       <tbody>
         <tr> {if $error.load_balance_mode != null}
           <th class="error"><label>{$message.descLoad_balance_mode|escape}</label>
-					<br />load_balance_mode</th>
+					<br />load_balance_mode *</th>
           {else}
           <th><label>{$message.descLoad_balance_mode|escape}</label>
-					<br />load_balance_mode</th>
+					<br />load_balance_mode *</th>
           {/if}
           {if $params.load_balance_mode == 'true'}
           <td><input type="checkbox" name="load_balance_mode" id="load_balance_mode" value="true" checked="checked" /></td>
@@ -695,10 +695,10 @@ function cancelNode() {
           {/if} </tr>
         <tr> {if $error.master_slave_mode != null}
           <th class="error"><label>{$message.descMaster_slave_mode|escape}</label>
-					<br />master_slave_mode</th>
+					<br />master_slave_mode *</th>
           {else}
           <th><label>{$message.descMaster_slave_mode|escape}</label>
-					<br />master_slave_mode</th>
+					<br />master_slave_mode *</th>
           {/if}
           {if $params.master_slave_mode == 'true'}
           <td><input type="checkbox" name="master_slave_mode" id="master_slave_mode" value="true" checked="checked" /></td>
@@ -731,10 +731,10 @@ function cancelNode() {
           {/if} </tr>
         <tr> {if $error.parallel_mode != null}
           <th class="error"><label>{$message.descParallel_mode|escape}</label>
-					<br />parallel_mode</th>
+					<br />parallel_mode *</th>
           {else}
           <th><label>{$message.descParallel_mode|escape}</label>
-					<br />parallel_mode</th>
+					<br />parallel_mode *</th>
           {/if}
           {if $params.parallel_mode == 'true'}
           <td><input type="checkbox" name="parallel_mode" id="parallel_mode" value="true" checked="checked" /></td>
@@ -743,10 +743,10 @@ function cancelNode() {
           {/if} </tr>
         <tr> {if $error.enable_query_cache != null}
           <th class="error"><label>{$message.descEnable_query_cache|escape}</label>
-					<br />enable_query_cache</th>
+					<br />enable_query_cache *</th>
           {else}
           <th><label>{$message.descEnable_query_cache|escape}</label>
-					<br />enable_query_cache</th>
+					<br />enable_query_cache *</th>
           {/if}
           {if $params.enable_query_cache == 'true'}
           <td><input type="checkbox" name="enable_query_cache" id="enable_query_cache" checked="checked" /></td>
@@ -790,6 +790,7 @@ function cancelNode() {
       <input type="button" name="btnReset" value="{$message.strReset|escape}" onclick="resetData()"/>
     </p>
   </form>
+  <p>{$message.cautionaryNote|escape}</p>
 </div>
 <hr class="hidden" />
 <div id="footer">

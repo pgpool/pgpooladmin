@@ -262,6 +262,7 @@ $message = array(
     'e6003' => 'Could not write to pcp.conf. ',
     'e7001' => 'pcp.conf not found.',
     'e8001' => 'Detailed information cannot be acquired.',
+    'cautionaryNote' => 'NOTE: Updated to reflect the settings, the settings are required to reload. Also, [*] has pgpool items will be required to restart.',
     
 );
 
