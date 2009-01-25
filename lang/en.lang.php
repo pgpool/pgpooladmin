@@ -19,7 +19,7 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2008 PgPool Global Development Group
+ * @copyright  2003-2009 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
@@ -41,6 +41,7 @@ $message = array(
     'descEnable_query_cache' => 'Perform query cache',
     'descFailover_command' => 'Command to be executed when detaching a node',
     'descFailback_command' => 'Command to be executed when attaching a node',
+	'descClient_idle_limit_in_recovery' => 'Timeout in seconds while waiting for a query from a client in on line recovery',
     'descHealth_check_period' => 'Specifies the interval for next health checking. 0 means no health checking',
     'descHealth_check_timeout' => 'Pgpool does "health check" periodically to detect PostgreSQL servers down, network communication problems or as such',
     'descHealth_check_user' => 'PostgreSQL user name for the health checking',
@@ -52,6 +53,7 @@ $message = array(
 	'descLog_hostname' => 'If true, client\'s hostname will be shown in ps status and in a connection log if log_connections is true',
     'descLog_statement' => 'If true, print all statements to the log',
     'descLogdir' => 'The directory name to store pgpool\'s log files',
+    'descPid_file_name' => 'The pid file name',
     'descMaster_slave_mode' => 'Run in master/slave mode',
     'descMax_pool' => 'Number of connection pools each pgpool server process are keeping',
     'descNum_init_children' => 'Number of pgpool processes initially forked',

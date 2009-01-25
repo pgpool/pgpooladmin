@@ -256,13 +256,21 @@
         </tr>
       </thead>
       <tbody>
+
         <tr>
           <th><label>{$message.descLogdir|escape}</label>
           <br>logdir (string) *</th>
           <td>pgpoolの各種ログファイルを格納するディレクトリです。
-           現在のところ、pgpool.pid というプロセスIDを格納するファイルだけが作られるようになっています。
           <br>デフォルト値は'/tmp'です。</td>
         </tr>
+
+        <tr>
+          <th><label>{$message.descPid_file_name|escape}</label>
+          <br>pid_file_name (string) *</th>
+          <td>pgpoolのpidファイルの名前(パス名)です。
+          <br>デフォルト値は'/var/run/pgpool/pgpool.pid'です。</td>
+        </tr>
+
         <tr>
           <th><label>{$message.descPrint_timestamp|escape}</label>
 	  <br>print_timestamp *</th>
@@ -455,6 +463,16 @@
            0 を指定すると待ち時間無しとなり、リカバリが一瞬で終了しない場合以外は失敗となります。
           <br>デフォルト値は 90 です。</td>
         </tr>
+
+        <tr>
+          <th><label>{$message.descClient_idle_limit_in_recovery|escape}</label>
+          <br>client_idle_limit_in_recovery (integer)</th>
+          <td>前回クライアントから来たクエリから、client_idle_limit_in_recovery 秒越えても次のクエリが届かない場合は、
+           クライアントへの接続を強制的に切断し、クライアントからの次のコネクションを待つようにします。
+          <br>デフォルト値は 0(無効) です。このパラメータはオンラインリカバリ中のみ有効です。
+          </td>
+        </tr>
+
       </tbody>
       <tfoot>
         <tr>
@@ -602,6 +620,7 @@
           <br>　%%: '％'文字
           <br>デフォルトでは設定されていません。</td>
 	</tr>
+
       </tbody>
       <tfoot>
         <tr>

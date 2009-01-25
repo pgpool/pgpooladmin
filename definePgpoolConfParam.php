@@ -19,7 +19,7 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2008 PgPool Global Development Group
+ * @copyright  2003-2009 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
@@ -96,6 +96,11 @@ $pgpoolConfigParam[$key]['max'] = 10000;
 $key = 'logdir';
 $pgpoolConfigParam[$key]['type'] ='C';
 $pgpoolConfigParam[$key]['default'] ='/tmp';
+$pgpoolConfigParam[$key]['regexp'] = "$dirreg";
+
+$key = 'pid_file_name';
+$pgpoolConfigParam[$key]['type'] ='C';
+$pgpoolConfigParam[$key]['default'] ='/var/run/pgpool/pgpool.pid';
 $pgpoolConfigParam[$key]['regexp'] = "$dirreg";
 
 $key = 'pcp_timeout';
@@ -296,5 +301,11 @@ $key = 'failback_command';
 $pgpoolConfigParam[$key]['type'] ='C';
 $pgpoolConfigParam[$key]['default'] ='';
 $pgpoolConfigParam[$key]['regexp'] = ".*";
+
+$key = 'client_idle_limit_in_recovery';
+$pgpoolConfigParam[$key]['type'] ='N';
+$pgpoolConfigParam[$key]['default'] ='0';
+$pgpoolConfigParam[$key]['min'] = 0;
+$pgpoolConfigParam[$key]['max'] = 65535;
 
 ?>

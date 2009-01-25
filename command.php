@@ -19,7 +19,7 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2008 PgPool Global Development Group
+ * @copyright  2003-2009 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
@@ -97,9 +97,12 @@ function execPcp($command, $num='') {
 				$cmdOption = $configOption . $num . ' 2>&1 &';
 			}
 
-            if(DoesPgpoolPidExist()) {
-                return array('FAIL'=> '');
-            }
+			/* we should not check pid file here.
+			 * let pgpool handle bogus pid file
+             * if(DoesPgpoolPidExist()) {
+             *   return array('FAIL'=> '');
+             * }
+			 */
             $cmd = _PGPOOL2_COMMAND . $cmdOption;
 			//var_dump($cmd);exit;
             $ret = exec($cmd, $output, $return_var);

@@ -369,6 +369,17 @@ function cancelNode() {
           {/if}
           <td><input type="text" name="logdir" value="{$params.logdir|escape}"/></td>
         </tr>
+
+        <tr> {if $error.pid_file_name != null}
+          <th class="error"><label>{$message.descPid_file_name|escape}</label>
+          <br />logdir (string) *</th>
+          {else}
+          <th><label>{$message.descPid_file_name|escape}</label>
+          <br />logdir (string) *</th>
+          {/if}
+          <td><input type="text" name="pid_file_name" value="{$params.pid_file_name|escape}"/></td>
+        </tr>
+
         <tr> {if $error.print_timestamp != null}
           <th><label>{$message.descPrint_timestamp|escape}</label>
 					<br />print_timestamp *</th>
@@ -595,6 +606,17 @@ function cancelNode() {
           {/if}
           <td><input type="text" name="recovery_timeout" value="{$params.recovery_timeout|escape}"/></td>
         </tr>
+
+	<tr> {if $error.client_idle_limit_in_recovery != null}
+          <th class="error"><label>{$message.descClient_idle_limit_in_recovery|escape}</label>
+          <br />client_idle_limit_in_recovery (integer)</th>
+          {else}
+          <th><label>{$message.descClient_idle_limit_in_recovery|escape}</label>
+          <br />client_idle_limit_in_recovery (integer)</th>
+          {/if}
+          <td><input type="text" name="client_idle_limit_in_recovery" value="{$params.client_idle_limit_in_recovery|escape}"/></td>
+        </tr>
+
       </tbody>
     </table>
     <h3><a name="system-database" id="system-database">System Database</a></h3>
@@ -783,6 +805,7 @@ function cancelNode() {
           {/if}
           <td><input type="text" name="failback_command" value="{$params.failback_command|escape}"/></td>
         </tr>
+
       </tbody>
     </table>
     <p>

@@ -192,11 +192,19 @@ number of connection pools each pgpool server process are keeping. pgpool will m
         </tr>
       </thead>
       <tbody>
+
         <tr>
           <th><label>{$message.descLogdir|escape}</label>
           <br>logdir (string)</th>
 		  <td>The directory name to store pgpool's log files. Currently only a file named pgpool.pid(has pgpool's process id) is stored. The default value for logdir is '/tmp'.</td>
         </tr>
+
+        <tr>
+          <th><label>{$message.descPid_file_name|escape}</label>
+          <br>pid_file_name (string)</th>
+		  <td>file name which has pgpool's process id. The default value for pid_file_name is '/var/run/pgpool/pgpool.pid'.</td>
+        </tr>
+
         <tr>
           <th><label>{$message.descPrint_timestamp|escape}</label>
 					<br>print_timestamp</th>
@@ -331,6 +339,14 @@ number of connection pools each pgpool server process are keeping. pgpool will m
           <br>recovery_timeout (integer)</th>
 		  <td>Number of seconds to wait for online recovery to complete. Note that 0 means NO WAIT; not no timeout.</td>
         </tr>
+
+        <tr>
+          <th><label>{$message.descClient_idle_limit_in_recovery|escape}</label>
+	  <br>client_idle_limit_in_recovery (integer)</th>
+          <td>Queries from clients, in seconds, the maximum waiting time can be set. The default value is 0 (no effect). Did not receive a query within a set time, you force the connection disconnected. The waiting time is running command is not included in the command does not have to worry about orphaned. This parameter takes effects only in on line recovery.</td>
+        </tr>
+        <tr>
+
       </tbody>
       <tfoot>
         <tr>
@@ -472,6 +488,7 @@ automatically do the rewriting for you.
           <br>　%%: '%' character
           </td>
         </tr>
+
       </tbody>
       <tfoot>
         <tr>

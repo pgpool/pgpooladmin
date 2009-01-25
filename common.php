@@ -268,7 +268,8 @@ function readHealthCheckParam() {
  * @return  bool
  */
 function DoesPgpoolPidExist() {
-    $pidFile = readLogDir() . '/pgpool.pid';
+    $params = readConfigParams(array('pid_file_name'));
+    $pidFile = $params['pid_file_name'];
     if( file_exists($pidFile) ) {
         return true;
     }
