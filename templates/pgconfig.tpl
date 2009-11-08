@@ -372,10 +372,10 @@ function cancelNode() {
 
         <tr> {if $error.pid_file_name != null}
           <th class="error"><label>{$message.descPid_file_name|escape}</label>
-          <br />logdir (string) *</th>
+          <br />pid_file_name (string) *</th>
           {else}
           <th><label>{$message.descPid_file_name|escape}</label>
-          <br />logdir (string) *</th>
+          <br />pid_file_name (string) *</th>
           {/if}
           <td><input type="text" name="pid_file_name" value="{$params.pid_file_name|escape}"/></td>
         </tr>
