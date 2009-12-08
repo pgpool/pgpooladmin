@@ -277,6 +277,7 @@
           <td>true ならば pgpool のログにタイムスタンプを追加します。
           <br>デフォルトは true です。</td>
 	</tr>
+
         <tr>
           <th><label>{$message.descLog_statement|escape}</label>
 	  <br>log_statement</th>
@@ -286,6 +287,15 @@
           <br>デフォルト値は false です。
           </td>
 	</tr>
+
+        <tr>
+          <th><label>{$message.descLog_per_node_statement|escape}</label>
+	  <br>log_per_node_statement</th>
+	  <td>   log_statementと似ていますが、DBノード単位でログが出力されるので、レプリケーションや負荷分散の確認が容易です。
+          <br>デフォルト値は false です。
+          </td>
+	</tr>
+
         <tr>
           <th><label>{$message.descLog_connections|escape}</label>
 	  <br>log_connections</th>
@@ -333,12 +343,27 @@
 	  <td>デットロックを監視するためのタイムアウト時間をミリ秒単位で指定します。
           <br>デフォルト値は 5000 (5秒)です。</td>
        </tr>
+
         <tr>
           <th><label>{$message.descReplication_stop_on_mismatch|escape}</label>
+		  <br>replication_stop_on_mismatch</th>
 	  <td>true の場合、マスタとセカンダリの間で、データの不一致があった場合に強制的に縮退運転に入ります。
            false の場合には、該当の問い合わせを強制的に終了するだけに留めます。
           <br>デフォルト値は false です。</td>
 	</tr>
+
+        <tr>
+          <th><label>{$message.descFail_over_on_backend_error|escape}</label>
+		  <br>fail_over_on_backend_error</th>
+	  <td>trueならば、バックエンドのソケットへの書き込みに失敗するとフェイルオーバします。
+   これはpgpool-II 2.2.xまでの挙動と同じです。
+falseにすると、フェイルオーバせず、単にエラーがレポートされてセッションが切断されます。
+このパラメータをfalseにする場合には、health checkを有効にすることをお勧めします。
+なお、このパラメータがfalseの場合でも、クライアントがpgpoolに接続する際にバックエンドへの接続に失敗した場合、あるいはバックエンドがシャットダウンされたことをpgpool-IIが検知した場合にはフェイルオーバが起きることに注意してください。
+このパラメータを変更した時には設定ファイルを再読み込みしてください。
+          <br>デフォルト値は true です。</td>
+	</tr>
+
         <tr>
           <th><label>{$message.descReplicate_select|escape}</label>
           <br>replicate_select</th>
@@ -350,7 +375,7 @@
           <br>reset_query_list (string)</th>
 	  <td>セッションが終了するときにコネクションを初期化するための SQL コマンドを「;」で区切って列挙します。
           <br>デフォルト値は以下のようになっていますが、任意の SQL文を追加しても構いません。
-	  <p>reset_query_list = 'ABORT; RESET ALL; SET SESSION AUTHORIZATION DEFAULT'</p>
+	  <p>reset_query_list = 'ABORT; DISCARD ALL'</p>
            PostgreSQL のバージョンによって使用できる SQLコマンドが違うので、
            PostgreSQL 7.3 以前では注意してください(「4. pgpoolの稼働環境」参照)。
            <br>なお、「ABORT」は、PostgreSQL 7.4以上ではトランザクションブロックの中にいない場合には発行されません。

@@ -393,6 +393,7 @@ function cancelNode() {
           <td><input type="checkbox" name="print_timestamp" id="print_timestamp" value="false" /></td>
           {/if}
 		</tr>
+
         <tr> {if $error.log_statement != null}
           <th class="error"><label>{$message.descLog_statement|escape}</label>
 					<br />log_statement</th>
@@ -406,6 +407,21 @@ function cancelNode() {
           <td><input type="checkbox" name="log_statement" id="log_statement" value="false" /></td>
           {/if}
 		</tr>
+
+        <tr> {if $error.log_per_node_statement != null}
+          <th class="error"><label>{$message.descLog_per_node_statement|escape}</label>
+					<br />log_per_node_statement</th>
+          {else}
+          <th><label>{$message.descLog_per_node_statement|escape}</label>
+					<br />log_per_node_statement</th>
+          {/if}
+          {if $params.log_per_node_statement == 'true'}
+          <td><input type="checkbox" name="log_per_node_statement" id="log_per_node_statement" value="true" checked="checked" /></td>
+          {else}
+          <td><input type="checkbox" name="log_per_node_statement" id="log_per_node_statement" value="false" /></td>
+          {/if}
+		</tr>
+
         <tr> {if $error.log_connections != null}
           <th class="error"><label>{$message.descLog_connections|escape}</label>
 					<br />log_connections</th>
@@ -469,6 +485,7 @@ function cancelNode() {
           {/if}
           <td><input type="text" name="replication_timeout" value="{$params.replication_timeout|escape}"/></td>
         </tr>
+
         <tr> {if $error.replication_stop_on_mismatch != null}
           <th class="error"><label>{$message.descReplication_stop_on_mismatch|escape}</label>
 					<br />replication_stop_on_mismatch</th>
@@ -481,6 +498,20 @@ function cancelNode() {
           {else}
           <td><input type="checkbox" name="replication_stop_on_mismatch" id="replication_stop_on_mismatch" value="false" /></td>
           {/if} </tr>
+
+        <tr> {if $error.fail_over_on_backend_error != null}
+          <th class="error"><label>{$message.descFail_over_on_backend_error|escape}</label>
+					<br />fail_over_on_backend_error</th>
+          {else}
+          <th><label>{$message.descFail_over_on_backend_error|escape}</label>
+					<br />fail_over_on_backend_error</th>
+          {/if}
+          {if $params.fail_over_on_backend_error == 'true'}
+          <td><input type="checkbox" name="fail_over_on_backend_error" id="fail_over_on_backend_error" value="true" checked="checked" /></td>
+          {else}
+          <td><input type="checkbox" name="fail_over_on_backend_error" id="fail_over_on_backend_error" value="false" /></td>
+          {/if} </tr>
+
         <tr> {if $error.replicate_select != null}
           <th class="error"><label>{$message.descReplicate_select|escape}</label>
 					<br />replicate_select</th>

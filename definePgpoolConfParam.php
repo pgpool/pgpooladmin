@@ -133,7 +133,7 @@ $pgpoolConfigParam[$key]['default'] =false;
 
 $key = 'reset_query_list';
 $pgpoolConfigParam[$key]['type'] ='C';
-$pgpoolConfigParam[$key]['default'] ='ABORT; RESET ALL; SET SESSION AUTHORIZATION DEFAULT';
+$pgpoolConfigParam[$key]['default'] ='ABORT; DISCARD ALL';
 $pgpoolConfigParam[$key]['regexp'] = "^[0-9a-zA-Z; ]+$";
 
 $key = 'print_timestamp';
@@ -308,4 +308,11 @@ $pgpoolConfigParam[$key]['default'] ='0';
 $pgpoolConfigParam[$key]['min'] = 0;
 $pgpoolConfigParam[$key]['max'] = 65535;
 
+$key = 'fail_over_on_backend_error';
+$pgpoolConfigParam[$key]['type'] ='B';
+$pgpoolConfigParam[$key]['default'] =true;
+
+$key = 'log_per_node_statement';
+$pgpoolConfigParam[$key]['type'] ='B';
+$pgpoolConfigParam[$key]['default'] =false;
 ?>

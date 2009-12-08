@@ -210,11 +210,23 @@ number of connection pools each pgpool server process are keeping. pgpool will m
 					<br>print_timestamp</th>
 		  <td>If true timestamp is added to each log line. Default value is true.</td>
 		</tr>
+
         <tr>
-          <th><label>{$message.descLog_statement|escape}</label>          <br>log_statement</th>
+          <th><label>{$message.descLog_statement|escape}</label>
+          <br>log_statement</th>
           <td>If true, SQL statement logs.
           <br>The role of the PostgreSQL log_statement options are similar, there is no option when you debug logging, but the inquiry be useful to examine.</td>
         </tr>
+
+        <tr>
+          <th><label>{$message.descLog_per_node_statement|escape}</label>
+          <br>log_per_node_statement</th>
+		  <td>If true, print all statements to the log. Similar to
+          log_statement except that prints DB node id and backend
+          process id info.
+		  </td>
+        </tr>
+
         <tr>
           <th><label>{$message.descLog_connections|escape}</label>
           <br>log_connections</th>
@@ -252,11 +264,23 @@ number of connection pools each pgpool server process are keeping. pgpool will m
           <br>replication_timeout (integer)</th>
 		  <td>pgpool will abort the session if a node does not respond (due to a inter-node deadlock) within this milli seconds. if set to 0, timeout is disabled.</td>
         </tr>
+
         <tr>
           <th><label>{$message.descReplication_stop_on_mismatch|escape}</label>
 					<br>replication_stop_on_mismatch</th>
 		  <td>Stop replication mode on data mismatch between master and secondary. Default is false.</td>
 		</tr>
+
+        <tr>
+          <th><label>{$message.descFail_over_on_backend_error|escape}</label>
+          <br>fail_over_on_backend_error</th> <td>If true, trigger
+          fail over when writing to the backend communication socket
+          fails. This is the same behavior of pgpool-II 2.2.x or
+          earlier. If set to false, pgpool will report an error and
+          disconnect the session.
+		  </td>
+		</tr>
+
         <tr>
           <th><label>{$message.descReplicate_select|escape}</label>
           <br>replicate_select</th>
