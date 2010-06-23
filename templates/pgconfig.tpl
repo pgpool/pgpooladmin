@@ -74,6 +74,7 @@ function cancelNode() {
       <li><a href="#health-check">Health Check</a></li>
       <li><a href="#recovery">Online Recovery</a></li>
       <li><a href="#system-database">System Database</a></li>
+      <li><a href="#ssl">Ssl</a></li>
       <li><a href="#others">Others</a></li>
     </ul>
   </div>
@@ -720,6 +721,72 @@ function cancelNode() {
         </tr>
       </tbody>
     </table>
+    <h3><a name="ssl" id="ssl">Ssl</a></h3>
+    <table>
+      <thead>
+        <tr>
+          <th>{$message.strParameter|escape}</th>
+          <th>{$message.strValue|escape}</th>
+        </tr>
+      </thead>
+      <tfoot>
+        <tr>
+          <td colspan="2"></td>
+        </tr>
+      </tfoot>
+      <tbody>
+        <tr> {if $error.ssl != null}
+          <th class="error"><label>{$message.descSsl|escape}</label>
+                    <br />ssl</th>
+          {else}
+          <th><label>{$message.descSsl|escape}</label>
+                    <br />ssl</th>
+          {/if}
+          {if $params.ssl == 'true'}
+          <td><input type="checkbox" name="ssl" id="ssl" value="true" checked="checked" /></td>
+          {else}
+          <td><input type="checkbox" name="ssl" id="ssl" value="false" /></td>
+          {/if} </tr>
+        </tr>
+        <tr> {if $error.ssl_key != null}
+          <th class="error"><label>{$message.descSsl_key|escape}</label>
+                    <br />ssl_key</th>
+          {else}
+          <th><label>{$message.descSsl_key|escape}</label>
+                    <br />ssl_key</th>
+          {/if}
+          <td><input type="text" name="ssl_key" id="ssl_key" value="{$params.ssl_key|escape}" /></td>
+        </tr>
+        <tr> {if $error.ssl_cert != null}
+          <th class="error"><label>{$message.descSsl_cert|escape}</label>
+                    <br />ssl_cert</th>
+          {else}
+          <th><label>{$message.descSsl_cert|escape}</label>
+                    <br />ssl_cert</th>
+          {/if}
+          <td><input type="text" name="ssl_cert" id="ssl_cert" value="{$params.ssl_cert|escape}" /></td>
+        </tr>
+        <tr> {if $error.ssl_ca_cert != null}
+          <th class="error"><label>{$message.descSsl_ca_cert|escape}</label>
+                    <br />ssl_ca_cert</th>
+          {else}
+          <th><label>{$message.descSsl_ca_cert|escape}</label>
+                    <br />ssl_ca_cert</th>
+          {/if}
+          <td><input type="text" name="ssl_ca_cert" id="ssl_ca_cert" value="{$params.ssl_ca_cert|escape}" /></td>
+        </tr>
+        <tr> {if $error.ssl_ca_cert_dir != null}
+          <th class="error"><label>{$message.descSsl_ca_cert_dir|escape}</label>
+                    <br />ssl_ca_cert_dir</th>
+          {else}
+          <th><label>{$message.descSsl_ca_cert_dir|escape}</label>
+                    <br />ssl_ca_cert_dir</th>
+          {/if}
+          <td><input type="text" name="ssl_ca_cert_dir" id="ssl_ca_cert_dir" value="{$params.ssl_ca_cert_dir|escape}" /></td>
+        </tr>
+      </tbody>
+    </table>
+
     <h3><a name="others" id="others">Others</a></h3>
     <table>
       <thead>
@@ -835,6 +902,15 @@ function cancelNode() {
           <br />failback_command (string)</th>
           {/if}
           <td><input type="text" name="failback_command" value="{$params.failback_command|escape}"/></td>
+        </tr>
+        <tr> {if $error.lobj_lock_table != null}
+          <th class="error"><label>{$message.descLobj_lock_table|escape}</label>
+                    <br />lobj_lock_table</th>
+          {else}
+          <th><label>{$message.descLobj_lock_table|escape}</label>
+                    <br />lobj_lock_table</th>
+          {/if}
+          <td><input type="text" name="lobj_lock_table" id="lobj_lock_table" value="{$params.lobj_lock_table|escape}" /></td>
         </tr>
 
       </tbody>
