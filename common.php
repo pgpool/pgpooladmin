@@ -91,7 +91,7 @@ $messageList = array();
 
 $res_dir = opendir('lang/');
 while($file_name = readdir( $res_dir )) {
-    if(ereg('.*\.lang\.php$', $file_name)) {
+    if(preg_match('/.*\.lang\.php$/', $file_name)) {
         if(@is_file('lang/' . $file_name)) {
             include('lang/' . $file_name);
             $messageList[$message['lang']] = $message['strLang']; 
@@ -344,14 +344,14 @@ function readConfigParams($paramList = FALSE) {
     foreach ($configFile as $line_num => $line) {
         $line = trim($line);
         if(preg_match("/^\w/", $line)) {
-            list($key, $value) = split("=", $line);
+            list($key, $value) = explode("=", $line);
             
             $key = trim($key);
             $value = trim($value);
             
             if(preg_match("/^backend_hostname/", $key)) {
                 $num = str_replace('backend_hostname', '', $key);
-                $configParam['backend_hostname'][$num] = ereg_replace("'", "", $value);
+                $configParam['backend_hostname'][$num] = str_replace("'", "", $value);
             }
             else if(preg_match("/^backend_port/", $key)) {
                 $num = str_replace('backend_port', '', $key);
@@ -363,10 +363,10 @@ function readConfigParams($paramList = FALSE) {
             }
             else if(preg_match("/^backend_data_directory/", $key)) {
                 $num = str_replace('backend_data_directory', '', $key);
-                $configParam['backend_data_directory'][$num] = ereg_replace("'", "", $value);
+                $configParam['backend_data_directory'][$num] =str_replace("'", "", $value);
             }
             else {
-                $configParam[$key] = ereg_replace("'", "", $value);
+                $configParam[$key] = str_replace("'", "", $value);
             }
         }
     }
