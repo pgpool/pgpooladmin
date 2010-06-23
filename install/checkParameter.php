@@ -37,10 +37,14 @@ if(isset($_POST['action'])) {
     $action = $_POST['action'];
 }
 
-$pgpool2_config_file = $_POST['pgpool2_config_file'];
-if( !$pgpool2_config_file)  {
+if (isset($_POST['pgpool2_config_file']) && $_POST['pgpool2_config_file']) {
+    $pgpool2_config_file = $_POST['pgpool2_config_file'];
+}
+else {
     $pgpool2_config_file = _PGPOOL2_CONFIG_FILE;
 }
+
+$msgPgpoolConfigFile = '';
 if(!@is_file($pgpool2_config_file)) {
     $msgPgpoolConfigFile = 'File not found';
     $error = true;
@@ -56,13 +60,17 @@ else {
     }
 }
 
+if(isset($_POST['password_file']) && $_POST['password_file'])  {
 $password_file = $_POST['password_file'];
-if( !$password_file)  {
+}
+else {
     $password_file = _PGPOOL2_PASSWORD_FILE;
 }
+
+$msgPasswordFile = '';
 if(!@is_file($password_file)) {
     $msgPasswordFile = 'File not found';
-        $error = true;
+    $error = true;
 }
 else {
     if(!is_readable($password_file)) {
@@ -75,21 +83,33 @@ else {
     }
 }
 
-$pgpool_command = $_POST['pgpool_command'];
-if( !$pgpool_command)  {
+if(isset($_POST['pgpool_command']) && $_POST['pgpool_command']) {
+    $pgpool_command = $_POST['pgpool_command'];
+}
+else {
     $pgpool_command = _PGPOOL2_COMMAND;
 }
+
+$msgPgpoolCommand = '';
 if(!@is_file($pgpool_command)) {
     $msgPgpoolCommand = 'pgpool command not found';
-        $error = true;
+    $error = true;
 }
 else if(!is_executable($pgpool_command)) {
     $msgPgpoolCommand =  'pgpool command not executable';
     $error = true;
 }
 
-$pgpool_logfile = $_POST['pgpool_logfile'];
-if( !$pgpool_logfile)  {
+$msgCmdC = '';
+$msgCmdD = '';
+$msgCmdN = '';
+$msgCmdM = '';
+
+$msgPgpoolLogFile = '';
+if(isset($_POST['pgpool_logfile']) && $_POST['pgpool_logfile']) {
+    $pgpool_logfile = $_POST['pgpool_logfile'];
+}
+else {
     $pgpool_logfile = _PGPOOL2_LOG_FILE;
 }
 if(!is_dir(dirname($pgpool_logfile))) {
@@ -103,10 +123,14 @@ else {
     }
 }
 
-$pcp_client_dir = $_POST['pcp_client_dir'];
-if( !$pcp_client_dir)  {
+if(isset($_POST['pcp_client_dir']) && $_POST['pcp_client_dir']) {
+    $pcp_client_dir = $_POST['pcp_client_dir'];
+}
+else {
     $pcp_client_dir = _PGPOOL2_PCP_DIR;
 }
+
+$msgPcpClientDir = '';
 if(!is_dir($pcp_client_dir)) {
     $msgPcpClientDir = 'Directory not found';
         $error = true;
@@ -133,19 +157,23 @@ else {
     }
 }
 
-$pcp_hostname = $_POST['pcp_hostname'];
-if(!$pcp_hostname) {
+$msgPcpHostname = '';
+if(isset($_POST['pcp_hostname']) && $_POST['pcp_hostname']) {
+    $pcp_hostname = $_POST['pcp_hostname'];
+}
+else {
     $pcp_hostname =  _PGPOOL2_PCP_HOSTNAME;
-    $msgPcpHostname = '';
 }
 
-$pcp_refreshTime = $_POST['pcp_refreshTime'];
-if(!$pcp_refreshTime) {
+if(isset($_POST['pcp_refreshTime']) && $_POST['pcp_refreshTime']) {
+    $pcp_refreshTime = $_POST['pcp_refreshTime'];
+}
+else {
     $pcp_refreshTime =  _PGPOOL2_STATUS_REFRESH_TIME;
     $msgPcpRefreshTime = '';
 }
 
-if($error || $_POST['submitBack'] != null) { 
+if($error || (isset($_POST['submitBack']) && $_POST['submitBack'] != null)) { 
 }
 else {
     
