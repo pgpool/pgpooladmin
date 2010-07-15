@@ -36,7 +36,7 @@ if(!array_key_exists('SUCCESS', $ret)) {
     $tpl->display('innerError.tpl');
     exit();
 } else {
-        $procPids = split(" ", $ret['SUCCESS']);
+        $procPids = explode(" ", $ret['SUCCESS']);
 }
 
 for($i=0; $i<count($procPids); $i++) {

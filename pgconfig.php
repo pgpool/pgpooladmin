@@ -308,11 +308,11 @@ function check($key, $value, &$configParam ,&$error) {
  */
 function checkString($str, $pattern)
 {
-    if(ereg($pattern, $str)) {
+    if(preg_match("/$pattern/", $str)) {
         return true;
     } else {
         return false;
-        }
+    }
 }
 
 /**
@@ -328,7 +328,7 @@ function checkInteger($str, $min, $max)
     if(is_numeric($str)) {
         $minLen = strlen($min);
         $maxLen = strlen($max);
-        if(ereg("^[0-9]{".$minLen.",".$maxLen."}$", $str)) {
+        if(preg_match('/^[0-9]{'.$minLen.','.$maxLen.'}$/', $str)) {
             if($str < $min || $str > $max) {
                 return false;
             } else {
@@ -389,7 +389,7 @@ function writeConfigFile($configValue, $pgpoolConfigParam)
     for($i=0; $i < count($configFile); $i++) {
         $line = $configFile[$i];
         if(preg_match("/^\w/", $line)) {
-            list($key, $value) = split("=", $line);
+            list($key, $value) = explode("=", $line);
             $key = trim($key);
             if(!preg_match("/^backend_hostname/", $key)
             && !preg_match("/^backend_port/", $key)
