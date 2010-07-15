@@ -279,12 +279,12 @@ $pgpoolConfigParam[$key]['regexp'] = ".*";
 $key = 'recovery_1st_stage_command';
 $pgpoolConfigParam[$key]['type'] ='C';
 $pgpoolConfigParam[$key]['default'] ='';
-$pgpoolConfigParam[$key]['regexp'] = "^[0-9a-zA-Z_/\.\-]*$";
+$pgpoolConfigParam[$key]['regexp'] = "^[0-9a-zA-Z_\/\.\-]*$";
 
 $key = 'recovery_2nd_stage_command';
 $pgpoolConfigParam[$key]['type'] ='C';
 $pgpoolConfigParam[$key]['default'] ='';
-$pgpoolConfigParam[$key]['regexp'] = "^[0-9a-zA-Z_/\.\-]*$";
+$pgpoolConfigParam[$key]['regexp'] = "^[0-9a-zA-Z_\/\.\-]*$";
 
 $key = 'recovery_timeout';
 $pgpoolConfigParam[$key]['type'] ='N';
@@ -315,4 +315,33 @@ $pgpoolConfigParam[$key]['default'] =true;
 $key = 'log_per_node_statement';
 $pgpoolConfigParam[$key]['type'] ='B';
 $pgpoolConfigParam[$key]['default'] =false;
+
+$key = 'lobj_lock_table';
+$pgpoolConfigParam[$key]['type'] ='C';
+$pgpoolConfigParam[$key]['default'] ='';
+$pgpoolConfigParam[$key]['regexp'] = ".*";
+
+$key = 'ssl';
+$pgpoolConfigParam[$key]['type'] ='B';
+$pgpoolConfigParam[$key]['default'] = false;
+
+$key = 'ssl_key';
+$pgpoolConfigParam[$key]['type'] ='C';
+$pgpoolConfigParam[$key]['default'] ='';
+$pgpoolConfigParam[$key]['regexp'] = "^(|\/[0-9a-zA-Z_\/\.\-]*)$";
+
+$key = 'ssl_cert';
+$pgpoolConfigParam[$key]['type'] ='C';
+$pgpoolConfigParam[$key]['default'] ='';
+$pgpoolConfigParam[$key]['regexp'] = "^(|\/[0-9a-zA-Z_\/\.\-]*)$";
+
+$key = 'ssl_ca_cert';
+$pgpoolConfigParam[$key]['type'] ='C';
+$pgpoolConfigParam[$key]['default'] ='';
+$pgpoolConfigParam[$key]['regexp'] = "^(|\/[0-9a-zA-Z_\/\.\-]*)$";
+
+$key = 'ssl_ca_cert_dir';
+$pgpoolConfigParam[$key]['type'] ='C';
+$pgpoolConfigParam[$key]['default'] ='';
+$pgpoolConfigParam[$key]['regexp'] = "^(|\/[0-9a-zA-Z_\/\.\-]*)$";
 ?>
