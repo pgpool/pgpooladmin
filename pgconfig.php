@@ -328,12 +328,10 @@ function checkInteger($str, $min, $max)
     if(is_numeric($str)) {
         $minLen = strlen($min);
         $maxLen = strlen($max);
-        if(preg_match('/^[0-9]{'.$minLen.','.$maxLen.'}$/', $str)) {
-            if($str < $min || $str > $max) {
-                return false;
-            } else {
-                return true;
-            }
+        if($str < $min || $str > $max) {
+            return false;
+        } else {
+            return true;
         }
     }
     return false;
