@@ -74,7 +74,7 @@ if($conn == false) {
     $errorCode = 'e2001';
     $tpl->assign('errorCode', $errorCode);
     $tpl->display('error.tpl');
-#    exit();
+    exit();
 }
 
 if($action == 'delete') {

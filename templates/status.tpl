@@ -77,10 +77,12 @@ function timer(interval) {
 	setTimeout("reload()",interval);
 }
 
-function sendCommand(command, nodeNumber){
-    document.Command.action.value= command;
-    document.Command.nodeNumber.value= nodeNumber;
-    document.Command.submit();
+function sendCommand(command, nodeNumber, message){
+    if (window.confirm(message)) {
+        document.Command.action.value= command;
+        document.Command.nodeNumber.value= nodeNumber;
+        document.Command.submit();
+    }
 }
 
 function startPgpool() {
@@ -208,6 +210,13 @@ function changeView(chView){
           <td><input type="checkbox" name="c" /></td>
           {/if}
           </tr>
+          <tr><td>{$message.strCmdLargeD|escape}(-D)</td>
+          {if $n == 1}
+          <td><input type="checkbox" name="D" checked="checked" /></td>
+          {else}
+          <td><input type="checkbox" name="D" /></td>
+          {/if}
+          </tr>
           <tr><td>{$message.strCmdN|escape}(-n)</td>
           {if $n == 1}
           <td><input type="checkbox" name="n" checked="checked" /></td>
@@ -282,6 +291,13 @@ function changeView(chView){
           <td><input type="checkbox" name="c" checked="checked" /></td>
           {else}
           <td><input type="checkbox" name="c" /></td>
+          {/if}
+          </tr>
+          <tr><td>{$message.strCmdLargeD|escape}(-D)</td>
+          {if $n == 1}
+          <td><input type="checkbox" name="D" checked="checked" /></td>
+          {else}
+          <td><input type="checkbox" name="D" /></td>
           {/if}
           </tr>
           <tr><td>{$message.strCmdN|escape}(-n)</td>

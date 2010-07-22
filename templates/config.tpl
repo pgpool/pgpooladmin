@@ -53,104 +53,134 @@
           </td>
         </tr>
         <tr>
-          <th><label>{$message.strPgConfFile|escape}</label>
+          {if $errors.pgpool_config_file != null}<th class="error">{else}<th>{/if}
+            <label>{$message.strPgConfFile|escape}</label>
             (string)</th>
           <td><input type="text" name="pgpool_config_file" size="50" value="{$params.pgpool_config_file|escape}" />
-        {if $errors.pgpool_config_file != ''}
-        <br />{$errors.pgpool_config_file|escape}
-        {/if}
-        </td></tr>
+          {if $errors.pgpool_config_file != ''}
+          <br />{$errors.pgpool_config_file|escape}
+          {/if}
+          </td></tr>
         <tr>
-          <th><label>{$message.strPasswordFile|escape}</label>
+          {if $errors.password_file != null}<th class="error">{else}<th>{/if}
+            <label>{$message.strPasswordFile|escape}</label>
             (string)</th>
           <td><input type="text" name="password_file" size="50" value="{$params.password_file|escape}" />
-        {if $errors.password_file != ''}
-        <br />{$errors.password_file|escape}
-        {/if}
-        </td></tr>
+          {if $errors.password_file != ''}
+          <br />{$errors.password_file|escape}
+          {/if}
+          </td></tr>
         <tr>
-          <th><label>{$message.strPgpoolCommand|escape}</label>
+          {if $errors.pgpool_command != null}<th class="error">{else}<th>{/if}
+          <label>{$message.strPgpoolCommand|escape}</label>
             (string)</th>
           <td><input type="text" name="pgpool_command" size="50" value="{$params.pgpool_command|escape}" />
-        {if $errors.pgpool_command != ''}
-        <br />{$errors.pgpool_command|escape}
-        {/if}
-        </td></tr>
+          {if $errors.pgpool_command != ''}
+          <br />{$errors.pgpool_command|escape}
+          {/if}
+          </td></tr>
         <tr>
           <th colspan="2"><label>{$message.strPgpoolCommandOption|escape}</label>
             (string)</th></tr>
-          <tr><td>{$message.strCmdC|escape}(-c)</td>
+        <tr><td>{$message.strCmdC|escape}(-c)</td>
+          <td>
           {if $params.c == 1}
-          <td><input type="checkbox" name="c" checked="checked" /></td>
+          <input type="checkbox" name="c" checked="checked" />
           {else}
-          <td><input type="checkbox" name="c" /></td>
+          <input type="checkbox" name="c" />
           {/if}
-          </tr>
-          <tr><td>{$message.strCmdN|escape}(-n)</td>
-          {if $params.n == 1}
-          <td><input type="checkbox" name="n" checked="checked" /></td>
-          {else}
-          <td><input type="checkbox" name="n" /></td>
+          {if $errors.c != ''}
+          <br />{$errors.c|escape}
           {/if}
-          </tr>
-          <tr><td>{$message.strCmdD|escape}(-d)</td>
+          </td></tr>
+        <tr><td>{$message.strCmdLargeD|escape}(-D)</td>
+          <td>
           {if $params.d == 1}
-          <td><input type="checkbox" name="d" checked="checked" /></td>
+          <input type="checkbox" name="D" checked="checked" />
           {else}
-          <td><input type="checkbox" name="d" /></td>
+          <input type="checkbox" name="D" />
           {/if}
-          </tr>
-          <tr><td>{$message.strCmdM|escape}(-m)</td><td><select name="m">
+          {if $errors.D != ''}
+          <br />{$errors.D|escape}
+          {/if}
+          </td></tr>
+        <tr><td>{$message.strCmdN|escape}(-n)</td>
+          <td>
+          {if $params.n == 1}
+          <input type="checkbox" name="n" checked="checked" />
+          {else}
+          <input type="checkbox" name="n" />
+          {/if}
+          {if $errors.n != ''}
+          <br />{$errors.n|escape}
+          {/if}
+          </td></tr>
+        <tr><td>{$message.strCmdD|escape}(-d)</td>
+          <td>
+          {if $params.d == 1}
+          <input type="checkbox" name="d" checked="checked" />
+          {else}
+          <input type="checkbox" name="d" />
+          {/if}
+          {if $errors.d != ''}
+          <br />{$errors.d|escape}
+          {/if}
+          </td></tr>
+        <tr><td>{$message.strCmdM|escape}(-m)</td><td><select name="m">
           {if $params.m == 's'}
-               <option value="s" selected="selected">smart</optgroup>
-               <option value="f">fast</optgroup>
-               <option value="i">immediate</optgroup>
+               <option value="s" selected="selected">smart</option>
+               <option value="f">fast</option>
+               <option value="i">immediate</option>
           {elseif $params.m == 'f'}  
-               <option value="s">smart</optgroup>
-               <option value="f" selected="selected">fast</optgroup>
-               <option value="i">immediate</optgroup>
+               <option value="s">smart</option>
+               <option value="f" selected="selected">fast</option>
+               <option value="i">immediate</option>
           {elseif $params.m == 'i'}  
-               <option value="s">smart</optgroup>
-               <option value="f">fast</optgroup>
-               <option value="i" selected="selected">immediate</optgroup>
+               <option value="s">smart</option>
+               <option value="f">fast</option>
+               <option value="i" selected="selected">immediate</option>
           {else}  
-               <option value="s">smart</optgroup>
-               <option value="f">fast</optgroup>
-               <option value="i">immediate</optgroup>
+               <option value="s">smart</option>
+               <option value="f">fast</option>
+               <option value="i">immediate</option>
           {/if}  
           </td></tr>
         <tr>
-          <th><label>{$message.strPgpoolLogFile|escape}</label>
+          {if $errors.pgpool_logfile != null}<th class="error">{else}<th>{/if}
+            <label>{$message.strPgpoolLogFile|escape}</label>
             (string)</th>
           <td><input type="text" name="pgpool_logfile" size="50" value="{$params.pgpool_logfile|escape}" />
-        {if $errors.pgpool_logfile != ''}
-        <br />{$errors.pgpool_logfile|escape}
-        {/if}
-        </td></tr>
+          {if $errors.pgpool_logfile != ''}
+          <br />{$errors.pgpool_logfile|escape}
+          {/if}
+          </td></tr>
         <tr>
-          <th><label>{$message.strPcpDir|escape}</label>
+          {if $errors.pcp_client_dir != null}<th class="error">{else}<th>{/if}
+            <label>{$message.strPcpDir|escape}</label>
             (string)</th>
           <td><input type="text" name="pcp_client_dir" size="50" value="{$params.pcp_client_dir|escape}" />
-        {if $errors.pcp_client_dir != ''}
-        <br />{$errors.pcp_client_dir|escape}
-        {/if}
-        </td></tr>
+          {if $errors.pcp_client_dir != ''}
+          <br />{$errors.pcp_client_dir|escape}
+          {/if}
+          </td></tr>
         <tr>
-          <th><label>{$message.strPcpHostName|escape}</label>
+          {if $errors.pcp_hostname != null}<th class="error">{else}<th>{/if}
+            <label>{$message.strPcpHostName|escape}</label>
             (string)</th>
           <td><input type="text" name="pcp_hostname" size="50" value="{$params.pcp_hostname|escape}" />
-        {if $errors.pcp_hostname != ''}
-        <br />{$errors.pcp_hostname|escape}
-        {/if}
-        </td></tr>
+          {if $errors.pcp_hostname != ''}
+          <br />{$errors.pcp_hostname|escape}
+          {/if}
+          </td></tr>
         <tr>
-          <th><label>{$message.strPcpRefreshTime|escape}</label>
+          {if $errors.pcp_refresh_time != null}<th class="error">{else}<th>{/if}
+            <label>{$message.strPcpRefreshTime|escape}</label>
             (integer)
           </th><td><input type="text" name="pcp_refresh_time" size="50" value="{$params.pcp_refresh_time|escape}" />
-        {if $errors.pcp_refresh_time != ''}
-        <br />{$errors.pcp_refresh_time|escape}
-        {/if}
-        </td></tr>
+          {if $errors.pcp_refresh_time != ''}
+          <br />{$errors.pcp_refresh_time|escape}
+          {/if}
+          </td></tr>
       </tbody>
     </table>
   </form>

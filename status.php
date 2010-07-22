@@ -52,6 +52,7 @@ if(isset($_POST['action'])) {
  */
 
 $tpl->assign('c', _PGPOOL2_CMD_OPTION_C);
+$tpl->assign('D', _PGPOOL2_CMD_OPTION_LARGE_D);
 $tpl->assign('d', _PGPOOL2_CMD_OPTION_D);
 $tpl->assign('m', _PGPOOL2_CMD_OPTION_M);
 $tpl->assign('n', _PGPOOL2_CMD_OPTION_N);
@@ -66,6 +67,9 @@ switch ($action) {
 
         if(isset($_POST['c'])) {
             $args = $args . "-c ";
+        }
+        if(isset($_POST['D'])) {
+            $args = $args . "-D ";
         }
         if(isset($_POST['d'])) {
             $args = $args . "-d ";
@@ -163,6 +167,9 @@ switch ($action) {
 
         if(isset($_POST['c'])) {
             $args = $args . "-c ";
+        }
+        if(isset($_POST['D'])) {
+            $args = $args . "-D ";
         }
         if(isset($_POST['d'])) {
             $args = $args . "-d ";

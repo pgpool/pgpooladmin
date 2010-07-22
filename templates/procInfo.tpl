@@ -8,6 +8,7 @@
 <body>
 <h3>{$message.strProcInfo|escape}</h3>
 <table>
+  <thead>
   <tr>
     <td><label>{$message.strProcId|escape}</label></td>
     <td><label>{$message.strDbName|escape}</label><br /><label>{$message.strConnUser|escape}</label></td>
@@ -15,6 +16,7 @@
     <td><label>{$message.strProtocolMajorVersion|escape}</label><br /><label>{$message.strProtocolNinorVersion|escape}</label></td>
     <td><label>{$message.strConnUsed|escape}</label></td>
   </tr>
+  </thead>
   {foreach name=proc key=num item=value from=$procInfo}
     {foreach name=data item=data from=$value}
     {if $smarty.foreach.data.first == true}

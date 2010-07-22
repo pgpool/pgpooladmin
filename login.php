@@ -59,7 +59,7 @@ if($success == false) {
     if($fp != null) {
         while( !feof($fp) ) {
             $line = fgets($fp);
-            if( ereg($regexp, $line) ) {
+            if( preg_match("/$regexp/", $line) ) {
                 $_SESSION[SESSION_LOGIN_USER] = $username;
                 $_SESSION[SESSION_LOGIN_USER_PASSWORD] = $password;
                 $success = true;
@@ -88,6 +88,7 @@ if(DoesPgpoolPidExist()) {
 }
 
 $tpl->assign('c', _PGPOOL2_CMD_OPTION_C);
+$tpl->assign('D', _PGPOOL2_CMD_OPTION_LARGE_D);
 $tpl->assign('d', _PGPOOL2_CMD_OPTION_D);
 $tpl->assign('m', _PGPOOL2_CMD_OPTION_M);
 $tpl->assign('n', _PGPOOL2_CMD_OPTION_N);

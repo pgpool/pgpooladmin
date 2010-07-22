@@ -144,6 +144,22 @@ $key = 'master_slave_mode';
 $pgpoolConfigParam[$key]['type'] ='B';
 $pgpoolConfigParam[$key]['default'] =false;
 
+$key = 'master_slave_sub_mode';
+$pgpoolConfigParam[$key]['type'] ='C';
+$pgpoolConfigParam[$key]['default'] ='slony';
+$pgpoolConfigParam[$key]['regexp'] = "^[slony|stream]+$";
+
+$key = 'delay_threshold';
+$pgpoolConfigParam[$key]['type'] ='N';
+$pgpoolConfigParam[$key]['default'] = 0;
+$pgpoolConfigParam[$key]['min'] = 0;
+$pgpoolConfigParam[$key]['max'] = 65535;
+
+$key = 'log_standby_delay';
+$pgpoolConfigParam[$key]['type'] ='C';
+$pgpoolConfigParam[$key]['default'] ='none';
+$pgpoolConfigParam[$key]['regexp'] = "^[always|if_over_threshold|none]+$";
+
 $key = 'connection_cache';
 $pgpoolConfigParam[$key]['type'] ='B';
 $pgpoolConfigParam[$key]['default'] =true;
@@ -305,12 +321,16 @@ $pgpoolConfigParam[$key]['regexp'] = ".*";
 $key = 'client_idle_limit_in_recovery';
 $pgpoolConfigParam[$key]['type'] ='N';
 $pgpoolConfigParam[$key]['default'] ='0';
-$pgpoolConfigParam[$key]['min'] = 0;
+$pgpoolConfigParam[$key]['min'] = -1;
 $pgpoolConfigParam[$key]['max'] = 65535;
 
 $key = 'fail_over_on_backend_error';
 $pgpoolConfigParam[$key]['type'] ='B';
 $pgpoolConfigParam[$key]['default'] =true;
+
+$key = 'failover_if_affected_tuples_mismatch';
+$pgpoolConfigParam[$key]['type'] ='B';
+$pgpoolConfigParam[$key]['default'] =false;
 
 $key = 'log_per_node_statement';
 $pgpoolConfigParam[$key]['type'] ='B';

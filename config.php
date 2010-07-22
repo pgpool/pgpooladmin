@@ -68,6 +68,11 @@ if( defined('_PGPOOL2_CMD_OPTION_C'))
 else
     $errors['c'] = $message['errNoDefined'];
 
+if( defined('_PGPOOL2_CMD_OPTION_LARGE_D'))
+    $params['D'] = _PGPOOL2_CMD_OPTION_LARGE_D;
+else
+    $errors['D'] = $message['errNoDefined'];
+
 if( defined('_PGPOOL2_CMD_OPTION_D'))
     $params['d'] = _PGPOOL2_CMD_OPTION_D;
 else
@@ -150,6 +155,13 @@ switch ( $action ) {
             $params[$key] = 0;
         }
         
+        $key = 'D';
+        if(isset($_POST[$key])) {
+            $params[$key] = 1;
+        } else {
+            $params[$key] = 0;
+        }
+
         $key = 'd';
         if(isset($_POST[$key])) {
             $params[$key] = 1;
@@ -201,7 +213,7 @@ switch ( $action ) {
         } else {
             $errors[$key] = $message['errNoDefined'];            
         }
-        if(!ereg("^[0-9a-zA-Z\._\-]+$", $params[$key])) {
+        if(!preg_match("/^[0-9a-zA-Z\._\-]+$/", $params[$key])) {
             $errors[$key] = $message['errIllegalHostname'];            
         }
         
@@ -256,6 +268,9 @@ switch ( $action ) {
             $str = 'define(\'_PGPOOL2_CMD_OPTION_C\', \'' .  $params['c'] . '\');' . "\n";
             fputs($fp, $str);
 
+            $str = 'define(\'_PGPOOL2_CMD_OPTION_LARGE_D\', \'' .  $params['D'] . '\');' . "\n";
+            fputs($fp, $str);
+
             $str = 'define(\'_PGPOOL2_CMD_OPTION_D\', \'' .  $params['d'] . '\');' . "\n";
             fputs($fp, $str);
 
@@ -282,6 +297,9 @@ switch ( $action ) {
             fclose($fp);
 
             $tpl->assign('status', 'success');
+
+        } else {
+            $tpl->assign('errors', $errors);
         }
         
         /**

@@ -512,6 +512,18 @@ function cancelNode() {
           {else}
           <td><input type="checkbox" name="fail_over_on_backend_error" id="fail_over_on_backend_error" value="false" /></td>
           {/if} </tr>
+        <tr> {if $error.replication_stop_on_mismatch != null}
+          <th class="error"><label>{$message.descFailover_if_affected_tuples_mismatch|escape}</label>
+					<br />failover_if_affected_tuples_mismatch</th>
+          {else}
+          <th><label>{$message.descFailover_if_affected_tuples_mismatch|escape}</label>
+					<br />failover_if_affected_tuples_mismatch</th>
+          {/if}
+          {if $params.failover_if_affected_tuples_mismatch == 'true'}
+          <td><input type="checkbox" name="failover_if_affected_tuples_mismatch" id="failover_if_affected_tuples_mismatch" value="true" checked="checked" /></td>
+          {else}
+          <td><input type="checkbox" name="failover_if_affected_tuples_mismatch" id="failover_if_affected_tuples_mismatch" value="false" /></td>
+          {/if} </tr>
 
         <tr> {if $error.replicate_select != null}
           <th class="error"><label>{$message.descReplicate_select|escape}</label>
@@ -825,6 +837,35 @@ function cancelNode() {
           {else}
           <td><input type="checkbox" name="master_slave_mode" id="master_slave_mode" value="false" /></td>
           {/if} </tr>
+        <tr> {if $error.master_slave_sub_mode != null}
+          <th class="error"><label>{$message.descMaster_slave_sub_mode|escape}</label>
+					<br />master_slave_sub_mode *</th>
+          {else}
+          <th><label>{$message.descMaster_slave_sub_mode|escape}</label><br />master_slave_sub_mode *</th>
+          {/if}
+          <td><select name="master_slave_sub_mode" id="master_slave_sub_mode">
+              <option value="slony" {if $params.master_slave_sub_mode == 'slony'}selected{/if}>slony</option>
+              <option value="stream" {if $params.master_slave_sub_mode == 'stream'}selected{/if}>stream</option>
+              </select></td>
+        </tr>
+        <tr> {if $error.delay_threshold != null}
+          <th class="error"><label>{$message.descDelay_threshold|escape}</label><br />delay_threshold</th>
+          {else}
+          <th><label>{$message.descDelay_threshold|escape}</label><br />delay_threshold</th>
+          {/if}
+          <td><input type="text" name="delay_threshold" id="delay_threshold" value="{$params.delay_threshold|escape}" /></td>
+        </tr>
+        <tr> {if $error.log_standby_delay != null}
+          <th class="error"><label>{$message.descLog_standby_delay|escape}</label><br />log_standby_delay</th>
+          {else}
+          <th><label>{$message.descLog_standby_delay|escape}</label><br />log_standby_delay</th>
+          {/if}
+          <td><select name="log_standby_delay" id="log_standby_delay">
+              <option value="always" {if $params.log_standby_delay == 'always'}selected{/if}>always</option>
+              <option value="if_over_threshold" {if $params.log_standby_delay == 'if_over_threshold'}selected{/if}>if_over_threshold</option>
+              <option value="none" {if $params.log_standby_delay == 'none'}selected{/if}>none</option>
+              </select></td>
+        </tr>
         <tr> {if $error.portinsert_lock!= null}
           <th class="error"><label>{$message.descInsert_lock|escape}</label>
 					<br />insert_lock</th>
