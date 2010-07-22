@@ -40,6 +40,7 @@ $message = array(
     'strCmdC' => 'Clears query cache',
     'strCmdD' => 'debug mode',
     'strCmdM' => 'stop mode',
+    'strCmdLargeD' => 'Discard pgpool_status file',
     'strCmdN' => 'don\'t run in daemon mode',
     'strCmdPgpoolFile' => 'pgpool.conf',
     'strCmdPcpFile' => 'pcp.conf',

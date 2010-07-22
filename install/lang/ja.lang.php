@@ -40,6 +40,7 @@ $message = array(
     'strCmdC' => 'クエリキャッシュクリア',
     'strCmdD' => 'デバッグモード',
     'strCmdM' => '停止モード',
+    'strCmdLargeD' => 'pgpool_status を無視',
     'strCmdN' => '非デーモンモード',
     'strCmdPgpoolFile' => 'pgpool.conf',
     'strCmdPcpFile' => 'pcp.conf',

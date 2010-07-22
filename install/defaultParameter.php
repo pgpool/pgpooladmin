@@ -27,6 +27,7 @@ define("_PGPOOL2_CONFIG_FILE", "/usr/local/etc/pgpool.conf");
 define("_PGPOOL2_PASSWORD_FILE", "/usr/local/etc/pcp.conf");
 define("_PGPOOL2_COMMAND", "/usr/local/bin/pgpool");
 define("_PGPOOL2_CMD_OPTION_C", "0");
+define("_PGPOOL2_CMD_OPTION_LARGE_D", "0");
 define("_PGPOOL2_CMD_OPTION_D", "0");
 define("_PGPOOL2_CMD_OPTION_M", "s");
 define("_PGPOOL2_CMD_OPTION_N", "0");

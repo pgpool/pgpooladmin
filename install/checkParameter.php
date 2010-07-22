@@ -101,6 +101,7 @@ else if(!is_executable($pgpool_command)) {
 }
 
 $msgCmdC = '';
+$msgCmdLargeD = '';
 $msgCmdD = '';
 $msgCmdN = '';
 $msgCmdM = '';
@@ -165,6 +166,14 @@ else {
     $pcp_hostname =  _PGPOOL2_PCP_HOSTNAME;
 }
 
+if(isset($_POST['pcp_timeout']) && $_POST['pcp_timeout']) {
+    $pcp_timeout= $_POST['pcp_timeout'];
+}
+else {
+    $pcp_timeout =  _PGPOOL2_PCP_TIMEOUT;
+    $msgPcpTimeout = '';
+}
+
 if(isset($_POST['pcp_refreshTime']) && $_POST['pcp_refreshTime']) {
     $pcp_refreshTime = $_POST['pcp_refreshTime'];
 }
@@ -211,6 +220,12 @@ if(!$error && $action == 'next') {
         $c = 0;
     }
     
+    if(isset($_POST['D'])) {
+        $D = 1;
+    } else {
+        $D = 0;
+    }
+    
     if(isset($_POST['d'])) {
         $d = 1;
     } else {
@@ -224,6 +239,9 @@ if(!$error && $action == 'next') {
     }
     
     $str = 'define(\'_PGPOOL2_CMD_OPTION_C\', \'' . $c . '\');' . "\n";
+    fputs($fp, $str);
+    
+    $str = 'define(\'_PGPOOL2_CMD_OPTION_LARGE_D\', \'' . $D . '\');' . "\n";
     fputs($fp, $str);
     
     $str = 'define(\'_PGPOOL2_CMD_OPTION_D\', \'' . $d . '\');' . "\n";
@@ -337,6 +355,19 @@ if(!$error && $action == 'next') {
     </td>
   </tr>
   <tr>
+    <th><label><?php echo $message['strCmdLargeD'] ?></label></th>
+      <td><input type="checkbox" name="D" /></td>
+    <?php
+    if($msgCmdLargeD != '') {
+        echo '<br />' . $msgCmdLargeD;
+        echo '</td><td><img src="images/ng.gif" alt="ng" />';
+    } else {
+        echo '</td><td><img src="images/ok.gif" alt="ok" />';
+    }
+    ?>
+    </td>
+  </tr>
+  <tr>
     <th><label><?php echo $message['strCmdN'] ?></label></th>
       <td><input type="checkbox" name="n" /></td>
     <?php
@@ -421,6 +452,19 @@ if(!$error && $action == 'next') {
     </td>
   </tr>
   <tr>
+    <th><label><?php echo $message['strPcpTimeout'] ?></label></th>
+                  <td><input name="pcp_timeout" type="text" value="<?php echo $pcp_timeout?>" size="50" />
+    <?php
+    if($msgPcpHostname != '') {
+        echo '<br />' . $msgPcpHostname;
+        echo '</td><td><img src="images/ng.gif" alt="ng" />';
+    } else {
+        echo '</td><td><img src="images/ok.gif" alt="ok" />';
+    }
+    ?>
+    </td>
+  </tr>
+  <tr>
     <th><label><?php echo $message['strPcpRefreshTime'] ?></label></th>
                   <td><input name="pcp_refreshTime" type="text" value="<?php echo $pcp_refreshTime ?>" size="50" />
     <?php
@@ -449,7 +493,7 @@ echo '<input type="submit" value="' . $message['strNext'] . '" />';
 </div>
     <div id="footer">
       <address>Version <?php echo $version;?><br />
-      Copyright &copy; 2006 - 2008 <a href="http://pgpool.projects.postgresql.org/">pgpool Global Development Group</a>. All rights reserved.</address>
+      Copyright &copy; 2006 - <?php echo date('Y'); ?> <a href="http://pgpool.projects.postgresql.org/">pgpool Global Development Group</a>. All rights reserved.</address>
     </div>
   </body>
 </html>
