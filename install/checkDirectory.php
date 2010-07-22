@@ -116,7 +116,7 @@ else
 </div>
     <div id="footer">
       <address>Version <?php echo $version;?><br />
-      Copyright &copy; 2006 - 2008 <a href="http://pgpool.projects.postgresql.org/">pgpool Global Development Group</a>. All rights reserved.</address>
+      Copyright &copy; 2006 - <?php echo date('Y'); ?> <a href="http://pgpool.projects.postgresql.org/">pgpool Global Development Group</a>. All rights reserved.</address>
     </div>
   </body>
 </html>
