@@ -15,6 +15,8 @@
     <td><label>{$message.strProcTime|escape}</label><br /><label>{$message.strConnTime|escape}</label></td>
     <td><label>{$message.strProtocolMajorVersion|escape}</label><br /><label>{$message.strProtocolNinorVersion|escape}</label></td>
     <td><label>{$message.strConnUsed|escape}</label></td>
+    <td><label>{$message.strBackendPid|escape}</label></td>
+    <td><label>{$message.strFrontendConnected|escape}</label></td>
   </tr>
   </thead>
   {foreach name=proc key=num item=value from=$procInfo}
@@ -27,9 +29,11 @@
       {/if}
         <td rowspan="{$smarty.foreach.data.total}">{$num|escape}</td>
         <td>{$data.0|escape}<br />{$data.1|escape}</td>
-        <td>{$data.2|escape}<br />{$data.3|escape}</td>
-        <td>{$data.4|escape}<br />{$data.5|escape}</td>
-        <td>{$data.6|escape}</td>
+        <td>{$data.2|escape} {$data.3|escape}<br />{$data.4|escape} {$data.5|escape}</td>
+        <td>{$data.6|escape}<br />{$data.7|escape}</td>
+        <td>{$data.8|escape}</td>
+        <td>{$data.9|escape}</td>
+        <td>{$data.10|escape}</td>
       </tr>
     {else}
       {if $smarty.foreach.proc.iteration % 2 == 0}
@@ -38,9 +42,11 @@
       <tr class="odd">
       {/if}
         <td>{$data.0|escape}<br />{$data.1|escape}</td>
-        <td>{$data.2|escape}<br />{$data.3|escape}</td>
-        <td>{$data.4|escape}<br />{$data.5|escape}</td>
-        <td>{$data.6|escape}</td>
+        <td>{$data.2|escape} {$data.3|escape}<br />{$data.4|escape} {$data.5|escape}</td>
+        <td>{$data.6|escape}<br />{$data.7|escape}</td>
+        <td>{$data.8|escape}</td>
+        <td>{$data.9|escape}</td>
+        <td>{$data.10|escape}</td>
       </tr>
     {/if}    
   {/foreach}

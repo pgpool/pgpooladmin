@@ -19,7 +19,7 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2008 PgPool Global Development Group
+ * @copyright  2003-2010 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
@@ -54,10 +54,11 @@ for($i=0; $i<count($procPids); $i++) {
         if(count($ret) > 0) {
             foreach($ret as $line) {
                 $data = split(" ", $line);
-                
+/*                
                 $dateFormat = $message['strDateFormat'];
                 $data[2] = date($dateFormat, $data[2]); 
                 $data[3] = date($dateFormat, $data[3]);
+*/
                 $procInfo[$procPid][]  = $data;
             }
         } else {
