@@ -63,7 +63,7 @@ for($i=0; $i<$nodeCount; $i++) {
         $ret = $ret['SUCCESS'];
     }
     $nodeInfo[$i] = explode(" ", $ret);
-    $nodeInfo[$i][3] =  sprintf('%.3f', $nodeInfo[$i][3] / $MAX_VALUE);
+    $nodeInfo[$i][3] =  sprintf('%.3f', $nodeInfo[$i][3]);
 	/* node is active? */
 	if ($nodeInfo[$i][2] != 3)
 		$node_alive = true;
