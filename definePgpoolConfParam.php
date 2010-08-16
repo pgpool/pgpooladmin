@@ -19,7 +19,7 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2009 PgPool Global Development Group
+ * @copyright  2003-2010 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
@@ -135,6 +135,16 @@ $key = 'reset_query_list';
 $pgpoolConfigParam[$key]['type'] ='C';
 $pgpoolConfigParam[$key]['default'] ='ABORT; DISCARD ALL';
 $pgpoolConfigParam[$key]['regexp'] = "^[0-9a-zA-Z; ]+$";
+
+$key = 'white_function_list';
+$pgpoolConfigParam[$key]['type'] ='C';
+$pgpoolConfigParam[$key]['default'] ='';
+$pgpoolConfigParam[$key]['regexp'] = "^[0-9a-zA-Z,]*$";
+
+$key = 'black_function_list';
+$pgpoolConfigParam[$key]['type'] ='C';
+$pgpoolConfigParam[$key]['default'] ='';
+$pgpoolConfigParam[$key]['regexp'] = "^[0-9a-zA-Z,]*$";
 
 $key = 'print_timestamp';
 $pgpoolConfigParam[$key]['type'] ='B';

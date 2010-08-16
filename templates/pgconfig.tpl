@@ -537,7 +537,8 @@ function cancelNode() {
           {else}
           <td><input type="checkbox" name="replicate_select" id="replicate_select" value="false" /></td>
           {/if} </tr>
-        <tr> {if $error.reset_query_list != null}
+
+          <tr> {if $error.reset_query_list != null}
           <th class="error"><label>{$message.descReset_query_list|escape}</label>
           <br />reset_query_list (string)</th>
           {else}
@@ -545,7 +546,28 @@ function cancelNode() {
           <br />reset_query_list (string)</th>
           {/if}
           <td><input type="text" name="reset_query_list" value="{$params.reset_query_list|escape}"/></td>
-        </tr>
+	  </tr>
+
+          <tr> {if $error.white_function_list != null}
+          <th class="error"><label>{$message.descWhite_function_list|escape}</label>
+          <br />white_function_list (string)</th>
+          {else}
+          <th><label>{$message.descWhite_function_list|escape}</label>
+          <br />white_function_list (string)</th>
+          {/if}
+          <td><input type="text" name="white_function_list" value="{$params.white_function_list|escape}"/></td>
+	  </tr>
+
+          <tr> {if $error.black_function_list != null}
+          <th class="error"><label>{$message.descBlack_function_list|escape}</label>
+          <br />black_function_list (string)</th>
+          {else}
+          <th><label>{$message.descBlack_function_list|escape}</label>
+          <br />black_function_list (string)</th>
+          {/if}
+          <td><input type="text" name="black_function_list" value="{$params.black_function_list|escape}"/></td>
+	  </tr>
+
       </tbody>
     </table>
     <h3><a name="health-check" id="health-check">Health Check</a></h3>
