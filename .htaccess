@@ -1,4 +1,4 @@
-<Files ~ "\.tpl">
+<Files ~ "\.tpl|NEWS|ChangeLog">
 Order allow,deny
 deny from all
 satisfy all

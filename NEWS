@@ -1,0 +1,18 @@
+pgpoolAdmon 3.0 beta1 2010/08/xx
+
+	* Version 3.0
+
+	  pgpoolAdmin 3.0 adopts pgpool-II 3.0.
+
+	  - Add "Discard pgpool_status file(-D)" to pgpoolAdmin Setting(Anzai)
+
+	  - Sync pgpool.conf Setting with pgpool-II 3.0(Anzai, Tatsuo)
+
+	  - Add "Backend pid" (process if of PostgreSQL database
+            server process) and "Frontend connected"(1 if frontend
+            actually connets) to Process Info.(Tatsuo)
+
+	  - Replace functions deprecated in PHP 5.3(Anzai)
+
+	  - Refactor pgpool status/summary(Tatsuo)
+
