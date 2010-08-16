@@ -36,6 +36,11 @@
     {elseif $nodeInfo[num][2] == 3}
       {$message.strNodeStatus3|escape}
     {/if}
+	{if $nodeInfo[num][5] == 1}
+      {$message.strStandbyRunning|escape}
+    {elseif $nodeInfo[num][5] == 0}
+      {$message.strPrimaryRunning|escape}
+    {/if}
     </td>
     {if $parallelMode == false}
     <td>{$nodeInfo[num][3]|escape}</td>

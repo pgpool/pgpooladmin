@@ -248,6 +248,55 @@ function NodeActive($num) {
 }
 
 /**
+ * Confirmation whether node is act as a standby server
+ *
+ * @return  integer
+ */
+function NodeStandby($num) {
+
+	$params = readConfigParams(array('master_slave_mode','master_slave_sub_mode'));
+
+	if ($params['master_slave_mode'] != 'true' || $params['master_slave_sub_mode'] != 'stream')
+		return -1;
+
+    $healthCheckDb = 'template1';
+    
+    $params = readHealthCheckParam();
+    
+    $healthCheckUser = $params['health_check_user'];
+    $backendHostName = $params['backend_hostname'][$num];
+    $backendPort = $params['backend_port'][$num];
+    if($backendHostName != '') {
+        $conStr = "dbname=$healthCheckDb user=$healthCheckUser host=$backendHostName port=$backendPort" ;
+    } else {
+        $conStr = "dbname=$healthCheckDb port=$backendPort user=$healthCheckUser" ;
+    }
+
+    $conn = @pg_connect($conStr);
+
+    if($conn == FALSE) {
+        @pg_close($conn);
+        return -1;
+	}
+
+	$res = pg_query($conn, 'SELECT pg_is_in_recovery()');
+	if(!pg_result_status($res) == PGSQL_TUPLES_OK) {
+        return -1;
+    }
+
+	$rr = pg_fetch_array($res);
+
+	if ($rr[0][0] == 't')
+		$r = 1;
+	else
+		$r = 0;
+
+	@pg_free_result($res);
+	@pg_close($conn);
+	return $r;
+}
+
+/**
  * Read parameter from pgpool.conf using health check 
  *
  * @return  array
