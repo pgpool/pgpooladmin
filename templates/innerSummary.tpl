@@ -9,22 +9,6 @@
 <h3>{$message.strPgpoolSummary|escape}</h3>
 <table>
   <tbody>
-    <tr><td>{$message.strParallelMode|escape}</td>
-    <td>
-    {if $params.parallel_mode == 'true'}
-    {$message.strPgpool2|escape}
-    {else}
-    {$message.strPgpool1|escape}
-    {/if}
-    </td></tr>
-    <tr><td>{$message.strQueryCache|escape}</td>
-    <td>
-    {if $params.enable_query_cache == 'true'}
-    {$message.strOn|escape}
-    {else}
-    {$message.strOff|escape}
-    {/if}
-    </td></tr>
     <tr><td>{$message.strReplicationMode|escape}</td>
     <td>
     {if $params.parallel_mode == 'true'}
@@ -35,6 +19,25 @@
     {$message.strOff|escape}
     {/if}
     </td></tr>
+
+    <tr><td>{$message.strMasterSlaveMode|escape}</td>
+    <td>
+    {if $params.master_slave_mode == 'true'}
+    {$message.strOn|escape}/{$params.master_slave_sub_mode|escape}
+    {else}
+    {$message.strOff|escape}
+    {/if}
+    </td></tr>
+
+    <tr><td>{$message.strParallelMode|escape}</td>
+    <td>
+    {if $params.parallel_mode == 'true'}
+    {$message.strOn|escape}
+    {else}
+    {$message.strOff|escape}
+    {/if}
+    </td></tr>
+
     <tr><td>{$message.strLoadBalanceMode|escape}</td>
     <td>
     {if $params.parallel_mode == 'true'}
@@ -53,6 +56,16 @@
     {$message.strOn|escape}
     {/if}
     </td></tr>
+
+    <tr><td>{$message.strQueryCache|escape}</td>
+    <td>
+    {if $params.enable_query_cache == 'true'}
+    {$message.strOn|escape}
+    {else}
+    {$message.strOff|escape}
+    {/if}
+    </td></tr>
+
   </tbody>
 </table>
 </body>

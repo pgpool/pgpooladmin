@@ -19,7 +19,7 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2008 PgPool Global Development Group
+ * @copyright  2003-2010 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
@@ -30,6 +30,8 @@ if(!isset($_SESSION[SESSION_LOGIN_USER])) {
 }
 
 $params = readConfigParams(array('parallel_mode',
+                                              'master_slave_mode',
+                                              'master_slave_sub_mode',
                                               'enable_query_cache',
                                               'replication_mode',
                                               'load_balance_mode',
