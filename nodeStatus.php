@@ -67,8 +67,6 @@ for($i=0; $i<$nodeCount; $i++) {
 	/* node is active? */
 	if ($nodeInfo[$i][2] != 3)
 		$node_alive = true;
-
-	$nodeInfo[$i][5] = NodeStandby($i);
 }
 
 for ($i = 0; $i < $nodeCount; $i++) {
@@ -103,6 +101,7 @@ for ($i = 0; $i < $nodeCount; $i++) {
 			break; 
         }
     }
+	$nodeInfo[$i][5] = NodeStandby($i);
 }
 
 $tpl->assign('refreshTime', _PGPOOL2_STATUS_REFRESH_TIME*1000);
