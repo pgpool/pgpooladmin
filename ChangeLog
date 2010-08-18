@@ -1,3 +1,23 @@
+2010-08-17 16:36  gleu
+
+	* lang/fr.lang.php: Update french translation.
+
+2010-08-16 19:06  t-ishii
+
+	* common.php, nodeStatus.php, lang/en.lang.php, lang/ja.lang.php,
+	  templates/nodeStatus.tpl: Add primary/standby mode info to node
+	  status.
+
+2010-08-16 16:59  gleu
+
+	* lang/: en.lang.php, fr.lang.php: Update french translation. Tweak
+	  a few strings in the english one.
+
+2010-08-16 15:48  t-ishii
+
+	* .htaccess, ChangeLog, NEWS: Add NEWS, ChangeLog.  Also modify
+	  .htaccess not to allow access to NEWS and ChageLog.
+
 2010-08-16 15:16  t-ishii
 
 	* version.php: Update version.
