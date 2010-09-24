@@ -1,6 +1,32 @@
+2010-09-24 17:47  kitagawa
+
+	* version.php: Update version.
+
+2010-09-24 16:24  t-ishii
+
+	* libs/: Config_File.class.php, Smarty.class.php,
+	  Smarty_Compiler.class.php, debug.tpl,
+	  internals/core.process_compiled_include.php,
+	  internals/core.write_cache_file.php,
+	  internals/core.write_compiled_include.php,
+	  internals/core.write_file.php, plugins/compiler.assign.php,
+	  plugins/function.html_select_date.php,
+	  plugins/function.html_table.php, plugins/function.mailto.php,
+	  plugins/function.math.php, plugins/modifier.capitalize.php,
+	  plugins/modifier.date_format.php,
+	  plugins/modifier.debug_print_var.php,
+	  plugins/modifier.regex_replace.php,
+	  plugins/modifier.truncate.php,
+	  plugins/outputfilter.trimwhitespace.php: Update embedded Smarty
+	  to 2.6.26.
+
+2010-09-20 12:20  t-ishii
+
+	* install/phpinfo.php: Add missing file.
+
 2010-09-10 09:58  kitagawa
 
-	* NEWS, version.php: Prepare 3.0
+	* NEWS, version.php, ChangeLog (utags: V3_0_0): Prepare 3.0
 
 2010-08-25 14:13  kitagawa
 
@@ -17,8 +43,8 @@
 
 2010-08-18 14:18  t-ishii
 
-	* nodeStatus.php (tags: V3_0_0_BETA2): Fix connect/disconnect
-	  buttons disappering ini node status window.
+	* nodeStatus.php (tags: V3_0_0, V3_0_0_BETA2): Fix
+	  connect/disconnect buttons disappering ini node status window.
 
 2010-08-18 10:01  t-ishii
 
@@ -26,15 +52,16 @@
 
 2010-08-17 16:36  gleu
 
-	* lang/fr.lang.php (tags: V3_0_0_BETA2, V3_0_0_BETA1): Update
-	  french translation.
+	* lang/fr.lang.php (tags: V3_0_0, V3_0_0_BETA2, V3_0_0_BETA1):
+	  Update french translation.
 
 2010-08-16 19:06  t-ishii
 
-	* common.php (tags: V3_0_0_BETA2), nodeStatus.php, lang/en.lang.php
-	  (tags: V3_0_0_BETA2), lang/ja.lang.php (tags: V3_0_0_BETA2),
-	  templates/nodeStatus.tpl (tags: V3_0_0_BETA2) (utags:
-	  V3_0_0_BETA1): Add primary/standby mode info to node status.
+	* common.php (tags: V3_0_0, V3_0_0_BETA2), nodeStatus.php,
+	  lang/en.lang.php (tags: V3_0_0, V3_0_0_BETA2), lang/ja.lang.php
+	  (tags: V3_0_0, V3_0_0_BETA2), templates/nodeStatus.tpl (tags:
+	  V3_0_0, V3_0_0_BETA2) (utags: V3_0_0_BETA1): Add primary/standby
+	  mode info to node status.
 
 2010-08-16 16:59  gleu
 
@@ -43,9 +70,9 @@
 
 2010-08-16 15:48  t-ishii
 
-	* .htaccess (tags: V3_0_0_BETA2, V3_0_0_BETA1), ChangeLog, NEWS
-	  (tags: V3_0_0_BETA1): Add NEWS, ChangeLog.  Also modify .htaccess
-	  not to allow access to NEWS and ChageLog.
+	* .htaccess (tags: V3_0_0, V3_0_0_BETA2, V3_0_0_BETA1), ChangeLog,
+	  NEWS (tags: V3_0_0_BETA1): Add NEWS, ChangeLog.  Also modify
+	  .htaccess not to allow access to NEWS and ChageLog.
 
 2010-08-16 15:16  t-ishii
 
@@ -53,11 +80,11 @@
 
 2010-08-16 15:14  t-ishii
 
-	* definePgpoolConfParam.php (tags: V3_0_0_BETA2, V3_0_0_BETA1),
-	  pgconfig.php (tags: V3_0_0_BETA2, V3_0_0_BETA1),
-	  lang/en.lang.php, lang/ja.lang.php, templates/pgconfig.tpl (tags:
-	  V3_0_0_BETA2, V3_0_0_BETA1): Add white_function_list and
-	  black_function_list.
+	* definePgpoolConfParam.php (tags: V3_0_0, V3_0_0_BETA2,
+	  V3_0_0_BETA1), pgconfig.php (tags: V3_0_0, V3_0_0_BETA2,
+	  V3_0_0_BETA1), lang/en.lang.php, lang/ja.lang.php,
+	  templates/pgconfig.tpl (tags: V3_0_0, V3_0_0_BETA2,
+	  V3_0_0_BETA1): Add white_function_list and black_function_list.
 
 2010-08-16 15:12  t-ishii
 
@@ -65,13 +92,14 @@
 
 2010-08-16 15:12  t-ishii
 
-	* innerSummary.php, templates/innerSummary.tpl (utags:
+	* innerSummary.php, templates/innerSummary.tpl (utags: V3_0_0,
 	  V3_0_0_BETA1, V3_0_0_BETA2): Refactor pgpool status/summary.
 
 2010-08-16 15:11  t-ishii
 
-	* procInfo.php, templates/procInfo.tpl (utags: V3_0_0_BETA1,
-	  V3_0_0_BETA2): Adopt for pgpool-II 3.0 pcp_proc_info command.
+	* procInfo.php, templates/procInfo.tpl (utags: V3_0_0,
+	  V3_0_0_BETA1, V3_0_0_BETA2): Adopt for pgpool-II 3.0
+	  pcp_proc_info command.
 
 	  Add "Backend pid" (process if of PostgreSQL database server process)
 	  and "Frontend connected"(1 if frontend actually connets) to Process
@@ -99,7 +127,7 @@
 
 2010-08-05 15:33  anzai
 
-	* screen.css (tags: V3_0_0_BETA2, V3_0_0_BETA1):
+	* screen.css (tags: V3_0_0, V3_0_0_BETA2, V3_0_0_BETA1):
 
 	  Change font-size: small -> x-small
 
@@ -111,21 +139,21 @@
 
 2010-07-22 14:19  anzai
 
-	* conf/pgmgt.conf.php (tags: V3_0_0_BETA2, V3_0_0_BETA1):
+	* conf/pgmgt.conf.php (tags: V3_0_0, V3_0_0_BETA2, V3_0_0_BETA1):
 
 	  Add define() for the new start option "-D"
 
 2010-07-22 14:17  anzai
 
-	* config.php (tags: V3_0_0_BETA2, V3_0_0_BETA1),
-	  definePgpoolConfParam.php, login.php (tags: V3_0_0_BETA2,
-	  V3_0_0_BETA1), queryCache.php (tags: V3_0_0_BETA2, V3_0_0_BETA1),
-	  status.php (tags: V3_0_0_BETA2, V3_0_0_BETA1), version.php,
-	  lang/en.lang.php, lang/fr.lang.php, lang/ja.lang.php,
-	  templates/config.tpl (tags: V3_0_0_BETA2, V3_0_0_BETA1),
-	  templates/nodeStatus.tpl, templates/pgconfig.tpl,
-	  templates/procInfo.tpl, templates/status.tpl (tags: V3_0_0_BETA2,
-	  V3_0_0_BETA1):
+	* config.php (tags: V3_0_0, V3_0_0_BETA2, V3_0_0_BETA1),
+	  definePgpoolConfParam.php, login.php (tags: V3_0_0, V3_0_0_BETA2,
+	  V3_0_0_BETA1), queryCache.php (tags: V3_0_0, V3_0_0_BETA2,
+	  V3_0_0_BETA1), status.php (tags: V3_0_0, V3_0_0_BETA2,
+	  V3_0_0_BETA1), version.php, lang/en.lang.php, lang/fr.lang.php,
+	  lang/ja.lang.php, templates/config.tpl (tags: V3_0_0,
+	  V3_0_0_BETA2, V3_0_0_BETA1), templates/nodeStatus.tpl,
+	  templates/pgconfig.tpl, templates/procInfo.tpl,
+	  templates/status.tpl (tags: V3_0_0, V3_0_0_BETA2, V3_0_0_BETA1):
 
 	  Add new start option "-D".  Change the vaild range of
 	  client_idle_limit_in_recovery (Now -1 became valid).  Add new
@@ -143,7 +171,7 @@
 2010-07-22 14:08  anzai
 
 	* install/: checkParameter.php, defaultParameter.php,
-	  lang/en.lang.php, lang/ja.lang.php (utags: V3_0_0_BETA1,
+	  lang/en.lang.php, lang/ja.lang.php (utags: V3_0_0, V3_0_0_BETA1,
 	  V3_0_0_BETA2):
 
 	  Add new start option "-D".  Add the input part for pcp_timeout to
@@ -151,8 +179,8 @@
 
 2010-07-22 14:04  anzai
 
-	* install/: checkDirectory.php, index.php (utags: V3_0_0_BETA1,
-	  V3_0_0_BETA2):
+	* install/: checkDirectory.php, index.php (utags: V3_0_0,
+	  V3_0_0_BETA1, V3_0_0_BETA2):
 
 	  Fix copyright year
 
@@ -195,12 +223,12 @@
 2009-12-08 11:13  t-ishii
 
 	* definePgpoolConfParam.php, version.php, lang/en.lang.php,
-	  lang/ja.lang.php, templates/footer.tpl (tags: V3_0_0_BETA2,
-	  V3_0_0_BETA1), templates/pgconfig.tpl,
-	  templates/help/en/pgconfig.tpl (tags: V3_0_0_BETA2,
-	  V3_0_0_BETA1), templates/help/ja/pgconfig.tpl (tags:
-	  V3_0_0_BETA2, V3_0_0_BETA1) (utags: V2_3_0): Prepare pgpoolAdmin
-	  2.3
+	  lang/ja.lang.php, templates/footer.tpl (tags: V2_3_1, V3_0_0,
+	  V3_0_0_BETA2, V3_0_0_BETA1), templates/pgconfig.tpl,
+	  templates/help/en/pgconfig.tpl (tags: V2_3_1, V3_0_0,
+	  V3_0_0_BETA2, V3_0_0_BETA1), templates/help/ja/pgconfig.tpl
+	  (tags: V2_3_1, V3_0_0, V3_0_0_BETA2, V3_0_0_BETA1) (utags:
+	  V2_3_0): Prepare pgpoolAdmin 2.3
 
 2009-11-08 19:31  t-ishii
 
@@ -209,7 +237,7 @@
 
 2009-02-28 14:41  t-ishii
 
-	* lang/fr.lang.php (tags: V2_3_0, V2_2_0): Fix PHP error
+	* lang/fr.lang.php (tags: V2_3_1, V2_3_0, V2_2_0): Fix PHP error
 
 2009-02-28 14:19  t-ishii
 
@@ -221,12 +249,12 @@
 
 2009-01-25 17:16  t-ishii
 
-	* command.php (tags: V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0),
-	  common.php (tags: V2_3_0, V2_2_0), definePgpoolConfParam.php
-	  (tags: V2_2_0), version.php, lang/en.lang.php (tags: V2_2_0),
-	  lang/ja.lang.php (tags: V2_2_0), templates/footer.tpl (tags:
-	  V2_2_0), templates/pgconfig.tpl (tags: V2_2_0),
-	  templates/help/en/pgconfig.tpl (tags: V2_2_0),
+	* command.php (tags: V2_3_1, V3_0_0, V3_0_0_BETA2, V3_0_0_BETA1,
+	  V2_3_0, V2_2_0), common.php (tags: V2_3_0, V2_2_0),
+	  definePgpoolConfParam.php (tags: V2_2_0), version.php,
+	  lang/en.lang.php (tags: V2_2_0), lang/ja.lang.php (tags: V2_2_0),
+	  templates/footer.tpl (tags: V2_2_0), templates/pgconfig.tpl
+	  (tags: V2_2_0), templates/help/en/pgconfig.tpl (tags: V2_2_0),
 	  templates/help/ja/pgconfig.tpl (tags: V2_2_0) (utags:
 	  V2_2_0_BETA1): Version 2.2beta1
 
@@ -240,12 +268,12 @@
 
 2008-10-31 13:28  t-ishii
 
-	* queryCache.php (tags: V2_3_0, V2_2_0, V2_2_0_BETA1),
-	  doc/screen.css (tags: V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0,
-	  V2_2_0_BETA1), lang/en.lang.php, lang/ja.lang.php,
-	  templates/pgconfig.tpl, templates/help/en/pgconfig.tpl,
-	  templates/help/ja/pgconfig.tpl: Bug fix and enhancements from
-	  Matsusaka regarding help and styles
+	* queryCache.php (tags: V2_3_1, V2_3_0, V2_2_0, V2_2_0_BETA1),
+	  doc/screen.css (tags: V2_3_1, V3_0_0, V3_0_0_BETA2, V3_0_0_BETA1,
+	  V2_3_0, V2_2_0, V2_2_0_BETA1), lang/en.lang.php,
+	  lang/ja.lang.php, templates/pgconfig.tpl,
+	  templates/help/en/pgconfig.tpl, templates/help/ja/pgconfig.tpl:
+	  Bug fix and enhancements from Matsusaka regarding help and styles
 
 2008-09-25 14:09  t-ishii
 
@@ -253,9 +281,10 @@
 
 2008-03-25 10:48  y-asaba
 
-	* tools/make_tarball.sh (tags: V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0,
-	  V2_2_0, V2_2_0_BETA1): Remove tools directory. This directory has
-	  developer's tools. No need to contain in release package.
+	* tools/make_tarball.sh (tags: V2_3_1, V3_0_0, V3_0_0_BETA2,
+	  V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1): Remove tools
+	  directory. This directory has developer's tools. No need to contain
+	  in release package.
 
 2008-03-25 10:34  y-asaba
 
@@ -263,93 +292,110 @@
 
 2008-03-18 18:00  y-asaba
 
-	* doc/index_en.html (tags: V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0,
-	  V2_2_0, V2_2_0_BETA1), doc/index_ja.html (tags: V3_0_0_BETA2,
+	* doc/index_en.html (tags: V2_3_1, V3_0_0, V3_0_0_BETA2,
+	  V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1), doc/index_ja.html
+	  (tags: V2_3_1, V3_0_0, V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0,
+	  V2_2_0, V2_2_0_BETA1), doc/en/changePassword.html (tags: V2_3_1,
+	  V3_0_0, V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0,
+	  V2_2_0_BETA1), doc/en/config.html (tags: V2_3_1, V3_0_0,
+	  V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1),
+	  doc/en/errorCode.html (tags: V2_3_1, V3_0_0, V3_0_0_BETA2,
+	  V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1), doc/en/install.html
+	  (tags: V2_3_1, V3_0_0, V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0,
+	  V2_2_0, V2_2_0_BETA1), doc/en/login.html (tags: V2_3_1, V3_0_0,
+	  V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1),
+	  doc/en/logout.html (tags: V2_3_1, V3_0_0, V3_0_0_BETA2,
 	  V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1),
-	  doc/en/changePassword.html (tags: V3_0_0_BETA2, V3_0_0_BETA1,
-	  V2_3_0, V2_2_0, V2_2_0_BETA1), doc/en/config.html (tags:
+	  doc/en/nodeServerStatus.html (tags: V2_3_1, V3_0_0, V3_0_0_BETA2,
+	  V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1), doc/en/pgconfig.html
+	  (tags: V2_3_1, V3_0_0, V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0,
+	  V2_2_0, V2_2_0_BETA1), doc/en/queryCache.html (tags: V2_3_1,
+	  V3_0_0, V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0,
+	  V2_2_0_BETA1), doc/en/status.html (tags: V2_3_1, V3_0_0,
 	  V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1),
-	  doc/en/errorCode.html (tags: V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0,
-	  V2_2_0, V2_2_0_BETA1), doc/en/install.html (tags: V3_0_0_BETA2,
-	  V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1), doc/en/login.html
-	  (tags: V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1),
-	  doc/en/logout.html (tags: V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0,
-	  V2_2_0, V2_2_0_BETA1), doc/en/nodeServerStatus.html (tags:
-	  V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1),
-	  doc/en/pgconfig.html (tags: V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0,
-	  V2_2_0, V2_2_0_BETA1), doc/en/queryCache.html (tags:
-	  V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1),
-	  doc/en/status.html (tags: V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0,
-	  V2_2_0, V2_2_0_BETA1), doc/en/systemDb.html (tags: V3_0_0_BETA2,
+	  doc/en/systemDb.html (tags: V2_3_1, V3_0_0, V3_0_0_BETA2,
 	  V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1),
-	  doc/ja/changePassword.html (tags: V3_0_0_BETA2, V3_0_0_BETA1,
-	  V2_3_0, V2_2_0, V2_2_0_BETA1), doc/ja/config.html (tags:
+	  doc/ja/changePassword.html (tags: V2_3_1, V3_0_0, V3_0_0_BETA2,
+	  V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1), doc/ja/config.html
+	  (tags: V2_3_1, V3_0_0, V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0,
+	  V2_2_0, V2_2_0_BETA1), doc/ja/errorCode.html (tags: V2_3_1,
+	  V3_0_0, V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0,
+	  V2_2_0_BETA1), doc/ja/install.html (tags: V2_3_1, V3_0_0,
 	  V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1),
-	  doc/ja/errorCode.html (tags: V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0,
-	  V2_2_0, V2_2_0_BETA1), doc/ja/install.html (tags: V3_0_0_BETA2,
-	  V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1), doc/ja/login.html
-	  (tags: V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1),
-	  doc/ja/logout.html (tags: V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0,
+	  doc/ja/login.html (tags: V2_3_1, V3_0_0, V3_0_0_BETA2,
+	  V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1), doc/ja/logout.html
+	  (tags: V2_3_1, V3_0_0, V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0,
 	  V2_2_0, V2_2_0_BETA1), doc/ja/nodeServerStatus.html (tags:
+	  V2_3_1, V3_0_0, V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0,
+	  V2_2_0_BETA1), doc/ja/pgconfig.html (tags: V2_3_1, V3_0_0,
 	  V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1),
-	  doc/ja/pgconfig.html (tags: V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0,
-	  V2_2_0, V2_2_0_BETA1), doc/ja/queryCache.html (tags:
+	  doc/ja/queryCache.html (tags: V2_3_1, V3_0_0, V3_0_0_BETA2,
+	  V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1), doc/ja/status.html
+	  (tags: V2_3_1, V3_0_0, V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0,
+	  V2_2_0, V2_2_0_BETA1), doc/ja/systemDb.html (tags: V2_3_1,
+	  V3_0_0, V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0,
+	  V2_2_0_BETA1), templates/changePassword.tpl (tags: V2_3_1,
+	  V3_0_0, V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0,
+	  V2_2_0_BETA1), templates/config.tpl (tags: V2_3_1, V2_3_0,
+	  V2_2_0, V2_2_0_BETA1), templates/error.tpl (tags: V2_3_1, V3_0_0,
 	  V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1),
-	  doc/ja/status.html (tags: V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0,
-	  V2_2_0, V2_2_0_BETA1), doc/ja/systemDb.html (tags: V3_0_0_BETA2,
+	  templates/innerError.tpl (tags: V2_3_1, V3_0_0, V3_0_0_BETA2,
 	  V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1),
-	  templates/changePassword.tpl (tags: V3_0_0_BETA2, V3_0_0_BETA1,
-	  V2_3_0, V2_2_0, V2_2_0_BETA1), templates/config.tpl (tags:
-	  V2_3_0, V2_2_0, V2_2_0_BETA1), templates/error.tpl (tags:
-	  V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1),
-	  templates/innerError.tpl (tags: V3_0_0_BETA2, V3_0_0_BETA1,
-	  V2_3_0, V2_2_0, V2_2_0_BETA1), templates/innerLog.tpl (tags:
-	  V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1),
-	  templates/innerNodeServerStatus.tpl (tags: V3_0_0_BETA2,
+	  templates/innerLog.tpl (tags: V2_3_1, V3_0_0, V3_0_0_BETA2,
 	  V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1),
-	  templates/innerSummary.tpl (tags: V2_3_0, V2_2_0, V2_2_0_BETA1),
-	  templates/innerSystemCatalog.tpl (tags: V3_0_0_BETA2,
-	  V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1), templates/login.tpl
-	  (tags: V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1),
-	  templates/nodeServerStatus.tpl (tags: V3_0_0_BETA2, V3_0_0_BETA1,
-	  V2_3_0, V2_2_0, V2_2_0_BETA1), templates/nodeStatus.tpl (tags:
-	  V2_3_0, V2_2_0, V2_2_0_BETA1), templates/pgconfig.tpl,
-	  templates/pgmgtNotFound.tpl (tags: V3_0_0_BETA2, V3_0_0_BETA1,
-	  V2_3_0, V2_2_0, V2_2_0_BETA1), templates/procInfo.tpl (tags:
-	  V2_3_0, V2_2_0, V2_2_0_BETA1), templates/queryCache.tpl (tags:
+	  templates/innerNodeServerStatus.tpl (tags: V2_3_1, V3_0_0,
 	  V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1),
-	  templates/status.tpl (tags: V2_3_0, V2_2_0, V2_2_0_BETA1),
-	  templates/systemDb.tpl (tags: V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0,
-	  V2_2_0, V2_2_0_BETA1), templates/help/en/changePassword.tpl
-	  (tags: V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1),
-	  templates/help/en/config.tpl (tags: V3_0_0_BETA2, V3_0_0_BETA1,
-	  V2_3_0, V2_2_0, V2_2_0_BETA1), templates/help/en/errorCode.tpl
-	  (tags: V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1),
-	  templates/help/en/login.tpl (tags: V3_0_0_BETA2, V3_0_0_BETA1,
-	  V2_3_0, V2_2_0, V2_2_0_BETA1),
-	  templates/help/en/nodeServerStatus.tpl (tags: V3_0_0_BETA2,
+	  templates/innerSummary.tpl (tags: V2_3_1, V2_3_0, V2_2_0,
+	  V2_2_0_BETA1), templates/innerSystemCatalog.tpl (tags: V2_3_1,
+	  V3_0_0, V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0,
+	  V2_2_0_BETA1), templates/login.tpl (tags: V2_3_1, V3_0_0,
+	  V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1),
+	  templates/nodeServerStatus.tpl (tags: V2_3_1, V3_0_0,
+	  V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1),
+	  templates/nodeStatus.tpl (tags: V2_3_1, V2_3_0, V2_2_0,
+	  V2_2_0_BETA1), templates/pgconfig.tpl,
+	  templates/pgmgtNotFound.tpl (tags: V2_3_1, V3_0_0, V3_0_0_BETA2,
 	  V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1),
+	  templates/procInfo.tpl (tags: V2_3_1, V2_3_0, V2_2_0,
+	  V2_2_0_BETA1), templates/queryCache.tpl (tags: V2_3_1, V3_0_0,
+	  V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1),
+	  templates/status.tpl (tags: V2_3_1, V2_3_0, V2_2_0,
+	  V2_2_0_BETA1), templates/systemDb.tpl (tags: V2_3_1, V3_0_0,
+	  V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1),
+	  templates/help/en/changePassword.tpl (tags: V2_3_1, V3_0_0,
+	  V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1),
+	  templates/help/en/config.tpl (tags: V2_3_1, V3_0_0, V3_0_0_BETA2,
+	  V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1),
+	  templates/help/en/errorCode.tpl (tags: V2_3_1, V3_0_0,
+	  V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1),
+	  templates/help/en/login.tpl (tags: V2_3_1, V3_0_0, V3_0_0_BETA2,
+	  V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1),
+	  templates/help/en/nodeServerStatus.tpl (tags: V2_3_1, V3_0_0,
+	  V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1),
 	  templates/help/en/pgconfig.tpl, templates/help/en/queryCache.tpl
-	  (tags: V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1),
-	  templates/help/en/status.tpl (tags: V3_0_0_BETA2, V3_0_0_BETA1,
-	  V2_3_0, V2_2_0, V2_2_0_BETA1), templates/help/en/systemDb.tpl
-	  (tags: V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1),
-	  templates/help/ja/changePassword.tpl (tags: V3_0_0_BETA2,
-	  V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1),
-	  templates/help/ja/config.tpl (tags: V3_0_0_BETA2, V3_0_0_BETA1,
-	  V2_3_0, V2_2_0, V2_2_0_BETA1), templates/help/ja/errorCode.tpl
-	  (tags: V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1),
-	  templates/help/ja/login.tpl (tags: V3_0_0_BETA2, V3_0_0_BETA1,
-	  V2_3_0, V2_2_0, V2_2_0_BETA1),
-	  templates/help/ja/nodeServerStatus.tpl (tags: V3_0_0_BETA2,
-	  V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1),
+	  (tags: V2_3_1, V3_0_0, V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0,
+	  V2_2_0, V2_2_0_BETA1), templates/help/en/status.tpl (tags:
+	  V2_3_1, V3_0_0, V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0,
+	  V2_2_0_BETA1), templates/help/en/systemDb.tpl (tags: V2_3_1,
+	  V3_0_0, V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0,
+	  V2_2_0_BETA1), templates/help/ja/changePassword.tpl (tags:
+	  V2_3_1, V3_0_0, V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0,
+	  V2_2_0_BETA1), templates/help/ja/config.tpl (tags: V2_3_1,
+	  V3_0_0, V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0,
+	  V2_2_0_BETA1), templates/help/ja/errorCode.tpl (tags: V2_3_1,
+	  V3_0_0, V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0,
+	  V2_2_0_BETA1), templates/help/ja/login.tpl (tags: V2_3_1, V3_0_0,
+	  V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1),
+	  templates/help/ja/nodeServerStatus.tpl (tags: V2_3_1, V3_0_0,
+	  V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1),
 	  templates/help/ja/pgconfig.tpl, templates/help/ja/queryCache.tpl
-	  (tags: V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1),
-	  templates/help/ja/status.tpl (tags: V3_0_0_BETA2, V3_0_0_BETA1,
-	  V2_3_0, V2_2_0, V2_2_0_BETA1), templates/help/ja/systemDb.tpl
-	  (tags: V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1):
-	  Fixed wrong <meta> tag position. pgpoolAdmin showed empty pages when
-	  lang setting was Japanese.
+	  (tags: V2_3_1, V3_0_0, V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0,
+	  V2_2_0, V2_2_0_BETA1), templates/help/ja/status.tpl (tags:
+	  V2_3_1, V3_0_0, V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0,
+	  V2_2_0_BETA1), templates/help/ja/systemDb.tpl (tags: V2_3_1,
+	  V3_0_0, V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0,
+	  V2_2_0_BETA1): Fixed wrong <meta> tag position. pgpoolAdmin
+	  showed empty pages when lang setting was Japanese.
 
 	    <title>Japanese title</title>
 	    <meta http-equiv="Content-Type" content="text/html;
@@ -383,8 +429,8 @@
 2008-03-14 16:37  y-asaba
 
 	* doc/en/images/: nodestatus.jpg, status.jpg (utags: V2_1_0_BETA1,
-	  V2_2_0, V2_2_0_BETA1, V2_3_0, V3_0_0_BETA1, V3_0_0_BETA2): Update
-	  screenshots.
+	  V2_2_0, V2_2_0_BETA1, V2_3_0, V2_3_1, V3_0_0, V3_0_0_BETA1,
+	  V3_0_0_BETA2): Update screenshots.
 
 2008-03-14 16:01  y-asaba
 
@@ -442,10 +488,11 @@
 
 2008-02-06 17:41  yamaguti
 
-	* command.php, common.php, config.php (tags: V2_3_0, V2_2_0,
-	  V2_2_0_BETA1), status.php (tags: V2_3_0, V2_2_0, V2_2_0_BETA1),
-	  templates/status.tpl (utags: V2_1_0_BETA1): Disable "Log" button
-	  in "pgpool status" screen if a PIPE command is set as a log file.
+	* command.php, common.php, config.php (tags: V2_3_1, V2_3_0,
+	  V2_2_0, V2_2_0_BETA1), status.php (tags: V2_3_1, V2_3_0, V2_2_0,
+	  V2_2_0_BETA1), templates/status.tpl (utags: V2_1_0_BETA1):
+	  Disable "Log" button in "pgpool status" screen if a PIPE command is
+	  set as a log file.
 
 2008-02-06 17:08  yamaguti
 
@@ -487,15 +534,15 @@
 
 2008-02-04 13:33  yamaguti
 
-	* .htaccess (tags: V2_3_0, V2_2_0, V2_2_0_BETA1, V2_1_0_BETA1):
-	  hide *.tpl files from a client
+	* .htaccess (tags: V2_3_1, V2_3_0, V2_2_0, V2_2_0_BETA1,
+	  V2_1_0_BETA1): hide *.tpl files from a client
 
 2008-02-01 17:57  yamaguti
 
 	* status.php, doc/en/config.html, doc/en/install.html,
-	  install/lang/en.lang.php (tags: V2_3_0, V2_2_0, V2_2_0_BETA1,
-	  V2_1_0_BETA1), templates/help/en/config.tpl: lowered "Pgpool"'s
-	  first 'P' in  English documents & messages
+	  install/lang/en.lang.php (tags: V2_3_1, V2_3_0, V2_2_0,
+	  V2_2_0_BETA1, V2_1_0_BETA1), templates/help/en/config.tpl:
+	  lowered "Pgpool"'s first 'P' in  English documents & messages
 
 2008-02-01 16:08  yamaguti
 
@@ -515,41 +562,45 @@
 
 2008-02-01 16:06  yamaguti
 
-	* changePassword.php (tags: V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0,
-	  V2_2_0, V2_2_0_BETA1, V2_1_0_BETA1), command.php, common.php,
-	  config.php, definePgpoolConfParam.php, help.php (tags:
-	  V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1,
-	  V2_1_0_BETA1), index.php (tags: V3_0_0_BETA2, V3_0_0_BETA1,
-	  V2_3_0, V2_2_0, V2_2_0_BETA1, V2_1_0_BETA1), innerLog.php (tags:
-	  V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1,
-	  V2_1_0_BETA1), innerNodeServerStatus.php (tags: V3_0_0_BETA2,
+	* changePassword.php (tags: V2_3_1, V3_0_0, V3_0_0_BETA2,
 	  V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1, V2_1_0_BETA1),
-	  innerSummary.php (tags: V2_3_0, V2_2_0, V2_2_0_BETA1,
-	  V2_1_0_BETA1), innerSystemCatalog.php (tags: V3_0_0_BETA2,
-	  V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1, V2_1_0_BETA1),
-	  login.php (tags: V2_3_0, V2_2_0, V2_2_0_BETA1, V2_1_0_BETA1),
-	  logout.php (tags: V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0,
-	  V2_2_0_BETA1, V2_1_0_BETA1), nodeServerStatus.php (tags:
+	  command.php, common.php, config.php, definePgpoolConfParam.php,
+	  help.php (tags: V2_3_1, V3_0_0, V3_0_0_BETA2, V3_0_0_BETA1,
+	  V2_3_0, V2_2_0, V2_2_0_BETA1, V2_1_0_BETA1), index.php (tags:
+	  V2_3_1, V3_0_0, V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0,
+	  V2_2_0_BETA1, V2_1_0_BETA1), innerLog.php (tags: V2_3_1, V3_0_0,
 	  V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1,
-	  V2_1_0_BETA1), nodeStatus.php (tags: V2_3_0, V2_2_0,
+	  V2_1_0_BETA1), innerNodeServerStatus.php (tags: V2_3_1, V3_0_0,
+	  V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1,
+	  V2_1_0_BETA1), innerSummary.php (tags: V2_3_1, V2_3_0, V2_2_0,
+	  V2_2_0_BETA1, V2_1_0_BETA1), innerSystemCatalog.php (tags:
+	  V2_3_1, V3_0_0, V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0,
+	  V2_2_0_BETA1, V2_1_0_BETA1), login.php (tags: V2_3_1, V2_3_0,
+	  V2_2_0, V2_2_0_BETA1, V2_1_0_BETA1), logout.php (tags: V2_3_1,
+	  V3_0_0, V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1,
+	  V2_1_0_BETA1), nodeServerStatus.php (tags: V2_3_1, V3_0_0,
+	  V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1,
+	  V2_1_0_BETA1), nodeStatus.php (tags: V2_3_1, V2_3_0, V2_2_0,
 	  V2_2_0_BETA1, V2_1_0_BETA1), pgconfig.php (tags: V2_3_0, V2_2_0,
 	  V2_2_0_BETA1, V2_1_0_BETA1), procInfo.php (tags: V2_3_0, V2_2_0,
 	  V2_2_0_BETA1, V2_1_0_BETA1), queryCache.php (tags: V2_1_0_BETA1),
-	  status.php, systemDb.php (tags: V3_0_0_BETA2, V3_0_0_BETA1,
-	  V2_3_0, V2_2_0, V2_2_0_BETA1, V2_1_0_BETA1), version.php,
-	  install/checkDirectory.php (tags: V2_3_0, V2_2_0, V2_2_0_BETA1,
-	  V2_1_0_BETA1), install/checkParameter.php (tags: V2_3_0, V2_2_0,
-	  V2_2_0_BETA1, V2_1_0_BETA1), install/defaultParameter.php (tags:
-	  V2_3_0, V2_2_0, V2_2_0_BETA1, V2_1_0_BETA1), install/finish.php
-	  (tags: V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1,
-	  V2_1_0_BETA1), install/index.php (tags: V2_3_0, V2_2_0,
-	  V2_2_0_BETA1, V2_1_0_BETA1), install/setLang.php (tags:
-	  V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1,
+	  status.php, systemDb.php (tags: V2_3_1, V3_0_0, V3_0_0_BETA2,
+	  V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1, V2_1_0_BETA1),
+	  version.php, install/checkDirectory.php (tags: V2_3_1, V2_3_0,
+	  V2_2_0, V2_2_0_BETA1, V2_1_0_BETA1), install/checkParameter.php
+	  (tags: V2_3_0, V2_2_0, V2_2_0_BETA1, V2_1_0_BETA1),
+	  install/defaultParameter.php (tags: V2_3_1, V2_3_0, V2_2_0,
+	  V2_2_0_BETA1, V2_1_0_BETA1), install/finish.php (tags: V2_3_1,
+	  V3_0_0, V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1,
+	  V2_1_0_BETA1), install/index.php (tags: V2_3_1, V2_3_0, V2_2_0,
+	  V2_2_0_BETA1, V2_1_0_BETA1), install/setLang.php (tags: V2_3_1,
+	  V3_0_0, V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1,
 	  V2_1_0_BETA1), install/lang/en.lang.php, install/lang/fr.lang.php
-	  (tags: V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1,
-	  V2_1_0_BETA1), install/lang/ja.lang.php (tags: V2_3_0, V2_2_0,
-	  V2_2_0_BETA1, V2_1_0_BETA1), lang/en.lang.php, lang/fr.lang.php,
-	  lang/ja.lang.php: updated source files copyright
+	  (tags: V2_3_1, V3_0_0, V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0,
+	  V2_2_0, V2_2_0_BETA1, V2_1_0_BETA1), install/lang/ja.lang.php
+	  (tags: V2_3_1, V2_3_0, V2_2_0, V2_2_0_BETA1, V2_1_0_BETA1),
+	  lang/en.lang.php, lang/fr.lang.php, lang/ja.lang.php: updated
+	  source files copyright
 
 	  2003-2007  =>  2003-2008
 
@@ -576,8 +627,8 @@
 
 	* doc/ja/images/: nodestatus.jpg, pgpooladmin.jpg, restart.jpg,
 	  start.jpg, status.jpg, stop.jpg (utags: V2_1_0_BETA1, V2_2_0,
-	  V2_2_0_BETA1, V2_3_0, V3_0_0_BETA1, V3_0_0_BETA2): Update
-	  screenshot.
+	  V2_2_0_BETA1, V2_3_0, V2_3_1, V3_0_0, V3_0_0_BETA1,
+	  V3_0_0_BETA2): Update screenshot.
 
 2007-12-28 11:21  y-asaba
 
@@ -754,9 +805,9 @@
 
 2007-02-20 18:55  devrim
 
-	* pgpoolAdmin.spec (tags: V3_0_0_BETA2, V3_0_0_BETA1, V2_3_0,
-	  V2_2_0, V2_2_0_BETA1, V2_1_0_BETA1, V2_0_0_BETA1): Removed Vendor
-	  tag, per guidelines
+	* pgpoolAdmin.spec (tags: V2_3_1, V3_0_0, V3_0_0_BETA2,
+	  V3_0_0_BETA1, V2_3_0, V2_2_0, V2_2_0_BETA1, V2_1_0_BETA1,
+	  V2_0_0_BETA1): Removed Vendor tag, per guidelines
 
 2007-02-20 18:54  devrim
 
