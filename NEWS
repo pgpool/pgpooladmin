@@ -1,3 +1,9 @@
+pgpoolAdmin 3.0.1 2010/09/24
+
+	* Version 3.0.1
+
+	  - Update embedded Smarty to 2.6.26(Tatsuo)
+
 pgpoolAdmin 3.0 2010/09/10
 
 	* Version 3.0
