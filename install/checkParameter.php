@@ -19,7 +19,7 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2008 PgPool Global Development Group
+ * @copyright  2003-2010 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
@@ -113,11 +113,18 @@ if(isset($_POST['pgpool_logfile']) && $_POST['pgpool_logfile']) {
 else {
     $pgpool_logfile = _PGPOOL2_LOG_FILE;
 }
-if(!is_dir(dirname($pgpool_logfile))) {
+
+if($pgpool_logfile != '' && strpos($pgpool_logfile, '|') !== FALSE) {
+	// pipe
+	$tmp_str = trim($pgpool_logfile);
+	if(($tmp_str[0] != '|') || ($tmp_str[strlen($tmp_str) - 1] == '|')) {
+	    $msgPgpoolLogFile = 'Directory not found';
+    	$error = true;
+	}
+} else if (!is_dir(dirname($pgpool_logfile))) {
     $msgPgpoolLogFile = 'Directory not found';
     $error = true;
-}
-else {
+} else {
     if(!is_writable(dirname($pgpool_logfile))) {
         $msgPgpoolLogFile = 'Write access denied';
         $error = true;
