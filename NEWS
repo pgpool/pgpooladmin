@@ -1,3 +1,13 @@
+pgpoolAdmin 3.0.3 2011/03/10
+
+	* Version 3.0.3
+
+	* Update french translation, per a patch from Jean-Paul
+      Argudo(Guillaume)
+
+	* Allow to accept '|' for pgpool logfile in the installation
+      script. This has been alredy possible in pgpool.conf(Tatsuo)
+
 pgpoolAdmin 3.0.1 2010/09/24
 
 	* Version 3.0.1
