@@ -2,7 +2,7 @@
 
 # Release package script.
 #
-# Usage: ./make_tarball version cvs-tag-name
+# Usage: ./make_tarball [version cvs-tag-name]
 #
 
 CVSROOT=:ext:${USER}@cvs.pgfoundry.org:/cvsroot/pgpool
