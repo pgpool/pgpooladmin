@@ -54,7 +54,7 @@ function execPcp($command, $num='') {
     $param = readPcpInfo();
     $param['hostname'] = _PGPOOL2_PCP_HOSTNAME;
 
-    $args = " " . $param['pcp_timeout'] . " " . $param['hostname'] . " " . $param['pcp_port'] . " ". $_SESSION[SESSION_LOGIN_USER] . " " . $_SESSION[SESSION_LOGIN_USER_PASSWORD] . " " . $num;
+    $args = " " . $param['pcp_timeout'] . " " . $param['hostname'] . " " . $param['pcp_port'] . " ". $_SESSION[SESSION_LOGIN_USER] . " '" . $_SESSION[SESSION_LOGIN_USER_PASSWORD] . "' " . $num;
 
     switch ($command) {
         case 'PCP_NODE_COUNT':
