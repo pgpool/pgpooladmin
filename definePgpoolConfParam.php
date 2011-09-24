@@ -139,12 +139,12 @@ $pgpoolConfigParam[$key]['regexp'] = "^[0-9a-zA-Z; ]+$";
 $key = 'white_function_list';
 $pgpoolConfigParam[$key]['type'] ='C';
 $pgpoolConfigParam[$key]['default'] ='';
-$pgpoolConfigParam[$key]['regexp'] = "^[0-9a-zA-Z,]*$";
+$pgpoolConfigParam[$key]['regexp'] = "^[0-9a-zA-Z_,]*$";
 
 $key = 'black_function_list';
 $pgpoolConfigParam[$key]['type'] ='C';
 $pgpoolConfigParam[$key]['default'] ='';
-$pgpoolConfigParam[$key]['regexp'] = "^[0-9a-zA-Z,]*$";
+$pgpoolConfigParam[$key]['regexp'] = "^[0-9a-zA-Z_,]*$";
 
 $key = 'print_timestamp';
 $pgpoolConfigParam[$key]['type'] ='B';
