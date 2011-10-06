@@ -46,7 +46,7 @@ define('SMARTY_COMPILE_DIR', dirname(__FILE__) . '/templates_c' );
 $tpl = new Smarty();
 $tpl->assign('version', $version);
 
-if(!file_exists('conf/pgmgt.conf.php')) {
+if (!file_exists('conf/pgmgt.conf.php')) {
     include('lang/en.lang.php');
     $tpl->assign('message', $message);
     $tpl->display('pgmgtNotFound.tpl');
@@ -59,7 +59,7 @@ require_once('conf/pgmgt.conf.php');
  * Check login
  */
 $isLogin = FALSE;
-if(isset($_SESSION[SESSION_LOGIN_USER])) {
+if (isset($_SESSION[SESSION_LOGIN_USER])) {
     $isLogin = TRUE;
     $tpl->assign('isLogin', $isLogin);
 }
@@ -68,21 +68,21 @@ if(isset($_SESSION[SESSION_LOGIN_USER])) {
  * Check pgmgt.conf.php Parameter
  */
 $errors = array();
-if( !defined('_PGPOOL2_LANG')
-    || !defined('_PGPOOL2_CONFIG_FILE')
-    || !defined('_PGPOOL2_PASSWORD_FILE')
-    || !defined('_PGPOOL2_COMMAND')
-    || !defined('_PGPOOL2_PCP_DIR')
-    || !defined('_PGPOOL2_PCP_HOSTNAME')
-    || !defined('_PGPOOL2_STATUS_REFRESH_TIME')) {
-        
-        include('lang/en.lang.php');
-        $tpl->assign('message', $message);
-        $errorCode = 'e7';
-        $tpl->assign('errorCode', $errorCode);
-        $tpl->display('error.tpl');
-        exit();
-    }
+if (!defined('_PGPOOL2_LANG') ||
+    !defined('_PGPOOL2_CONFIG_FILE') ||
+    !defined('_PGPOOL2_PASSWORD_FILE') ||
+    !defined('_PGPOOL2_COMMAND') ||
+    !defined('_PGPOOL2_PCP_DIR') ||
+    !defined('_PGPOOL2_PCP_HOSTNAME') ||
+    !defined('_PGPOOL2_STATUS_REFRESH_TIME'))
+{
+    include('lang/en.lang.php');
+    $tpl->assign('message', $message);
+    $errorCode = 'e7';
+    $tpl->assign('errorCode', $errorCode);
+    $tpl->display('error.tpl');
+    exit();
+}
 
 /**
  * Create message catalog list
@@ -90,17 +90,17 @@ if( !defined('_PGPOOL2_LANG')
 $messageList = array();
 
 $res_dir = opendir('lang/');
-while($file_name = readdir( $res_dir )) {
-    if(preg_match('/.*\.lang\.php$/', $file_name)) {
-        if(@is_file('lang/' . $file_name)) {
+while ($file_name = readdir( $res_dir )) {
+    if (preg_match('/.*\.lang\.php$/', $file_name)) {
+        if (@is_file('lang/' . $file_name)) {
             include('lang/' . $file_name);
-            $messageList[$message['lang']] = $message['strLang']; 
+            $messageList[$message['lang']] = $message['strLang'];
+
         } else {
             $errorCode = 'e2';
             $tpl->assign('errorCode', $errorCode);
             $tpl->display('error.tpl');
             exit();
-
         }
     }
 }
@@ -123,18 +123,18 @@ $_SESSION[SESSION_MESSAGE] = $message;
  */
 function openDBConnection($param)
 {
-    $host= $param['hostname'];
-    $port = $param['port'];
-    $dbname = $param['dbname'];
-    $user = $param['user'];
+    $host     = $param['hostname'];
+    $port     = $param['port'];
+    $dbname   = $param['dbname'];
+    $user     = $param['user'];
     $password = $param['password'];
 
-    if($host != '') {
+    if ($host != '') {
         $conStr = "host=$host port=$port dbname=$dbname user=$user password=$password" ;
     } else {
         $conStr = "port=$port dbname=$dbname user=$user password=$password" ;
     }
-    
+
     $con = @pg_connect($conStr);
     return $con;
 }
@@ -156,10 +156,11 @@ function closeDBConnection($connection)
  * @param string $sql
  * @return resource
  */
-function execQuery($conn, $sql) {
+function execQuery($conn, $sql)
+{
     $rs = @pg_query($conn, $sql);
-    if(!pg_result_status($rs) == PGSQL_TUPLES_OK) {
-        return false;
+    if (!pg_result_status($rs) == PGSQL_TUPLES_OK) {
+        return FALSE;
     }
 
     return $rs;
@@ -170,33 +171,36 @@ function execQuery($conn, $sql) {
  *
  * @return  string
  */
-function selectLanguage($selectLang, $messageList) {
-    if( $selectLang == null || $selectLang == 'auto') {
+function selectLanguage($selectLang, $messageList)
+{
+    if ($selectLang == NULL || $selectLang == 'auto') {
         if(isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
             $acceptLanguages = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
         } else {
             $acceptLanguages = FALSE;
         }
-        
-        $lang = null;
-        
-        if($acceptLanguages == FALSE) {
+
+        $lang = NULL;
+
+        if ($acceptLanguages == FALSE) {
             $lang = 'en';
+
         } else {
             $langList = split(',|;', $acceptLanguages);
-            foreach($langList as $acceptLanguage) {
-                foreach(array_keys($messageList) as $messageLanguage) {
-                    if( $acceptLanguage == $messageLanguage ) {
+            foreach ($langList as $acceptLanguage) {
+                foreach (array_keys($messageList) as $messageLanguage) {
+                    if ($acceptLanguage == $messageLanguage ) {
                         $lang = $messageLanguage;
                         break;
                     }
                 }
-                if( $lang != null) break;
+                if ($lang != NULL) { break; }
             }
         }
     } else {
         $lang = $selectLang;
     }
+
     $_SESSION[SESSION_LANG] = $lang;
     return $lang;
 }
@@ -206,14 +210,14 @@ function selectLanguage($selectLang, $messageList) {
  *
  * @return bool
  */
-function isParallelMode() {
-    
+function isParallelMode()
+{
     $params = readConfigParams(array('parallel_mode'));
 
-    if($params['parallel_mode'] == 'true') {
-        return true;
+    if ($params['parallel_mode'] == 'true') {
+        return TRUE;
     } else {
-        return false;
+        return FALSE;
     }
 }
 
@@ -222,15 +226,17 @@ function isParallelMode() {
  *
  * @return  bool
  */
-function NodeActive($num) {
+function NodeActive($num)
+{
     $healthCheckDb = 'template1';
-    
+
     $params = readHealthCheckParam();
-    
+
     $healthCheckUser = $params['health_check_user'];
     $backendHostName = $params['backend_hostname'][$num];
-    $backendPort = $params['backend_port'][$num];
-    if($backendHostName != '') {
+    $backendPort     = $params['backend_port'][$num];
+
+    if ($backendHostName != '') {
         $conStr = "dbname=$healthCheckDb user=$healthCheckUser host=$backendHostName port=$backendPort" ;
     } else {
         $conStr = "dbname=$healthCheckDb port=$backendPort user=$healthCheckUser" ;
@@ -238,7 +244,7 @@ function NodeActive($num) {
 
     $conn = @pg_connect($conStr);
 
-    if($conn == FALSE) {
+    if ($conn == FALSE) {
         @pg_close($conn);
         return FALSE;
     } else {
@@ -252,21 +258,24 @@ function NodeActive($num) {
  *
  * @return  integer
  */
-function NodeStandby($num) {
+function NodeStandby($num)
+{
 
-	$params = readConfigParams(array('master_slave_mode','master_slave_sub_mode'));
+    $params = readConfigParams(array('master_slave_mode','master_slave_sub_mode'));
 
-	if ($params['master_slave_mode'] != 'true' || $params['master_slave_sub_mode'] != 'stream')
-		return -1;
+    if ($params['master_slave_mode'] != 'true' || $params['master_slave_sub_mode'] != 'stream') {
+        return -1;
+    }
 
     $healthCheckDb = 'template1';
-    
+
     $params = readHealthCheckParam();
-    
+
     $healthCheckUser = $params['health_check_user'];
     $backendHostName = $params['backend_hostname'][$num];
-    $backendPort = $params['backend_port'][$num];
-    if($backendHostName != '') {
+    $backendPort     = $params['backend_port'][$num];
+
+    if ($backendHostName != '') {
         $conStr = "dbname=$healthCheckDb user=$healthCheckUser host=$backendHostName port=$backendPort" ;
     } else {
         $conStr = "dbname=$healthCheckDb port=$backendPort user=$healthCheckUser" ;
@@ -274,40 +283,42 @@ function NodeStandby($num) {
 
     $conn = @pg_connect($conStr);
 
-    if($conn == FALSE) {
+    if ($conn == FALSE) {
         @pg_close($conn);
-        return -1;
-	}
-
-	$res = pg_query($conn, 'SELECT pg_is_in_recovery()');
-	if(!pg_result_status($res) == PGSQL_TUPLES_OK) {
         return -1;
     }
 
-	$rr = pg_fetch_array($res);
+    $res = pg_query($conn, 'SELECT pg_is_in_recovery()');
+    if (!pg_result_status($res) == PGSQL_TUPLES_OK) {
+        return -1;
+    }
 
-	if ($rr[0][0] == 't')
-		$r = 1;
-	else
-		$r = 0;
+    $rr = pg_fetch_array($res);
 
-	@pg_free_result($res);
-	@pg_close($conn);
-	return $r;
+    if ($rr[0][0] == 't') {
+        $r = 1;
+    } else {
+        $r = 0;
+    }
+
+    @pg_free_result($res);
+    @pg_close($conn);
+    return $r;
 }
 
 /**
- * Read parameter from pgpool.conf using health check 
+ * Read parameter from pgpool.conf using health check
  *
  * @return  array
  */
-function readHealthCheckParam() {
-    
+function readHealthCheckParam()
+{
+
     $params = readConfigParams(array('health_check_user',
-                                                  'backend_hostname',
-                                                  'backend_port',
-                                                  'backend_weight'));
-    
+                                     'backend_hostname',
+                                     'backend_port',
+                                     'backend_weight'));
+
     return $params;
 }
 
@@ -316,13 +327,14 @@ function readHealthCheckParam() {
  *
  * @return  bool
  */
-function DoesPgpoolPidExist() {
+function DoesPgpoolPidExist()
+{
     $params = readConfigParams(array('pid_file_name'));
     $pidFile = $params['pid_file_name'];
-    if( file_exists($pidFile) ) {
-        return true;
+    if (file_exists($pidFile) ) {
+        return TRUE;
     }
-    return false;
+    return FALSE;
 }
 
 /**
@@ -330,8 +342,9 @@ function DoesPgpoolPidExist() {
  *
  * @return  bool
  */
-function readLogDir() {
-    
+function readLogDir()
+{
+
     $params = readConfigParams(array('logdir'));
     return $params['logdir'];
 }
@@ -341,14 +354,14 @@ function readLogDir() {
  *
  * @return bool
  */
-function isReplicationMode() {
-    
+function isReplicationMode()
+{
     $params = readConfigParams(array('replication_mode'));
 
-    if($params['replication_mode'] == 'true') {
-        return true;
+    if ($params['replication_mode'] == 'true') {
+        return TRUE;
     } else {
-        return false;
+        return FALSE;
     }
 }
 
@@ -357,14 +370,14 @@ function isReplicationMode() {
  *
  * @return bool
  */
-function isMasterSlaveMode() {
-    
+function isMasterSlaveMode()
+{
     $params = readConfigParams(array('master_slave_mode'));
 
-    if($params['master_slave_mode'] == 'true') {
-        return true;
+    if ($params['master_slave_mode'] == 'true') {
+        return TRUE;
     } else {
-        return false;
+        return FALSE;
     }
 }
 
@@ -375,13 +388,13 @@ function isMasterSlaveMode() {
  * @param array $paramList
  * @return array
  */
-function readConfigParams($paramList = FALSE) {
-
+function readConfigParams($paramList = FALSE)
+{
     $results = array();
     $configParam = array();
-    
+
     $configFile = @file(_PGPOOL2_CONFIG_FILE);
-    if($configFile == false) {
+    if ($configFile == FALSE) {
         $errTpl = new Smarty();
         $errTpl->assign('message', $_SESSION[SESSION_MESSAGE]);
         $errorCode = 'e4';
@@ -389,62 +402,65 @@ function readConfigParams($paramList = FALSE) {
         $errTpl->display('error.tpl');
         exit();
     }
-    
+
     foreach ($configFile as $line_num => $line) {
         $line = trim($line);
-        if(preg_match("/^\w/", $line)) {
+        if (preg_match("/^\w/", $line)) {
             list($key, $value) = explode("=", $line);
-            
+
             $key = trim($key);
             $value = trim($value);
-            
-            if(preg_match("/^backend_hostname/", $key)) {
+
+            if (preg_match("/^backend_hostname/", $key)) {
                 $num = str_replace('backend_hostname', '', $key);
                 $configParam['backend_hostname'][$num] = str_replace("'", "", $value);
-            }
-            else if(preg_match("/^backend_port/", $key)) {
+
+            } elseif (preg_match("/^backend_port/", $key)) {
                 $num = str_replace('backend_port', '', $key);
                 $configParam['backend_port'][$num] = $value;
-            }
-            else if(preg_match("/^backend_weight/", $key)) {
+
+            } elseif (preg_match("/^backend_weight/", $key)) {
                 $num = str_replace('backend_weight', '', $key);
                 $configParam['backend_weight'][$num] = $value;
-            }
-            else if(preg_match("/^backend_data_directory/", $key)) {
+
+            } elseif (preg_match("/^backend_data_directory/", $key)) {
                 $num = str_replace('backend_data_directory', '', $key);
                 $configParam['backend_data_directory'][$num] =str_replace("'", "", $value);
-            }
-            else {
+
+            } else {
                 $configParam[$key] = str_replace("'", "", $value);
             }
         }
     }
-    
-    if(is_array($paramList)) {
-        foreach($paramList as $key) {
-            if(isset($configParam[$key])) {
+
+    if (is_array($paramList)) {
+        foreach ($paramList as $key) {
+            if (isset($configParam[$key])) {
                 $results[$key] = $configParam[$key];
             } else {
                 include('definePgpoolConfParam.php');
-                if(!preg_match("/^backend_hostname/", $key)
-                  && !preg_match("/^backend_port/", $key)
-                  && !preg_match("/^backend_weight/", $key)
-				   && !preg_match("/^backend_data_directory/", $key)) {
+                if(!preg_match("/^backend_hostname/",       $key) &&
+                   !preg_match("/^backend_port/",           $key) &&
+                   !preg_match("/^backend_weight/",         $key) &&
+                   !preg_match("/^backend_data_directory/", $key))
+                {
                     $results[$key] = $pgpoolConfigParam[$key]['default'];
                 }
             }
         }
+
     } else {
         $results = $configParam;
     }
-    
+
     return $results;
-    
+
 }
 
-function isPipe($str) 
+function isPipe($str)
+
 {
-	return (strpos($str, '|') !== FALSE);
+    return (strpos($str, '|') !== FALSE);
 }
 
 ?>

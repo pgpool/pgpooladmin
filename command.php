@@ -32,29 +32,35 @@ require_once('common.php');
  * @param srgs $num
  * @return array
  */
-function execPcp($command, $num='') {
+function execPcp($command, $num='')
+{
     $pcpStatus = array (
-        '0' => 'SUCCESS',
-        '1' => 'UNKNOWNERR',
-        '2' => 'EOFERR',
-        '3' => 'NOMEMERR',
-        '4' => 'READERR',
-        '5' => 'WRITEERR',
-        '6' => 'TIMEOUTERR',
-        '7' => 'INVALERR',
-        '8' => 'CONNERR',
-        '9' => 'NOCONNERR',
-        '10' => 'SOCKERR',
-        '11' => 'HOSTERR',
-        '12' => 'BACKENDERR',
-        '13' => 'AUTHERR',
+        '0'   => 'SUCCESS',
+        '1'   => 'UNKNOWNERR',
+        '2'   => 'EOFERR',
+        '3'   => 'NOMEMERR',
+        '4'   => 'READERR',
+        '5'   => 'WRITEERR',
+        '6'   => 'TIMEOUTERR',
+        '7'   => 'INVALERR',
+        '8'   => 'CONNERR',
+        '9'   => 'NOCONNERR',
+        '10'  => 'SOCKERR',
+        '11'  => 'HOSTERR',
+        '12'  => 'BACKENDERR',
+        '13'  => 'AUTHERR',
         '127' => 'COMMANDERROR'
     );
 
     $param = readPcpInfo();
     $param['hostname'] = _PGPOOL2_PCP_HOSTNAME;
 
-    $args = " " . $param['pcp_timeout'] . " " . $param['hostname'] . " " . $param['pcp_port'] . " ". $_SESSION[SESSION_LOGIN_USER] . " '" . $_SESSION[SESSION_LOGIN_USER_PASSWORD] . "' " . $num;
+    $args = " " . $param['pcp_timeout'] .
+            " " . $param['hostname'] .
+            " " . $param['pcp_port'] .
+            " ". $_SESSION[SESSION_LOGIN_USER] .
+            " '" . $_SESSION[SESSION_LOGIN_USER_PASSWORD] . "' " .
+            $num;
 
     switch ($command) {
         case 'PCP_NODE_COUNT':
@@ -66,47 +72,47 @@ function execPcp($command, $num='') {
             $cmd = _PGPOOL2_PCP_DIR . '/pcp_node_info' . $args;
             $ret = exec($cmd, $output, $return_var);
             break;
-            
+
         case 'PCP_ATTACH_NODE':
             $cmd = _PGPOOL2_PCP_DIR . '/pcp_attach_node' . $args;
             $ret = exec($cmd, $output, $return_var);
             break;
-            
+
         case 'PCP_DETACH_NODE':
             $cmd = _PGPOOL2_PCP_DIR . '/pcp_detach_node' . $args;
             $ret = exec($cmd, $output, $return_var);
             break;
-            
+
         case 'PCP_PROC_COUNT':
             $cmd = _PGPOOL2_PCP_DIR . '/pcp_proc_count' . $args;
             $ret = exec($cmd, $output, $return_var);
             break;
-            
+
         case 'PCP_PROC_INFO':
             $cmd = _PGPOOL2_PCP_DIR . '/pcp_proc_info' . $args;
             $ret = exec($cmd, $output, $return_var);
             $ret = $output;
             break;
-            
-        case 'PCP_START_PGPOOL':
-			$configOption = ' -f ' . _PGPOOL2_CONFIG_FILE . ' -F ' . _PGPOOL2_PASSWORD_FILE;
-			
-			if(isPipe($num)) {
-				$cmdOption = $configOption . $num . ' > /dev/null &';
-			} else {
-				$cmdOption = $configOption . $num . ' 2>&1 &';
-			}
 
-			/* we should not check pid file here.
-			 * let pgpool handle bogus pid file
+        case 'PCP_START_PGPOOL':
+            $configOption = ' -f ' . _PGPOOL2_CONFIG_FILE .
+                            ' -F ' . _PGPOOL2_PASSWORD_FILE;
+
+            if(isPipe($num)) {
+                $cmdOption = $configOption . $num . ' > /dev/null &';
+            } else {
+                $cmdOption = $configOption . $num . ' 2>&1 &';
+            }
+
+            /* we should not check pid file here.
+             * let pgpool handle bogus pid file
              * if(DoesPgpoolPidExist()) {
              *   return array('FAIL'=> '');
              * }
-			 */
+             */
             $cmd = _PGPOOL2_COMMAND . $cmdOption;
-			//var_dump($cmd);exit;
             $ret = exec($cmd, $output, $return_var);
-            if($return_var == 0) {
+            if ($return_var == 0) {
                 return array($pcpStatus[$return_var] => $output);
             } else {
                 return array('FAIL' => $output);
@@ -115,17 +121,17 @@ function execPcp($command, $num='') {
 
         case 'PCP_RELOAD_PGPOOL':
             $cmdOption = $num;
-            $cmdOption = $cmdOption . ' -f ' . _PGPOOL2_CONFIG_FILE
-                                                    . ' -F ' . _PGPOOL2_PASSWORD_FILE . ' reload';
+            $cmdOption = $cmdOption .
+                         ' -f ' . _PGPOOL2_CONFIG_FILE .
+                         ' -F ' . _PGPOOL2_PASSWORD_FILE . ' reload';
             $cmd = _PGPOOL2_COMMAND . $cmdOption . ' 2>&1 &';
             $ret = exec($cmd, $output, $return_var);
-            if($return_var == 0) {
+            if ($return_var == 0) {
                 return array($pcpStatus[$return_var] => $output);
             } else {
                 return array('FAIL' => $output);
             }
             break;
-
 
         case 'PCP_STOP_PGPOOL':
             $cmd = _PGPOOL2_PCP_DIR . '/pcp_stop_pgpool' . $args;
@@ -148,8 +154,8 @@ function execPcp($command, $num='') {
  *
  * @return array
  */
-function readPcpInfo() {
-    
+function readPcpInfo()
+{
     $params = readConfigParams(array('pcp_port', 'pcp_timeout'));
     return $params;
 }

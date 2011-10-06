@@ -25,9 +25,7 @@
         <td>{$message.$errorCode|escape}</td>
       </tr>
       </td>
-      
       </tr>
-      
     </table>
 </div>
 <div id="footer">

@@ -8,7 +8,7 @@
 <!--
 {literal}
 function load() {
-    var xmlhttp = false; 
+    var xmlhttp = false;
 
     if (typeof XMLHttpRequest!='undefined')
         xmlhttp = new XMLHttpRequest();
@@ -35,7 +35,7 @@ function load() {
 
 function showDetail(num) {
     var catalog = "pg_settings";
-    var xmlhttp = false; 
+    var xmlhttp = false;
     var url = "";
 
     if (typeof XMLHttpRequest!='undefined')
@@ -66,21 +66,26 @@ function showDetail(num) {
 </script>
 {/literal}
 </head>
+
 <body onload="load()">
 <div id="header">
   <h1><img src="images/logo.gif" alt="pgpoolAdmin" /></h1>
 </div>
+
 <div id="menu">
 {include file="menu.tpl"}
 </div>
+
 <div id="content">
 <div id="help"><a href="help.php?help={$help|escape}"><img src="images/question.gif" alt="help"/>{$message.strHelp|escape}</a></div>
+
 <h2>{$message.strNodeStatus|escape}</h2>
   <div id="status">{$message.strPleaseWait|escape}</div>
 <p>
   <div id="detailInfo"></div>
-</p>  
+</p>
 </div>
+
 <div id="footer">
 {include file='footer.tpl'}
 </div>

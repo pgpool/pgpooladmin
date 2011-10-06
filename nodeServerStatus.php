@@ -26,7 +26,7 @@
 require_once('common.php');
 $tpl->assign('help', basename( __FILE__, '.php'));
 
-if(!isset($_SESSION[SESSION_LOGIN_USER])) {
+if (!isset($_SESSION[SESSION_LOGIN_USER])) {
     header('Location: login.php');
     exit();
 }

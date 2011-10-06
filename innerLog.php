@@ -25,18 +25,18 @@
 
 require_once('common.php');
 
-if(!isset($_SESSION[SESSION_LOGIN_USER])) {
+if (!isset($_SESSION[SESSION_LOGIN_USER])) {
     exit();
 }
 
 $pgpoolLog = _PGPOOL2_LOG_FILE;
-if($pgpoolLog == '') {
+if ($pgpoolLog == '') {
     $logDir = readLogDir();
     $pgpoolLog = "$logDir/pgpool.log";
 }
 
 $logFile = @file($pgpoolLog);
-if($logFile == false) {
+if ($logFile == false) {
     $errorCode = 'e8001';
     $tpl->assign('errorCode', $errorCode);
     $tpl->display('innerError.tpl');
@@ -44,7 +44,7 @@ if($logFile == false) {
 }
 
 $logSplitFile = array();
-for($i=0; $i<count($logFile); $i++) {
+for($i = 0; $i < count($logFile); $i++) {
     $logFile[$i] = split(' +', $logFile[$i], 6);
 }
 

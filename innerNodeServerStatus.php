@@ -25,7 +25,7 @@
 
 require_once('common.php');
 
-if(!isset($_SESSION[SESSION_LOGIN_USER])) {
+if (!isset($_SESSION[SESSION_LOGIN_USER])) {
     exit();
 }
 
@@ -35,9 +35,10 @@ $params = readHealthCheckParam();
 
 $healthCheckUser = $params['health_check_user'];
 
-if(isset($params['backend_hostname'])) {
+if (isset($params['backend_hostname'])) {
     $backendHostName = $params['backend_hostname'];
-    $backendPort = $params['backend_port'];
+    $backendPort     = $params['backend_port'];
+
 } else {
     $backendHostName = array();
 }
@@ -45,9 +46,9 @@ if(isset($params['backend_hostname'])) {
 $result = array();
 foreach($backendHostName as $num => $hostname) {
     $result[$num]['hostname'] = $backendHostName[$num];
-    $result[$num]['port'] = $backendPort[$num];
-    
-    if(NodeActive($num)) {
+    $result[$num]['port']     = $backendPort[$num];
+
+    if (NodeActive($num)) {
         $result[$num]['status'] = TRUE;
     } else {
         $result[$num]['status'] = FALSE;

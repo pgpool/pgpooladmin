@@ -40,23 +40,23 @@ if(isset($_POST['action'])) {
 
 switch ( $action ) {
     case 'update':
-        
+
         if(!isset($_POST['password']) || !isset($_POST['password2'])) {
             $tpl->display('changePassword.tpl');
             break;
         }
-        
+
         $password  = $_POST['password'];
         $password2 = $_POST['password2'];
-        
+
         if($password == '' || $password2 == '') {
             $tpl->assign('error', $message['errPasswordMismatch']);
             $tpl->display('changePassword.tpl');
             break;
         }
-        
+
         if($password === $password2) {
-            
+
             $passFile = @file(_PGPOOL2_PASSWORD_FILE);
             if($passFile == false) {
                 $errorCode = 'e6001';
@@ -64,7 +64,7 @@ switch ( $action ) {
                 $tpl->display('error.tpl');
                 exit();
             }
-            
+
             if( ! is_writable(_PGPOOL2_PASSWORD_FILE) ) {
                 $errorCode = 'e6003';
                 $tpl->assign('errorCode', $errorCode);
@@ -72,19 +72,19 @@ switch ( $action ) {
                 exit();
             }
             $fw = fopen(_PGPOOL2_PASSWORD_FILE, 'w');
-            
+
             for($i=0; $i<count($passFile); $i++) {
-                
+
                 $line = $passFile[$i];
                 $spt = split(":", $line);
-                
+
                 if($spt[0] == $_SESSION[SESSION_LOGIN_USER]) {
                     $line = $_SESSION[SESSION_LOGIN_USER] . ":" . md5($password) . "\n";
                 }
                 fputs($fw, $line);
             }
             fclose($fw);
-            
+
             session_unset();
             $tpl->display('login.tpl');
             break;

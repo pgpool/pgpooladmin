@@ -19,9 +19,9 @@
   <form action="login.php" method="post" name="Login">
     <table>
      <tfoot>
-	  <tr><td colspan="2">
+      <tr><td colspan="2">
       <input type="submit" name="Button" value="{$message.strLogin|escape}" />
-	  </td></tr>
+      </td></tr>
      </tfoot>
     <tbody>
       <tr>

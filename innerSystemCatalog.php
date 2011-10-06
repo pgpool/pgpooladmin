@@ -25,43 +25,46 @@
 
 require_once('common.php');
 
-if(!isset($_SESSION[SESSION_LOGIN_USER])) {
+if (!isset($_SESSION[SESSION_LOGIN_USER])) {
     exit();
 }
 
 $pgCatalog = pg_escape_string($_GET['catalog']);
 $nodeNum = $_GET['num'];
 
-if($pgCatalog == '') {
+if ($pgCatalog == '') {
     return;
 }
 
-$params =readHealthCheckParam();
+// Set Parameters
+$params = readHealthCheckParam();
 
 $dbParams['hostname'] = $params['backend_hostname'][$nodeNum];
-$dbParams['port'] = $params['backend_port'][$nodeNum];
-$dbParams['dbname'] = 'template1';
-$dbParams['user'] = $params['health_check_user'];
-$dbParams['password']  ='';
+$dbParams['port']     = $params['backend_port'][$nodeNum];
+$dbParams['dbname']   = 'template1';
+$dbParams['user']     = $params['health_check_user'];
+$dbParams['password'] ='';
 
 $tpl->assign('hostname', $dbParams['hostname'] );
-$tpl->assign('port', $dbParams['port'] );
+$tpl->assign('port',     $dbParams['port'] );
 
+// Get Data From Database
 $conn = openDBConnection($dbParams);
 
-$sql = 'show pool_status';
+$sql = 'SHOW pool_status';
 
 $rs = execQuery($conn, $sql);
 
-if(!pg_result_status($rs) == PGSQL_TUPLES_OK) {
+if (!pg_result_status($rs) == PGSQL_TUPLES_OK) {
     $sql = "SELECT * FROM $pgCatalog";
     $rs = execQuery($conn, $sql);
     $tpl->assign('catalog', $pgCatalog);
+
 } else {
     $tpl->assign('catalog', 'pool_status');
 }
 
-if(!pg_result_status($rs) == PGSQL_TUPLES_OK) {
+if (!pg_result_status($rs) == PGSQL_TUPLES_OK) {
     $errorCode = 'e8001';
     $tpl->assign('errorCode', $errorCode);
     $tpl->display('innerError.tpl');
@@ -72,6 +75,7 @@ $results = pg_fetch_all($rs);
 
 closeDBConnection($conn);
 
+// Show
 $tpl->assign('results', $results);
 $tpl->display('innerSystemCatalog.tpl');
 

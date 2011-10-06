@@ -26,7 +26,7 @@
   <td>{$message.msgUpdateFailed|escape}</td>
   </tr>
   </table>
-  {/if}  
+  {/if}
   <h2>{$message.strSetting|escape}</h2>
   <form action="config.php" method="post" id="Config">
     <input type="hidden" name="action" value="update" />
@@ -131,19 +131,19 @@
                <option value="s" selected="selected">smart</option>
                <option value="f">fast</option>
                <option value="i">immediate</option>
-          {elseif $params.m == 'f'}  
+          {elseif $params.m == 'f'}
                <option value="s">smart</option>
                <option value="f" selected="selected">fast</option>
                <option value="i">immediate</option>
-          {elseif $params.m == 'i'}  
+          {elseif $params.m == 'i'}
                <option value="s">smart</option>
                <option value="f">fast</option>
                <option value="i" selected="selected">immediate</option>
-          {else}  
+          {else}
                <option value="s">smart</option>
                <option value="f">fast</option>
                <option value="i">immediate</option>
-          {/if}  
+          {/if}
           </td></tr>
         <tr>
           {if $errors.pgpool_logfile != null}<th class="error">{else}<th>{/if}

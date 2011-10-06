@@ -13,4 +13,3 @@
     <li><a href="help.php?help=errorCode">{$message.strErrorCode|escape}</a></li>
   {/if}
   </ul>
-  

@@ -25,38 +25,40 @@
 
 require_once('command.php');
 
-if(!isset($_SESSION[SESSION_LOGIN_USER])) {
+if (!isset($_SESSION[SESSION_LOGIN_USER])) {
     exit();
 }
 
 $ret = execPcp('PCP_PROC_COUNT');
-if(!array_key_exists('SUCCESS', $ret)) {
+if (!array_key_exists('SUCCESS', $ret)) {
     $errorCode = 'e1004';
     $tpl->assign('errorCode', $errorCode);
     $tpl->display('innerError.tpl');
     exit();
+
 } else {
-        $procPids = explode(" ", $ret['SUCCESS']);
+    $procPids = explode(" ", $ret['SUCCESS']);
 }
 
-for($i=0; $i<count($procPids); $i++) {
+for ($i = 0; $i < count($procPids); $i++) {
     $procPid = $procPids[$i];
     $ret = execPcp('PCP_PROC_INFO', $procPid);
-    if(!array_key_exists('SUCCESS', $ret)) {
+
+    if (!array_key_exists('SUCCESS', $ret)) {
         $errorCode = 'e1005';
         $tpl->assign('errorCode', $errorCode);
         $tpl->display('innerError.tpl');
         exit();
-    } else {
 
+    } else {
         $ret = $ret['SUCCESS'];
-        
-        if(count($ret) > 0) {
-            foreach($ret as $line) {
+
+        if (count($ret) > 0) {
+            foreach ($ret as $line) {
                 $data = split(" ", $line);
-/*                
+/*
                 $dateFormat = $message['strDateFormat'];
-                $data[2] = date($dateFormat, $data[2]); 
+                $data[2] = date($dateFormat, $data[2]);
                 $data[3] = date($dateFormat, $data[3]);
 */
                 $procInfo[$procPid][]  = $data;

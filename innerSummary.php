@@ -25,17 +25,17 @@
 
 require_once('common.php');
 
-if(!isset($_SESSION[SESSION_LOGIN_USER])) {
+if (!isset($_SESSION[SESSION_LOGIN_USER])) {
     exit();
 }
 
 $params = readConfigParams(array('parallel_mode',
-                                              'master_slave_mode',
-                                              'master_slave_sub_mode',
-                                              'enable_query_cache',
-                                              'replication_mode',
-                                              'load_balance_mode',
-                                              'health_check_period'));
+                                 'master_slave_mode',
+                                 'master_slave_sub_mode',
+                                 'enable_query_cache',
+                                 'replication_mode',
+                                 'load_balance_mode',
+                                 'health_check_period'));
 
 $tpl->assign('params', $params);
 $tpl->display('innerSummary.tpl');

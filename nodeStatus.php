@@ -27,14 +27,14 @@ require_once('common.php');
 require_once('command.php');
 $tpl->assign('help', basename( __FILE__, '.php'));
 
-$MAX_VALUE = 2147483647;
+$MAX_VALUE = PHP_INT_MAX;
 
-if(!isset($_SESSION[SESSION_LOGIN_USER])) {
+if (!isset($_SESSION[SESSION_LOGIN_USER])) {
     exit();
 }
 
 $ret = execPcp('PCP_NODE_COUNT');
-if(!array_key_exists('SUCCESS', $ret)) {
+if (!array_key_exists('SUCCESS', $ret)) {
     $errorCode = 'e1002';
     $tpl->assign('errorCode', $errorCode);
     $tpl->display('innerError.tpl');
@@ -45,68 +45,76 @@ if(!array_key_exists('SUCCESS', $ret)) {
 
 $tpl->assign('nodeCount', $nodeCount);
 
-$isParallelMode = isParallelMode();
+$isParallelMode    = isParallelMode();
 $isReplicationMode = isReplicationMode();
 $isMasterSlaveMode = isMasterSlaveMode();
 
 $nodeInfo = array();
-$node_alive = false;
+$node_alive = FALSE;
 
-for($i=0; $i<$nodeCount; $i++) {
+for ($i = 0; $i<$nodeCount; $i++) {
     $ret = execPcp('PCP_NODE_INFO', $i);
-    if(!array_key_exists('SUCCESS', $ret)) {
+    if (!array_key_exists('SUCCESS', $ret)) {
         $errorCode = 'e1003';
         $tpl->assign('errorCode', $errorCode);
         $tpl->display('innerError.tpl');
         exit();
+
     } else {
         $ret = $ret['SUCCESS'];
     }
+
     $nodeInfo[$i] = explode(" ", $ret);
     $nodeInfo[$i][3] =  sprintf('%.3f', $nodeInfo[$i][3]);
-	/* node is active? */
-	if ($nodeInfo[$i][2] != 3)
-		$node_alive = true;
+
+    /* node is active? */
+    if ($nodeInfo[$i][2] != 3) {
+        $node_alive = TRUE;
+    }
 }
 
 for ($i = 0; $i < $nodeCount; $i++) {
-	if ($node_alive == false) {
-		if (($isReplicationMode || $isMasterSlaveMode) &&
-			NodeActive($i))
-			array_push($nodeInfo[$i], 'return');
-		else
-			array_push($nodeInfo[$i], 'none');
-	} else if( $isParallelMode ) {
+    if ($node_alive == FALSE) {
+        if (($isReplicationMode || $isMasterSlaveMode) && NodeActive($i)) {
+            array_push($nodeInfo[$i], 'return');
+        } else {
+            array_push($nodeInfo[$i], 'none');
+        }
+
+    } elseif( $isParallelMode ) {
         array_push($nodeInfo[$i], 'none');
+
     } else {
         switch($nodeInfo[$i][2]) {
-		case 1:
-		case 2:
-			if($isReplicationMode || $isMasterSlaveMode) {
-				array_push($nodeInfo[$i], 'disconnect');
-			} else {
-				array_push($nodeInfo[$i], 'none');
-			}
-			break; 
-		case 3:
-			if($isReplicationMode || $isMasterSlaveMode) {
-				if(NodeActive($i)) {
-					array_push($nodeInfo[$i], 'return');
-				} else {
-                    array_push($nodeInfo[$i], 'recovery');
+            case 1:
+            case 2:
+                if ($isReplicationMode || $isMasterSlaveMode) {
+                    array_push($nodeInfo[$i], 'disconnect');
+                } else {
+                    array_push($nodeInfo[$i], 'none');
                 }
-			} else {
-				array_push($nodeInfo[$i], 'none');
-			}
-			break; 
+                break;
+
+            case 3:
+                if ($isReplicationMode || $isMasterSlaveMode) {
+                    if (NodeActive($i)) {
+                        array_push($nodeInfo[$i], 'return');
+                    } else {
+                        array_push($nodeInfo[$i], 'recovery');
+                    }
+                } else {
+                    array_push($nodeInfo[$i], 'none');
+                }
+                break;
         }
     }
-	$nodeInfo[$i][5] = NodeStandby($i);
+
+    $nodeInfo[$i][5] = NodeStandby($i);
 }
 
-$tpl->assign('refreshTime', _PGPOOL2_STATUS_REFRESH_TIME*1000);
-$tpl->assign('nodeInfo', $nodeInfo);
-$tpl->assign('parallelMode', $isParallelMode);
+$tpl->assign('refreshTime',   _PGPOOL2_STATUS_REFRESH_TIME*1000);
+$tpl->assign('nodeInfo',      $nodeInfo);
+$tpl->assign('parallelMode',  $isParallelMode);
 $tpl->assign('msgStopPgpool', $message['msgStopPgpool']);
 $tpl->display('nodeStatus.tpl');
 

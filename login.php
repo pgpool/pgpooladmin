@@ -26,65 +26,69 @@
 require_once('common.php');
 require_once('command.php');
 
-$success = false;
+$success = FALSE;
 
-if(isset($_SESSION[SESSION_LOGIN_USER])) {
-    $success = true;
+if (isset($_SESSION[SESSION_LOGIN_USER])) {
+    $success = TRUE;
 }
 
-if($success == false) {
-    if(isset($_POST['username'])) {
+// Do login
+if ($success == FALSE) {
+    if (isset($_POST['username'])) {
         $username = $_POST['username'];
     } else {
         $tpl->display('login.tpl');
         exit();
     }
-    
-    if(isset($_POST['password'])) {
+
+    if (isset($_POST['password'])) {
         $password = $_POST['password'];
     }
-    
+
     $md5password = md5($password);
-    
-    if( !file_exists(_PGPOOL2_PASSWORD_FILE)) {
+
+    if (!file_exists(_PGPOOL2_PASSWORD_FILE)) {
         $errorCode = 'e7001';
         $tpl->assign('errorCode', $errorCode);
         $tpl->display('error.tpl');
         exit();
     }
-    
+
+    // Check each rows in pcp.conf to search
     $fp = fopen(_PGPOOL2_PASSWORD_FILE, 'r');
-    $regexp = '^' . $username.":".$md5password;
-    
-    if($fp != null) {
-        while( !feof($fp) ) {
+    $regexp = "^{$username}:{$md5password}";
+
+    if ($fp != NULL) {
+        while (!feof($fp) ) {
             $line = fgets($fp);
-            if( preg_match("/$regexp/", $line) ) {
-                $_SESSION[SESSION_LOGIN_USER] = $username;
+            if (preg_match("/$regexp/", $line) ) {
+                $_SESSION[SESSION_LOGIN_USER]          = $username;
                 $_SESSION[SESSION_LOGIN_USER_PASSWORD] = $password;
-                $success = true;
+                $success = TRUE;
             }
         }
     }
     fclose($fp);
+
+    // If login falied, show login page again.
+    if (!$success) {
+        $tpl->display('login.tpl');
+        exit();
+    }
 }
 
-if(!$success) {
-    $tpl->display('login.tpl');
-    exit();
-}
-
+// If user has already logined, show nodeStatus page.
 $tpl->assign('isLogin', TRUE);
 $tpl->assign('viewPHP', 'nodeStatus.php');
 
 $refreshTime = 5000;
-if( _PGPOOL2_STATUS_REFRESH_TIME >= 0 ) {
+if (_PGPOOL2_STATUS_REFRESH_TIME >= 0 ) {
     $refreshTime = _PGPOOL2_STATUS_REFRESH_TIME * 1000;
 }
-if(DoesPgpoolPidExist()) {
-    $tpl->assign('pgpoolIsActive', true);
+if (DoesPgpoolPidExist()) {
+    $tpl->assign('pgpoolIsActive', TRUE);
 } else {
-    $tpl->assign('pgpoolIsActive', false);
+    $tpl->assign('pgpoolIsActive', FALSE);
 }
 
 $tpl->assign('c', _PGPOOL2_CMD_OPTION_C);
@@ -93,9 +97,9 @@ $tpl->assign('d', _PGPOOL2_CMD_OPTION_D);
 $tpl->assign('m', _PGPOOL2_CMD_OPTION_M);
 $tpl->assign('n', _PGPOOL2_CMD_OPTION_N);
 
-$tpl->assign('pgpoolConf', _PGPOOL2_CONFIG_FILE);
-$tpl->assign('pcpConf', _PGPOOL2_PASSWORD_FILE);
-$tpl->assign('refreshTime', $refreshTime);
+$tpl->assign('pgpoolConf',    _PGPOOL2_CONFIG_FILE);
+$tpl->assign('pcpConf',       _PGPOOL2_PASSWORD_FILE);
+$tpl->assign('refreshTime',   $refreshTime);
 $tpl->assign('msgStopPgpool', $message['msgStopPgpool']);
 $tpl->assign('help', 'status');
 $tpl->display('status.tpl');
