@@ -31,6 +31,11 @@ tbody th {
   font-weight: normal;
   text-align: left;
 }
+tbody th.category {
+  font-weight: bold;
+  color: #709CD1;
+  font-size: small;
+}
 a:link {
   color: red;
   text-decoration: none;
