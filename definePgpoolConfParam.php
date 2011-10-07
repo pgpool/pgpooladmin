@@ -60,23 +60,18 @@ $pgpoolConfigParam[$key]['default'] =9898;
 $pgpoolConfigParam[$key]['min'] = 1024;
 $pgpoolConfigParam[$key]['max'] = 65535;
 
+$key = 'pcp_timeout';
+$pgpoolConfigParam[$key]['type'] ='N';
+$pgpoolConfigParam[$key]['default'] ='10';
+$pgpoolConfigParam[$key]['min'] = 0;
+$pgpoolConfigParam[$key]['max'] = 65535;
+
 $key = 'pcp_socket_dir';
 $pgpoolConfigParam[$key]['type'] ='C';
 $pgpoolConfigParam[$key]['default'] ='/tmp';
 $pgpoolConfigParam[$key]['regexp'] = "$dirreg";
 
 # - Backend Connection Settings -
-
-$key = 'backend_socket_dir';
-$pgpoolConfigParam[$key]['type'] ='C';
-$pgpoolConfigParam[$key]['default'] ='/tmp';
-$pgpoolConfigParam[$key]['regexp'] = "$dirreg";
-
-$key = 'pcp_timeout';
-$pgpoolConfigParam[$key]['type'] ='N';
-$pgpoolConfigParam[$key]['default'] ='10';
-$pgpoolConfigParam[$key]['min'] = 0;
-$pgpoolConfigParam[$key]['max'] = 65535;
 
 $key = 'backend_hostname';
 $pgpoolConfigBackendParam[$key]['type'] ='C';
@@ -100,11 +95,16 @@ $pgpoolConfigBackendParam[$key]['type'] ='C';
 $pgpoolConfigBackendParam[$key]['default'] ='';
 $pgpoolConfigBackendParam[$key]['regexp'] = ".*";
 
+$key = 'backend_flag';
+$pgpoolConfigBackendParam[$key]['type'] ='C';
+$pgpoolConfigBackendParam[$key]['default'] ='ALLOW_TO_FAILOVER';
+$pgpoolConfigBackendParam[$key]['regexp'] = "^[ALLOW_TO_FAILOVER|DISALLOW_TO_FAILOVER]+$";
+
 # - Authentication -
 
 $key = 'enable_pool_hba';
 $pgpoolConfigParam[$key]['type'] ='B';
-$pgpoolConfigParam[$key]['default'] =false;
+$pgpoolConfigParam[$key]['default'] = false;
 
 $key = 'authentication_timeout';
 $pgpoolConfigParam[$key]['type'] ='N';
@@ -186,6 +186,13 @@ $pgpoolConfigParam[$key]['max'] = 65535;
 # LOGS
 #------------------------------------------------------------------------------
 
+# - Where to log -
+
+$key = 'log_destination';
+$pgpoolConfigParam[$key]['type'] ='C';
+$pgpoolConfigParam[$key]['default'] ='stderr';
+$pgpoolConfigParam[$key]['regexp'] = "^[stderr|syslog]+$";
+
 # - What to log -
 
 $key = 'print_timestamp';
@@ -202,16 +209,36 @@ $pgpoolConfigParam[$key]['default'] = false;
 
 $key = 'log_statement';
 $pgpoolConfigParam[$key]['type'] ='B';
-$pgpoolConfigParam[$key]['default'] =false;
+$pgpoolConfigParam[$key]['default'] = false;
 
 $key = 'log_per_node_statement';
 $pgpoolConfigParam[$key]['type'] ='B';
-$pgpoolConfigParam[$key]['default'] =false;
+$pgpoolConfigParam[$key]['default'] = false;
 
 $key = 'log_standby_delay';
 $pgpoolConfigParam[$key]['type'] ='C';
 $pgpoolConfigParam[$key]['default'] ='none';
 $pgpoolConfigParam[$key]['regexp'] = "^[always|if_over_threshold|none]+$";
+
+# - Syslog specific - 
+
+$key = 'syslog_facility';
+$pgpoolConfigBackendParam[$key]['type'] ='C';
+$pgpoolConfigBackendParam[$key]['default'] = 'LOCAL0';
+$pgpoolConfigBackendParam[$key]['regexp'] = "^[0-9a-zA-Z\._\-]*$";
+
+$key = 'syslog_ident';
+$pgpoolConfigBackendParam[$key]['type'] ='C';
+$pgpoolConfigBackendParam[$key]['default'] ='pgpool';
+$pgpoolConfigBackendParam[$key]['regexp'] = "^[0-9a-zA-Z\._\-]*$";
+
+# - Debug -
+
+$key = 'debug_level';
+$pgpoolConfigParam[$key]['type'] ='N';
+$pgpoolConfigParam[$key]['default'] ='0';
+$pgpoolConfigParam[$key]['min'] = 0;
+$pgpoolConfigParam[$key]['max'] = 65535;
 
 #------------------------------------------------------------------------------
 # FILE LOCATIONS
@@ -246,21 +273,15 @@ $pgpoolConfigParam[$key]['regexp'] = "^[0-9a-zA-Z; ]+$";
 
 $key = 'replication_mode';
 $pgpoolConfigParam[$key]['type'] ='B';
-$pgpoolConfigParam[$key]['default'] =false;
+$pgpoolConfigParam[$key]['default'] = false;
 
 $key = 'replicate_select';
 $pgpoolConfigParam[$key]['type'] ='B';
-$pgpoolConfigParam[$key]['default'] =false;
-
-$key = 'replication_timeout';
-$pgpoolConfigParam[$key]['type'] ='N';
-$pgpoolConfigParam[$key]['default'] =5000;
-$pgpoolConfigParam[$key]['min'] = 0;
-$pgpoolConfigParam[$key]['max'] = 65535;
+$pgpoolConfigParam[$key]['default'] = false;
 
 $key = 'insert_lock';
 $pgpoolConfigParam[$key]['type'] ='B';
-$pgpoolConfigParam[$key]['default'] =false;
+$pgpoolConfigParam[$key]['default'] = false;
 
 $key = 'lobj_lock_table';
 $pgpoolConfigParam[$key]['type'] ='C';
@@ -271,11 +292,11 @@ $pgpoolConfigParam[$key]['regexp'] = ".*";
 
 $key = 'replication_stop_on_mismatch';
 $pgpoolConfigParam[$key]['type'] ='B';
-$pgpoolConfigParam[$key]['default'] =false;
+$pgpoolConfigParam[$key]['default'] = false;
 
 $key = 'failover_if_affected_tuples_mismatch';
 $pgpoolConfigParam[$key]['type'] ='B';
-$pgpoolConfigParam[$key]['default'] =false;
+$pgpoolConfigParam[$key]['default'] = false;
 
 #------------------------------------------------------------------------------
 # LOAD BALANCING MODE
@@ -283,7 +304,7 @@ $pgpoolConfigParam[$key]['default'] =false;
 
 $key = 'load_balance_mode';
 $pgpoolConfigParam[$key]['type'] ='B';
-$pgpoolConfigParam[$key]['default'] =false;
+$pgpoolConfigParam[$key]['default'] = false;
 
 $key = 'ignore_leading_white_space';
 $pgpoolConfigParam[$key]['type'] ='B';
@@ -305,7 +326,7 @@ $pgpoolConfigParam[$key]['regexp'] = "^[0-9a-zA-Z_,]*$";
 
 $key = 'master_slave_mode';
 $pgpoolConfigParam[$key]['type'] ='B';
-$pgpoolConfigParam[$key]['default'] =false;
+$pgpoolConfigParam[$key]['default'] = false;
 
 $key = 'master_slave_sub_mode';
 $pgpoolConfigParam[$key]['type'] ='C';
@@ -314,11 +335,33 @@ $pgpoolConfigParam[$key]['regexp'] = "^[slony|stream]+$";
 
 # - Streaming -
 
+$key = 'sr_check_period';
+$pgpoolConfigParam[$key]['type'] ='N';
+$pgpoolConfigParam[$key]['default'] = 0;
+$pgpoolConfigParam[$key]['min'] = 0;
+$pgpoolConfigParam[$key]['max'] = 65535;
+
+$key = 'sr_check_user';
+$pgpoolConfigParam[$key]['type'] ='C';
+$pgpoolConfigParam[$key]['default'] ='';
+$pgpoolConfigParam[$key]['regexp'] = "^[0-9a-zA-Z_,]*$";
+
+$key = 'sr_check_password';
+$pgpoolConfigParam[$key]['type'] ='C';
+$pgpoolConfigParam[$key]['default'] ='';
+$pgpoolConfigParam[$key]['regexp'] = "^[0-9a-zA-Z_,]*$";
+
 $key = 'delay_threshold';
 $pgpoolConfigParam[$key]['type'] ='N';
 $pgpoolConfigParam[$key]['default'] = 0;
 $pgpoolConfigParam[$key]['min'] = 0;
 $pgpoolConfigParam[$key]['max'] = 65535;
+
+# - Special commands -
+$key = 'follow_master_command';
+$pgpoolConfigParam[$key]['type'] ='C';
+$pgpoolConfigParam[$key]['default'] ='';
+$pgpoolConfigParam[$key]['regexp'] = ".*";
 
 #------------------------------------------------------------------------------
 # PARALLEL MODE AND QUERY CACHE
@@ -326,11 +369,11 @@ $pgpoolConfigParam[$key]['max'] = 65535;
 
 $key = 'parallel_mode';
 $pgpoolConfigParam[$key]['type'] ='B';
-$pgpoolConfigParam[$key]['default'] =false;
+$pgpoolConfigParam[$key]['default'] = false;
 
 $key = 'enable_query_cache';
 $pgpoolConfigParam[$key]['type'] ='B';
-$pgpoolConfigParam[$key]['default'] =false;
+$pgpoolConfigParam[$key]['default'] = false;
 
 $key = 'pgpool2_hostname';
 $pgpoolConfigParam[$key]['type'] ='C';
@@ -445,4 +488,13 @@ $pgpoolConfigParam[$key]['default'] ='0';
 $pgpoolConfigParam[$key]['min'] = -1;
 $pgpoolConfigParam[$key]['max'] = 65535;
 
+#------------------------------------------------------------------------------
+# OTHERS
+#------------------------------------------------------------------------------
+
+$key = 'relcache_expire';
+$pgpoolConfigParam[$key]['type'] ='N';
+$pgpoolConfigParam[$key]['default'] ='0';
+$pgpoolConfigParam[$key]['min'] = 0;
+$pgpoolConfigParam[$key]['max'] = 65535;
 ?>

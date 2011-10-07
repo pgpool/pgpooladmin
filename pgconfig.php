@@ -85,6 +85,12 @@ switch ($action) {
              $configValue['backend_data_directory'] = array();
         }
 
+        if (isset($_POST['backend_flag'])) {
+            $configValue['backend_flag'] = $_POST['backend_flag'];
+        } else {
+             $configValue['backend_flag'] = array();
+        }
+
         $tpl->assign('params', $configValue);
         $tpl->assign('isAdd', TRUE);
         $tpl->display('pgconfig.tpl');
@@ -117,11 +123,15 @@ switch ($action) {
         if (isset($_POST['backend_data_directory'])) {
             $configValue['backend_data_directory'] = $_POST['backend_data_directory'];
         }
+        if (isset($_POST['backend_flag'])) {
+            $configValue['backend_flag'] = $_POST['backend_flag'];
+        }
 
         array_pop($configValue['backend_hostname']);
         array_pop($configValue['backend_port']);
         array_pop($configValue['backend_weight']);
         array_pop($configValue['backend_data_directory']);
+        array_pop($configValue['backend_flag']);
         $tpl->assign('params', $configValue);
         $tpl->assign('isAdd', FALSE);
         $tpl->display('pgconfig.tpl');
@@ -185,6 +195,7 @@ switch ($action) {
                 $port           = $configValue['backend_port'][$i];
                 $weight         = $configValue['backend_weight'][$i];
                 $data_directory = $configValue['backend_data_directory'][$i];
+                $flag           = $configValue['backend_flag'][$i];
 
                 $result = FALSE;
 
@@ -226,6 +237,14 @@ switch ($action) {
                     $error['backend_data_directory'][$i] = FALSE;
                 }
 
+                // backend_flag
+                $result = checkString($flag,
+                                      $pgpoolConfigBackendParam['backend_flag']['regexp']);
+                if (!$result) {
+                    $error['backend_flag'][$i] = TRUE;
+                } else {
+                    $error['backend_flag'][$i] = FALSE;
+                }
             }
         }
 
@@ -234,7 +253,8 @@ switch ($action) {
             if (preg_match("/^backend_hostname/",       $key) ||
                 preg_match("/^backend_port/",           $key) ||
                 preg_match("/^backend_weight/",         $key) ||
-                preg_match("/^backend_data_directory/", $key))
+                preg_match("/^backend_data_directory/", $key) ||
+                preg_match("/^backend_flag/",           $key))
             {
                 for ($i = 0; $i < count($value); $i++) {
                     if ($value[$i] == TRUE) {
@@ -425,7 +445,8 @@ function writeConfigFile($configValue, $pgpoolConfigParam)
             if (!preg_match("/^backend_hostname/",       $key) &&
                 !preg_match("/^backend_port/",           $key) &&
                 !preg_match("/^backend_weight/",         $key) &&
-                !preg_match("/^backend_data_directory/", $key))
+                !preg_match("/^backend_data_directory/", $key) &&
+                !preg_match("/^backend_flag/",           $key))
             {
                 $removeBackendConfigFile[] =  $line;
             }
@@ -477,6 +498,9 @@ function writeConfigFile($configValue, $pgpoolConfigParam)
 
             $line = "backend_data_directory$i = '" . $configValue['backend_data_directory'][$i] . "'\n";
             $configFile[] = $line;
+
+            $line = "backend_flag$i= '" . $configValue['backend_flag'][$i] . "'\n";
+            $configFile[] = $line;
         }
     }
 
@@ -507,6 +531,8 @@ function  deleteBackendHost($num, &$configValue)
     unset($configValue['backend_data_directory'][$num]);
     $configValue['backend_data_directory'] = array_values($configValue['backend_data_directory']);
 
+    unset($configValue['backend_flag'][$num]);
+    $configValue['backend_flag'] = array_values($configValue['backend_flag']);
 }
 
 ?>
