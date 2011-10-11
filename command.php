@@ -32,7 +32,7 @@ require_once('common.php');
  * @param srgs $num
  * @return array
  */
-function execPcp($command, $num='')
+function execPcp($command, $num = '')
 {
     $pcpStatus = array (
         '0'   => 'SUCCESS',
@@ -135,6 +135,13 @@ function execPcp($command, $num='')
 
         case 'PCP_STOP_PGPOOL':
             $cmd = _PGPOOL2_PCP_DIR . '/pcp_stop_pgpool' . $args;
+            $ret = exec($cmd, $output, $return_var);
+            break;
+
+        case 'PCP_PROMOTE_NODE':
+            // -g option means that standby doesn't become primary
+            // untill all connection get closed.
+            $cmd = _PGPOOL2_PCP_DIR . '/pcp_promote_node' .' -g '. $args;
             $ret = exec($cmd, $output, $return_var);
             break;
 

@@ -186,7 +186,7 @@ function selectLanguage($selectLang, $messageList)
             $lang = 'en';
 
         } else {
-            $langList = split(',|;', $acceptLanguages);
+            $langList = explode(',|;', $acceptLanguages);
             foreach ($langList as $acceptLanguage) {
                 foreach (array_keys($messageList) as $messageLanguage) {
                     if ($acceptLanguage == $messageLanguage ) {
@@ -260,20 +260,16 @@ function NodeActive($num)
  */
 function NodeStandby($num)
 {
-
-    $params = readConfigParams(array('master_slave_mode','master_slave_sub_mode'));
-
-    if ($params['master_slave_mode'] != 'true' || $params['master_slave_sub_mode'] != 'stream') {
+    if (isMasterSlaveMode() == FALSE || useStreaming() == FALSE) {
         return -1;
     }
-
-    $healthCheckDb = 'template1';
 
     $params = readHealthCheckParam();
 
     $healthCheckUser = $params['health_check_user'];
     $backendHostName = $params['backend_hostname'][$num];
     $backendPort     = $params['backend_port'][$num];
+    $healthCheckDb = 'template1';
 
     if ($backendHostName != '') {
         $conStr = "dbname=$healthCheckDb user=$healthCheckUser host=$backendHostName port=$backendPort" ;
@@ -374,7 +370,39 @@ function isMasterSlaveMode()
 {
     $params = readConfigParams(array('master_slave_mode'));
 
-    if ($params['master_slave_mode'] == 'true') {
+    if ($params['master_slave_mode'] == 'on') {
+        return TRUE;
+    } else {
+        return FALSE;
+    }
+}
+
+/**
+ * Whether pgpool is using stream sub mode in master slave mode or not?
+ *
+ * @return bool
+ */
+function useStreaming()
+{
+    $params = readConfigParams(array('master_slave_sub_mode'));
+
+    if (isMasterSlaveMode() && $params['master_slave_sub_mode'] == 'stream') {
+        return TRUE;
+    } else {
+        return FALSE;
+    }
+}
+
+/**
+ * Whether pgpool uses syslog or not?
+ *
+ * @return bool
+ */
+function useSyslog()
+{
+    $params = readConfigParams(array('log_destination'));
+
+    if ($params['log_destination'] == 'syslog') {
         return TRUE;
     } else {
         return FALSE;

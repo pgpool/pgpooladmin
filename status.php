@@ -50,7 +50,6 @@ if (isset($_POST['action'])) {
 /**
  * Set pgpool command option
  */
-
 $tpl->assign('c', _PGPOOL2_CMD_OPTION_C);
 $tpl->assign('D', _PGPOOL2_CMD_OPTION_LARGE_D);
 $tpl->assign('d', _PGPOOL2_CMD_OPTION_D);
@@ -64,6 +63,11 @@ if (isPipe(_PGPOOL2_LOG_FILE)) {
 }
 
 switch ($action) {
+
+    /* --------------------------------------------------------------------- */
+    /* start                                                                 */
+    /* --------------------------------------------------------------------- */
+
     case 'start':
         $args = ' ';
 
@@ -95,7 +99,7 @@ switch ($action) {
             $tpl->assign('pgpoolMessage', $ret);
         } else {
             for ($i = 0; $i < 10; $i++) {
-                if(DoesPgpoolPidExist()) {
+                if (DoesPgpoolPidExist()) {
                     break;
                 } else {
                     sleep(1);
@@ -111,6 +115,10 @@ switch ($action) {
         }
 
         break;
+
+    /* --------------------------------------------------------------------- */
+    /* stop                                                                  */
+    /* --------------------------------------------------------------------- */
 
     case 'stop':
         $m = $_POST['stop_mode'];
@@ -140,6 +148,10 @@ switch ($action) {
 
         break;
 
+    /* --------------------------------------------------------------------- */
+    /* restart                                                               */
+    /* --------------------------------------------------------------------- */
+
     case 'restart':
         /**
          * Stop pgpool
@@ -154,7 +166,7 @@ switch ($action) {
             exit();
 
         } else {
-            for($i = 0; $i < 10; $i++) {
+            for ($i = 0; $i < 10; $i++) {
                 if (DoesPgpoolPidExist()) {
                     sleep(1);
                 } else {
@@ -216,14 +228,14 @@ switch ($action) {
         }
         break;
 
+    /* --------------------------------------------------------------------- */
+    /* other                                                                 */
+    /* --------------------------------------------------------------------- */
+
     case 'reload':
-        /**
-         * reload pgpool
-         */
         $args = ' ';
         $ret = execPcp('PCP_RELOAD_PGPOOL', $args);
         break;
-
 
     case 'return':
         $ret = execPcp('PCP_ATTACH_NODE', $nodeNumber);
@@ -245,9 +257,18 @@ switch ($action) {
         }
         break;
 
-
     case 'detach':
         $ret = execPcp('PCP_DETACH_NODE', $nodeNumber);
+        if (!array_key_exists('SUCCESS', $ret)) {
+            $errorCode = 'e1007';
+            $tpl->assign('errorCode', $errorCode);
+            $tpl->display('error.tpl');
+            exit();
+        }
+        break;
+
+    case 'promote':
+        $ret = execPcp('PCP_PROMOTE_NODE', $nodeNumber);
         if (!array_key_exists('SUCCESS', $ret)) {
             $errorCode = 'e1007';
             $tpl->assign('errorCode', $errorCode);
@@ -279,15 +300,15 @@ if (DoesPgpoolPidExist()) {
     $tpl->assign('pgpoolIsActive', FALSE);
 }
 
-$tpl->assign('viewPHP', $viewPHP);
-
 if (_PGPOOL2_STATUS_REFRESH_TIME >= 0 ) {
     $refreshTime = _PGPOOL2_STATUS_REFRESH_TIME * 1000;
 }
 
+$tpl->assign('viewPHP',       $viewPHP);
 $tpl->assign('pgpoolConf',    _PGPOOL2_CONFIG_FILE);
 $tpl->assign('pcpConf',       _PGPOOL2_PASSWORD_FILE);
 $tpl->assign('refreshTime',   $refreshTime);
+$tpl->assign('useSyslog',     useSyslog());
 $tpl->assign('msgStopPgpool', $message['msgStopPgpool']);
 $tpl->display('status.tpl');
 

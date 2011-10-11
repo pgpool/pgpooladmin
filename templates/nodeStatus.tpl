@@ -33,16 +33,16 @@
     <td>{$nodeInfo[num][1]|escape}</td>
 
     <td>
-    {if $nodeInfo[num][2] == 1}
+    {if $nodeInfo[num][2] == $smarty.const.NODE_ACTIVE_NO_CONNECT}
       {$message.strNodeStatus1|escape}
-    {elseif $nodeInfo[num][2] == 2}
+    {elseif $nodeInfo[num][2] == $smarty.const.NODE_ACTIVE_CONNECTED}
       {$message.strNodeStatus2|escape}
-    {elseif $nodeInfo[num][2] == 3}
+    {elseif $nodeInfo[num][2] == $smarty.const.NODE_DOWN}
       {$message.strNodeStatus3|escape}
     {/if}
-    {if $nodeInfo[num][5] == 1}
+    {if $nodeInfo[num][6] == 1}
       {$message.strStandbyRunning|escape}
-    {elseif $nodeInfo[num][5] == 0}
+    {elseif $nodeInfo[num][6] == 0}
       {$message.strPrimaryRunning|escape}
     {/if}
     </td>
@@ -64,6 +64,11 @@
       <input type="button" name="command"
        onclick="sendCommand('recovery', {$smarty.section.num.index|escape}, '{$message.msgRecoveryConfirm|escape}')"
        value="{$message.strRecovery|escape}" />
+    {/if}
+    {if $nodeInfo[num][5] == 'promote' && $nodeInfo[num][6] == 1}
+      <input type="button" name="command"
+       onclick="sendCommand('promote', {$smarty.section.num.index|escape}, '{$message.msgRPromoteConfirm|escape}')"
+       value="{$message.strPromote|escape}" />
     {/if}
     </td>
 

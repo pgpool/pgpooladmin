@@ -8,23 +8,25 @@
 <!--
 
 var strConnError = "{$message.strConnectionError|escape}";
-var strUp = "{$message.strUp|escape}";
-var strDown = "{$message.strDown|escape}";
+var strUp        = "{$message.strUp|escape}";
+var strDown      = "{$message.strDown|escape}";
 var strDataError = "{$message.strDataError|escape}";
-var refreshTime = "{$refreshTime|escape}";
-var view = "{$viewPHP|escape}";
-var msgStopPgpool = "{$message.msgStopPgpool|escape}";
+var refreshTime  = "{$refreshTime|escape}";
+var view         = "{$viewPHP|escape}";
+var msgStopPgpool    = "{$message.msgStopPgpool|escape}";
 var msgRestartPgpool = "{$message.msgRestartPgpool|escape}";
-var msgReloadPgpool = "{$message.msgReloadPgpool|escape}";
+var msgReloadPgpool  = "{$message.msgReloadPgpool|escape}";
 
 {literal}
-function load() {
-    var xmlhttp = false; 
 
-    if (typeof XMLHttpRequest!='undefined')
+function load() {
+    var xmlhttp = false;
+
+    if (typeof XMLHttpRequest!='undefined') {
         xmlhttp = new XMLHttpRequest();
-    else
+    } else {
         xmlhttp = new ActiveXObject("MSXML2.XMLHTTP");
+    }
 
     if (!xmlhttp) {
         alert('Sorry, cannot use XMLHttpRequest');
@@ -46,12 +48,15 @@ function load() {
     xmlhttp.send("");
 }
 
+/* --------------------------------------------------------------------- */
+
 function reload() {
     var xmlhttp = false;
-    if (typeof XMLHttpRequest!='undefined')
+    if (typeof XMLHttpRequest!='undefined') {
         xmlhttp = new XMLHttpRequest();
-    else
-        xmlhttp = new ActiveXObject("MSXML2.XMLHTTP");	
+    } else {
+        xmlhttp = new ActiveXObject("MSXML2.XMLHTTP");
+    }
 
     if (!xmlhttp) {
         alert('Sorry, cannot use XMLHttpRequest');
@@ -73,8 +78,10 @@ function reload() {
     xmlhttp.send("");
 }
 
+/* --------------------------------------------------------------------- */
+
 function timer(interval) {
-	setTimeout("reload()",interval);
+    setTimeout("reload()",interval);
 }
 
 function sendCommand(command, nodeNumber, message){
@@ -84,6 +91,10 @@ function sendCommand(command, nodeNumber, message){
         document.Command.submit();
     }
 }
+
+/* --------------------------------------------------------------------- */
+/* buttons                                                               */
+/* --------------------------------------------------------------------- */
 
 function startPgpool() {
     document.Command.action.value= "start";
@@ -95,6 +106,7 @@ function stopPgpool() {
     stopOption.style.visibility = "visible";
     stopOption.style.position = "";
     stopOption.style.height = "";
+
     var cmdBtn = document.getElementById('cmdBtn');
     cmdBtn.style.visibility = "hidden";
     cmdBtn.style.position = "absolute";
@@ -106,10 +118,12 @@ function restartPgpool() {
     stopOption.style.visibility = "hidden";
     stopOption.style.position = "absolute";
     stopOption.style.height = "0";
+
     var restartOption = document.getElementById('restartOption');
     restartOption.style.visibility = "visible";
     restartOption.style.position = "";
     restartOption.style.height = "";
+
     var cmdBtn = document.getElementById('cmdBtn');
     cmdBtn.style.visibility = "hidden";
     cmdBtn.style.position = "absolute";
@@ -121,32 +135,38 @@ function cancelCmd() {
     stopOption.style.visibility = "hidden";
     stopOption.style.position = "absolute";
     stopOption.style.height = "0";
+
     var restartOption = document.getElementById('restartOption');
     restartOption.style.visibility = "hidden";
     restartOption.style.position = "absolute";
     restartOption.style.height = "0";
+
     var cmdBtn = document.getElementById('cmdBtn');
     cmdBtn.style.visibility = "visible";
     cmdBtn.style.position = "";
     cmdBtn.style.height = "";
 }
 
+/* --------------------------------------------------------------------- */
+/* execute                                                               */
+/* --------------------------------------------------------------------- */
+
 function execRestartPgpool() {
-   if(window.confirm(msgRestartPgpool)){ 
+   if (window.confirm(msgRestartPgpool)){
     document.Command.action.value= "restart";
     document.Command.submit();
    }
 }
 
 function execReloadPgpool() {
-   if(window.confirm(msgReloadPgpool)){ 
+   if (window.confirm(msgReloadPgpool)){
     document.Command.action.value= "reload";
     document.Command.submit();
    }
 }
 
 function execStopPgpool() {
-   if(window.confirm(msgStopPgpool)){ 
+   if (window.confirm(msgStopPgpool)){
     document.Command.action.value= "stop";
     document.Command.submit();
    }
@@ -161,197 +181,257 @@ function changeView(chView){
 </script>
 {/literal}
 </head>
+
 <body onload="load()">
 <div id="header">
   <h1><img src="images/logo.gif" alt="pgpoolAdmin" /></h1>
 </div>
+
 <div id="menu">
 {include file="menu.tpl"}
 </div>
 <div id="content">
 <div id="help"><a href="help.php?help={$help|escape}"><img src="images/question.gif" alt="help"/>{$message.strHelp|escape}</a></div>
+
 <form action="status.php" name="Command" method="post">
   <input type="hidden" name="action" value="" />
   <input type="hidden" name="nodeNumber" value="" />
+
+{* --------------------------------------------------------------------- *}
+{* Status Info Buttons                                                   *}
+{* --------------------------------------------------------------------- *}
+
 <h2>{$message.strPgpoolStatus|escape}</h2>
+
 {if $pgpoolIsActive == true}
 <p>
     <input type="button" name="command" onclick="changeView('summary')" value="{$message.strPgpoolSummary|escape}" />
     <input type="button" name="command" onclick="changeView('proc')" value="{$message.strProcInfo|escape}" />
     <input type="button" name="command" onclick="changeView('node')" value="{$message.strNodeInfo|escape}" />
-    {if $n == 1 && $pipe == 0}
+    {if $useSyslog == FALSE && $n == 1 && $pipe == 0}
     <input type="button" name="command" onclick="changeView('log')" value="{$message.strLog|escape}" />
     {/if}
-</p>    
+</p>
   <div id="status"></div>
 <p>
     <input type="button" name="command" onclick="changeView('summary')" value="{$message.strPgpoolSummary|escape}" />
     <input type="button" name="command" onclick="changeView('proc')" value="{$message.strProcInfo|escape}" />
     <input type="button" name="command" onclick="changeView('node')" value="{$message.strNodeInfo|escape}" />
-    {if $n == 1 && $pipe == 0}
+    {if $useSyslog == FALSE && $n == 1 && $pipe == 0}
     <input type="button" name="command" onclick="changeView('log')" value="{$message.strLog|escape}" />
     {/if}
 </p>
 {else}
 {$message.strStopPgpool|escape}
 {/if}
+
+{* --------------------------------------------------------------------- *}
+
 <h2>{$message.strPgpool|escape}</h2>
+
+    {* --------------------------------------------------------------------- *}
+    {* Start Options                                                         *}
+    {* --------------------------------------------------------------------- *}
+
     {if $pgpoolIsActive == false}
     <table>
     <thead><tr><th colspan="2">{$message.strStartOption|escape}</th></tr></thead>
-    <tfoot>
-    <tr><td colspan="2"><input type="button" name="command" onclick="startPgpool()" value="{$message.strStartPgpool|escape}" /></td></tr></tfoot>
+    <tfoot><tr>
+      <td colspan="2">
+      <input type="button" name="command" onclick="startPgpool()"
+       value="{$message.strStartPgpool|escape}" />
+      </td>
+    </tr></tfoot>
     <tbody>
-        <tr>
-          <tr><td>{$message.strCmdC|escape}(-c)</td>
+
+        <tr><td>{$message.strCmdC|escape} (-c)</td>
           {if $c == 1}
           <td><input type="checkbox" name="c" checked="checked" /></td>
           {else}
           <td><input type="checkbox" name="c" /></td>
           {/if}
-          </tr>
-          <tr><td>{$message.strCmdLargeD|escape}(-D)</td>
+        </tr>
+
+        <tr><td>{$message.strCmdLargeD|escape} (-D)</td>
           {if $n == 1}
           <td><input type="checkbox" name="D" checked="checked" /></td>
           {else}
           <td><input type="checkbox" name="D" /></td>
           {/if}
-          </tr>
-          <tr><td>{$message.strCmdN|escape}(-n)</td>
+        </tr>
+
+        <tr><td>{$message.strCmdN|escape} (-n)</td>
           {if $n == 1}
           <td><input type="checkbox" name="n" checked="checked" /></td>
           {else}
           <td><input type="checkbox" name="n" /></td>
           {/if}
-          </tr>
-          <tr><td>{$message.strCmdD|escape}(-d)</td>
+        </tr>
+
+        <tr><td>{$message.strCmdD|escape} (-d)</td>
           {if $d == 1}
           <td><input type="checkbox" name="d" checked="checked" /></td>
           {else}
           <td><input type="checkbox" name="d" /></td>
           {/if}
-          </tr>
-          <tr><td>{$message.strCmdPgpoolFile|escape}(-f)</td>
+        </tr>
+
+        <tr><td>{$message.strCmdPgpoolFile|escape} (-f)</td>
           <td>{$pgpoolConf|escape}</td>
-          </tr>
-          <tr><td>{$message.strCmdPcpFile|escape}(-F)</td>
+        </tr>
+
+        <tr><td>{$message.strCmdPcpFile|escape} (-F)</td>
           <td>{$pcpConf|escape}</td>
-          </tr>
+        </tr>
+
     </tbody>
     </table>
     {else}
+
+    {* --------------------------------------------------------------------- *}
+    {* Command Buttons                                                       *}
+    {* --------------------------------------------------------------------- *}
+
     <div id="cmdBtn" style="visibility: visible">
     <input type="button" name="command" onclick="stopPgpool()" value="{$message.strStopPgpool|escape}" />
     <input type="button" name="command" onclick="restartPgpool()" value="{$message.strRestartPgpool|escape}" />
     <input type="button" name="command" onclick="execReloadPgpool()" value="{$message.strReloadPgpool|escape}" />
     </div>
+
+    {* --------------------------------------------------------------------- *}
+    {* Stop Options                                                          *}
+    {* --------------------------------------------------------------------- *}
     <div id="stopOption" style="visibility: hidden; position: absolute">
+
     <table>
     <thead><tr><th colspan="2">{$message.strStopOption|escape}</th></tr></thead>
-    <tfoot>
-    <tr><td colspan="2">
-    <input type="button" name="command" onclick="execStopPgpool()" value="{$message.strExecute|escape}" />
-    <input type="button" name="command" onclick="cancelCmd()" value="{$message.strCancel|escape}" />
-    </td></tr></tfoot>
+    <tfoot><tr>
+      <td colspan="2">
+      <input type="button" name="command" onclick="execStopPgpool()" value="{$message.strExecute|escape}" />
+      <input type="button" name="command" onclick="cancelCmd()" value="{$message.strCancel|escape}" />
+      </td>
+    </tr></tfoot>
     <tbody>
-          <tr><td>{$message.strCmdM|escape}(-m)</td><td><select name="stop_mode">
+          <tr><td>{$message.strCmdM|escape}(-m)</td>
+          <td><select name="stop_mode">
           {if $m == 's'}
                <option value="s" selected="selected">smart</option>
                <option value="f">fast</option>
                <option value="i">immediate</option>
-          {elseif $m == 'f'}  
+          {elseif $m == 'f'}
                <option value="s">smart</option>
                <option value="f" selected="selected">fast</option>
                <option value="i">immediate</option>
-          {elseif $m == 'i'}  
+          {elseif $m == 'i'}
                <option value="s">smart</option>
                <option value="f">fast</option>
                <option value="i" selected="selected">immediate</option>
-          {else}  
+          {else}
                <option value="s">smart</option>
                <option value="f">fast</option>
                <option value="i">immediate</option>
-          {/if}  
+          {/if}
+          </select>
           </td></tr>
     </tbody>
     </table>
     </div>
+
+    {* --------------------------------------------------------------------- *}
+    {* Restart Options                                                       *}
+    {* --------------------------------------------------------------------- *}
     <div id="restartOption" style="visibility: hidden; position: absolute">
+
     <table>
     <thead><tr><th colspan="2">{$message.strRestartOption|escape}</th></tr></thead>
-    <tfoot>
-    <tr><td colspan="2">
-    <input type="button" name="command" onclick="execRestartPgpool()" value="{$message.strExecute|escape}" />
-    <input type="button" name="command" onclick="cancelCmd()" value="{$message.strCancel|escape}" />
-    </td></tr></tfoot>
+    <tfoot><tr>
+      <td colspan="2">
+      <input type="button" name="command" onclick="execRestartPgpool()" value="{$message.strExecute|escape}" />
+      <input type="button" name="command" onclick="cancelCmd()" value="{$message.strCancel|escape}" />
+      </td>
+    </tr></tfoot>
     <tbody>
-        <tr>
-          <tr><td>{$message.strCmdC|escape}(-c)</td>
+
+        <tr><td>{$message.strCmdC|escape}(-c)</td>
           {if $c == 1}
           <td><input type="checkbox" name="c" checked="checked" /></td>
           {else}
           <td><input type="checkbox" name="c" /></td>
           {/if}
-          </tr>
-          <tr><td>{$message.strCmdLargeD|escape}(-D)</td>
+        </tr>
+
+        <tr><td>{$message.strCmdLargeD|escape}(-D)</td>
           {if $n == 1}
           <td><input type="checkbox" name="D" checked="checked" /></td>
           {else}
           <td><input type="checkbox" name="D" /></td>
           {/if}
-          </tr>
-          <tr><td>{$message.strCmdN|escape}(-n)</td>
+        </tr>
+
+        <tr><td>{$message.strCmdN|escape}(-n)</td>
           {if $n == 1}
           <td><input type="checkbox" name="n" checked="checked" /></td>
           {else}
           <td><input type="checkbox" name="n" /></td>
           {/if}
-          </tr>
-          <tr><td>{$message.strCmdD|escape}(-d)</td>
+        </tr>
+
+        <tr><td>{$message.strCmdD|escape}(-d)</td>
           {if $d == 1}
           <td><input type="checkbox" name="d" checked="checked" /></td>
           {else}
           <td><input type="checkbox" name="d" /></td>
           {/if}
-          </tr>
-          <tr><td>{$message.strCmdM|escape}(-m)</td><td><select name="restart_mode">
+        </tr>
+
+        <tr><td>{$message.strCmdM|escape}(-m)</td><td>
+          <select name="restart_mode">
           {if $m == 's'}
                <option value="s" selected="selected">smart</option>
                <option value="f">fast</option>
                <option value="i">immediate</option>
-          {elseif $m == 'f'}  
+          {elseif $m == 'f'}
                <option value="s">smart</option>
                <option value="f" selected="selected">fast</option>
                <option value="i">immediate</option>
-          {elseif $m == 'i'}  
+          {elseif $m == 'i'}
                <option value="s">smart</option>
                <option value="f">fast</option>
                <option value="i" selected="selected">immediate</option>
-          {else}  
+          {else}
                <option value="s">smart</option>
                <option value="f">fast</option>
                <option value="i">immediate</option>
-          {/if}  
-	  </select>
-          </td></tr>
-          <tr><td>{$message.strCmdPgpoolFile|escape}(-f)</td>
+          {/if}
+          </select>
+          </td>
+        </tr>
+
+        <tr><td>{$message.strCmdPgpoolFile|escape}(-f)</td>
           <td>{$pgpoolConf|escape}</td>
-          </tr>
-          <tr><td>{$message.strCmdPcpFile|escape}(-F)</td>
+        </tr>
+
+        <tr><td>{$message.strCmdPcpFile|escape}(-F)</td>
           <td>{$pcpConf|escape}</td>
-          </tr>
+        </tr>
+
     </tbody>
     </table>
     </div>
     {/if}
+
+{* --------------------------------------------------------------------- *}
+
     <p>{$pgpoolStatus|escape}</p>
     <p>
     {foreach from=$pgpoolMessage item=lines}
     {$lines|escape}<br />
     {/foreach}
     </p>
+
 </form>
 </div>
+
 <div id="footer">
 {include file='footer.tpl'}
 </div>
