@@ -18,7 +18,7 @@
  * suitability of this software for any purpose.  It is provided "as
  * is" without express or implied warranty.
  *
- * @author     Ryuma Ando <ando@ecomas.co.jp>
+ * @author     Bambo Huang <bambo.huang@gmail.com>
  * @copyright  2003-2009 PgPool Global Development Group
  * @version    CVS: $Id$
  */
@@ -26,6 +26,9 @@
 $message = array(
     'lang' => 'zh_cn',
     'strLang' => '简体中文',
+
+    'descAuthentication_timeout' => '执行客户端认证的超时时长，单位为秒',
+    'descBackend_flag' => '是否允许故障切换和断开连接',
     'descBackend_hostname' => 'pgpool 可以连接到的 PostgreSQL 服务器名',
     'descBackend_port' => 'PostgreSQL 服务器运行的端口',
     'descBackend_socket_dir' => '可以连接到 PostgreSQL 的套接字目录',
@@ -35,28 +38,38 @@ $message = array(
     'descChild_life_time' => '空闲的子进程的生命期，单位为秒',
     'descChild_max_connections' => '如果我们的连接数到达 child_max_connections，子进程将退出',
 	'descClient_idle_limit' => '子进程等待客户端执行查询的空闲超时时长，单位为秒',
-	'descAuthentication_timeout' => '执行客户端认证的超时时长，单位为秒',
+	'descClient_idle_limit_in_recovery' => '在在线恢复期间等待客户端提交一个查询请求的超时时长，单位为秒',
+
     'descConnection_cache' => '如果为 true ，则缓存到 PostgreSQL 的连接',
     'descConnection_life_time' => '空闲连接的生命期，单位为秒',
     'descDelay_threshold' => '如果备用服务器的延迟超过了 delay_threshold ，任何查询都将只发送到主服务器',
+
+	'descDebug_level' => '调试信息的详细级别',
     'descEnable_pool_hba' => '基于主机的认证',
     'descEnable_query_cache' => '执行查询缓存',
     'descFailover_command' => '断开一个节点时执行的命令',
     'descFailback_command' => '连接到一个节点时执行的命令',
     'descFailover_if_affected_tuples_mismatch' => '由于不认可 UPDATE/DELETE 生效的行数不同而进行故障切换',
+
     'descFail_over_on_backend_error' => '与服务器发生套接字错误时进行故障切换',
-	'descClient_idle_limit_in_recovery' => '在在线恢复中等待客户端发送查询的超时时间，单位为秒',
-    'descHealth_check_period' => '指定下一次健康检查的时间间隔。0 表示不进行健康检查',
+    'descFollow_master_command' => '在主节点发送故障切换后运行的命令',
+    'descHealth_check_period' => '指定下一次健康检查的时间间隔。0 表示不进行健康检查，-1 表示不等待',
+    
     'descHealth_check_timeout' => 'Pgpool 周期性地进行“健康检查”以检测 PostgreSQL 服务器宕机，网络通信问题一类的情况，如果发往服务器的请求在本超时时间内未响应，则表示发生故障。',
+
     'descHealth_check_user' => '用于健康检查的 PostgreSQL 用户名',
     'descIgnore_leading_white_space' => '如果为 true ，当 pgpool 判断这个查询是否为一个 SELECT 查询以便进行负载均衡时忽略每个查询开始的空白',
+
     'descInsert_lock' => '如果你复制一个有 SERIAL 数据类型列的表，有时候序列值在不同的服务器上不同，本参数用于避免序列值不同的情况',
+
     'descListen_addresses' => '指定用于 TCP/IP 连接的监听地址',
     'descLoad_balance_mode' => '为 SELECT 进行负载均衡',
     'descLobj_lock_table' => '指定在复制模式中当重写 lo_create 时用于加锁的表名',
+    'descLog_destination' => '记录日志的地方',
 	'descLog_connections' => '如果为 true，进入的连接信息将被打印到日志中',
     'descLog_standby_delay' => '频繁记录备机的延迟',
 	'descLog_hostname' => '如果为 true ，备机的主机名将能够用 ps 命令显示，且当 log_connections 为 true 的时候，将记录备机的主机名到日志中',
+
     'descLog_statement' => '如果为 true ，将打印所有的语句到日志中',
     'descLogdir' => '用于存放 pgpool 的日志文件的目录名',
     'descLog_per_node_statement' => '如果为 true ，以每个数据库节点的模式打印所有的语句到日志中',
@@ -77,17 +90,23 @@ $message = array(
     'descRecovery_1st_stage_command' => '第一阶段需要执行的恢复命令',
     'descRecovery_2nd_stage_command' => '第二阶段需要执行的恢复命令',
     'descRecovery_timeout' => '等待在线恢复完成的时长，单位为秒。 0 表示不等待',
+    'descRelcache_expire' => '相关缓冲区的生命期',
     'descReplication_mode' => '如果你计划使用复制功能，设置本值为 true',
     'descReplication_stop_on_mismatch' => '当主备节点数据不一致的时候停止复制模式',
 	'descReplicate_select' => '如果为 true ，复制 SELECT 查询，否则，只发送到主节点',
-    'descReplication_timeout' => 'In non strict replication mode, there will be a risk of deadlock',
-    'descReset_query_list' => 'Semicolon separated SQL commands to be issued at the end of session',
-    'descSocket_dir' => '可以连接到 pgpool 的套接字目录',
+    'descReplication_timeout' => '在不是很严格的复制模式中，有发生死锁的风险。这里设置复制超时的时长',
+    'descReset_query_list' => '在会话完成后需要执行的由分号分隔的SQL命令',
     'descSsl' => 'pgpool-II 与后台以 SSL 方式连接',
     'descSsl_ca_cert' => 'openssl 使用 -CAFile 指定的证书文件',
     'descSsl_ca_cert_dir' => 'openssl 使用 -CAPath 指定的证书所在的目录',
     'descSsl_cert' => '到用于连接到前端和后端的 x509 证书的完整路径',
     'descSsl_key' => '到用于连接到前端和后端的四月文件的完整路径',
+    'descSocket_dir' => '可以连接到 pgpool 的套接字目录',
+    'descSr_check_period' => '检查流复制延迟的时间间隔，单位为秒',
+    'descSr_check_user' => '执行流复制检查的用户名',
+    'descSr_check_password' => '执行流复制检查的用户的密码',
+    'descSyslog_facility' => 'Syslog 本地设施',
+    'descSyslog_ident' => 'Syslog 程序标识串',
     'descSystem_db_dbname' => '系统数据库的数据库名',
     'descSystem_db_hostname' => '系统数据库所在的主机名',
     'descSystem_db_password' => '连接到系统数据库的用户的密码',
@@ -95,6 +114,7 @@ $message = array(
     'descSystem_db_schema' => '系统数据库的模式名',
     'descSystem_db_user' => '用于连接到系统数据库的用户名',
     'descWhite_function_list' => '用逗号分隔的不会对数据库有写操作的函数',
+
     'errAlreadyExist' => '对象已经存在',
     'errFileNotExecutable' => '文件不可执行',
     'errFileNotFound' => '文件不存在',
@@ -104,11 +124,13 @@ $message = array(
     'errInputEverything' => '请填写所有内容',
     'errNoDefined' => '没有定义参数',
     'errNotSameLength' => 'col_list 的数组的长度和对应的 type_list 不匹配。它们在个数上应该相同',
+
     'errPasswordMismatch' => '密码不匹配',
     'errRequired' => '本项必填',
     'errShouldBeInteger' => '这里应该为整数',
     'errShouldBeZeroOrMore' => '这里应该为 0 或者更大的数字',
     'errSingleQuotation' => '请用单引号括起元素数组',
+
     'msgDeleteConfirm' => '您是否确定要删除它？',
     'msgMasterDbConnectionError' => '主数据库连接失败',
     'msgPgpoolConfNotFound' => '找不到 pgpool.conf',
@@ -124,6 +146,7 @@ $message = array(
     'msgDetachConfirm' => '是否真想断开到这个节点的连接？',
     'msgReturnConfirm' => '是否真想连接到这个节点？',
     'msgRecoveryConfirm' => '是否真想恢复这个节点？',
+
     'strAdd' => '添加',
     'strAdminPassword' => '密码',
     'strBack' => '返回',
@@ -248,6 +271,7 @@ $message = array(
     'strUpdate' => '更新',
     'strValue' => '值',
     'strWeight' => '比重',
+
     'e1' => 'pgmgt.conf.php 未找到。',
     'e2' => '消息 catalog 未找到。',
     'e3' => 'PCP 命令发生错误。',
