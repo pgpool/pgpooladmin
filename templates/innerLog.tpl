@@ -18,13 +18,10 @@
     {else}
     <tr class="odd">
     {/if}
-    <td>{$logFile[num][0]|escape}</td>
-    <td>{$logFile[num][1]|escape}</td>
-    <td>{$logFile[num][2]|escape}</td>
-    <td>{$logFile[num][3]|escape}</td>
-    <td>{$logFile[num][4]|escape}</td>
-    <td>{$logFile[num][5]|escape}</td>
-    <td></td>
+    <td>{$logFile[num].timestamp|escape}</td>
+    <td>{$logFile[num].level|escape}</td>
+    <td>{$logFile[num].pid|escape}</td>
+    <td>{$logFile[num].message|escape}</td>
   {/section}
   </tbody>
 </table>

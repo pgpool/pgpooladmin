@@ -36,7 +36,7 @@ if ($pgpoolLog == '') {
 }
 
 $logFile = @file($pgpoolLog);
-if ($logFile == false) {
+if ($logFile == FALSE) {
     $errorCode = 'e8001';
     $tpl->assign('errorCode', $errorCode);
     $tpl->display('innerError.tpl');
@@ -44,11 +44,22 @@ if ($logFile == false) {
 }
 
 $logSplitFile = array();
-for($i = 0; $i < count($logFile); $i++) {
-    $logFile[$i] = split(' +', $logFile[$i], 6);
+for ($i = 0; $i < count($logFile); $i++) {
+    $words = explode(" ", $logFile[$i]);
+    $words = array_merge(array_diff($words, array("")));
+
+    $logFile[$i] = array('timestamp' => $words[0]. ' '. $words[1],
+                         'level'     => $words[2],
+                         'pid'       => $words[3]. ' '. $words[4],
+                         'message'   => ''
+                         );
+
+    for ($j = 5; $j < count($words); $j++) {
+        $logFile[$i]['message'] .= ' '. $words[$j];
+    }
+    $logFile[$i]['message'] = trim($logFile[$i]['message']);
 }
 
 $tpl->assign('logFile', $logFile);
 $tpl->display('innerLog.tpl');
-
 ?>
