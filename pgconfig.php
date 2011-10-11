@@ -49,18 +49,20 @@ if (isset($_POST['action'])) {
 switch ($action) {
     case 'add':
 
+        // Boolean value
         foreach ($pgpoolConfigParam as $key => $value) {
             if ($pgpoolConfigParam[$key]['type'] == 'B') {
                 if (isset($_POST[$key])) {
-                    $configValue[$key] = 'true';
+                    $configValue[$key] = 'on';
                 } else {
-                    $configValue[$key] = 'false';
+                    $configValue[$key] = 'off';
                 }
             } else {
                 $configValue[$key] = trim($_POST[$key]);
             }
         }
 
+        // Backend settings
         if (isset($_POST['backend_hostname'])) {
             $configValue['backend_hostname'] = $_POST['backend_hostname'];
         } else {
@@ -99,18 +101,20 @@ switch ($action) {
 
     case 'cancel':
 
+        // Boolean value
         foreach ($pgpoolConfigParam as $key => $value) {
             if ($pgpoolConfigParam[$key]['type'] == 'B') {
                 if (isset($_POST[$key])) {
-                    $configValue[$key] = 'true';
+                    $configValue[$key] = 'on';
                 } else {
-                    $configValue[$key] = 'false';
+                    $configValue[$key] = 'off';
                 }
             } else {
                 $configValue[$key] = trim($_POST[$key]);
             }
         }
 
+        // Backend settings
         if (isset($_POST['backend_hostname'])) {
             $configValue['backend_hostname'] = $_POST['backend_hostname'];
         }
@@ -334,13 +338,27 @@ function check($key, $value, &$configParam ,&$error)
     switch ($type) {
         case 'B':
             $result = checkBoolean($configParam[$key]);
+
+            // allow true/false and on/off as input format,
+            // but write with only on/off format.
+            if ($result) {
+                if ($configParam[$key] == 'true') {
+                    $configParam[$key] = 'on';
+                } elseif ($configParam[$key] == 'false') {
+                    $configParam[$key] = 'off';
+                }
+            }
+
             break;
+
         case 'C':
             $result = checkString($configParam[$key], $value['regexp']);
             break;
+
         case 'F':
             $result = checkFloat($configParam[$key], $value['min'], $value['max']);
             break;
+
         case 'N':
             $result = checkInteger($configParam[$key], $value['min'], $value['max']);
             break;
@@ -416,7 +434,7 @@ function checkFloat($str, $min, $max)
  */
 function checkBoolean($str)
 {
-    if ($str == 'true' || $str == 'false') {
+    if (in_array($str, array('true', 'false', 'on', 'off'))) {
         return TRUE;
     } else {
         return FALSE;
