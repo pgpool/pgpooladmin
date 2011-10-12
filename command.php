@@ -25,6 +25,10 @@
 
 require_once('common.php');
 
+// timeout seconds
+// (The parameter "pcp_timeout" existed till V3.0.)
+define('PCP_TIMEOUT', 10);
+
 /**
  * Execute pcp command
  *
@@ -55,7 +59,7 @@ function execPcp($command, $num = '')
     $param = readPcpInfo();
     $param['hostname'] = _PGPOOL2_PCP_HOSTNAME;
 
-    $args = " " . $param['pcp_timeout'] .
+    $args = " " . PCP_TIMEOUT.
             " " . $param['hostname'] .
             " " . $param['pcp_port'] .
             " ". $_SESSION[SESSION_LOGIN_USER] .
@@ -163,7 +167,7 @@ function execPcp($command, $num = '')
  */
 function readPcpInfo()
 {
-    $params = readConfigParams(array('pcp_port', 'pcp_timeout'));
+    $params = readConfigParams(array('pcp_port'));
     return $params;
 }
 ?>

@@ -159,16 +159,6 @@ function cancelNode() {
           <td><input type="text" name="pcp_port" value="{$params.pcp_port|escape}"/></td>
         </tr>
 
-        <tr> {if $error.pcp_timeout != null}
-          <th class="error"><label>{$message.descPcp_timeout|escape}</label>
-          <br />pcp_timeout (integer)</th>
-          {else}
-          <th><label>{$message.descPcp_timeout|escape}</label>
-          <br />pcp_timeout (integer)</th>
-          {/if}
-          <td><input type="text" name="pcp_timeout" value="{$params.pcp_timeout|escape}"/></td>
-        </tr>
-
         <tr> {if $error.pcp_socket_dir != null}
           <th class="error"><label>{$message.descPcp_socket_dir|escape}</label>
           <br />pcp_socket_dir (string) *</th>

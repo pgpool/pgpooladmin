@@ -75,12 +75,6 @@ $pgpoolConfigParam[$key]['default'] = 9898;
 $pgpoolConfigParam[$key]['min'] = 1024;
 $pgpoolConfigParam[$key]['max'] = NUM_MAX;
 
-$key = 'pcp_timeout';
-$pgpoolConfigParam[$key]['type'] = 'N';
-$pgpoolConfigParam[$key]['default'] = 10;
-$pgpoolConfigParam[$key]['min'] = 0;
-$pgpoolConfigParam[$key]['max'] = NUM_MAX;
-
 $key = 'pcp_socket_dir';
 $pgpoolConfigParam[$key]['type'] = 'C';
 $pgpoolConfigParam[$key]['default'] = '/tmp';
