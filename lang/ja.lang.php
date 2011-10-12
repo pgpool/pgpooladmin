@@ -86,7 +86,8 @@ $message = array(
     'descReplication_mode' => 'レプリケーションモードの有効化',
     'descReplication_stop_on_mismatch' => 'マスタ/セカンダリ間のデータ不一致時に縮退運転',
     'descReplicate_select' => 'SELECT 文のレプリケーション',
-    'descReplication_timeout' => 'デッドロックを監視するためのタイムアウト時間',
+    'descReplication_timeout' => 'デッドロックを監視するためのタイムアウト時間。'.
+                                 '厳密でないレプリケーションモードでは、デッドロックが発生しやすくなります。',
     'descReset_query_list' => 'セッションが終了するときにコネクションを初期化するためのSQLコマンド',
     'descSocket_dir' => 'pgpoolがコネクションを受け付けるUnix domain socketディレクトリ',
     'descSsl' => 'pgpool-IIとバックエンドの間のSSL接続',
@@ -138,6 +139,7 @@ $message = array(
     'msgDetachConfirm' => 'このノードを切断してよいですか？',
     'msgReturnConfirm' => 'このノードを復帰させてよいですか？',
     'msgRecoveryConfirm' => 'このノードをリカバリしますか？',
+    'msgRPromoteConfirm' => 'このノードをマスタに昇格しますか？',
 
     'strAdd' => '追加',
     'strAdminPassword' => '管理者パスワード',
@@ -230,6 +232,7 @@ $message = array(
     'strProcId' => 'プロセスID',
     'strProcInfo' => 'プロセス情報',
     'strProcTime' => 'プロセススタート時刻',
+    'strPromote' => 'マスタ昇格',
     'strProtocolMajorVersion' => 'プロトコルメジャーバージョン',
     'strProtocolNinorVersion' => 'プロトコルマイナーバージョン',
     'strQueryCache' => 'クエリキャッシュ',

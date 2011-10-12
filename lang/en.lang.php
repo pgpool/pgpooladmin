@@ -146,6 +146,7 @@ $message = array(
     'msgDetachConfirm' => 'Do you really detach this node?',
     'msgReturnConfirm' => 'Do you really make this node return?',
     'msgRecoveryConfirm' => 'Do you really recover this node?',
+    'msgRPromoteConfirm' => 'Do you really make this node primary?',
 
     'strAdd' => 'Add',
     'strAdminPassword' => 'Password',
@@ -238,6 +239,7 @@ $message = array(
     'strProcId' => 'Process ID',
     'strProcInfo' => 'Process Info.',
     'strProcTime' => 'Process Start Time',
+    'strPromote' => 'Promote',
     'strProtocolMajorVersion' => 'Protocol Major Version',
     'strProtocolNinorVersion' => 'Protocol Minor Version',
     'strQueryCache' => 'Query Cache',
