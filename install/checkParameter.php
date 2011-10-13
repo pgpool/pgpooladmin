@@ -19,7 +19,7 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2010 PgPool Global Development Group
+ * @copyright  2003-2011 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
@@ -30,76 +30,78 @@ session_start();
 require("defaultParameter.php");
 require_once('setLang.php');
 
-$error = false;
+/* --------------------------------------------------------------------- */
+/* Error check                                                           */
+/* --------------------------------------------------------------------- */
+
+$error = FALSE;
 
 $action = '';
-if(isset($_POST['action'])) {
+if (isset($_POST['action'])) {
     $action = $_POST['action'];
 }
 
+// check pgpool.conf
 if (isset($_POST['pgpool2_config_file']) && $_POST['pgpool2_config_file']) {
     $pgpool2_config_file = $_POST['pgpool2_config_file'];
-}
-else {
+} else {
     $pgpool2_config_file = _PGPOOL2_CONFIG_FILE;
 }
 
 $msgPgpoolConfigFile = '';
-if(!@is_file($pgpool2_config_file)) {
+if (!@is_file($pgpool2_config_file)) {
     $msgPgpoolConfigFile = 'File not found';
-    $error = true;
-}
-else {
-    if(!is_readable($pgpool2_config_file)) {
+    $error = TRUE;
+} else {
+    if (!is_readable($pgpool2_config_file)) {
         $msgPgpoolConfigFile = 'Read access denied';
-        $error = true;
+        $error = TRUE;
     }
-    if(!is_writable($pgpool2_config_file)) {
+    if (!is_writable($pgpool2_config_file)) {
         $msgPgpoolConfigFile = 'Write access denied';
-        $error = true;
+        $error = TRUE;
     }
 }
 
-if(isset($_POST['password_file']) && $_POST['password_file'])  {
-$password_file = $_POST['password_file'];
-}
-else {
+// check pcp.conf
+if (isset($_POST['password_file']) && $_POST['password_file']) {
+    $password_file = $_POST['password_file'];
+} else {
     $password_file = _PGPOOL2_PASSWORD_FILE;
 }
 
 $msgPasswordFile = '';
-if(!@is_file($password_file)) {
+if (!@is_file($password_file)) {
     $msgPasswordFile = 'File not found';
-    $error = true;
-}
-else {
-    if(!is_readable($password_file)) {
+    $error = TRUE;
+} else {
+    if (!is_readable($password_file)) {
         $msgPasswordFile = 'Read access denied';
-        $error = true;
+        $error = TRUE;
     }
-    if(!is_writable($password_file)) {
+    if (!is_writable($password_file)) {
         $msgPasswordFile = 'Write access denied';
-        $error = true;
+        $error = TRUE;
     }
 }
 
-if(isset($_POST['pgpool_command']) && $_POST['pgpool_command']) {
+// check bin directory
+if (isset($_POST['pgpool_command']) && $_POST['pgpool_command']) {
     $pgpool_command = $_POST['pgpool_command'];
-}
-else {
+} else {
     $pgpool_command = _PGPOOL2_COMMAND;
 }
 
 $msgPgpoolCommand = '';
-if(!@is_file($pgpool_command)) {
+if (!@is_file($pgpool_command)) {
     $msgPgpoolCommand = 'pgpool command not found';
-    $error = true;
-}
-else if(!is_executable($pgpool_command)) {
+    $error = TRUE;
+} elseif (!is_executable($pgpool_command)) {
     $msgPgpoolCommand =  'pgpool command not executable';
-    $error = true;
+    $error = TRUE;
 }
 
+// check args of pgpool comand
 $msgCmdC = '';
 $msgCmdLargeD = '';
 $msgCmdD = '';
@@ -107,181 +109,182 @@ $msgCmdN = '';
 $msgCmdM = '';
 
 $msgPgpoolLogFile = '';
-if(isset($_POST['pgpool_logfile']) && $_POST['pgpool_logfile']) {
+if (isset($_POST['pgpool_logfile']) && $_POST['pgpool_logfile']) {
     $pgpool_logfile = $_POST['pgpool_logfile'];
-}
-else {
+} else {
     $pgpool_logfile = _PGPOOL2_LOG_FILE;
 }
 
-if($pgpool_logfile != '' && strpos($pgpool_logfile, '|') !== FALSE) {
-	// pipe
-	$tmp_str = trim($pgpool_logfile);
-	if(($tmp_str[0] != '|') || ($tmp_str[strlen($tmp_str) - 1] == '|')) {
-	    $msgPgpoolLogFile = 'Directory not found';
-    	$error = true;
-	}
-} else if (!is_dir(dirname($pgpool_logfile))) {
-    $msgPgpoolLogFile = 'Directory not found';
-    $error = true;
-} else {
-    if(!is_writable(dirname($pgpool_logfile))) {
-        $msgPgpoolLogFile = 'Write access denied';
-        $error = true;
+if ($pgpool_logfile != '' && strpos($pgpool_logfile, '|') !== FALSE) {
+    // pipe
+    $tmp_str = trim($pgpool_logfile);
+    if (($tmp_str[0] != '|') || ($tmp_str[strlen($tmp_str) - 1] == '|')) {
+        $msgPgpoolLogFile = 'Directory not found';
+        $error = TRUE;
     }
+
+} elseif (!is_dir(dirname($pgpool_logfile))) {
+    $msgPgpoolLogFile = 'Directory not found';
+    $error = TRUE;
+
+} elseif (!is_writable(dirname($pgpool_logfile))) {
+    $msgPgpoolLogFile = 'Write access denied';
+    $error = TRUE;
 }
 
-if(isset($_POST['pcp_client_dir']) && $_POST['pcp_client_dir']) {
+if (isset($_POST['pcp_client_dir']) && $_POST['pcp_client_dir']) {
     $pcp_client_dir = $_POST['pcp_client_dir'];
-}
-else {
+} else {
     $pcp_client_dir = _PGPOOL2_PCP_DIR;
 }
 
 $msgPcpClientDir = '';
-if(!is_dir($pcp_client_dir)) {
+if (!is_dir($pcp_client_dir)) {
     $msgPcpClientDir = 'Directory not found';
-        $error = true;
-}
-else {
+        $error = TRUE;
+} else {
     $command = array('pcp_attach_node',
-                            'pcp_detach_node',
-                            'pcp_node_count',
-                            'pcp_node_info',
-                            'pcp_proc_count',
-                            'pcp_proc_info',
-                            'pcp_stop_pgpool',
-                            'pcp_systemdb_info');
-    
-    for($i=0; $i<count($command); $i++) {
-		if(!@is_file($pcp_client_dir . "/" . $command[$i])) {
-			$msgPcpClientDir = $command[$i] . ' command not found';
-			$error = true;
-		}
-        else if(!is_executable($pcp_client_dir . "/" . $command[$i] )) {
+                     'pcp_detach_node',
+                     'pcp_node_count',
+                     'pcp_node_info',
+                     'pcp_proc_count',
+                     'pcp_proc_info',
+                     'pcp_stop_pgpool',
+                     'pcp_systemdb_info');
+
+    for ($i = 0; $i < count($command); $i++) {
+        if (!@is_file($pcp_client_dir . "/" . $command[$i])) {
+            $msgPcpClientDir = $command[$i] . ' command not found';
+            $error = TRUE;
+        } elseif (!is_executable($pcp_client_dir . "/" . $command[$i] )) {
             $msgPcpClientDir = $command[$i] . ' not executable';
-			$error = true;
+            $error = TRUE;
         }
     }
 }
 
 $msgPcpHostname = '';
-if(isset($_POST['pcp_hostname']) && $_POST['pcp_hostname']) {
+if (isset($_POST['pcp_hostname']) && $_POST['pcp_hostname']) {
     $pcp_hostname = $_POST['pcp_hostname'];
-}
-else {
+} else {
     $pcp_hostname =  _PGPOOL2_PCP_HOSTNAME;
 }
 
-if(isset($_POST['pcp_timeout']) && $_POST['pcp_timeout']) {
+if (isset($_POST['pcp_timeout']) && $_POST['pcp_timeout']) {
     $pcp_timeout= $_POST['pcp_timeout'];
-}
-else {
+} else {
     $pcp_timeout =  _PGPOOL2_PCP_TIMEOUT;
     $msgPcpTimeout = '';
 }
 
-if(isset($_POST['pcp_refreshTime']) && $_POST['pcp_refreshTime']) {
+if (isset($_POST['pcp_refreshTime']) && $_POST['pcp_refreshTime']) {
     $pcp_refreshTime = $_POST['pcp_refreshTime'];
-}
-else {
+} else {
     $pcp_refreshTime =  _PGPOOL2_STATUS_REFRESH_TIME;
     $msgPcpRefreshTime = '';
 }
 
-if($error || (isset($_POST['submitBack']) && $_POST['submitBack'] != null)) { 
-}
-else {
-    
-    $params['lang'] = $_SESSION['lang'];
+/* --------------------------------------------------------------------- */
+/* Write pgmt.conf.php                                                   */
+/* --------------------------------------------------------------------- */
+
+if ($error || (isset($_POST['submitBack']) && $_POST['submitBack'] != NULL)) {
+
+} else {
+    $params['lang']                = $_SESSION['lang'];
     $params['pgpool2_config_file'] = $pgpool2_config_file;
-    $params['password_file'] = $password_file;
-    $params['pcp_client_dir'] = $pcp_client_dir;
-    $params['pcp_hostname'] = $pcp_hostname;
-    $params['pcp_refreshTime'] = $pcp_refreshTime;
-    
+    $params['password_file']       = $password_file;
+    $params['pcp_client_dir']      = $pcp_client_dir;
+    $params['pcp_hostname']        = $pcp_hostname;
+    $params['pcp_refreshTime']     = $pcp_refreshTime;
+
     $_SESSION['params'] = $params;
 }
 
-if(!$error && $action == 'next') {
+if (!$error && $action == 'next') {
 
     $fp = fopen( "../conf/pgmgt.conf.php", "w");
 
     fputs($fp, "<?php"."\n");
-    
+
     $str = 'define(\'_PGPOOL2_LANG\', \'' . $_SESSION['lang'] . '\');' . "\n";
     fputs($fp, $str);
-    
+
     $str = 'define(\'_PGPOOL2_CONFIG_FILE\', \'' . $_POST['pgpool2_config_file'] . '\');' . "\n";
     fputs($fp, $str);
-    
+
     $str = 'define(\'_PGPOOL2_PASSWORD_FILE\', \'' . $_POST['password_file'] . '\');' . "\n";
     fputs($fp, $str);
-    
+
     $str = 'define(\'_PGPOOL2_COMMAND\', \'' . $_POST['pgpool_command'] . '\');' . "\n";
     fputs($fp, $str);
-    
-    if(isset($_POST['c'])) {
+
+    if (isset($_POST['c'])) {
         $c = 1;
     } else {
         $c = 0;
     }
-    
-    if(isset($_POST['D'])) {
+
+    if (isset($_POST['D'])) {
         $D = 1;
     } else {
         $D = 0;
     }
-    
-    if(isset($_POST['d'])) {
+
+    if (isset($_POST['d'])) {
         $d = 1;
     } else {
         $d = 0;
     }
-    
-    if(isset($_POST['n'])) {
+
+    if (isset($_POST['n'])) {
         $n = 1;
     } else {
         $n = 0;
     }
-    
+
     $str = 'define(\'_PGPOOL2_CMD_OPTION_C\', \'' . $c . '\');' . "\n";
     fputs($fp, $str);
-    
+
     $str = 'define(\'_PGPOOL2_CMD_OPTION_LARGE_D\', \'' . $D . '\');' . "\n";
     fputs($fp, $str);
-    
+
     $str = 'define(\'_PGPOOL2_CMD_OPTION_D\', \'' . $d . '\');' . "\n";
     fputs($fp, $str);
-    
+
     $str = 'define(\'_PGPOOL2_CMD_OPTION_M\', \'' . $_POST['m'] . '\');' . "\n";
     fputs($fp, $str);
-    
+
     $str = 'define(\'_PGPOOL2_CMD_OPTION_N\', \'' . $n . '\');' . "\n";
     fputs($fp, $str);
-    
+
     $str = 'define(\'_PGPOOL2_LOG_FILE\', \'' . $_POST['pgpool_logfile'] . '\');' . "\n";
     fputs($fp, $str);
-    
+
     $str = 'define(\'_PGPOOL2_PCP_DIR\', \'' . $_POST['pcp_client_dir'] . '\');' . "\n";
     fputs($fp, $str);
-    
+
     $str = 'define(\'_PGPOOL2_PCP_HOSTNAME\', \'' . $_POST['pcp_hostname'] . '\');' . "\n";
     fputs($fp, $str);
-    
+
     $str = 'define(\'_PGPOOL2_PCP_TIMEOUT\', \'' . $_POST['pcp_timeout'] . '\');' . "\n";
     fputs($fp, $str);
-    
+
     $str = 'define(\'_PGPOOL2_STATUS_REFRESH_TIME\', \'' . $_POST['pcp_refreshTime'] . '\');' . "\n";
     fputs($fp, $str);
-    
+
     fputs($fp, "?>"."\n");
-    
+
     fclose($fp);
-    
+
     header("Location: finish.php");
 }
+
+/* --------------------------------------------------------------------- */
+/* HTML                                                                  */
+/* --------------------------------------------------------------------- */
 ?>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -293,12 +296,12 @@ if(!$error && $action == 'next') {
     <div id="header">
       <h1><img src="../images/logo.gif" alt="pgpoolAdmin" /></h1>
     </div>
-	  <div id="content">
+      <div id="content">
   <h2>Welcome to pgpool-II Administration Tool</h2>
   <h3><?php echo $message['strParameterCheck']; ?></h3>
   <form action="checkParameter.php" method="post" name="CheckPath" id="CheckPath">
     <?php
-    if($error) {
+    if ($error) {
         echo '<input type="hidden" name="action" value="check">';
     } else {
         echo '<input type="hidden" name="action" value="next">';
@@ -310,7 +313,7 @@ if(!$error && $action == 'next') {
     <th><label><?php echo $message['strPgConfFile'] ?></label></th>
     <td><input name="pgpool2_config_file" type="text" value="<?php echo $pgpool2_config_file?>" size="50" />
     <?php
-    if($msgPgpoolConfigFile != '') {
+    if ($msgPgpoolConfigFile != '') {
         echo '<br />' . $msgPgpoolConfigFile;
         echo '</td><td><img src="images/ng.gif" alt="ng" />';
     } else {
@@ -321,9 +324,9 @@ if(!$error && $action == 'next') {
   </tr>
   <tr>
     <th><label><?php echo $message['strPasswordFile'] ?></label></th>
-	  <td><input name="password_file" type="text" value="<?php echo $password_file ?>" size="50" />
+      <td><input name="password_file" type="text" value="<?php echo $password_file ?>" size="50" />
     <?php
-    if($msgPasswordFile != '') {
+    if ($msgPasswordFile != '') {
         echo '<br />' . $msgPasswordFile;
         echo '</td><td><img src="images/ng.gif" alt="ng" />';
     } else {
@@ -336,7 +339,7 @@ if(!$error && $action == 'next') {
     <th><label><?php echo $message['strPgpoolCommand'] ?></label></th>
                   <td><input name="pgpool_command" type="text" value="<?php echo $pgpool_command ?>" size="50" />
     <?php
-    if($msgPgpoolCommand != '') {
+    if ($msgPgpoolCommand != '') {
         echo '<br />' . $msgPgpoolCommand;
         echo '</td><td><img src="images/ng.gif" alt="ng" />';
     } else {
@@ -352,7 +355,7 @@ if(!$error && $action == 'next') {
     <th><label><?php echo $message['strCmdC'] ?></label></th>
       <td><input type="checkbox" name="c" /></td>
     <?php
-    if($msgCmdC != '') {
+    if ($msgCmdC != '') {
         echo '<br />' . $msgCmdC;
         echo '</td><td><img src="images/ng.gif" alt="ng" />';
     } else {
@@ -365,7 +368,7 @@ if(!$error && $action == 'next') {
     <th><label><?php echo $message['strCmdLargeD'] ?></label></th>
       <td><input type="checkbox" name="D" /></td>
     <?php
-    if($msgCmdLargeD != '') {
+    if ($msgCmdLargeD != '') {
         echo '<br />' . $msgCmdLargeD;
         echo '</td><td><img src="images/ng.gif" alt="ng" />';
     } else {
@@ -378,7 +381,7 @@ if(!$error && $action == 'next') {
     <th><label><?php echo $message['strCmdN'] ?></label></th>
       <td><input type="checkbox" name="n" /></td>
     <?php
-    if($msgCmdN != '') {
+    if ($msgCmdN != '') {
         echo '<br />' . $msgCmdN;
         echo '</td><td><img src="images/ng.gif" alt="ng" />';
     } else {
@@ -391,7 +394,7 @@ if(!$error && $action == 'next') {
     <th><label><?php echo $message['strCmdD'] ?></label></th>
       <td><input type="checkbox" name="d" /></td>
     <?php
-    if($msgCmdD != '') {
+    if ($msgCmdD != '') {
         echo '<br />' . $msgCmdD;
         echo '</td><td><img src="images/ng.gif" alt="ng" />';
     } else {
@@ -409,7 +412,7 @@ if(!$error && $action == 'next') {
            </select>
      </td>
     <?php
-    if($msgCmdM != '') {
+    if ($msgCmdM != '') {
         echo '<br />' . $msgCmdM;
         echo '</td><td><img src="images/ng.gif" alt="ng" />';
     } else {
@@ -422,7 +425,7 @@ if(!$error && $action == 'next') {
     <th><label><?php echo $message['strPgpoolLogFile'] ?></label></th>
                   <td><input name="pgpool_logfile" type="text" value="<?php echo $pgpool_logfile ?>" size="50" />
     <?php
-    if($msgPgpoolLogFile != '') {
+    if ($msgPgpoolLogFile != '') {
         echo '<br />' . $msgPgpoolLogFile;
         echo '</td><td><img src="images/ng.gif" alt="ng" />';
     } else {
@@ -436,7 +439,7 @@ if(!$error && $action == 'next') {
     <th><label><?php echo $message['strPcpDir'] ?></label></th>
                   <td><input name="pcp_client_dir" type="text" value="<?php echo $pcp_client_dir ?>" size="50" />
     <?php
-    if($msgPcpClientDir != '') {
+    if ($msgPcpClientDir != '') {
         echo '<br />' . $msgPcpClientDir;
         echo '</td><td><img src="images/ng.gif" alt="ng" />';
     } else {
@@ -449,7 +452,7 @@ if(!$error && $action == 'next') {
     <th><label><?php echo $message['strPcpHostName'] ?></label></th>
                   <td><input name="pcp_hostname" type="text" value="<?php echo $pcp_hostname ?>" size="50" />
     <?php
-    if($msgPcpHostname != '') {
+    if ($msgPcpHostname != '') {
         echo '<br />' . $msgPcpHostname;
         echo '</td><td><img src="images/ng.gif" alt="ng" />';
     } else {
@@ -462,7 +465,7 @@ if(!$error && $action == 'next') {
     <th><label><?php echo $message['strPcpTimeout'] ?></label></th>
                   <td><input name="pcp_timeout" type="text" value="<?php echo $pcp_timeout?>" size="50" />
     <?php
-    if($msgPcpHostname != '') {
+    if ($msgPcpHostname != '') {
         echo '<br />' . $msgPcpHostname;
         echo '</td><td><img src="images/ng.gif" alt="ng" />';
     } else {
@@ -475,7 +478,7 @@ if(!$error && $action == 'next') {
     <th><label><?php echo $message['strPcpRefreshTime'] ?></label></th>
                   <td><input name="pcp_refreshTime" type="text" value="<?php echo $pcp_refreshTime ?>" size="50" />
     <?php
-    if($msgPcpRefreshTime != '') {
+    if ($msgPcpRefreshTime != '') {
         echo '<br />' . $msgPcpRefreshTime;
         echo '</td><td><img src="images/ng.gif" alt="ng" />';
     } else {
@@ -488,7 +491,7 @@ if(!$error && $action == 'next') {
 </table>
 <p>
 <?php
-if($error) {
+if ($error) {
 echo '<input type="submit" value="' . $message['strCheck'] . '" />';
 }
 else {

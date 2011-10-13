@@ -19,7 +19,7 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2008 PgPool Global Development Group
+ * @copyright  2003-2011 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
@@ -27,10 +27,10 @@ require_once('../version.php');
 
 $messageList = array();
 $res_dir = opendir('lang/');
-while($file_name = readdir( $res_dir )) {
-    if(ereg('^[^\.]', $file_name)) {
+while ($file_name = readdir( $res_dir )) {
+    if (ereg('^[^\.]', $file_name)) {
         include('lang/' . $file_name);
-        $messageList[$message['lang']] = $message['strLang']; 
+        $messageList[$message['lang']] = $message['strLang'];
     }
 }
 
@@ -46,7 +46,7 @@ while($file_name = readdir( $res_dir )) {
     <div id="header">
       <h1><img src="../images/logo.gif" alt="pgpoolAdmin" /></h1>
     </div>
-	  <div id="content">
+     <div id="content">
   <h2>Welcome to pgpool-II Administration Tool</h2>
 <form action="checkDirectory.php" method="post" name="CheckPath" id="CheckPath">
 <table>

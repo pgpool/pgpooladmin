@@ -19,7 +19,7 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2008 PgPool Global Development Group
+ * @copyright  2003-2011 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
@@ -29,29 +29,29 @@ session_start();
 
 require_once('setLang.php');
 
-$error = false;
+$error = FALSE;
 
 $action = '';
-if(isset($_POST['action'])) {
+if (isset($_POST['action'])) {
     $action = $_POST['action'];
 }
 
 $templates_c = dirname(dirname(__FILE__) . '/') . '/templates_c';
-if(!is_writable($templates_c)) {
+if (!is_writable($templates_c)) {
     $templates_c = $templates_c . '  write denied';
-    $error = true;
+    $error = TRUE;
 } else {
     unset($templates_c);
 }
 $conf = dirname(dirname(__FILE__) . '/') . '/conf/pgmgt.conf.php';
-if(!is_writable($conf)) {
+if (!is_writable($conf)) {
     $conf = $conf . '  write denied';
-    $error = true;
+    $error = TRUE;
 } else {
     unset($conf);
 }
 
-if(!$error && $action == 'next') {
+if (!$error && $action == 'next') {
     header("Location: checkParameter.php");
 }
 
@@ -67,7 +67,7 @@ if(!$error && $action == 'next') {
     <div id="header">
       <h1><img src="../images/logo.gif" alt="pgpoolAdmin" /></h1>
     </div>
-	  <div id="content">
+      <div id="content">
   <h2>Welcome to pgpool-II Administration Tool</h2>
   <h3><? echo $message['strDirectoryCheck'] ?></h3>
   <form action="checkDirectory.php" method="post" name="CheckPath" id="CheckPath">
@@ -106,10 +106,11 @@ if(!$error && $action == 'next') {
 </table>
 <p>
 <?php
-if($error)
+if ($error) {
     echo '<input type="submit" value="' . $message['strCheck'] . '" />';
-else
+} else {
     echo '<input type="submit" value="' . $message['strNext'] . '" />';
+}
 ?>
 </p>
 </form>
