@@ -1,37 +1,29 @@
-pgpoolAdmin 3.0.3 2011/03/11
+pgpoolAdmin 3.1 2011/10/14
 
-	* Version 3.0.3
+    * Version 3.1
 
-	* Update french translation, per a patch from Jean-Paul
-      Argudo(Guillaume)
+    * pgpoolAdmin 3.1 adopts pgpool-II 3.1.
 
-	* Allow to accept '|' for pgpool logfile in the installation
-      script. This has been alredy possible in pgpool.conf(Tatsuo)
+        * Version 3.0
 
-pgpoolAdmin 3.0.1 2010/09/24
+          - Replace functions deprecated in PHP 5.3 (Anzai)
 
-	* Version 3.0.1
+          - Sync pgpool.conf Setting with pgpool-II 3.1 (Anzai)
 
-	  - Update embedded Smarty to 2.6.26(Tatsuo)
+          - Add new parameters and remove deleted parameters in pgpool-II 3.1 (Anzai)
+            - new:
+              follow_master_command, relcache_expire, backend_flag, sr_check_period,
+              sr_check_user, sr_check_password, log_destination, syslog_facility, syslog_ident
 
-pgpoolAdmin 3.0 2010/09/10
+            - deleted:
+              pcp_timeout, backend_socket_dir
 
-	* Version 3.0
+          - Add promote button in Master/Slave mode with streaming replication (Anzai)
+            - This button is to execute pcp_promote_node.
 
-	  pgpoolAdmin 3.0 adopts pgpool-II 3.0.
+          - Other small changes for pgpool-II 3.1 (Anzai)
+            - When log_destination is syslog, Log button will be invisible.
+            - Allow regex value in black_function_list and white_function_list.
 
-	  - Add "Discard pgpool_status file(-D)" to pgpoolAdmin Setting(Anzai)
-
-	  - Sync pgpool.conf Setting with pgpool-II 3.0(Anzai, Tatsuo)
-
-	  - Add "Backend pid" (process if of PostgreSQL database
-            server process) and "Frontend connected"(1 if frontend
-            actually connets) to Process Info.(Tatsuo)
-
-	  - Replace functions deprecated in PHP 5.3(Anzai)
-
-	  - Refactor pgpool status/summary(Tatsuo)
-
-	  - Fix connect/disconnect buttons disappering ini node status
-	    window(Tatsuo)
-
+          - Some fix (Anzai)
+            - Change to save boolean values in pgpool.conf with on/off format.
