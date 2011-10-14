@@ -188,7 +188,7 @@ function setValue($key)
         $params[$key] = $g_msg_nodef;
     }
 
-    if (strpos($key, 'file') !== FALSE) {
+    if (strpos($key, 'file') !== FALSE && $key != 'pgpool_logfile') {
         fileError($key);
     }
 }
