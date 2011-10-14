@@ -1,3 +1,15 @@
+2011-10-14 11:25  anzai
+
+	* config.php:
+
+	  Fix bug that inputting pipe for pgpool_logfile isn't allowed.
+
+2011-10-13 12:12  anzai
+
+	* ChangeLog, NEWS:
+
+	  Prepare 3.1.
+
 2011-10-13 12:02  anzai
 
 	* config.php, definePgpoolConfParam.php, innerSummary.php,
