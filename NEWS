@@ -1,10 +1,15 @@
-pgpoolAdmin 3.1 2011/10/14
-
-    * Version 3.1
+pgpoolAdmin 3.1.1 2011/12/5
 
     * pgpoolAdmin 3.1 adopts pgpool-II 3.1.
 
-        * Version 3.0
+        * Version 3.1.1 2011/12/5
+
+            - Fix not to ignore changing boolean values in pgpool.conf. (Anzai)
+            - Fix not to ignore changing D option of pgpool command in pgmgt.conf. (Anzai)
+            - At query cache page it somtimes happen "redeclare function" error,
+              so replace include() to require_once(). (Anzai)
+
+        * Version 3.1 2011/10/14
 
           - Replace functions deprecated in PHP 5.3 (Anzai)
 
