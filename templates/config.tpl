@@ -95,7 +95,7 @@
           </td></tr>
         <tr><td>{$message.strCmdLargeD|escape}(-D)</td>
           <td>
-          {if $params.d == 1}
+          {if $params.D == 1}
           <input type="checkbox" name="D" checked="checked" />
           {else}
           <input type="checkbox" name="D" />

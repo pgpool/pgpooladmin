@@ -196,7 +196,7 @@ function setValue($key)
 function setBool($key)
 {
     global $g_post;
-    global $prams;
+    global $params;
 
     if (isset($g_post[$key])) {
         $params[$key] = 1;

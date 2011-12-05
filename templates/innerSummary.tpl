@@ -19,7 +19,7 @@ td > img {
   <tbody>
     <tr><td>{$message.strReplicationMode|escape}</td>
     <td>
-    {if $params.replication_mode == 'on'}
+    {if $params.parallel_mode == 'on'}
     {$message.strInvalidation|escape}
     {elseif $params.replication_mode == 'on'}
     <img src="images/check.png"> {$message.strOn|escape}

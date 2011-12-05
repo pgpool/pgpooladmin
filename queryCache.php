@@ -86,7 +86,7 @@ if ($action == 'delete') {
 
     if ($hashArray != FALSE) {
         $sql = "DELETE FROM $sysDbSchema.query_cache WHERE ";
-        for ($i = 0; $i<count($hashArray)-1; $i++) {
+        for ($i = 0; $i < count($hashArray) -1; $i++) {
             $escaped = pg_escape_string($hashArray[$i]);
             $sql .= "hash = '$escaped' OR ";
         }
@@ -105,7 +105,7 @@ if ($action == 'search') {
     $_SESSION['qDb'] = $dbname;
 }
 
-if(isset($_SESSION['qQueryStr'])) {
+if (isset($_SESSION['qQueryStr'])) {
     $query = $_SESSION['qQueryStr'];
 } else {
     $query = '';

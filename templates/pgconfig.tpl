@@ -180,7 +180,7 @@ function cancelNode() {
           <th><label>{$message.descEnable_pool_hba|escape}</label>
                     <br />enable_pool_hba</th>
           {/if}
-          {if $params.enable_pool_hba == 'true'}
+          {if $params.enable_pool_hba == 'on'}
           <td><input type="checkbox" name="enable_pool_hba" id="enable_pool_hba" checked="checked" /></td>
           {else}
           <td><input type="checkbox" name="enable_pool_hba" id="enable_pool_hba" /></td>
@@ -208,7 +208,7 @@ function cancelNode() {
           <th><label>{$message.descSsl|escape}</label>
                     <br />ssl</th>
           {/if}
-          {if $params.ssl == 'true'}
+          {if $params.ssl == 'on'}
           <td><input type="checkbox" name="ssl" id="ssl" value="true" checked="checked" /></td>
           {else}
           <td><input type="checkbox" name="ssl" id="ssl" value="false" /></td>
@@ -529,7 +529,7 @@ function cancelNode() {
           <th><label>{$message.descPrint_timestamp|escape}</label>
           <br />print_timestamp *</th>
           {/if}
-          {if $params.print_timestamp == 'true'}
+          {if $params.print_timestamp == 'on'}
           <td><input type="checkbox" name="print_timestamp"
                id="print_timestamp" value="true" checked="checked" /></td>
           {else}
@@ -545,7 +545,7 @@ function cancelNode() {
           <th><label>{$message.descLog_connections|escape}</label>
           <br />log_connections</th>
           {/if}
-          {if $params.log_connections == 'true'}
+          {if $params.log_connections == 'on'}
           <td><input type="checkbox" name="log_connections"
                id="log_connections" value="true" checked="checked" /></td>
           {else}
@@ -561,7 +561,7 @@ function cancelNode() {
           <th><label>{$message.descLog_hostname|escape}</label>
                     <br />log_hostname</th>
           {/if}
-          {if $params.log_hostname == 'true'}
+          {if $params.log_hostname == 'on'}
           <td><input type="checkbox" name="log_hostname" id="log_hostname" value="true" checked="checked" /></td>
           {else}
           <td><input type="checkbox" name="log_hostname" id="log_hostname" value="false" /></td>
@@ -575,7 +575,7 @@ function cancelNode() {
           <th><label>{$message.descLog_statement|escape}</label>
           <br />log_statement</th>
           {/if}
-          {if $params.log_statement == 'true'}
+          {if $params.log_statement == 'on'}
           <td><input type="checkbox" name="log_statement" id="log_statement" value="true" checked="checked" /></td>
           {else}
           <td><input type="checkbox" name="log_statement" id="log_statement" value="false" /></td>
@@ -589,7 +589,7 @@ function cancelNode() {
           <th><label>{$message.descLog_per_node_statement|escape}</label>
           <br />log_per_node_statement</th>
           {/if}
-          {if $params.log_per_node_statement == 'true'}
+          {if $params.log_per_node_statement == 'on'}
           <td><input type="checkbox" name="log_per_node_statement"
                id="log_per_node_statement" value="true" checked="checked" /></td>
           {else}
@@ -723,7 +723,7 @@ function cancelNode() {
           <th><label>{$message.descConnection_cache|escape}</label>
           <br />connection_cache *</th>
           {/if}
-          {if $params.connection_cache == 'true'}
+          {if $params.connection_cache == 'on'}
           <td><input type="checkbox" name="connection_cache"
               id="connection_cache" value="true" checked="checked" /></td>
           {else}
@@ -771,7 +771,7 @@ function cancelNode() {
           <th><label>{$message.descReplication_mode|escape}</label>
           <br />replication_mode *</th>
           {/if}
-          {if $params.replication_mode == 'true'}
+          {if $params.replication_mode == 'on'}
           <td><input type="checkbox" name="replication_mode"
                id="replication_mode" value="true" checked="checked" /></td>
           {else}
@@ -787,7 +787,7 @@ function cancelNode() {
           <th><label>{$message.descReplicate_select|escape}</label>
           <br />replicate_select</th>
           {/if}
-          {if $params.replicate_select == 'true'}
+          {if $params.replicate_select == 'on'}
           <td><input type="checkbox" name="replicate_select"
                id="replicate_select" value="true" checked="checked" /></td>
           {else}
@@ -803,7 +803,7 @@ function cancelNode() {
           <th><label>{$message.descInsert_lock|escape}</label>
           <br />insert_lock</th>
           {/if}
-          {if $params.insert_lock == 'true'}
+          {if $params.insert_lock == 'on'}
           <td><input type="checkbox" name="insert_lock" id="insert_lock" value="true" checked="checked" /></td>
           {else}
           <td><input type="checkbox" name="insert_lock" id="insert_lock" value="false" /></td>
@@ -832,7 +832,7 @@ function cancelNode() {
           <th><label>{$message.descReplication_stop_on_mismatch|escape}</label>
           <br />replication_stop_on_mismatch</th>
           {/if}
-          {if $params.replication_stop_on_mismatch == 'true'}
+          {if $params.replication_stop_on_mismatch == 'on'}
           <td><input type="checkbox" name="replication_stop_on_mismatch"
                id="replication_stop_on_mismatch" value="true" checked="checked" /></td>
           {else}
@@ -847,7 +847,7 @@ function cancelNode() {
           <th><label>{$message.descFailover_if_affected_tuples_mismatch|escape}</label>
           <br />failover_if_affected_tuples_mismatch</th>
           {/if}
-          {if $params.failover_if_affected_tuples_mismatch == 'true'}
+          {if $params.failover_if_affected_tuples_mismatch == 'on'}
           <td><input type="checkbox" name="failover_if_affected_tuples_mismatch"
                id="failover_if_affected_tuples_mismatch" value="true" checked="checked" /></td>
           {else}
@@ -896,7 +896,7 @@ function cancelNode() {
           <th><label>{$message.descLoad_balance_mode|escape}</label>
           <br />load_balance_mode *</th>
           {/if}
-          {if $params.load_balance_mode == 'true'}
+          {if $params.load_balance_mode == 'on'}
           <td><input type="checkbox" name="load_balance_mode"
                id="load_balance_mode" value="true" checked="checked" /></td>
           {else}
@@ -912,7 +912,7 @@ function cancelNode() {
           <th><label>{$message.descIgnore_leading_white_space|escape}</label>
           <br />ignore_leading_white_space</th>
           {/if}
-          {if $params.ignore_leading_white_space == 'true'}
+          {if $params.ignore_leading_white_space == 'on'}
           <td><input type="checkbox" name="ignore_leading_white_space"
                id="ignore_leading_white_space" value="true" checked="checked" /></td>
           {else}
@@ -971,7 +971,7 @@ function cancelNode() {
           <th><label>{$message.descMaster_slave_mode|escape}</label>
           <br />master_slave_mode *</th>
           {/if}
-          {if $params.master_slave_mode == 'true'}
+          {if $params.master_slave_mode == 'on'}
           <td><input type="checkbox" name="master_slave_mode"
                id="master_slave_mode" value="true" checked="checked" /></td>
           {else}
@@ -1083,7 +1083,7 @@ function cancelNode() {
           <th><label>{$message.descParallel_mode|escape}</label>
           <br />parallel_mode *</th>
           {/if}
-          {if $params.parallel_mode == 'true'}
+          {if $params.parallel_mode == 'on'}
           <td><input type="checkbox" name="parallel_mode"
                id="parallel_mode" value="true" checked="checked" /></td>
           {else}
@@ -1099,7 +1099,7 @@ function cancelNode() {
           <th><label>{$message.descEnable_query_cache|escape}</label>
           <br />enable_query_cache *</th>
           {/if}
-          {if $params.enable_query_cache == 'true'}
+          {if $params.enable_query_cache == 'on'}
           <td><input type="checkbox" name="enable_query_cache" id="enable_query_cache" checked="checked" /></td>
           {else}
           <td><input type="checkbox" name="enable_query_cache" id="enable_query_cache" /></td>
@@ -1281,7 +1281,7 @@ function cancelNode() {
           <th><label>{$message.descFail_over_on_backend_error|escape}</label>
                     <br />fail_over_on_backend_error</th>
           {/if}
-          {if $params.fail_over_on_backend_error == 'true'}
+          {if $params.fail_over_on_backend_error == 'on'}
           <td><input type="checkbox" name="fail_over_on_backend_error"
                id="fail_over_on_backend_error" value="true" checked="checked" /></td>
           {else}

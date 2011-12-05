@@ -466,7 +466,7 @@ function readConfigParams($paramList = FALSE)
             if (isset($configParam[$key])) {
                 $results[$key] = $configParam[$key];
             } else {
-                include('definePgpoolConfParam.php');
+                require_once('definePgpoolConfParam.php');
                 if(!preg_match("/^backend_hostname/",       $key) &&
                    !preg_match("/^backend_port/",           $key) &&
                    !preg_match("/^backend_weight/",         $key) &&
