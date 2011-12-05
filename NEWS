@@ -8,6 +8,7 @@ pgpoolAdmin 3.1.1 2011/12/5
             - Fix not to ignore changing D option of pgpool command in pgmgt.conf. (Anzai)
             - At query cache page it somtimes happen "redeclare function" error,
               so replace include() to require_once(). (Anzai)
+            - Update french document. (Guillaume Lelarge)
 
         * Version 3.1 2011/10/14
 
