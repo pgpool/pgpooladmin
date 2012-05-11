@@ -214,7 +214,7 @@ function isParallelMode()
 {
     $params = readConfigParams(array('parallel_mode'));
 
-    if ($params['parallel_mode'] == 'true') {
+    if ($params['parallel_mode'] == 'on') {
         return TRUE;
     } else {
         return FALSE;
@@ -354,7 +354,7 @@ function isReplicationMode()
 {
     $params = readConfigParams(array('replication_mode'));
 
-    if ($params['replication_mode'] == 'true') {
+    if ($params['replication_mode'] == 'on') {
         return TRUE;
     } else {
         return FALSE;
