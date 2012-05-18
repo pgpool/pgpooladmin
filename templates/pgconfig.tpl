@@ -84,6 +84,7 @@ function cancelNode() {
       <li><a href="#health-check">Health Check</a></li>
       <li><a href="#failover">Failover and Failback</a></li>
       <li><a href="#recovery">Online Recovery</a></li>
+      <li><a href="#memqcache">On Memory Query Cache</a></li>
       <li><a href="#others">Others</a></li>
     </ul>
   </div>
@@ -1231,6 +1232,36 @@ function cancelNode() {
           {/if}
           <td><input type="text" name="health_check_user" value="{$params.health_check_user|escape}"/></td>
         </tr>
+
+        <tr> {if $error.health_check_password != null}
+          <th class="error"><label>{$message.descHealth_check_password|escape}</label>
+          <br />health_check_password (string)</th>
+          {else}
+          <th><label>{$message.descHealth_check_password|escape}</label>
+          <br />health_check_password (string)</th>
+          {/if}
+          <td><input type="text" name="health_check_password" value="{$params.health_check_password|escape}"/></td>
+        </tr>
+
+        <tr> {if $error.health_check_max_retries != null}
+          <th class="error"><label>{$message.descHealth_check_max_retries|escape}</label>
+          <br />health_check_max_retries (integer)</th>
+          {else}
+          <th><label>{$message.descHealth_check_max_retries|escape}</label>
+          <br />health_check_max_retries (integer)</th>
+          {/if}
+          <td><input type="text" name="health_check_max_retries" value="{$params.health_check_max_retries|escape}"/></td>
+        </tr>
+
+        <tr> {if $error.health_check_retry_delay != null}
+          <th class="error"><label>{$message.descHealth_check_retry_delay|escape}</label>
+          <br />health_check_retry_delay (integer)</th>
+          {else}
+          <th><label>{$message.descHealth_check_retry_delay|escape}</label>
+          <br />health_check_retry_delay (integer)</th>
+          {/if}
+          <td><input type="text" name="health_check_retry_delay" value="{$params.health_check_retry_delay|escape}"/></td>
+        </tr>
       </tbody>
     </table>
 
@@ -1373,6 +1404,174 @@ function cancelNode() {
           <td><input type="text" name="client_idle_limit_in_recovery"
                value="{$params.client_idle_limit_in_recovery|escape}"/></td>
         </tr>
+      </tbody>
+    </table>
+
+    {* --------------------------------------------------------------------- *
+     * On Memory Query Cache                                                 *
+     * --------------------------------------------------------------------- *}
+    <h3><a name="memqcache" id="memqcache">On Memory Query Cache</a></h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>{$message.strParameter|escape}</th>
+          <th>{$message.strValue|escape}</th>
+        </tr>
+      </thead>
+      <tfoot>
+        <tr>
+          <td colspan="2"></td>
+        </tr>
+      </tfoot>
+      <tbody>
+
+        <tr> {if $error.memory_cache_enabled != null}
+          <th class="error"><label>{$message.descMemory_cache_enabled|escape}</label>
+          <br />memory_cache_enabled</th>
+          {else}
+          <th><label>{$message.descMemory_cache_enabled|escape}</label>
+                    <br />memory_cache_enabled</th>
+          {/if}
+          {if $params.memory_cache_enabled == 'on'}
+          <td><input type="checkbox" name="memory_cache_enabled" id="memory_cache_enabled" value="true" checked="checked" /></td>
+          {else}
+          <td><input type="checkbox" name="memory_cache_enabled" id="memory_cache_enabled" value="false" /></td>
+          {/if}
+        </tr>
+
+        <tr> {if $error.memqcache_method != null}
+        <th class="error"><label>{$message.descMemqcache_method|escape}</label>
+        <br />memqcache_method *</th>
+        {else}
+        <th><label>{$message.descMemqcache_method|escape}</label><br />memqcache_method *</th>
+        {/if}
+        <td><select name="memqcache_method" id="memqcache_method">
+            <option value="shmem" {if $params.memqcache_method == 'shmem'}selected{/if}>shmem</option>
+            <option value="memcached" {if $params.memqcache_method == 'memcached'}selected{/if}>memcached</option>
+            </select></td>
+        </tr>
+
+        <tr><th class="category" colspan="2">Memcached specific</th></tr>
+
+        <tr> {if $error.memqcache_memcached_host != null}
+          <th class="error"><label>{$message.descMemqcache_memcached_host|escape}</label>
+          <br />memqcache_memcached_host (strign) *</th>
+          {else}
+          <th><label>{$message.descMemqcache_memcached_host|escape}</label>
+          <br />memqcache_memcached_host (string) *</th>
+          {/if}
+          <td><input type="text" name="memqcache_memcached_host" value="{$params.memqcache_memcached_host|escape}"/></td>
+        </tr>
+
+        <tr> {if $error.memqcache_memcached_port != null}
+          <th class="error"><label>{$message.descMemqcache_memcached_port|escape}</label>
+          <br />memqcache_memcached_port (integer) *</th>
+          {else}
+          <th><label>{$message.descMemqcache_memcached_port|escape}</label>
+          <br />memqcache_memcached_port (integer) *</th>
+          {/if}
+          <td><input type="text" name="memqcache_memcached_port" value="{$params.memqcache_memcached_port|escape}"/></td>
+        </tr>
+
+        <tr><th class="category" colspan="2">Shared memory specific</th></tr>
+
+        <tr> {if $error.memqcache_total_size != null}
+          <th class="error"><label>{$message.descMemqcache_total_size|escape}</label>
+          <br />memqcache_total_size (integer) *</th>
+          {else}
+          <th><label>{$message.descMemqcache_total_size|escape}</label>
+          <br />memqcache_total_size (integer) *</th>
+          {/if}
+          <td><input type="text" name="memqcache_total_size" value="{$params.memqcache_total_size|escape}"/></td>
+        </tr>
+
+        <tr> {if $error.memqcache_max_num_cache != null}
+          <th class="error"><label>{$message.descMemqcache_max_num_cache|escape}</label>
+          <br />memqcache_max_num_cache (integer) *</th>
+          {else}
+          <th><label>{$message.descMemqcache_max_num_cache|escape}</label>
+          <br />memqcache_max_num_cache (integer) *</th>
+          {/if}
+          <td><input type="text" name="memqcache_max_num_cache" value="{$params.memqcache_max_num_cache|escape}"/></td>
+        </tr>
+
+        <tr> {if $error.memqcache_cache_block_size != null}
+          <th class="error"><label>{$message.descMemqcache_cache_block_size|escape}</label>
+          <br />memqcache_cache_block_size (integer) *</th>
+          {else}
+          <th><label>{$message.descMemqcache_cache_block_size|escape}</label>
+          <br />memqcache_cache_block_size (integer) *</th>
+          {/if}
+          <td><input type="text" name="memqcache_cache_block_size" value="{$params.memqcache_cache_block_size|escape}"/></td>
+        </tr>
+
+        <tr><th class="category" colspan="2">Common</th></tr>
+
+        <tr> {if $error.memqcache_expire != null}
+          <th class="error"><label>{$message.descMemqcache_expire|escape}</label>
+          <br />memqcache_expire (integer) *</th>
+          {else}
+          <th><label>{$message.descMemqcache_expire|escape}</label>
+          <br />memqcache_expire (integer) *</th>
+          {/if}
+          <td><input type="text" name="memqcache_expire" value="{$params.memqcache_expire|escape}"/></td>
+        </tr>
+
+        <tr> {if $error.memqcache_auto_cache_invalidation != null}
+          <th class="error"><label>{$message.descMemqcache_auto_cache_invalidation|escape}</label>
+          <br />memqcache_auto_cache_invalidation *</th>
+          {else}
+          <th><label>{$message.descMemqcache_auto_cache_invalidation|escape}</label>
+                    <br />memqcache_auto_cache_invalidation *</th>
+          {/if}
+          {if $params.memqcache_auto_cache_invalidation == 'on'}
+          <td><input type="checkbox" name="memqcache_auto_cache_invalidation" id="memqcache_auto_cache_invalidation" value="true" checked="checked" /></td>
+          {else}
+          <td><input type="checkbox" name="memqcache_auto_cache_invalidation" id="memqcache_auto_cache_invalidation" value="false" /></td>
+          {/if}
+        </tr>
+
+        <tr> {if $error.memqcache_maxcache != null}
+          <th class="error"><label>{$message.descMemqcache_maxcache|escape}</label>
+          <br />memqcache_maxcache (integer) *</th>
+          {else}
+          <th><label>{$message.descMemqcache_maxcache|escape}</label>
+          <br />memqcache_maxcache (integer) *</th>
+          {/if}
+          <td><input type="text" name="memqcache_maxcache" value="{$params.memqcache_maxcache|escape}"/></td>
+        </tr>
+
+        <tr> {if $error.memqcache_oiddir != null}
+          <th class="error"><label>{$message.descMemqcache_oiddir|escape}</label>
+          <br />memqcache_oiddir (string) *</th>
+          {else}
+          <th><label>{$message.descMemqcache_oiddir|escape}</label>
+          <br />memqcache_oiddir (string) *</th>
+          {/if}
+          <td><input type="text" name="memqcache_oiddir" value="{$params.memqcache_oiddir|escape}"/></td>
+        </tr>
+
+        <tr> {if $error.white_memqcache_table_list != null}
+          <th class="error"><label>{$message.descWhite_memqcache_table_list|escape}</label>
+          <br />white_memqcache_table_list (string)</th>
+          {else}
+          <th><label>{$message.descWhite_memqcache_table_list|escape}</label>
+          <br />white_memqcache_table_list (string)</th>
+          {/if}
+          <td><input type="text" name="white_memqcache_table_list" value="{$params.white_memqcache_table_list|escape}"/></td>
+        </tr>
+
+        <tr> {if $error.black_memqcache_table_list != null}
+          <th class="error"><label>{$message.descBlack_memqcache_table_list|escape}</label>
+          <br />black_memqcache_table_list (string)</th>
+          {else}
+          <th><label>{$message.descBlack_memqcache_table_list|escape}</label>
+          <br />black_memqcache_table_list (string)</th>
+          {/if}
+          <td><input type="text" name="black_memqcache_table_list" value="{$params.black_memqcache_table_list|escape}"/></td>
+        </tr>
+
       </tbody>
     </table>
 

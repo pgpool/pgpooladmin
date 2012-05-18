@@ -35,6 +35,7 @@ $message = array(
     'descBackend_weight' => 'Load balance weight when pgpool is running in the state of load balance mode',
     'descBackend_data_directory' => 'PostgreSQL database directory',
     'descBlack_function_list' => 'Comma separated functions which write to database',
+    'descBlack_memqcache_table_list' => 'Comma separated list of table names not to be cached',
     'descChild_life_time' => 'Life of an idle child process in seconds',
     'descChild_max_connections' => 'If child_max_connections connections were received, child exits',
     'descClient_idle_limit' => 'Timeout in seconds while waiting for a query from a client',
@@ -58,6 +59,10 @@ $message = array(
     'descHealth_check_timeout' => 'Pgpool does "health check" periodically to detect PostgreSQL servers down, '.
                                   'network communication problems or as such',
     'descHealth_check_user' => 'PostgreSQL user name for the health checking',
+    'descHealth_check_password' => 'PostgreSQL password of the user to perform health checking',
+    'descHealth_check_max_retries' => 'The maximum number of times to retry a failed health check before'.
+                                      ' giving up and initiating failover',
+    'descHealth_check_retry_delay' => 'The amount of time (in seconds) to sleep between failed health check retries',
     'descIgnore_leading_white_space' => 'If true, ignore leading white spaces of each query while pgpool judges '.
                                         'if the query is a SELECT so that it can be load balanced',
     'descInsert_lock' => ' If you replicate a table having SERIAL data type column, '.
@@ -77,6 +82,18 @@ $message = array(
     'descMaster_slave_mode' => 'Run in master/slave mode',
     'descMaster_slave_sub_mode' => 'The way to replicare in Master/slave mode',
     'descMax_pool' => 'Number of connection pools each pgpool server process are keeping',
+    'descMemory_cache_enabled' => 'Perform on memory query cache',
+    'descMemqcache_method' => 'Cache store method',
+    'descMemqcache_memcached_host' => 'Memcached host name',
+    'descMemqcache_memcached_port' => 'Memcached port number',
+    'descMemqcache_total_size' => 'Total memory size in bytes for storing memory cache',
+    'descMemqcache_max_num_cache' => 'Total number of cache entries',
+    'descMemqcache_expire' => 'Memory cache entry life time specified in seconds. 0 means infinite life time',
+    'descMemqcache_auto_cache_invalidation' => 'If true, invalidation of query cache is triggered'.
+                                               ' by corresponding DDL/DML/DCL',
+    'descMemqcache_maxcache' => 'Maximum SELECT result size in bytes',
+    'descMemqcache_cache_block_size' => 'Cache block size in bytes',
+    'descMemqcache_oiddir' => 'Temporary work directory to record table OIDs',
     'descNum_init_children' => 'Number of pgpool processes initially forked',
     'descParallel_mode' => 'Run in parallel mode',
     'descPcp_port' => 'The port number where pcp is running on',
@@ -114,6 +131,7 @@ $message = array(
     'descSystem_db_schema' => 'The schema name of system database',
     'descSystem_db_user' => 'The username when connection system database',
     'descWhite_function_list' => 'Comma separated functions those do not write to Database',
+    'descWhite_memqcache_table_list' => 'Comma separated list of table names to be cached',
 
     'errAlreadyExist' => 'It already exists.',
     'errFileNotExecutable' => 'File not executable',

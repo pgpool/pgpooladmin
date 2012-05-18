@@ -443,6 +443,23 @@ $pgpoolConfigParam[$key]['type'] = 'C';
 $pgpoolConfigParam[$key]['default'] = 'nodoby';
 $pgpoolConfigParam[$key]['regexp'] = $userreg;
 
+$key = 'health_check_password';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = '';
+$pgpoolConfigParam[$key]['regexp'] = $anyelse;
+
+$key = 'health_check_max_retries';
+$pgpoolConfigParam[$key]['type'] = 'N';
+$pgpoolConfigParam[$key]['default'] = 0;
+$pgpoolConfigParam[$key]['min'] = 0;
+$pgpoolConfigParam[$key]['max'] = NUM_MAX;
+
+$key = 'health_check_retry_delay';
+$pgpoolConfigParam[$key]['type'] = 'N';
+$pgpoolConfigParam[$key]['default'] = 1;
+$pgpoolConfigParam[$key]['min'] = 0;
+$pgpoolConfigParam[$key]['max'] = NUM_MAX;
+
 #------------------------------------------------------------------------------
 # FAILOVER AND FAILBACK
 #-----------------------------------------------------------------------------
@@ -496,6 +513,79 @@ $pgpoolConfigParam[$key]['type'] = 'N';
 $pgpoolConfigParam[$key]['default'] = 0;
 $pgpoolConfigParam[$key]['min'] = -1;
 $pgpoolConfigParam[$key]['max'] = NUM_MAX;
+
+#------------------------------------------------------------------------------
+# ON MEMORY QUERY CACHE 
+#------------------------------------------------------------------------------
+
+$key = 'memory_cache_enabled';
+$pgpoolConfigParam[$key]['type'] = 'B';
+$pgpoolConfigParam[$key]['default'] = 'off';
+
+$key = 'memqcache_method';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = 'shmem';
+$pgpoolConfigParam[$key]['regexp'] = selectreg(array('shmem', 'memcached'));
+
+$key = 'memqcache_memcached_host';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = 'localhost';
+$pgpoolConfigParam[$key]['regexp'] = $hostreg;
+
+$key = 'memqcache_memcached_port';
+$pgpoolConfigParam[$key]['type'] = 'N';
+$pgpoolConfigParam[$key]['default'] = 11211;
+$pgpoolConfigParam[$key]['max'] = NUM_MAX;
+$pgpoolConfigParam[$key]['min'] = 1024;
+
+$key = 'memqcache_total_size';
+$pgpoolConfigParam[$key]['type'] = 'N';
+$pgpoolConfigParam[$key]['default'] = 67108864;
+$pgpoolConfigParam[$key]['max'] = PHP_INT_MAX;
+$pgpoolConfigParam[$key]['min'] = 0;
+
+$key = 'memqcache_max_num_cache';
+$pgpoolConfigParam[$key]['type'] = 'N';
+$pgpoolConfigParam[$key]['default'] = 1000000;
+$pgpoolConfigParam[$key]['max'] = PHP_INT_MAX;
+$pgpoolConfigParam[$key]['min'] = 0;
+
+$key = 'memqcache_expire';
+$pgpoolConfigParam[$key]['type'] = 'N';
+$pgpoolConfigParam[$key]['default'] = 0; 
+$pgpoolConfigParam[$key]['max'] = NUM_MAX;
+$pgpoolConfigParam[$key]['min'] = 0;
+
+$key = 'memqcache_auto_cache_invalidation';
+$pgpoolConfigParam[$key]['type'] = 'B';
+$pgpoolConfigParam[$key]['default'] = 'on';
+
+$key = 'memqcache_maxcache';
+$pgpoolConfigParam[$key]['type'] = 'N';
+$pgpoolConfigParam[$key]['default'] = 409600;
+$pgpoolConfigParam[$key]['max'] = PHP_INT_MAX;
+$pgpoolConfigParam[$key]['min'] = 0;
+
+$key = 'memqcache_cache_block_size';
+$pgpoolConfigParam[$key]['type'] = 'N';
+$pgpoolConfigParam[$key]['default'] = 1048576;
+$pgpoolConfigParam[$key]['max'] = PHP_INT_MAX;
+$pgpoolConfigParam[$key]['min'] = 0;
+
+$key = 'memqcache_oiddir';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = '/var/log/pgpool/oiddir';
+$pgpoolConfigParam[$key]['regexp'] = $dirreg;
+
+$key = 'white_memqcache_table_list';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = '';
+$pgpoolConfigParam[$key]['regexp'] = $anyelse;
+
+$key = 'black_memqcache_table_list';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = '';
+$pgpoolConfigParam[$key]['regexp'] = $anyelse;
 
 #------------------------------------------------------------------------------
 # OTHERS
