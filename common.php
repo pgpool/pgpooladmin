@@ -44,6 +44,7 @@ define('SMARTY_COMPILE_DIR', dirname(__FILE__) . '/templates_c' );
  * Initialize Smartry
  */
 $tpl = new Smarty();
+//$tpl->error_reporting = E_ALL & ~E_NOTICE;
 $tpl->assign('version', $version);
 
 if (!file_exists('conf/pgmgt.conf.php')) {
@@ -58,11 +59,8 @@ require_once('conf/pgmgt.conf.php');
 /**
  * Check login
  */
-$isLogin = FALSE;
-if (isset($_SESSION[SESSION_LOGIN_USER])) {
-    $isLogin = TRUE;
-    $tpl->assign('isLogin', $isLogin);
-}
+$tpl->assign('isLogin', isset($_SESSION[SESSION_LOGIN_USER]));
+$tpl->assign('isHelp', FALSE);
 
 /**
  * Check pgmgt.conf.php Parameter

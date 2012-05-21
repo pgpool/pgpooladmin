@@ -65,7 +65,7 @@
        onclick="sendCommand('recovery', {$smarty.section.num.index|escape}, '{$message.msgRecoveryConfirm|escape}')"
        value="{$message.strRecovery|escape}" />
     {/if}
-    {if $nodeInfo[num][5] == 'promote' && $nodeInfo[num][6] == 1}
+    {if isset($nodeInfo[num][5]) && $nodeInfo[num][5] == 'promote' && $nodeInfo[num][6] == 1}
       <input type="button" name="command"
        onclick="sendCommand('promote', {$smarty.section.num.index|escape}, '{$message.msgRPromoteConfirm|escape}')"
        value="{$message.strPromote|escape}" />

@@ -40,7 +40,7 @@ if( ! file_exists($tempFile)) {
     exit();
 }
 
-$tpl->assign('isHelp', true);
+$tpl->assign('isHelp', TRUE);
 $tpl->display($tempFile);
 
 ?>

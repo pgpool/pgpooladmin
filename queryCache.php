@@ -77,6 +77,7 @@ if ($conn == FALSE) {
     exit();
 }
 
+$deleteRow = NULL;
 if ($action == 'delete') {
     if (isset($_POST['hash'])) {
         $hashArray = $_POST['hash'];
@@ -93,9 +94,9 @@ if ($action == 'delete') {
         $sql .= "hash = '$hashArray[$i]'";
         $rs = execQuery($conn, $sql);
         $deleteRow = pg_affected_rows($rs);
-        $tpl->assign("deleteRow", $deleteRow);
     }
 }
+$tpl->assign("deleteRow", $deleteRow);
 
 if ($action == 'search') {
     $query  = $_POST['qQueryStr'];
@@ -174,13 +175,14 @@ $result = pg_fetch_all($rs);
 
 closeDBConnection($conn);
 
+$result = NULL;
 if ($result) {
     $dateFormat = $message['strDateFormat'];
     for ($i = 0; $i < count($result); $i++) {
         $result[$i]['create_time'] = date($dateFormat, strtotime($result[$i]['create_time']));
     }
-    $tpl->assign('queryCache', $result);
 }
+$tpl->assign('queryCache', $result);
 
 $tpl->assign('qQueryStr', $query);
 $tpl->assign("qDb", $dbname);

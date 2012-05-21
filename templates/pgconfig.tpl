@@ -53,18 +53,23 @@ function cancelNode() {
 <div id="content">
 <div id="help"><a href="help.php?help={$help|escape}"><img src="images/question.gif" alt="help"/>{$message.strHelp|escape}</a></div>
 
-  {if $status == 'success'}
-  <table>
-    <tr>
-    <td>{$message.msgUpdateComplete|escape}</td>
-    </tr>
-  </table>
-  {elseif $status == 'fail'}
-  <table>
-    <tr>
-    <td>{$message.msgUpdateFailed|escape}</td>
-    </tr>
-  </table>
+  {* --------------------------------------------------------------------- *
+   * Succeeed / Failed                                                     *
+   * --------------------------------------------------------------------- *}
+  {if isset($status)}
+    {if $status == 'success'}
+    <table>
+      <tr>
+      <td>{$message.msgUpdateComplete|escape}</td>
+      </tr>
+    </table>
+    {elseif $status == 'fail'}
+    <table>
+      <tr>
+      <td>{$message.msgUpdateFailed|escape}</td>
+      </tr>
+    </table>
+    {/if}
   {/if}
 
   <h2>{$message.strPgConfSetting|escape}</h2>
@@ -116,7 +121,7 @@ function cancelNode() {
 
         <tr><th class="category" colspan="2">pgpool Connection Settings</th></tr>
 
-        <tr> {if $error.listen_addresses != null}
+        <tr> {if isset($error.listen_addresses)}
           <th class="error"><label>{$message.descListen_addresses|escape}</label>
           <br />listen_addresses (string) *</th>
           {else}
@@ -126,7 +131,7 @@ function cancelNode() {
           <td><input type="text" name="listen_addresses" value="{$params.listen_addresses|escape}"/></td>
         </tr>
 
-        <tr> {if $error.port != null}
+        <tr> {if isset($error.port)}
           <th class="error"><label>{$message.descPort|escape}</label>
           <br />port (integer) *</th>
           {else}
@@ -136,7 +141,7 @@ function cancelNode() {
           <td><input type="text" name="port" value="{$params.port|escape}"/></td>
         </tr>
 
-        <tr> {if $error.socket_dir != null}
+        <tr> {if isset($error.socket_dir)}
           <th class="error"><label>{$message.descSocket_dir|escape}</label>
           <br />socket_dir (string) *</th>
           {else}
@@ -150,7 +155,7 @@ function cancelNode() {
 
         <tr><th class="category" colspan="2">pgpool Communication Manager Connection Settings</th></tr>
 
-        <tr> {if $error.pcp_port != null}
+        <tr> {if isset($error.pcp_port)}
           <th class="error"><label>{$message.descPcp_port|escape}</label>
           <br />pcp_port (integer) *</th>
           {else}
@@ -160,7 +165,7 @@ function cancelNode() {
           <td><input type="text" name="pcp_port" value="{$params.pcp_port|escape}"/></td>
         </tr>
 
-        <tr> {if $error.pcp_socket_dir != null}
+        <tr> {if isset($error.pcp_socket_dir)}
           <th class="error"><label>{$message.descPcp_socket_dir|escape}</label>
           <br />pcp_socket_dir (string) *</th>
           {else}
@@ -174,7 +179,7 @@ function cancelNode() {
 
         <tr><th class="category" colspan="2">Authentication</th></tr>
 
-        <tr> {if $error.enable_pool_hba != null}
+        <tr> {if isset($error.enable_pool_hba)}
           <th class="error"><label>{$message.descEnable_pool_hba|escape}</label>
                     <br />enable_pool_hba</th>
           {else}
@@ -188,7 +193,7 @@ function cancelNode() {
           {/if}
         </tr>
 
-        <tr> {if $error.authentication_timeout != null}
+        <tr> {if isset($error.authentication_timeout)}
           <th class="error"><label>{$message.descAuthentication_timeout|escape}</label>
           <br />authentication_timeout (integer)</th>
           {else}
@@ -202,7 +207,7 @@ function cancelNode() {
 
         <tr><th class="category" colspan="2">SSL Connections</th></tr>
 
-        <tr> {if $error.ssl != null}
+        <tr> {if isset($error.ssl)}
           <th class="error"><label>{$message.descSsl|escape}</label>
                     <br />ssl</th>
           {else}
@@ -216,7 +221,7 @@ function cancelNode() {
           {/if} </tr>
         </tr>
 
-        <tr> {if $error.ssl_key != null}
+        <tr> {if isset($error.ssl_key)}
           <th class="error"><label>{$message.descSsl_key|escape}</label>
                     <br />ssl_key</th>
           {else}
@@ -226,7 +231,7 @@ function cancelNode() {
           <td><input type="text" name="ssl_key" id="ssl_key" value="{$params.ssl_key|escape}" /></td>
         </tr>
 
-        <tr> {if $error.ssl_cert != null}
+        <tr> {if isset($error.ssl_cert)}
           <th class="error"><label>{$message.descSsl_cert|escape}</label>
                     <br />ssl_cert</th>
           {else}
@@ -236,7 +241,7 @@ function cancelNode() {
           <td><input type="text" name="ssl_cert" id="ssl_cert" value="{$params.ssl_cert|escape}" /></td>
         </tr>
 
-        <tr> {if $error.ssl_ca_cert != null}
+        <tr> {if isset($error.ssl_ca_cert)}
           <th class="error"><label>{$message.descSsl_ca_cert|escape}</label>
                     <br />ssl_ca_cert</th>
           {else}
@@ -246,7 +251,7 @@ function cancelNode() {
           <td><input type="text" name="ssl_ca_cert" id="ssl_ca_cert" value="{$params.ssl_ca_cert|escape}" /></td>
         </tr>
 
-        <tr> {if $error.ssl_ca_cert_dir != null}
+        <tr> {if isset($error.ssl_ca_cert_dir)}
           <th class="error"><label>{$message.descSsl_ca_cert_dir|escape}</label>
                     <br />ssl_ca_cert_dir</th>
           {else}
@@ -282,7 +287,7 @@ function cancelNode() {
 
         <tr><th class="category" colspan="2">Pool size</th></tr>
 
-        <tr> {if $error.num_init_children != null}
+        <tr> {if isset($error.num_init_children)}
           <th class="error"><label>{$message.descNum_init_children|escape}</label>
           <br />num_init_children (integer) *</th>
           {else}
@@ -292,7 +297,7 @@ function cancelNode() {
           <td><input type="text" name="num_init_children" value="{$params.num_init_children|escape}"/></td>
         </tr>
 
-        <tr> {if $error.max_pool != null}
+        <tr> {if isset($error.max_pool)}
           <th class="error"><label>{$message.descMax_pool|escape}</label>
           <br />max_pool (integer) *</th>
           {else}
@@ -306,7 +311,7 @@ function cancelNode() {
 
         <tr><th class="category" colspan="2">Life time</th></tr>
 
-        <tr> {if $error.child_life_time != null}
+        <tr> {if isset($error.child_life_time)}
           <th class="error"><label>{$message.descChild_life_time|escape}</label>
           <br />child_life_time (integer)</th>
           {else}
@@ -316,7 +321,7 @@ function cancelNode() {
           <td><input type="text" name="child_life_time" value="{$params.child_life_time|escape}"/></td>
         </tr>
 
-        <tr> {if $error.child_max_connections != null}
+        <tr> {if isset($error.child_max_connections)}
           <th class="error"><label>{$message.descChild_max_connections|escape}</label>
           <br />child_max_connections (integer)</th>
           {else}
@@ -326,7 +331,7 @@ function cancelNode() {
           <td><input type="text" name="child_max_connections" value="{$params.child_max_connections|escape}"/></td>
         </tr>
 
-        <tr> {if $error.connection_life_time != null}
+        <tr> {if isset($error.connection_life_time)}
           <th class="error"><label>{$message.descConnection_life_time|escape}</label>
           <br />connection_life_time (integer)</th>
           {else}
@@ -336,7 +341,7 @@ function cancelNode() {
           <td><input type="text" name="connection_life_time" value="{$params.connection_life_time|escape}"/></td>
         </tr>
 
-        <tr> {if $error.client_idle_limit != null}
+        <tr> {if isset($error.client_idle_limit)}
           <th class="error"><label>{$message.descClient_idle_limit|escape}</label>
           <br />client_idle_limit (integer)</th>
           {else}
@@ -364,7 +369,7 @@ function cancelNode() {
         </tr>
       </thead>
 
-      {if $isAdd == true}
+      {if isset($isAdd) && $isAdd == true}
       <tfoot>
         <tr>
            <td colspan="3">
@@ -382,7 +387,7 @@ function cancelNode() {
       <tbody>
 
       {section name=num loop=$params.backend_hostname}
-      <tr> {if $error.backend_hostname[num] != null}
+      <tr> {if isset($error.backend_hostname[num])}
         <th class="error"><label>{$message.descBackend_hostname|escape}</label>
         <br />backend_hostname{$smarty.section.num.index} (string)</th>
         {else}
@@ -394,7 +399,7 @@ function cancelNode() {
         <input type="button" name="delete" value="{$message.strDelete|escape}" onclick="del({$smarty.section.num.index})" /></td>
       </tr>
 
-      <tr> {if $error.backend_port[num] != null}
+      <tr> {if isset($error.backend_port[num])}
         <th class="error"><label>{$message.descBackend_port|escape}</label>
         <br />backend_port{$smarty.section.num.index|escape} (integer)</th>
         {else}
@@ -404,7 +409,7 @@ function cancelNode() {
         <td><input type="text" name="backend_port[]" value="{$params.backend_port[num]|escape}" /></td>
       </tr>
 
-      <tr> {if $error.backend_weight[num] != null}
+      <tr> {if isset($error.backend_weight[num])}
         <th class="error"><label>{$message.descBackend_weight|escape}</label>
         <br />backend_weight{$smarty.section.num.index|escape} (float)</th>
         {else}
@@ -414,7 +419,7 @@ function cancelNode() {
         <td><input type="text" name="backend_weight[]" value="{$params.backend_weight[num]|escape}" /></td>
       </tr>
 
-      <tr> {if $error.backend_data_directory[num] != null}
+      <tr> {if isset($error.backend_data_directory[num])}
         <th class="error"><label>{$message.descBackend_data_directory|escape}</label>
         <br />backend_data_directory{$smarty.section.num.index|escape} (string)</th>
         {else}
@@ -425,7 +430,7 @@ function cancelNode() {
              value="{$params.backend_data_directory[num]|escape}" /></td>
       </tr>
 
-      <tr> {if $error.backend_flag[num] != null}
+      <tr> {if isset($error.backend_flag[num])}
         <th class="error"><label>{$message.descBackend_flag|escape}</label>
         <br />backend_flag{$smarty.section.num.index|escape} *</th>
         {else}
@@ -441,7 +446,7 @@ function cancelNode() {
       </tr>
       {/section}
 
-      {if $isAdd == true}
+      {if isset($isAdd) && $isAdd == true}
       <tr>
         <th><label>{$message.descBackend_hostname|escape}</label>
         <br />backend_hostname{$smarty.section.num.index} (string)</th>
@@ -507,7 +512,7 @@ function cancelNode() {
 
         <tr><th class="category" colspan="2">Where to log</th></tr>
 
-        <tr> {if $error.log_destination != null}
+        <tr> {if isset($error.log_destination)}
         <th class="error"><label>{$message.descLog_destination|escape}</label>
         <br />master_slave_sub_mode *</th>
         {else}
@@ -523,7 +528,7 @@ function cancelNode() {
 
         <tr><th class="category" colspan="2">What to log</th></tr>
 
-        <tr> {if $error.print_timestamp != null}
+        <tr> {if isset($error.print_timestamp)}
           <th><label>{$message.descPrint_timestamp|escape}</label>
           <br />print_timestamp *</th>
           {else}
@@ -539,7 +544,7 @@ function cancelNode() {
           {/if}
         </tr>
 
-        <tr> {if $error.log_connections != null}
+        <tr> {if isset($error.log_connections)}
           <th class="error"><label>{$message.descLog_connections|escape}</label>
           <br />log_connections</th>
           {else}
@@ -555,7 +560,7 @@ function cancelNode() {
           {/if}
         </tr>
 
-        <tr> {if $error.log_hostname != null}
+        <tr> {if isset($error.log_hostname)}
           <th class="error"><label>{$message.descLog_hostname|escape}</label>
           <br />log_hostname</th>
           {else}
@@ -569,7 +574,7 @@ function cancelNode() {
           {/if}
         </tr>
 
-        <tr> {if $error.log_statement != null}
+        <tr> {if isset($error.log_statement)}
           <th class="error"><label>{$message.descLog_statement|escape}</label>
                     <br />log_statement</th>
           {else}
@@ -583,7 +588,7 @@ function cancelNode() {
           {/if}
         </tr>
 
-        <tr> {if $error.log_per_node_statement != null}
+        <tr> {if isset($error.log_per_node_statement)}
           <th class="error"><label>{$message.descLog_per_node_statement|escape}</label>
           <br />log_per_node_statement</th>
           {else}
@@ -599,7 +604,7 @@ function cancelNode() {
           {/if}
         </tr>
 
-        <tr> {if $error.log_standby_delay != null}
+        <tr> {if isset($error.log_standby_delay)}
           <th class="error"><label>{$message.descLog_standby_delay|escape}</label><br />log_standby_delay</th>
           {else}
           <th><label>{$message.descLog_standby_delay|escape}</label><br />log_standby_delay</th>
@@ -618,7 +623,7 @@ function cancelNode() {
 
         <tr><th class="category" colspan="2">Syslog specific</th></tr>
 
-        <tr> {if $error.syslog_facility != null}
+        <tr> {if isset($error.syslog_facility)}
           <th class="error"><label>{$message.descSyslog_facility|escape}</label>
           <br />syslog_facility (string) *</th>
           {else}
@@ -628,7 +633,7 @@ function cancelNode() {
           <td><input type="text" name="syslog_facility" value="{$params.syslog_facility|escape}"/></td>
         </tr>
 
-        <tr> {if $error.syslog_ident != null}
+        <tr> {if isset($error.syslog_ident)}
           <th class="error"><label>{$message.descSyslog_ident|escape}</label>
           <br />syslog_ident (string) *</th>
           {else}
@@ -642,7 +647,7 @@ function cancelNode() {
 
         <tr><th class="category" colspan="2">Debug</th></tr>
 
-        <tr> {if $error.debug_level != null}
+        <tr> {if isset($error.debug_level)}
           <th class="error"><label>{$message.descDebug_level|escape}</label>
           <br />debug_level (integer)</th>
           {else}
@@ -674,7 +679,7 @@ function cancelNode() {
       </tfoot>
       <tbody>
 
-        <tr> {if $error.logdir != null}
+        <tr> {if isset($error.logdir)}
           <th class="error"><label>{$message.descLogdir|escape}</label>
           <br />logdir (string) *</th>
           {else}
@@ -684,7 +689,7 @@ function cancelNode() {
           <td><input type="text" name="logdir" value="{$params.logdir|escape}"/></td>
         </tr>
 
-        <tr> {if $error.pid_file_name != null}
+        <tr> {if isset($error.pid_file_name)}
           <th class="error"><label>{$message.descPid_file_name|escape}</label>
           <br />pid_file_name (string) *</th>
           {else}
@@ -717,7 +722,7 @@ function cancelNode() {
 
       <tbody>
 
-        <tr> {if $error.connection_cache != null}
+        <tr> {if isset($error.connection_cache)}
           <th class="error"><label>{$message.descConnection_cache|escape}</label>
           <br />connection_cache *</th>
           {else}
@@ -733,7 +738,7 @@ function cancelNode() {
           {/if}
         </tr>
 
-        <tr> {if $error.reset_query_list != null}
+        <tr> {if isset($error.reset_query_list)}
           <th class="error"><label>{$message.descReset_query_list|escape}</label>
           <br />reset_query_list (string)</th>
           {else}
@@ -765,7 +770,7 @@ function cancelNode() {
       </tfoot>
       <tbody>
 
-        <tr> {if $error.replication_mode != null}
+        <tr> {if isset($error.replication_mode)}
           <th class="error"><label>{$message.descReplication_mode|escape}</label>
           <br />replication_mode *</th>
           {else}
@@ -781,7 +786,7 @@ function cancelNode() {
           {/if}
         </tr>
 
-        <tr> {if $error.replicate_select != null}
+        <tr> {if isset($error.replicate_select)}
           <th class="error"><label>{$message.descReplicate_select|escape}</label>
           <br />replicate_select</th>
           {else}
@@ -797,7 +802,7 @@ function cancelNode() {
           {/if}
         </tr>
 
-        <tr> {if $error.portinsert_lock!= null}
+        <tr> {if isset($error.insert_lock)}
           <th class="error"><label>{$message.descInsert_lock|escape}</label>
           <br />insert_lock</th>
           {else}
@@ -811,7 +816,7 @@ function cancelNode() {
           {/if}
         </tr>
 
-        <tr> {if $error.lobj_lock_table != null}
+        <tr> {if isset($error.lobj_lock_table)}
           <th class="error"><label>{$message.descLobj_lock_table|escape}</label>
           <br />lobj_lock_table</th>
           {else}
@@ -826,7 +831,7 @@ function cancelNode() {
 
         <tr><th class="category" colspan="2">Degenerate handling</th></tr>
 
-        <tr> {if $error.replication_stop_on_mismatch != null}
+        <tr> {if isset($error.replication_stop_on_mismatch)}
           <th class="error"><label>{$message.descReplication_stop_on_mismatch|escape}</label>
           <br />replication_stop_on_mismatch</th>
           {else}
@@ -841,7 +846,7 @@ function cancelNode() {
               id="replication_stop_on_mismatch" value="false" /></td>
           {/if} </tr>
 
-        <tr> {if $error.replication_stop_on_mismatch != null}
+        <tr> {if isset($error.replication_stop_on_mismatch)}
           <th class="error"><label>{$message.descFailover_if_affected_tuples_mismatch|escape}</label>
           <br />failover_if_affected_tuples_mismatch</th>
           {else}
@@ -857,7 +862,7 @@ function cancelNode() {
           {/if}
         </tr>
 
-        <tr> {if $error.replication_timeout != null}
+        <tr> {if isset($error.replication_timeout)}
           <th class="error"><label>{$message.descReplication_timeout|escape}</label>
           <br />replication_timeout (integer)</th>
           {else}
@@ -890,7 +895,7 @@ function cancelNode() {
 
       <tbody>
 
-        <tr> {if $error.load_balance_mode != null}
+        <tr> {if isset($error.load_balance_mode)}
           <th class="error"><label>{$message.descLoad_balance_mode|escape}</label>
           <br />load_balance_mode *</th>
           {else}
@@ -906,7 +911,7 @@ function cancelNode() {
           {/if}
         </tr>
 
-        <tr> {if $error.ignore_leading_white_space != null}
+        <tr> {if isset($error.ignore_leading_white_space)}
           <th class="error"><label>{$message.descIgnore_leading_white_space|escape}</label>
           <br />ignore_leading_white_space</th>
           {else}
@@ -922,7 +927,7 @@ function cancelNode() {
           {/if}
         </tr>
 
-        <tr> {if $error.white_function_list != null}
+        <tr> {if isset($error.white_function_list)}
           <th class="error"><label>{$message.descWhite_function_list|escape}</label>
           <br />white_function_list (string)</th>
           {else}
@@ -932,7 +937,7 @@ function cancelNode() {
           <td><input type="text" name="white_function_list" value="{$params.white_function_list|escape}"/></td>
         </tr>
 
-        <tr> {if $error.black_function_list != null}
+        <tr> {if isset($error.black_function_list)}
           <th class="error"><label>{$message.descBlack_function_list|escape}</label>
           <br />black_function_list (string)</th>
           {else}
@@ -965,7 +970,7 @@ function cancelNode() {
 
       <tbody>
 
-        <tr> {if $error.master_slave_mode != null}
+        <tr> {if isset($error.master_slave_mode)}
           <th class="error"><label>{$message.descMaster_slave_mode|escape}</label>
           <br />master_slave_mode *</th>
           {else}
@@ -981,7 +986,7 @@ function cancelNode() {
           {/if}
         </tr>
 
-        <tr> {if $error.master_slave_sub_mode != null}
+        <tr> {if isset($error.master_slave_sub_mode)}
           <th class="error"><label>{$message.descMaster_slave_sub_mode|escape}</label>
           <br />master_slave_sub_mode *</th>
           {else}
@@ -1000,7 +1005,7 @@ function cancelNode() {
 
         <tr><th class="category" colspan="2">Streaming</th></tr>
 
-        <tr> {if $error.sr_check_period!= null}
+        <tr> {if isset($error.sr_check_period)}
           <th class="error"><label>{$message.descSr_check_period|escape}</label>
           <br />sr_check_period (integer) *</th>
           {else}
@@ -1010,7 +1015,7 @@ function cancelNode() {
           <td><input type="text" name="sr_check_period" value="{$params.sr_check_period|escape}"/></td>
         </tr>
 
-        <tr> {if $error.sr_check_user != null}
+        <tr> {if isset($error.sr_check_user)}
           <th class="error"><label>{$message.descSr_check_user|escape}</label>
           <br />sr_check_user (string) *</th>
           {else}
@@ -1020,7 +1025,7 @@ function cancelNode() {
           <td><input type="text" name="sr_check_user" value="{$params.sr_check_user|escape}"/></td>
         </tr>
 
-        <tr> {if $error.sr_check_password != null}
+        <tr> {if isset($error.sr_check_password)}
           <th class="error"><label>{$message.descSr_check_password|escape}</label>
           <br />sr_check_password (string) *</th>
           {else}
@@ -1030,7 +1035,7 @@ function cancelNode() {
           <td><input type="text" name="sr_check_password" value="{$params.sr_check_password|escape}"/></td>
         </tr>
 
-        <tr> {if $error.delay_threshold != null}
+        <tr> {if isset($error.delay_threshold)}
           <th class="error"><label>{$message.descDelay_threshold|escape}</label><br />delay_threshold</th>
           {else}
           <th><label>{$message.descDelay_threshold|escape}</label><br />delay_threshold</th>
@@ -1043,7 +1048,7 @@ function cancelNode() {
 
         <tr><th class="category" colspan="2">Special commands</th></tr>
 
-        <tr> {if $error.follow_master_command != null}
+        <tr> {if isset($error.follow_master_command)}
           <th class="error"><label>{$message.descFollow_master_command|escape}</label>
           <br />follow_master_command (string) *</th>
           {else}
@@ -1077,7 +1082,7 @@ function cancelNode() {
 
       <tbody>
 
-        <tr> {if $error.parallel_mode != null}
+        <tr> {if isset($error.parallel_mode)}
           <th class="error"><label>{$message.descParallel_mode|escape}</label>
           <br />parallel_mode *</th>
           {else}
@@ -1093,7 +1098,7 @@ function cancelNode() {
           {/if}
         </tr>
 
-        <tr> {if $error.enable_query_cache != null}
+        <tr> {if isset($error.enable_query_cache)}
           <th class="error"><label>{$message.descEnable_query_cache|escape}</label>
           <br />enable_query_cache *</th>
           {else}
@@ -1107,7 +1112,7 @@ function cancelNode() {
           {/if}
         </tr>
 
-        <tr> {if $error.pgpool2_hostname != null}
+        <tr> {if isset($error.pgpool2_hostname)}
           <th><label>{$message.descPgpool2_hostname|escape}</label>
           <br />pgpool2_hostname (string) *</th>
           {else}
@@ -1121,7 +1126,7 @@ function cancelNode() {
 
         <tr><th class="category" colspan="2">System DB info</th></tr>
 
-        <tr> {if $error.system_db_hostname != null}
+        <tr> {if isset($error.system_db_hostname)}
           <th class="error"><label>{$message.descSystem_db_hostname|escape}</label>
           <br />system_db_hostname (string) *</th>
           {else}
@@ -1131,7 +1136,7 @@ function cancelNode() {
           <td><input type="text" name="system_db_hostname" value="{$params.system_db_hostname|escape}"/></td>
         </tr>
 
-        <tr> {if $error.system_db_port != null}
+        <tr> {if isset($error.system_db_port)}
           <th class="error"><label>{$message.descSystem_db_port|escape}</label>
           <br />system_db_port (integer) *</th>
           {else}
@@ -1141,7 +1146,7 @@ function cancelNode() {
           <td><input type="text" name="system_db_port" value="{$params.system_db_port|escape}"/></td>
         </tr>
 
-        <tr> {if $error.system_db_dbname != null}
+        <tr> {if isset($error.system_db_dbname)}
           <th class="error"><label>{$message.descSystem_db_dbname|escape}</label>
           <br />system_db_dbname (string) *</th>
           {else}
@@ -1151,7 +1156,7 @@ function cancelNode() {
           <td><input type="text" name="system_db_dbname" value="{$params.system_db_dbname|escape}"/></td>
         </tr>
 
-        <tr> {if $error.system_db_schema != null}
+        <tr> {if isset($error.system_db_schema)}
           <th class="error"><label>{$message.descSystem_db_schema|escape}</label>
           <br />system_db_schema (string) *</th>
           {else}
@@ -1161,7 +1166,7 @@ function cancelNode() {
           <td><input type="text" name="system_db_schema" value="{$params.system_db_schema|escape}"/></td>
         </tr>
 
-        <tr> {if $error.system_db_user != null}
+        <tr> {if isset($error.system_db_user)}
           <th class="error"><label>{$message.descSystem_db_user|escape}</label>
           <br />system_db_user (string) *</th>
           {else}
@@ -1171,7 +1176,7 @@ function cancelNode() {
           <td><input type="text" name="system_db_user" value="{$params.system_db_user|escape}"/></td>
         </tr>
 
-        <tr> {if $error.system_db_password != null}
+        <tr> {if isset($error.system_db_password)}
           <th class="error"><label>{$message.descSystem_db_password|escape}</label>
           <br />system_db_password (string) *</th>
           {else}
@@ -1203,7 +1208,7 @@ function cancelNode() {
       </tfoot>
 
       <tbody>
-        <tr> {if $error.health_check_timeout != null}
+        <tr> {if isset($error.health_check_timeout)}
           <th class="error"><label>{$message.descHealth_check_timeout|escape}</label>
           <br />health_check_timeout (integer)</th>
           {else}
@@ -1213,7 +1218,7 @@ function cancelNode() {
           <td><input type="text" name="health_check_timeout" value="{$params.health_check_timeout|escape}"/></td>
         </tr>
 
-        <tr> {if $error.health_check_period != null}
+        <tr> {if isset($error.health_check_period)}
           <th class="error"><label>{$message.descHealth_check_period|escape}</label>
           <br />health_check_period (integer)</th>
           {else}
@@ -1223,7 +1228,7 @@ function cancelNode() {
           <td><input type="text" name="health_check_period" value="{$params.health_check_period|escape}"/></td>
         </tr>
 
-        <tr> {if $error.health_check_user != null}
+        <tr> {if isset($error.health_check_user)}
           <th class="error"><label>{$message.descHealth_check_user|escape}</label>
           <br />health_check_user (string)</th>
           {else}
@@ -1233,7 +1238,7 @@ function cancelNode() {
           <td><input type="text" name="health_check_user" value="{$params.health_check_user|escape}"/></td>
         </tr>
 
-        <tr> {if $error.health_check_password != null}
+        <tr> {if isset($error.health_check_password)}
           <th class="error"><label>{$message.descHealth_check_password|escape}</label>
           <br />health_check_password (string)</th>
           {else}
@@ -1243,7 +1248,7 @@ function cancelNode() {
           <td><input type="text" name="health_check_password" value="{$params.health_check_password|escape}"/></td>
         </tr>
 
-        <tr> {if $error.health_check_max_retries != null}
+        <tr> {if isset($error.health_check_max_retries)}
           <th class="error"><label>{$message.descHealth_check_max_retries|escape}</label>
           <br />health_check_max_retries (integer)</th>
           {else}
@@ -1253,7 +1258,7 @@ function cancelNode() {
           <td><input type="text" name="health_check_max_retries" value="{$params.health_check_max_retries|escape}"/></td>
         </tr>
 
-        <tr> {if $error.health_check_retry_delay != null}
+        <tr> {if isset($error.health_check_retry_delay)}
           <th class="error"><label>{$message.descHealth_check_retry_delay|escape}</label>
           <br />health_check_retry_delay (integer)</th>
           {else}
@@ -1285,7 +1290,7 @@ function cancelNode() {
 
       <tbody>
 
-        <tr> {if $error.failover_command != null}
+        <tr> {if isset($error.failover_command)}
           <th class="error"><label>{$message.descFailover_command|escape}</label>
           <br />failover_command (string)</th>
           {else}
@@ -1295,7 +1300,7 @@ function cancelNode() {
           <td><input type="text" name="failover_command" value="{$params.failover_command|escape}"/></td>
         </tr>
 
-        <tr> {if $error.failback_command != null}
+        <tr> {if isset($error.failback_command)}
           <th class="error"><label>{$message.descFailback_command|escape}</label>
           <br />failback_command (string)</th>
           {else}
@@ -1305,7 +1310,7 @@ function cancelNode() {
           <td><input type="text" name="failback_command" value="{$params.failback_command|escape}"/></td>
         </tr>
 
-        <tr> {if $error.fail_over_on_backend_error != null}
+        <tr> {if isset($error.fail_over_on_backend_error)}
           <th class="error"><label>{$message.descFail_over_on_backend_error|escape}</label>
                     <br />fail_over_on_backend_error</th>
           {else}
@@ -1342,7 +1347,7 @@ function cancelNode() {
       </tfoot>
 
       <tbody>
-        <tr> {if $error.recovery_user != null}
+        <tr> {if isset($error.recovery_user)}
           <th class="error"><label>{$message.descRecovery_user|escape}</label>
           <br />recovery_user (string)</th>
           {else}
@@ -1352,7 +1357,7 @@ function cancelNode() {
           <td><input type="text" name="recovery_user" value="{$params.recovery_user|escape}"/></td>
         </tr>
 
-        <tr> {if $error.recovery_password != null}
+        <tr> {if isset($error.recovery_password)}
           <th class="error"><label>{$message.descRecovery_password|escape}</label>
           <br />recovery_password (string)</th>
           {else}
@@ -1362,7 +1367,7 @@ function cancelNode() {
           <td><input type="password" name="recovery_password" value="{$params.recovery_password|escape}"/></td>
         </tr>
 
-        <tr> {if $error.recovery_1st_stage_command != null}
+        <tr> {if isset($error.recovery_1st_stage_command)}
           <th class="error"><label>{$message.descRecovery_1st_stage_command|escape}</label>
           <br />recovery_1st_stage_command (string)</th>
           {else}
@@ -1373,7 +1378,7 @@ function cancelNode() {
                value="{$params.recovery_1st_stage_command|escape}"/></td>
         </tr>
 
-        <tr> {if $error.recovery_2nd_stage_command != null}
+        <tr> {if isset($error.recovery_2nd_stage_command)}
           <th class="error"><label>{$message.descRecovery_2nd_stage_command|escape}</label>
           <br />recovery_2nd_stage_command (string)</th>
           {else}
@@ -1384,7 +1389,7 @@ function cancelNode() {
                value="{$params.recovery_2nd_stage_command|escape}"/></td>
         </tr>
 
-        <tr> {if $error.recovery_timeout != null}
+        <tr> {if isset($error.recovery_timeout)}
           <th class="error"><label>{$message.descRecovery_timeout|escape}</label>
           <br />recovery_timeout (integer)</th>
           {else}
@@ -1394,7 +1399,7 @@ function cancelNode() {
           <td><input type="text" name="recovery_timeout" value="{$params.recovery_timeout|escape}"/></td>
         </tr>
 
-        <tr> {if $error.client_idle_limit_in_recovery != null}
+        <tr> {if isset($error.client_idle_limit_in_recovery)}
           <th class="error"><label>{$message.descClient_idle_limit_in_recovery|escape}</label>
           <br />client_idle_limit_in_recovery (integer)</th>
           {else}
@@ -1426,7 +1431,7 @@ function cancelNode() {
       </tfoot>
       <tbody>
 
-        <tr> {if $error.memory_cache_enabled != null}
+        <tr> {if isset($error.memory_cache_enabled)}
           <th class="error"><label>{$message.descMemory_cache_enabled|escape}</label>
           <br />memory_cache_enabled</th>
           {else}
@@ -1440,7 +1445,7 @@ function cancelNode() {
           {/if}
         </tr>
 
-        <tr> {if $error.memqcache_method != null}
+        <tr> {if isset($error.memqcache_method)}
         <th class="error"><label>{$message.descMemqcache_method|escape}</label>
         <br />memqcache_method *</th>
         {else}
@@ -1454,7 +1459,7 @@ function cancelNode() {
 
         <tr><th class="category" colspan="2">Memcached specific</th></tr>
 
-        <tr> {if $error.memqcache_memcached_host != null}
+        <tr> {if isset($error.memqcache_memcached_host)}
           <th class="error"><label>{$message.descMemqcache_memcached_host|escape}</label>
           <br />memqcache_memcached_host (strign) *</th>
           {else}
@@ -1464,7 +1469,7 @@ function cancelNode() {
           <td><input type="text" name="memqcache_memcached_host" value="{$params.memqcache_memcached_host|escape}"/></td>
         </tr>
 
-        <tr> {if $error.memqcache_memcached_port != null}
+        <tr> {if isset($error.memqcache_memcached_port)}
           <th class="error"><label>{$message.descMemqcache_memcached_port|escape}</label>
           <br />memqcache_memcached_port (integer) *</th>
           {else}
@@ -1476,7 +1481,7 @@ function cancelNode() {
 
         <tr><th class="category" colspan="2">Shared memory specific</th></tr>
 
-        <tr> {if $error.memqcache_total_size != null}
+        <tr> {if isset($error.memqcache_total_size)}
           <th class="error"><label>{$message.descMemqcache_total_size|escape}</label>
           <br />memqcache_total_size (integer) *</th>
           {else}
@@ -1486,7 +1491,7 @@ function cancelNode() {
           <td><input type="text" name="memqcache_total_size" value="{$params.memqcache_total_size|escape}"/></td>
         </tr>
 
-        <tr> {if $error.memqcache_max_num_cache != null}
+        <tr> {if isset($error.memqcache_max_num_cache)}
           <th class="error"><label>{$message.descMemqcache_max_num_cache|escape}</label>
           <br />memqcache_max_num_cache (integer) *</th>
           {else}
@@ -1496,7 +1501,7 @@ function cancelNode() {
           <td><input type="text" name="memqcache_max_num_cache" value="{$params.memqcache_max_num_cache|escape}"/></td>
         </tr>
 
-        <tr> {if $error.memqcache_cache_block_size != null}
+        <tr> {if isset($error.memqcache_cache_block_size)}
           <th class="error"><label>{$message.descMemqcache_cache_block_size|escape}</label>
           <br />memqcache_cache_block_size (integer) *</th>
           {else}
@@ -1508,7 +1513,7 @@ function cancelNode() {
 
         <tr><th class="category" colspan="2">Common</th></tr>
 
-        <tr> {if $error.memqcache_expire != null}
+        <tr> {if isset($error.memqcache_expire)}
           <th class="error"><label>{$message.descMemqcache_expire|escape}</label>
           <br />memqcache_expire (integer) *</th>
           {else}
@@ -1518,7 +1523,7 @@ function cancelNode() {
           <td><input type="text" name="memqcache_expire" value="{$params.memqcache_expire|escape}"/></td>
         </tr>
 
-        <tr> {if $error.memqcache_auto_cache_invalidation != null}
+        <tr> {if isset($error.memqcache_auto_cache_invalidation)}
           <th class="error"><label>{$message.descMemqcache_auto_cache_invalidation|escape}</label>
           <br />memqcache_auto_cache_invalidation *</th>
           {else}
@@ -1532,7 +1537,7 @@ function cancelNode() {
           {/if}
         </tr>
 
-        <tr> {if $error.memqcache_maxcache != null}
+        <tr> {if isset($error.memqcache_maxcache)}
           <th class="error"><label>{$message.descMemqcache_maxcache|escape}</label>
           <br />memqcache_maxcache (integer) *</th>
           {else}
@@ -1542,7 +1547,7 @@ function cancelNode() {
           <td><input type="text" name="memqcache_maxcache" value="{$params.memqcache_maxcache|escape}"/></td>
         </tr>
 
-        <tr> {if $error.memqcache_oiddir != null}
+        <tr> {if isset($error.memqcache_oiddir)}
           <th class="error"><label>{$message.descMemqcache_oiddir|escape}</label>
           <br />memqcache_oiddir (string) *</th>
           {else}
@@ -1552,7 +1557,7 @@ function cancelNode() {
           <td><input type="text" name="memqcache_oiddir" value="{$params.memqcache_oiddir|escape}"/></td>
         </tr>
 
-        <tr> {if $error.white_memqcache_table_list != null}
+        <tr> {if isset($error.white_memqcache_table_list)}
           <th class="error"><label>{$message.descWhite_memqcache_table_list|escape}</label>
           <br />white_memqcache_table_list (string)</th>
           {else}
@@ -1562,7 +1567,7 @@ function cancelNode() {
           <td><input type="text" name="white_memqcache_table_list" value="{$params.white_memqcache_table_list|escape}"/></td>
         </tr>
 
-        <tr> {if $error.black_memqcache_table_list != null}
+        <tr> {if isset($error.black_memqcache_table_list)}
           <th class="error"><label>{$message.descBlack_memqcache_table_list|escape}</label>
           <br />black_memqcache_table_list (string)</th>
           {else}
@@ -1594,7 +1599,7 @@ function cancelNode() {
       </tfoot>
       <tbody>
 
-        <tr> {if $error.relcache_expire != null}
+        <tr> {if isset($error.relcache_expire)}
           <th class="error"><label>{$message.descRelcache_expire|escape}</label>
           <br />relcache_expire (integer)</th>
           {else}

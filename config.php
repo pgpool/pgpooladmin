@@ -82,6 +82,7 @@ $params['pcp_hostname']       = (defined('_PGPOOL2_PCP_HOSTNAME')) ?
 $params['pcp_refresh_time']   = (defined('_PGPOOL2_STATUS_REFRESH_TIME')) ?
                                 _PGPOOL2_STATUS_REFRESH_TIME : $message['errNoDefined'];
 
+$tpl->assign('status', NULL);
 switch ( $action ) {
     case 'update':
 

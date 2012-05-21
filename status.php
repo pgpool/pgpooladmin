@@ -62,6 +62,9 @@ if (isPipe(_PGPOOL2_LOG_FILE)) {
     $tpl->assign('pipe', 0);
 }
 
+$tpl->assign('pgpoolStatus', NULL);
+$tpl->assign('pgpoolMessage', NULL);
+
 switch ($action) {
 
     /* --------------------------------------------------------------------- */

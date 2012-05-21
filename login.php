@@ -97,9 +97,12 @@ $tpl->assign('d', _PGPOOL2_CMD_OPTION_D);
 $tpl->assign('m', _PGPOOL2_CMD_OPTION_M);
 $tpl->assign('n', _PGPOOL2_CMD_OPTION_N);
 
+$tpl->assign('pgpoolStatus',  NULL);
+$tpl->assign('pgpoolMessage', NULL);
 $tpl->assign('pgpoolConf',    _PGPOOL2_CONFIG_FILE);
 $tpl->assign('pcpConf',       _PGPOOL2_PASSWORD_FILE);
 $tpl->assign('refreshTime',   $refreshTime);
+$tpl->assign('useSyslog',     useSyslog());
 $tpl->assign('msgStopPgpool', $message['msgStopPgpool']);
 $tpl->assign('help', 'status');
 $tpl->display('status.tpl');

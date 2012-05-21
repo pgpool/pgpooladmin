@@ -18,7 +18,7 @@
   <form action="changePassword.php" method="post">
     <input type="hidden" name="action" value="update"/>
     <table>
-      {if $error != ''}
+      {if isset($error) && $error != ''}
       <thead><tr><td colspan="2">{$error|escape}</td></tr></thead>
       {/if}
       <tfoot>

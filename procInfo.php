@@ -55,7 +55,7 @@ for ($i = 0; $i < count($procPids); $i++) {
 
         if (count($ret) > 0) {
             foreach ($ret as $line) {
-                $data = split(" ", $line);
+                $data = explode(" ", $line);
 /*
                 $dateFormat = $message['strDateFormat'];
                 $data[2] = date($dateFormat, $data[2]);
@@ -64,7 +64,7 @@ for ($i = 0; $i < count($procPids); $i++) {
                 $procInfo[$procPid][]  = $data;
             }
         } else {
-            $procInfo[$procPid] = array('');
+            $procInfo[$procPid] = array(NULL);
         }
     }
 }
