@@ -212,7 +212,7 @@ function isParallelMode()
 {
     $params = readConfigParams(array('parallel_mode'));
 
-    if ($params['parallel_mode'] == 'on') {
+    if (isTrue($params['parallel_mode'])) {
         return TRUE;
     } else {
         return FALSE;
@@ -352,7 +352,7 @@ function isReplicationMode()
 {
     $params = readConfigParams(array('replication_mode'));
 
-    if ($params['replication_mode'] == 'on') {
+    if (isTrue($params['replication_mode'])) {
         return TRUE;
     } else {
         return FALSE;
@@ -368,7 +368,7 @@ function isMasterSlaveMode()
 {
     $params = readConfigParams(array('master_slave_mode'));
 
-    if ($params['master_slave_mode'] == 'on') {
+    if (isTrue($params['master_slave_mode'])) {
         return TRUE;
     } else {
         return FALSE;
@@ -489,4 +489,8 @@ function isPipe($str)
     return (strpos($str, '|') !== FALSE);
 }
 
+function isTrue($value)
+{
+    return in_array($value, array('on', 'true'));
+}
 ?>
