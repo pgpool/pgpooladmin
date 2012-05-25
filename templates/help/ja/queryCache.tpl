@@ -21,19 +21,27 @@
 	<p>クエリキャッシュのデータを検索することができます。検索対象は、クエリ文字列とデータベース名で、部分一致検索を行うことができます。クエリ文字列とデータベース名はAND検索になります。</p>
     <table>
       <tbody>
-        <tr> {if $deleteRow > 0}
+        <tr> {if isset($deleteRow) && $deleteRow > 0}
         <tr>
           <td colspan="5">{$deleteRow|escape}{$message.strDeleted|escape}</td>
         </tr>
       {/if}
       <tr>
         <td nowrap="nowrap" class="column">{$message.strQueryStr|escape}</td>
-        <td><input name="qQueryStr" type="text" id="qQueryStr" size="50" value="{$qQueryStr|escape}"/>
+        <td>{if isset($qQueryStr)}
+            <input name="qQueryStr" type="text" id="qQueryStr" size="50" value="{$qQueryStr|escape}"/>
+            {else}
+            <input name="qQueryStr" type="text" id="qQueryStr" size="50" value=""/>
+            {/if}
         </td>
       </tr>
       <tr>
         <td nowrap="nowrap" class="column">{$message.strDb|escape}</td>
-        <td><input name="qDb" type="text" id="qDb" size="50" value="{$qDb|escape}"/></td>
+        <td>{if isset($qDb)}
+            <input name="qDb" type="text" id="qDb" size="50" value="{$qDb|escape}"/></td>
+            {else}
+            <input name="qDb" type="text" id="qDb" size="50" value=""/></td>
+            {/if}
       </tr>
       </tbody>
       <tfoot>

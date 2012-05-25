@@ -43,7 +43,7 @@ function sendAction(action) {
       </td></tr>
       </tfoot>
       <tbody>
-        {if $deleteRow > 0}
+        {if isset($deleteRow) && $deleteRow > 0}
         <tr>
           <td colspan="5">{$deleteRow|escape}{$message.strDeleted|escape}</td>
         </tr>
@@ -69,9 +69,33 @@ function sendAction(action) {
       <tbody>
         <tr>
           <th><input type="checkbox" name="all" onclick="checkboxChange(this)" value="" /></th>
-          <th> {if $col == "query" && $sort == "ascending"} <a href="queryCache.php?col=query&sort=descending"><img src="images/ascending.gif" alt="ascending" />{$message.strQueryStr|escape}</a> {elseif $col == "query" && $sort == "descending"} <a href="queryCache.php?col=query&sort=ascending"><img src="images/descending.gif" alt="descending" />{$message.strQueryStr|escape}</a> {else} <img src="images/spacer.gif" width="8" height="8" alt="spacer" /><a href="queryCache.php?col=query&sort=ascending">{$message.strQueryStr|escape}</a> {/if} </th>
-          <th> {if $col == "dbname" && $sort == "ascending"} <a href="queryCache.php?col=dbname&sort=descending"><img src="images/ascending.gif" alt="ascending" />{$message.strDb|escape}</a> {elseif $col == "dbname" && $sort == "descending"} <a href="queryCache.php?col=dbname&sort=ascending"><img src="images/descending.gif" alt="descending" />{$message.strDb|escape}</a> {else} <img src="images/spacer.gif" width="8" height="8" alt="spacer" /><a href="queryCache.php?col=dbname&sort=ascending">{$message.strDb|escape}</a> {/if} </th>
-          <th> {if $col == "create_time" && $sort == "ascending"} <a href="queryCache.php?col=create_time&sort=descending"><img src="images/ascending.gif" alt="ascending" />{$message.strCreateTime|escape}</a> {elseif $col == "create_time" && $sort == "descending"} <a href="queryCache.php?col=create_time&sort=ascending"><img src="images/descending.gif" alt="descending" />{$message.strCreateTime|escape}</a> {else} <img src="images/spacer.gif" width="8" height="8" alt="spacer" /><a href="queryCache.php?col=create_time&sort=ascending">{$message.strCreateTime|escape}</a> {/if} </th>
+          <th>
+          {if $col == "query" && $sort == "ascending"}
+          <a href="queryCache.php?col=query&sort=descending"><img src="images/ascending.gif" alt="ascending" />{$message.strQueryStr|escape}</a>
+          {elseif $col == "query" && $sort == "descending"}
+          <a href="queryCache.php?col=query&sort=ascending"><img src="images/descending.gif" alt="descending" />{$message.strQueryStr|escape}</a>
+          {else}
+          <img src="images/spacer.gif" width="8" height="8" alt="spacer" /><a href="queryCache.php?col=query&sort=ascending">{$message.strQueryStr|escape}</a>
+          {/if}
+          </th>
+          <th>
+          {if $col == "dbname" && $sort == "ascending"}
+          <a href="queryCache.php?col=dbname&sort=descending"><img src="images/ascending.gif" alt="ascending" />{$message.strDb|escape}</a>
+          {elseif $col == "dbname" && $sort == "descending"}
+          <a href="queryCache.php?col=dbname&sort=ascending"><img src="images/descending.gif" alt="descending" />{$message.strDb|escape}</a>
+          {else}
+          <img src="images/spacer.gif" width="8" height="8" alt="spacer" /><a href="queryCache.php?col=dbname&sort=ascending">{$message.strDb|escape}</a>
+          {/if}
+          </th>
+          <th>
+          {if $col == "create_time" && $sort == "ascending"}
+          <a href="queryCache.php?col=create_time&sort=descending"><img src="images/ascending.gif" alt="ascending" />{$message.strCreateTime|escape}</a>
+          {elseif $col == "create_time" && $sort == "descending"}
+          <a href="queryCache.php?col=create_time&sort=ascending"><img src="images/descending.gif" alt="descending" />{$message.strCreateTime|escape}</a>
+          {else}
+          <img src="images/spacer.gif" width="8" height="8" alt="spacer" /><a href="queryCache.php?col=create_time&sort=ascending">{$message.strCreateTime|escape}</a>
+          {/if}
+          </th>
         </tr>
       {foreach name=querycache from=$queryCache item=cache}
       {if $smarty.foreach.querycache.iteration % 2 == 0}

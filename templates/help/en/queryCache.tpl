@@ -21,19 +21,27 @@
 	<p>It is possible to search for the data that exists in the query cache. It searches for the query string and the database name, and it processes it by the partial agreement retrieval. It becomes a search for the logical product with the query string and the database name. 
     <table>
       <tbody>
-        <tr> {if $deleteRow > 0}
+        <tr> {if isset($deleteRow) && $deleteRow > 0}
         <tr>
           <td colspan="5">{$deleteRow|escape}{$message.strDeleted|escape}</td>
         </tr>
       {/if}
       <tr>
         <td nowrap="nowrap" class="column">{$message.strQueryStr|escape}</td>
-        <td><input name="qQueryStr" type="text" id="qQueryStr" size="50" value="{$qQueryStr|escape}"/>
+        <td>{if isset($qQueryStr)}
+            <input name="qQueryStr" type="text" id="qQueryStr" size="50" value="{$qQueryStr|escape}"/>
+            {else}
+            <input name="qQueryStr" type="text" id="qQueryStr" size="50" value=""/>
+            {/if}
         </td>
       </tr>
       <tr>
         <td nowrap="nowrap" class="column">{$message.strDb|escape}</td>
-        <td><input name="qDb" type="text" id="qDb" size="50" value="{$qDb|escape}"/></td>
+        <td>{if isset($qDb)}
+            <input name="qDb" type="text" id="qDb" size="50" value="{$qDb|escape}"/></td>
+            {else}
+            <input name="qDb" type="text" id="qDb" size="50" value=""/></td>
+            {/if}
       </tr>
       </tbody>
       <tfoot>
@@ -56,6 +64,7 @@ The query string, database name and create time which existing in cache is displ
           <th>{$message.strDb|escape}</th>
           <th>{$message.strCreateTime|escape}</th>
         </tr>
+      {if isset($queryCache)}
       {foreach name=querycache from=$queryCache item=cache}
       {if $smarty.foreach.querycache.iteration % 2 == 0}
       <tr class="even">
@@ -68,6 +77,7 @@ The query string, database name and create time which existing in cache is displ
         <td>{$cache.create_time|escape}</td>
       </tr>
       {/foreach}
+      {/if}
       </tbody>
       <tfoot>
       <tr><td colspan="4">
