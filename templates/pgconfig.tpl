@@ -181,10 +181,10 @@ function cancelNode() {
 
         <tr> {if isset($error.enable_pool_hba)}
           <th class="error"><label>{$message.descEnable_pool_hba|escape}</label>
-                    <br />enable_pool_hba</th>
+                    <br />enable_pool_hba (bool)</th>
           {else}
           <th><label>{$message.descEnable_pool_hba|escape}</label>
-                    <br />enable_pool_hba</th>
+                    <br />enable_pool_hba (bool)</th>
           {/if}
           {if $params.enable_pool_hba == 'on'}
           <td><input type="checkbox" name="enable_pool_hba" id="enable_pool_hba" checked="checked" /></td>
@@ -209,10 +209,10 @@ function cancelNode() {
 
         <tr> {if isset($error.ssl)}
           <th class="error"><label>{$message.descSsl|escape}</label>
-                    <br />ssl</th>
+                    <br />ssl (bool)</th>
           {else}
           <th><label>{$message.descSsl|escape}</label>
-                    <br />ssl</th>
+                    <br />ssl (bool)</th>
           {/if}
           {if $params.ssl == 'on'}
           <td><input type="checkbox" name="ssl" id="ssl" value="true" checked="checked" /></td>
@@ -223,40 +223,40 @@ function cancelNode() {
 
         <tr> {if isset($error.ssl_key)}
           <th class="error"><label>{$message.descSsl_key|escape}</label>
-                    <br />ssl_key</th>
+                    <br />ssl_key (string)</th>
           {else}
           <th><label>{$message.descSsl_key|escape}</label>
-                    <br />ssl_key</th>
+                    <br />ssl_key (string)</th>
           {/if}
           <td><input type="text" name="ssl_key" id="ssl_key" value="{$params.ssl_key|escape}" /></td>
         </tr>
 
         <tr> {if isset($error.ssl_cert)}
           <th class="error"><label>{$message.descSsl_cert|escape}</label>
-                    <br />ssl_cert</th>
+                    <br />ssl_cert (string)</th>
           {else}
           <th><label>{$message.descSsl_cert|escape}</label>
-                    <br />ssl_cert</th>
+                    <br />ssl_cert (string)</th>
           {/if}
           <td><input type="text" name="ssl_cert" id="ssl_cert" value="{$params.ssl_cert|escape}" /></td>
         </tr>
 
         <tr> {if isset($error.ssl_ca_cert)}
           <th class="error"><label>{$message.descSsl_ca_cert|escape}</label>
-                    <br />ssl_ca_cert</th>
+                    <br />ssl_ca_cert (string)</th>
           {else}
           <th><label>{$message.descSsl_ca_cert|escape}</label>
-                    <br />ssl_ca_cert</th>
+                    <br />ssl_ca_cert (string)</th>
           {/if}
           <td><input type="text" name="ssl_ca_cert" id="ssl_ca_cert" value="{$params.ssl_ca_cert|escape}" /></td>
         </tr>
 
         <tr> {if isset($error.ssl_ca_cert_dir)}
           <th class="error"><label>{$message.descSsl_ca_cert_dir|escape}</label>
-                    <br />ssl_ca_cert_dir</th>
+                    <br />ssl_ca_cert_dir (string)</th>
           {else}
           <th><label>{$message.descSsl_ca_cert_dir|escape}</label>
-                    <br />ssl_ca_cert_dir</th>
+                    <br />ssl_ca_cert_dir (string)</th>
           {/if}
           <td><input type="text" name="ssl_ca_cert_dir" id="ssl_ca_cert_dir"
                value="{$params.ssl_ca_cert_dir|escape}" /></td>
@@ -432,10 +432,10 @@ function cancelNode() {
 
       <tr> {if isset($error.backend_flag[num])}
         <th class="error"><label>{$message.descBackend_flag|escape}</label>
-        <br />backend_flag{$smarty.section.num.index|escape} *</th>
+        <br />backend_flag{$smarty.section.num.index|escape} (string) *</th>
         {else}
         <th><label>{$message.descBackend_flag|escape}</label>
-        <br />backend_flag{$smarty.section.num.index|escape} *</th>
+        <br />backend_flag{$smarty.section.num.index|escape} (string) *</th>
         {/if}
         <td><select name="backend_flag[]" id="backend_flag[]">
             <option value="ALLOW_TO_FAILOVER"
@@ -514,7 +514,7 @@ function cancelNode() {
 
         <tr> {if isset($error.log_destination)}
         <th class="error"><label>{$message.descLog_destination|escape}</label>
-        <br />master_slave_sub_mode *</th>
+        <br />master_slave_sub_mode (string) *</th>
         {else}
         <th><label>{$message.descLog_destination|escape}</label><br />log_destination *</th>
         {/if}
@@ -530,10 +530,10 @@ function cancelNode() {
 
         <tr> {if isset($error.print_timestamp)}
           <th><label>{$message.descPrint_timestamp|escape}</label>
-          <br />print_timestamp *</th>
+          <br />print_timestamp (bool) *</th>
           {else}
           <th><label>{$message.descPrint_timestamp|escape}</label>
-          <br />print_timestamp *</th>
+          <br />print_timestamp (bool) *</th>
           {/if}
           {if $params.print_timestamp == 'on'}
           <td><input type="checkbox" name="print_timestamp"
@@ -546,10 +546,10 @@ function cancelNode() {
 
         <tr> {if isset($error.log_connections)}
           <th class="error"><label>{$message.descLog_connections|escape}</label>
-          <br />log_connections</th>
+          <br />log_connections (bool)</th>
           {else}
           <th><label>{$message.descLog_connections|escape}</label>
-          <br />log_connections</th>
+          <br />log_connections (bool)</th>
           {/if}
           {if $params.log_connections == 'on'}
           <td><input type="checkbox" name="log_connections"
@@ -562,10 +562,10 @@ function cancelNode() {
 
         <tr> {if isset($error.log_hostname)}
           <th class="error"><label>{$message.descLog_hostname|escape}</label>
-          <br />log_hostname</th>
+          <br />log_hostname (bool)</th>
           {else}
           <th><label>{$message.descLog_hostname|escape}</label>
-                    <br />log_hostname</th>
+                    <br />log_hostname (bool)</th>
           {/if}
           {if $params.log_hostname == 'on'}
           <td><input type="checkbox" name="log_hostname" id="log_hostname" value="true" checked="checked" /></td>
@@ -576,10 +576,10 @@ function cancelNode() {
 
         <tr> {if isset($error.log_statement)}
           <th class="error"><label>{$message.descLog_statement|escape}</label>
-                    <br />log_statement</th>
+                    <br />log_statement (bool)</th>
           {else}
           <th><label>{$message.descLog_statement|escape}</label>
-          <br />log_statement</th>
+          <br />log_statement (bool)</th>
           {/if}
           {if $params.log_statement == 'on'}
           <td><input type="checkbox" name="log_statement" id="log_statement" value="true" checked="checked" /></td>
@@ -590,10 +590,10 @@ function cancelNode() {
 
         <tr> {if isset($error.log_per_node_statement)}
           <th class="error"><label>{$message.descLog_per_node_statement|escape}</label>
-          <br />log_per_node_statement</th>
+          <br />log_per_node_statement (bool)</th>
           {else}
           <th><label>{$message.descLog_per_node_statement|escape}</label>
-          <br />log_per_node_statement</th>
+          <br />log_per_node_statement (bool)</th>
           {/if}
           {if $params.log_per_node_statement == 'on'}
           <td><input type="checkbox" name="log_per_node_statement"
@@ -605,9 +605,9 @@ function cancelNode() {
         </tr>
 
         <tr> {if isset($error.log_standby_delay)}
-          <th class="error"><label>{$message.descLog_standby_delay|escape}</label><br />log_standby_delay</th>
+          <th class="error"><label>{$message.descLog_standby_delay|escape}</label><br />log_standby_delay (string)</th>
           {else}
-          <th><label>{$message.descLog_standby_delay|escape}</label><br />log_standby_delay</th>
+          <th><label>{$message.descLog_standby_delay|escape}</label><br />log_standby_delay (string)</th>
           {/if}
           <td><select name="log_standby_delay" id="log_standby_delay">
               <option value="always"
@@ -724,10 +724,10 @@ function cancelNode() {
 
         <tr> {if isset($error.connection_cache)}
           <th class="error"><label>{$message.descConnection_cache|escape}</label>
-          <br />connection_cache *</th>
+          <br />connection_cache (bool) *</th>
           {else}
           <th><label>{$message.descConnection_cache|escape}</label>
-          <br />connection_cache *</th>
+          <br />connection_cache  (bool)*</th>
           {/if}
           {if $params.connection_cache == 'on'}
           <td><input type="checkbox" name="connection_cache"
@@ -772,10 +772,10 @@ function cancelNode() {
 
         <tr> {if isset($error.replication_mode)}
           <th class="error"><label>{$message.descReplication_mode|escape}</label>
-          <br />replication_mode *</th>
+          <br />replication_mode (bool) *</th>
           {else}
           <th><label>{$message.descReplication_mode|escape}</label>
-          <br />replication_mode *</th>
+          <br />replication_mode (bool) *</th>
           {/if}
           {if $params.replication_mode == 'on'}
           <td><input type="checkbox" name="replication_mode"
@@ -788,10 +788,10 @@ function cancelNode() {
 
         <tr> {if isset($error.replicate_select)}
           <th class="error"><label>{$message.descReplicate_select|escape}</label>
-          <br />replicate_select</th>
+          <br />replicate_select (bool)</th>
           {else}
           <th><label>{$message.descReplicate_select|escape}</label>
-          <br />replicate_select</th>
+          <br />replicate_select (bool)</th>
           {/if}
           {if $params.replicate_select == 'on'}
           <td><input type="checkbox" name="replicate_select"
@@ -804,10 +804,10 @@ function cancelNode() {
 
         <tr> {if isset($error.insert_lock)}
           <th class="error"><label>{$message.descInsert_lock|escape}</label>
-          <br />insert_lock</th>
+          <br />insert_lock (bool)</th>
           {else}
           <th><label>{$message.descInsert_lock|escape}</label>
-          <br />insert_lock</th>
+          <br />insert_lock (bool)</th>
           {/if}
           {if $params.insert_lock == 'on'}
           <td><input type="checkbox" name="insert_lock" id="insert_lock" value="true" checked="checked" /></td>
@@ -818,10 +818,10 @@ function cancelNode() {
 
         <tr> {if isset($error.lobj_lock_table)}
           <th class="error"><label>{$message.descLobj_lock_table|escape}</label>
-          <br />lobj_lock_table</th>
+          <br />lobj_lock_table (string)</th>
           {else}
           <th><label>{$message.descLobj_lock_table|escape}</label>
-          <br />lobj_lock_table</th>
+          <br />lobj_lock_table (string)</th>
           {/if}
           <td><input type="text" name="lobj_lock_table"
                id="lobj_lock_table" value="{$params.lobj_lock_table|escape}" /></td>
@@ -833,10 +833,10 @@ function cancelNode() {
 
         <tr> {if isset($error.replication_stop_on_mismatch)}
           <th class="error"><label>{$message.descReplication_stop_on_mismatch|escape}</label>
-          <br />replication_stop_on_mismatch</th>
+          <br />replication_stop_on_mismatch (bool)</th>
           {else}
           <th><label>{$message.descReplication_stop_on_mismatch|escape}</label>
-          <br />replication_stop_on_mismatch</th>
+          <br />replication_stop_on_mismatch (bool)</th>
           {/if}
           {if $params.replication_stop_on_mismatch == 'on'}
           <td><input type="checkbox" name="replication_stop_on_mismatch"
@@ -848,10 +848,10 @@ function cancelNode() {
 
         <tr> {if isset($error.replication_stop_on_mismatch)}
           <th class="error"><label>{$message.descFailover_if_affected_tuples_mismatch|escape}</label>
-          <br />failover_if_affected_tuples_mismatch</th>
+          <br />failover_if_affected_tuples_mismatch (bool)</th>
           {else}
           <th><label>{$message.descFailover_if_affected_tuples_mismatch|escape}</label>
-          <br />failover_if_affected_tuples_mismatch</th>
+          <br />failover_if_affected_tuples_mismatch (bool)</th>
           {/if}
           {if $params.failover_if_affected_tuples_mismatch == 'on'}
           <td><input type="checkbox" name="failover_if_affected_tuples_mismatch"
@@ -897,10 +897,10 @@ function cancelNode() {
 
         <tr> {if isset($error.load_balance_mode)}
           <th class="error"><label>{$message.descLoad_balance_mode|escape}</label>
-          <br />load_balance_mode *</th>
+          <br />load_balance_mode (bool) *</th>
           {else}
           <th><label>{$message.descLoad_balance_mode|escape}</label>
-          <br />load_balance_mode *</th>
+          <br />load_balance_mode (bool) *</th>
           {/if}
           {if $params.load_balance_mode == 'on'}
           <td><input type="checkbox" name="load_balance_mode"
@@ -913,10 +913,10 @@ function cancelNode() {
 
         <tr> {if isset($error.ignore_leading_white_space)}
           <th class="error"><label>{$message.descIgnore_leading_white_space|escape}</label>
-          <br />ignore_leading_white_space</th>
+          <br />ignore_leading_white_space (bool)</th>
           {else}
           <th><label>{$message.descIgnore_leading_white_space|escape}</label>
-          <br />ignore_leading_white_space</th>
+          <br />ignore_leading_white_space (bool)</th>
           {/if}
           {if $params.ignore_leading_white_space == 'on'}
           <td><input type="checkbox" name="ignore_leading_white_space"
@@ -972,10 +972,10 @@ function cancelNode() {
 
         <tr> {if isset($error.master_slave_mode)}
           <th class="error"><label>{$message.descMaster_slave_mode|escape}</label>
-          <br />master_slave_mode *</th>
+          <br />master_slave_mode (bool) *</th>
           {else}
           <th><label>{$message.descMaster_slave_mode|escape}</label>
-          <br />master_slave_mode *</th>
+          <br />master_slave_mode (bool) *</th>
           {/if}
           {if $params.master_slave_mode == 'on'}
           <td><input type="checkbox" name="master_slave_mode"
@@ -988,10 +988,10 @@ function cancelNode() {
 
         <tr> {if isset($error.master_slave_sub_mode)}
           <th class="error"><label>{$message.descMaster_slave_sub_mode|escape}</label>
-          <br />master_slave_sub_mode *</th>
+          <br />master_slave_sub_mode (string) *</th>
           {else}
           <th><label>{$message.descMaster_slave_sub_mode|escape}</label>
-          <br />master_slave_sub_mode *</th>
+          <br />master_slave_sub_mode (string) *</th>
           {/if}
           <td><select name="master_slave_sub_mode" id="master_slave_sub_mode">
               <option value="slony"
@@ -1036,9 +1036,9 @@ function cancelNode() {
         </tr>
 
         <tr> {if isset($error.delay_threshold)}
-          <th class="error"><label>{$message.descDelay_threshold|escape}</label><br />delay_threshold</th>
+          <th class="error"><label>{$message.descDelay_threshold|escape}</label><br />delay_threshold (bool)</th>
           {else}
-          <th><label>{$message.descDelay_threshold|escape}</label><br />delay_threshold</th>
+          <th><label>{$message.descDelay_threshold|escape}</label><br />delay_threshold (bool)</th>
           {/if}
           <td><input type="text" name="delay_threshold"
                id="delay_threshold" value="{$params.delay_threshold|escape}" /></td>
@@ -1084,10 +1084,10 @@ function cancelNode() {
 
         <tr> {if isset($error.parallel_mode)}
           <th class="error"><label>{$message.descParallel_mode|escape}</label>
-          <br />parallel_mode *</th>
+          <br />parallel_mode (bool) *</th>
           {else}
           <th><label>{$message.descParallel_mode|escape}</label>
-          <br />parallel_mode *</th>
+          <br />parallel_mode (bool) *</th>
           {/if}
           {if $params.parallel_mode == 'on'}
           <td><input type="checkbox" name="parallel_mode"
@@ -1100,10 +1100,10 @@ function cancelNode() {
 
         <tr> {if isset($error.enable_query_cache)}
           <th class="error"><label>{$message.descEnable_query_cache|escape}</label>
-          <br />enable_query_cache *</th>
+          <br />enable_query_cache (bool) *</th>
           {else}
           <th><label>{$message.descEnable_query_cache|escape}</label>
-          <br />enable_query_cache *</th>
+          <br />enable_query_cache (bool) *</th>
           {/if}
           {if $params.enable_query_cache == 'on'}
           <td><input type="checkbox" name="enable_query_cache" id="enable_query_cache" checked="checked" /></td>
@@ -1433,10 +1433,10 @@ function cancelNode() {
 
         <tr> {if isset($error.memory_cache_enabled)}
           <th class="error"><label>{$message.descMemory_cache_enabled|escape}</label>
-          <br />memory_cache_enabled</th>
+          <br />memory_cache_enabled (bool)</th>
           {else}
           <th><label>{$message.descMemory_cache_enabled|escape}</label>
-                    <br />memory_cache_enabled</th>
+                    <br />memory_cache_enabled (bool)</th>
           {/if}
           {if $params.memory_cache_enabled == 'on'}
           <td><input type="checkbox" name="memory_cache_enabled" id="memory_cache_enabled" value="true" checked="checked" /></td>
@@ -1447,9 +1447,9 @@ function cancelNode() {
 
         <tr> {if isset($error.memqcache_method)}
         <th class="error"><label>{$message.descMemqcache_method|escape}</label>
-        <br />memqcache_method *</th>
+        <br />memqcache_method (string) *</th>
         {else}
-        <th><label>{$message.descMemqcache_method|escape}</label><br />memqcache_method *</th>
+        <th><label>{$message.descMemqcache_method|escape}</label><br />memqcache_method (string) *</th>
         {/if}
         <td><select name="memqcache_method" id="memqcache_method">
             <option value="shmem" {if $params.memqcache_method == 'shmem'}selected{/if}>shmem</option>
