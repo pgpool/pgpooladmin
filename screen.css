@@ -57,6 +57,13 @@ input {
 label {
   font-weight: bold;
 }
+pre {
+    background-color: #EFEFFC;
+    padding: 5px 15px;
+}
+p {
+    margin: 5px;
+}
 #header {
   padding: 8px;
   border-bottom: 8px solid white;
