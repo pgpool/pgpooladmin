@@ -33,6 +33,7 @@
       <li><a href="#health-check">Health Check</a></li>
       <li><a href="#failover">Failover and Failback</a></li>
       <li><a href="#online-recovery">Online Recovery</a></li>
+      <li><a href="#memqcache">On Memory Query Cache</a></li>
       <li><a href="#others">Others</a></li>
     </ul>
 </div>
