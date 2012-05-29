@@ -19,7 +19,7 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2011 PgPool Global Development Group
+ * @copyright  2003-2012 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
@@ -107,6 +107,7 @@ $msgCmdLargeD = '';
 $msgCmdD = '';
 $msgCmdN = '';
 $msgCmdM = '';
+$msgCmdLargeC = '';
 
 $msgPgpoolLogFile = '';
 if (isset($_POST['pgpool_logfile']) && $_POST['pgpool_logfile']) {
@@ -123,6 +124,7 @@ if ($pgpool_logfile != '' && strpos($pgpool_logfile, '|') !== FALSE) {
         $error = TRUE;
     }
 
+// check log file directory
 } elseif (!is_dir(dirname($pgpool_logfile))) {
     $msgPgpoolLogFile = 'Directory not found';
     $error = TRUE;
@@ -132,6 +134,7 @@ if ($pgpool_logfile != '' && strpos($pgpool_logfile, '|') !== FALSE) {
     $error = TRUE;
 }
 
+// check pcp parameters
 if (isset($_POST['pcp_client_dir']) && $_POST['pcp_client_dir']) {
     $pcp_client_dir = $_POST['pcp_client_dir'];
 } else {
@@ -141,7 +144,8 @@ if (isset($_POST['pcp_client_dir']) && $_POST['pcp_client_dir']) {
 $msgPcpClientDir = '';
 if (!is_dir($pcp_client_dir)) {
     $msgPcpClientDir = 'Directory not found';
-        $error = TRUE;
+    $error = TRUE;
+
 } else {
     $command = array('pcp_attach_node',
                      'pcp_detach_node',
@@ -170,18 +174,18 @@ if (isset($_POST['pcp_hostname']) && $_POST['pcp_hostname']) {
     $pcp_hostname =  _PGPOOL2_PCP_HOSTNAME;
 }
 
+$msgPcpTimeout = '';
 if (isset($_POST['pcp_timeout']) && $_POST['pcp_timeout']) {
     $pcp_timeout= $_POST['pcp_timeout'];
 } else {
     $pcp_timeout =  _PGPOOL2_PCP_TIMEOUT;
-    $msgPcpTimeout = '';
 }
 
+$msgPcpRefreshTime = '';
 if (isset($_POST['pcp_refreshTime']) && $_POST['pcp_refreshTime']) {
     $pcp_refreshTime = $_POST['pcp_refreshTime'];
 } else {
     $pcp_refreshTime =  _PGPOOL2_STATUS_REFRESH_TIME;
-    $msgPcpRefreshTime = '';
 }
 
 /* --------------------------------------------------------------------- */
@@ -202,76 +206,27 @@ if ($error || (isset($_POST['submitBack']) && $_POST['submitBack'] != NULL)) {
 }
 
 if (!$error && $action == 'next') {
-
     $fp = fopen( "../conf/pgmgt.conf.php", "w");
 
     fputs($fp, "<?php"."\n");
 
-    $str = 'define(\'_PGPOOL2_LANG\', \'' . $_SESSION['lang'] . '\');' . "\n";
-    fputs($fp, $str);
+    write($fp, '_PGPOOL2_LANG',               $_SESSION['lang']);
+    write($fp, '_PGPOOL2_CONFIG_FILE',        $_POST['pgpool2_config_file']);
+    write($fp, '_PGPOOL2_PASSWORD_FILE',      $_POST['password_file']);
+    write($fp, '_PGPOOL2_COMMAND',            $_POST['pgpool_command']);
 
-    $str = 'define(\'_PGPOOL2_CONFIG_FILE\', \'' . $_POST['pgpool2_config_file'] . '\');' . "\n";
-    fputs($fp, $str);
+    write($fp, '_PGPOOL2_CMD_OPTION_C',       (int)isset($_POST['c']));
+    write($fp, '_PGPOOL2_CMD_OPTION_LARGE_D', (int)isset($_POST['D']));
+    write($fp, '_PGPOOL2_CMD_OPTION_D',       (int)isset($_POST['d']));
+    write($fp, '_PGPOOL2_CMD_OPTION_M',       $_POST['m']);
+    write($fp, '_PGPOOL2_CMD_OPTION_N',       (int)isset($_POST['n']));
+    write($fp, '_PGPOOL2_CMD_OPTION_LARGE_C', (int)isset($_POST['C']));
 
-    $str = 'define(\'_PGPOOL2_PASSWORD_FILE\', \'' . $_POST['password_file'] . '\');' . "\n";
-    fputs($fp, $str);
-
-    $str = 'define(\'_PGPOOL2_COMMAND\', \'' . $_POST['pgpool_command'] . '\');' . "\n";
-    fputs($fp, $str);
-
-    if (isset($_POST['c'])) {
-        $c = 1;
-    } else {
-        $c = 0;
-    }
-
-    if (isset($_POST['D'])) {
-        $D = 1;
-    } else {
-        $D = 0;
-    }
-
-    if (isset($_POST['d'])) {
-        $d = 1;
-    } else {
-        $d = 0;
-    }
-
-    if (isset($_POST['n'])) {
-        $n = 1;
-    } else {
-        $n = 0;
-    }
-
-    $str = 'define(\'_PGPOOL2_CMD_OPTION_C\', \'' . $c . '\');' . "\n";
-    fputs($fp, $str);
-
-    $str = 'define(\'_PGPOOL2_CMD_OPTION_LARGE_D\', \'' . $D . '\');' . "\n";
-    fputs($fp, $str);
-
-    $str = 'define(\'_PGPOOL2_CMD_OPTION_D\', \'' . $d . '\');' . "\n";
-    fputs($fp, $str);
-
-    $str = 'define(\'_PGPOOL2_CMD_OPTION_M\', \'' . $_POST['m'] . '\');' . "\n";
-    fputs($fp, $str);
-
-    $str = 'define(\'_PGPOOL2_CMD_OPTION_N\', \'' . $n . '\');' . "\n";
-    fputs($fp, $str);
-
-    $str = 'define(\'_PGPOOL2_LOG_FILE\', \'' . $_POST['pgpool_logfile'] . '\');' . "\n";
-    fputs($fp, $str);
-
-    $str = 'define(\'_PGPOOL2_PCP_DIR\', \'' . $_POST['pcp_client_dir'] . '\');' . "\n";
-    fputs($fp, $str);
-
-    $str = 'define(\'_PGPOOL2_PCP_HOSTNAME\', \'' . $_POST['pcp_hostname'] . '\');' . "\n";
-    fputs($fp, $str);
-
-    $str = 'define(\'_PGPOOL2_PCP_TIMEOUT\', \'' . $_POST['pcp_timeout'] . '\');' . "\n";
-    fputs($fp, $str);
-
-    $str = 'define(\'_PGPOOL2_STATUS_REFRESH_TIME\', \'' . $_POST['pcp_refreshTime'] . '\');' . "\n";
-    fputs($fp, $str);
+    write($fp, '_PGPOOL2_LOG_FILE',            $_POST['pgpool_logfile']);
+    write($fp, '_PGPOOL2_PCP_DIR',             $_POST['pcp_client_dir']);
+    write($fp, '_PGPOOL2_PCP_HOSTNAME',        $_POST['pcp_hostname']);
+    write($fp, '_PGPOOL2_PCP_TIMEOUT',         $_POST['pcp_timeout']);
+    write($fp, '_PGPOOL2_STATUS_REFRESH_TIME', $_POST['pcp_refreshTime']);
 
     fputs($fp, "?>"."\n");
 
@@ -298,6 +253,7 @@ if (!$error && $action == 'next') {
     </div>
       <div id="content">
   <h2>Welcome to pgpool-II Administration Tool</h2>
+
   <h3><?php echo $message['strParameterCheck']; ?></h3>
   <form action="checkParameter.php" method="post" name="CheckPath" id="CheckPath">
     <?php
@@ -307,195 +263,113 @@ if (!$error && $action == 'next') {
         echo '<input type="hidden" name="action" value="next">';
     }
     ?>
+
 <table>
   <tbody>
   <tr>
     <th><label><?php echo $message['strPgConfFile'] ?></label></th>
     <td><input name="pgpool2_config_file" type="text" value="<?php echo $pgpool2_config_file?>" size="50" />
-    <?php
-    if ($msgPgpoolConfigFile != '') {
-        echo '<br />' . $msgPgpoolConfigFile;
-        echo '</td><td><img src="images/ng.gif" alt="ng" />';
-    } else {
-        echo '</td><td><img src="images/ok.gif" alt="ok" />';
-    }
-    ?>
+    <?php showResult($msgPgpoolConfigFile); ?>
     </td>
   </tr>
   <tr>
     <th><label><?php echo $message['strPasswordFile'] ?></label></th>
-      <td><input name="password_file" type="text" value="<?php echo $password_file ?>" size="50" />
-    <?php
-    if ($msgPasswordFile != '') {
-        echo '<br />' . $msgPasswordFile;
-        echo '</td><td><img src="images/ng.gif" alt="ng" />';
-    } else {
-        echo '</td><td><img src="images/ok.gif" alt="ok" />';
-    }
-    ?>
+    <td><input name="password_file" type="text" value="<?php echo $password_file ?>" size="50" />
+    <?php showResult($msgPasswordFile); ?>
     </td>
   </tr>
   <tr>
     <th><label><?php echo $message['strPgpoolCommand'] ?></label></th>
-                  <td><input name="pgpool_command" type="text" value="<?php echo $pgpool_command ?>" size="50" />
-    <?php
-    if ($msgPgpoolCommand != '') {
-        echo '<br />' . $msgPgpoolCommand;
-        echo '</td><td><img src="images/ng.gif" alt="ng" />';
-    } else {
-        echo '</td><td><img src="images/ok.gif" alt="ok" />';
-    }
-    ?>
+    <td><input name="pgpool_command" type="text" value="<?php echo $pgpool_command ?>" size="50" />
+    <?php showResult($msgPgpoolCommand); ?>
     </td>
   </tr>
+
   <tr>
     <th colspan="3"><h3><?php echo $message['strPgpoolCommandOption'] ?></h3></th>
   </tr>
+
   <tr>
     <th><label><?php echo $message['strCmdC'] ?></label></th>
-      <td><input type="checkbox" name="c" /></td>
-    <?php
-    if ($msgCmdC != '') {
-        echo '<br />' . $msgCmdC;
-        echo '</td><td><img src="images/ng.gif" alt="ng" />';
-    } else {
-        echo '</td><td><img src="images/ok.gif" alt="ok" />';
-    }
-    ?>
+    <td><input type="checkbox" name="c" />
+    <?php showResult($msgCmdC); ?>
     </td>
   </tr>
   <tr>
     <th><label><?php echo $message['strCmdLargeD'] ?></label></th>
-      <td><input type="checkbox" name="D" /></td>
-    <?php
-    if ($msgCmdLargeD != '') {
-        echo '<br />' . $msgCmdLargeD;
-        echo '</td><td><img src="images/ng.gif" alt="ng" />';
-    } else {
-        echo '</td><td><img src="images/ok.gif" alt="ok" />';
-    }
-    ?>
+    <td><input type="checkbox" name="D" />
+    <?php showResult($msgCmdLargeD); ?>
     </td>
   </tr>
   <tr>
     <th><label><?php echo $message['strCmdN'] ?></label></th>
-      <td><input type="checkbox" name="n" /></td>
-    <?php
-    if ($msgCmdN != '') {
-        echo '<br />' . $msgCmdN;
-        echo '</td><td><img src="images/ng.gif" alt="ng" />';
-    } else {
-        echo '</td><td><img src="images/ok.gif" alt="ok" />';
-    }
-    ?>
+    <td><input type="checkbox" name="n" />
+    <?php showResult($msgCmdN); ?>
+    </td>
+  </tr>
+  <tr>
+    <th><label><?php echo $message['strCmdLargeC'] ?></label></th>
+    <td><input type="checkbox" name="D" />
+    <?php showResult($msgCmdLargeC); ?>
     </td>
   </tr>
   <tr>
     <th><label><?php echo $message['strCmdD'] ?></label></th>
-      <td><input type="checkbox" name="d" /></td>
-    <?php
-    if ($msgCmdD != '') {
-        echo '<br />' . $msgCmdD;
-        echo '</td><td><img src="images/ng.gif" alt="ng" />';
-    } else {
-        echo '</td><td><img src="images/ok.gif" alt="ok" />';
-    }
-    ?>
+    <td><input type="checkbox" name="d" />
+    <?php showResult($msgCmdD); ?>
     </td>
   </tr>
   <tr>
     <th><label><?php echo $message['strCmdM'] ?></label></th>
-      <td><select  name="m" />
-           <option value="s" selected="selected">smart</optgroup>
-           <option value="f">fast</optgroup>
-           <option value="i">immediate</optgroup>
-           </select>
-     </td>
-    <?php
-    if ($msgCmdM != '') {
-        echo '<br />' . $msgCmdM;
-        echo '</td><td><img src="images/ng.gif" alt="ng" />';
-    } else {
-        echo '</td><td><img src="images/ok.gif" alt="ok" />';
-    }
-    ?>
+    <td><select  name="m" />
+          <option value="s" selected="selected">smart</optgroup>
+          <option value="f">fast</optgroup>
+          <option value="i">immediate</optgroup>
+        </select>
+    <?php showResult($msgCmdM); ?>
     </td>
   </tr>
   <tr>
     <th><label><?php echo $message['strPgpoolLogFile'] ?></label></th>
-                  <td><input name="pgpool_logfile" type="text" value="<?php echo $pgpool_logfile ?>" size="50" />
-    <?php
-    if ($msgPgpoolLogFile != '') {
-        echo '<br />' . $msgPgpoolLogFile;
-        echo '</td><td><img src="images/ng.gif" alt="ng" />';
-    } else {
-        echo '</td><td><img src="images/ok.gif" alt="ok" />';
-    }
-    ?>
+    <td><input name="pgpool_logfile" type="text" value="<?php echo $pgpool_logfile ?>" size="50" />
+    <?php showResult($msgPgpoolLogFile); ?>
     </td>
   </tr>
 
   <tr>
     <th><label><?php echo $message['strPcpDir'] ?></label></th>
-                  <td><input name="pcp_client_dir" type="text" value="<?php echo $pcp_client_dir ?>" size="50" />
-    <?php
-    if ($msgPcpClientDir != '') {
-        echo '<br />' . $msgPcpClientDir;
-        echo '</td><td><img src="images/ng.gif" alt="ng" />';
-    } else {
-        echo '</td><td><img src="images/ok.gif" alt="ok" />';
-    }
-    ?>
+    <td><input name="pcp_client_dir" type="text" value="<?php echo $pcp_client_dir ?>" size="50" />
+    <?php showResult($msgPcpClientDir); ?>
     </td>
   </tr>
   <tr>
     <th><label><?php echo $message['strPcpHostName'] ?></label></th>
-                  <td><input name="pcp_hostname" type="text" value="<?php echo $pcp_hostname ?>" size="50" />
-    <?php
-    if ($msgPcpHostname != '') {
-        echo '<br />' . $msgPcpHostname;
-        echo '</td><td><img src="images/ng.gif" alt="ng" />';
-    } else {
-        echo '</td><td><img src="images/ok.gif" alt="ok" />';
-    }
-    ?>
+    <td><input name="pcp_hostname" type="text" value="<?php echo $pcp_hostname ?>" size="50" />
+    <?php showResult($msgPcpHostname); ?>
     </td>
   </tr>
   <tr>
     <th><label><?php echo $message['strPcpTimeout'] ?></label></th>
-                  <td><input name="pcp_timeout" type="text" value="<?php echo $pcp_timeout?>" size="50" />
-    <?php
-    if ($msgPcpHostname != '') {
-        echo '<br />' . $msgPcpHostname;
-        echo '</td><td><img src="images/ng.gif" alt="ng" />';
-    } else {
-        echo '</td><td><img src="images/ok.gif" alt="ok" />';
-    }
-    ?>
+    <td><input name="pcp_timeout" type="text" value="<?php echo $pcp_timeout?>" size="50" />
+    <?php showResult($msgPcpTimeout); ?>
     </td>
   </tr>
   <tr>
     <th><label><?php echo $message['strPcpRefreshTime'] ?></label></th>
-                  <td><input name="pcp_refreshTime" type="text" value="<?php echo $pcp_refreshTime ?>" size="50" />
-    <?php
-    if ($msgPcpRefreshTime != '') {
-        echo '<br />' . $msgPcpRefreshTime;
-        echo '</td><td><img src="images/ng.gif" alt="ng" />';
-    } else {
-        echo '</td><td><img src="images/ok.gif" alt="ok" />';
-    }
-    ?>
+    <td><input name="pcp_refreshTime" type="text" value="<?php echo $pcp_refreshTime ?>" size="50" />
+    <?php showResult($msgPcpRefreshTime); ?>
     </td>
   </tr>
   </tbody>
 </table>
+
 <p>
 <?php
 if ($error) {
-echo '<input type="submit" value="' . $message['strCheck'] . '" />';
+    echo '<input type="submit" value="' . $message['strCheck'] . '" />';
 }
 else {
-echo '<input type="submit" value="' . $message['strNext'] . '" />';
+    echo '<input type="submit" value="' . $message['strNext'] . '" />';
 }
 ?>
 </p>
@@ -507,3 +381,24 @@ echo '<input type="submit" value="' . $message['strNext'] . '" />';
     </div>
   </body>
 </html>
+
+<?php
+
+/* --------------------------------------------------------------------- */
+/* Function                                                              */
+/* --------------------------------------------------------------------- */
+
+function write($fp, $defname, $val)
+{
+    fputs($fp, "define('{$defname}', '{$val}');\n");
+}
+
+function showResult($msg)
+{
+    if ($msg != '') {
+        echo '<br />' . $msg;
+        echo '</td><td><img src="images/ng.gif" alt="ng" />';
+    } else {
+        echo '</td><td><img src="images/ok.gif" alt="ok" />';
+    }
+}

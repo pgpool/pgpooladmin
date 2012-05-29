@@ -19,7 +19,7 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2008 PgPool Global Development Group
+ * @copyright  2003-2012 PgPool Global Development Group
  * @version    SVN: $Id$
  */
 
@@ -55,6 +55,7 @@ $tpl->assign('D', _PGPOOL2_CMD_OPTION_LARGE_D);
 $tpl->assign('d', _PGPOOL2_CMD_OPTION_D);
 $tpl->assign('m', _PGPOOL2_CMD_OPTION_M);
 $tpl->assign('n', _PGPOOL2_CMD_OPTION_N);
+$tpl->assign('C', _PGPOOL2_CMD_OPTION_LARGE_C);
 
 if (isPipe(_PGPOOL2_LOG_FILE)) {
     $tpl->assign('pipe', 1);
@@ -94,6 +95,9 @@ switch ($action) {
             } else {
                 $args = "$args -n > $pgpoolLog ";
             }
+        }
+        if (isset($_POST['C'])) {
+            $args = $args . "-C ";
         }
 
         $ret = execPcp('PCP_START_PGPOOL', $args);
@@ -208,6 +212,9 @@ switch ($action) {
             } else {
                 $args = "$args -n > $pgpoolLog ";
             }
+        }
+        if (isset($_POST['C'])) {
+            $args = $args . "-C ";
         }
 
         $ret = execPcp('PCP_START_PGPOOL', $args);

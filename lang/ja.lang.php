@@ -19,7 +19,7 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2008 PgPool Global Development Group
+ * @copyright  2003-2012 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
@@ -169,6 +169,7 @@ $message = array(
     'strCmdC' => 'クエリキャッシュクリア',
     'strCmdD' => 'デバッグモード',
     'strCmdDesc' => '空白の場合には無視',
+    'strCmdLargeC' => 'オンメモリキャッシュの oid map をリセット',
     'strCmdLargeD' => 'pgpool_status を無視',
     'strCmdM' => '停止モード',
     'strCmdN' => '非デーモンモード',

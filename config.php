@@ -19,7 +19,7 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2011 PgPool Global Development Group
+ * @copyright  2003-2012 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
@@ -73,6 +73,8 @@ $params['m']                  = (defined('_PGPOOL2_CMD_OPTION_M')) ?
                                 _PGPOOL2_CMD_OPTION_M : $message['errNoDefined'];
 $params['n']                  = (defined('_PGPOOL2_CMD_OPTION_N')) ?
                                 _PGPOOL2_CMD_OPTION_N : $message['errNoDefined'];
+$params['C']                  = (defined('_PGPOOL2_CMD_OPTION_LARGE_C')) ?
+                                _PGPOOL2_CMD_OPTION_LARGE_C  : $message['errNoDefined'];
 $params['pgpool_logfile']     = (defined('_PGPOOL2_LOG_FILE')) ?
                                 _PGPOOL2_LOG_FILE : $message['errNoDefined'];
 $params['pcp_client_dir']     = (defined('_PGPOOL2_PCP_DIR')) ?
@@ -229,49 +231,32 @@ function writePgmtConf($pgmgtConfigFile)
     $str = "<?php\n";
     fputs($fp, $str);
 
-    $str = 'define(\'_PGPOOL2_LANG\', \'' . $params['lang'] . '\');' . "\n";
-    fputs($fp, $str);
+    write($fp, '_PGPOOL2_LANG',               $params['lang']);
+    write($fp, '_PGPOOL2_CONFIG_FILE',        $params['pgpool_config_file']);
+    write($fp, '_PGPOOL2_PASSWORD_FILE',      $params['password_file']);
+    write($fp, '_PGPOOL2_COMMAND',            $params['pgpool_command']);
 
-    $str = 'define(\'_PGPOOL2_CONFIG_FILE\', \'' .  $params['pgpool_config_file'] . '\');' . "\n";
-    fputs($fp, $str);
+    write($fp, '_PGPOOL2_CMD_OPTION_C',       $params['c']);
+    write($fp, '_PGPOOL2_CMD_OPTION_LARGE_D', $params['D']);
+    write($fp, '_PGPOOL2_CMD_OPTION_D',       $params['n']);
+    write($fp, '_PGPOOL2_CMD_OPTION_M',       $params['m']);
+    write($fp, '_PGPOOL2_CMD_OPTION_N',       $params['n']);
+    write($fp, '_PGPOOL2_CMD_OPTION_LARGE_C', $params['C']);
 
-    $str = 'define(\'_PGPOOL2_PASSWORD_FILE\', \'' .  $params['password_file'] . '\');' . "\n";
-    fputs($fp, $str);
-
-    $str = 'define(\'_PGPOOL2_COMMAND\', \'' .  $params['pgpool_command'] . '\');' . "\n";
-    fputs($fp, $str);
-
-    $str = 'define(\'_PGPOOL2_CMD_OPTION_C\', \'' .  $params['c'] . '\');' . "\n";
-    fputs($fp, $str);
-
-    $str = 'define(\'_PGPOOL2_CMD_OPTION_LARGE_D\', \'' .  $params['D'] . '\');' . "\n";
-    fputs($fp, $str);
-
-    $str = 'define(\'_PGPOOL2_CMD_OPTION_D\', \'' .  $params['d'] . '\');' . "\n";
-    fputs($fp, $str);
-
-    $str = 'define(\'_PGPOOL2_CMD_OPTION_M\', \'' .  $params['m'] . '\');' . "\n";
-    fputs($fp, $str);
-
-    $str = 'define(\'_PGPOOL2_CMD_OPTION_N\', \'' .  $params['n'] . '\');' . "\n";
-    fputs($fp, $str);
-
-    $str = 'define(\'_PGPOOL2_LOG_FILE\', \'' .  $params['pgpool_logfile'] . '\');' . "\n";
-    fputs($fp, $str);
-
-    $str = 'define(\'_PGPOOL2_PCP_DIR\', \'' .  $params['pcp_client_dir'] . '\');' . "\n";
-    fputs($fp, $str);
-
-    $str = 'define(\'_PGPOOL2_PCP_HOSTNAME\', \'' .  $params['pcp_hostname'] . '\');' . "\n";
-    fputs($fp, $str);
-
-    $str = 'define(\'_PGPOOL2_STATUS_REFRESH_TIME\', \'' .  $params['pcp_refresh_time'] . '\');' . "\n";
-    fputs($fp, $str);
+    write($fp, '_PGPOOL2_LOG_FILE',            $params['pgpool_logfile']);
+    write($fp, '_PGPOOL2_PCP_DIR',             $params['pcp_client_dir']);
+    write($fp, '_PGPOOL2_PCP_HOSTNAME',        $params['pcp_hostname']);
+    write($fp, '_PGPOOL2_STATUS_REFRESH_TIME', $params['pcp_refresh_time']);
 
     $str = "?>\n";
     fputs($fp, $str);
 
     fclose($fp);
     return TRUE;
+}
+
+function write($fp, $defname, $val)
+{
+    fputs($fp, "define('{$defname}', '{$val}');\n");
 }
 ?>

@@ -19,7 +19,7 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2009 PgPool Global Development Group
+ * @copyright  2003-2012 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
@@ -177,6 +177,7 @@ $message = array(
     'strCmdC' => 'Clears query cache',
     'strCmdD' => 'Debug mode',
     'strCmdDesc' => 'If it is a blank, this option is ignored.',
+    'strCmdLargeC' => 'Discard oid maps for on memory query cache',
     'strCmdLargeD' => 'Discard pgpool_status file',
     'strCmdM' => 'Stop mode',
     'strCmdN' => 'Don\'t run in daemon mode',

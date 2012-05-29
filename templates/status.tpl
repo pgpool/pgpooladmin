@@ -268,6 +268,14 @@ function changeView(chView){
           {/if}
         </tr>
 
+        <tr><td>{$message.strCmdLargeC|escape} (-C)</td>
+          {if $C == 1}
+          <td><input type="checkbox" name="C" checked="checked" /></td>
+          {else}
+          <td><input type="checkbox" name="C" /></td>
+          {/if}
+        </tr>
+
         <tr><td>{$message.strCmdD|escape} (-d)</td>
           {if $d == 1}
           <td><input type="checkbox" name="d" checked="checked" /></td>
@@ -373,6 +381,14 @@ function changeView(chView){
           <td><input type="checkbox" name="n" checked="checked" /></td>
           {else}
           <td><input type="checkbox" name="n" /></td>
+          {/if}
+        </tr>
+
+        <tr><td>{$message.strCmdLargeC|escape} (-C)</td>
+          {if $C == 1}
+          <td><input type="checkbox" name="C" checked="checked" /></td>
+          {else}
+          <td><input type="checkbox" name="C" /></td>
           {/if}
         </tr>
 

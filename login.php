@@ -19,7 +19,7 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2008 PgPool Global Development Group
+ * @copyright  2003-2012 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
@@ -96,6 +96,7 @@ $tpl->assign('D', _PGPOOL2_CMD_OPTION_LARGE_D);
 $tpl->assign('d', _PGPOOL2_CMD_OPTION_D);
 $tpl->assign('m', _PGPOOL2_CMD_OPTION_M);
 $tpl->assign('n', _PGPOOL2_CMD_OPTION_N);
+$tpl->assign('C', _PGPOOL2_CMD_OPTION_LARGE_C);
 
 $tpl->assign('pgpoolStatus',  NULL);
 $tpl->assign('pgpoolMessage', NULL);
