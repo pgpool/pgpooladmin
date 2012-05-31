@@ -32,6 +32,12 @@ define('SESSION_LOGIN_USER_PASSWORD', 'md5pass');
 define('SESSION_LANG', 'lang');
 define('SESSION_MESSAGE', 'message');
 
+function versions()
+{
+    return array('3.2', '3.1', '3.0',
+                 '2.3', '2.2', '2.1', '2.0');
+}
+
 session_start();
 
 /**
@@ -453,6 +459,10 @@ function readConfigParams($paramList = FALSE)
                 $num = str_replace('backend_data_directory', '', $key);
                 $configParam['backend_data_directory'][$num] =str_replace("'", "", $value);
 
+            } elseif (preg_match("/^backend_flag/", $key)) {
+                $num = str_replace('backend_flag', '', $key);
+                $configParam['backend_flag'][$num] =str_replace("'", "", $value);
+
             } else {
                 $configParam[$key] = str_replace("'", "", $value);
             }
@@ -468,7 +478,8 @@ function readConfigParams($paramList = FALSE)
                 if(!preg_match("/^backend_hostname/",       $key) &&
                    !preg_match("/^backend_port/",           $key) &&
                    !preg_match("/^backend_weight/",         $key) &&
-                   !preg_match("/^backend_data_directory/", $key))
+                   !preg_match("/^backend_data_directory/", $key) &&
+                   !preg_match("/^backend_flag/",           $key))
                 {
                     $results[$key] = $pgpoolConfigParam[$key]['default'];
                 }
@@ -492,5 +503,111 @@ function isPipe($str)
 function isTrue($value)
 {
     return in_array($value, array('on', 'true'));
+}
+
+/* check version */
+function hasMemqcache()
+{
+    return (3.2 <= _PGPOOL2_VERSION);
+}
+// pgpool has pcp_promote_node ?
+function hasPcpPromote()
+{
+    return (3.1 <= _PGPOOL2_VERSION);
+}
+function paramExists($param)
+{
+    $add_version = $del_version = 0;
+    switch ($param) {
+        /* Add */
+
+        // params added in 3.2
+        case 'health_check_password':
+        case 'health_check_max_retries':
+        case 'health_check_retry_delay':
+        case 'memory_cache_enabled':
+        case 'memqcache_method':
+        case 'memqcache_memcached_host':
+        case 'memqcache_memcached_port':
+        case 'memqcache_total_size':
+        case 'memqcache_max_num_cache':
+        case 'memqcache_expire':
+        case 'memqcache_auto_cache_invalidation':
+        case 'memqcache_maxcache':
+        case 'memqcache_cache_block_size':
+        case 'memqcache_oiddir':
+        case 'white_memqcache_table_lsit':
+        case 'black_memqcache_table_list':
+            $add_version = 3.2;
+            break;
+
+        // params added in 3.1
+        case 'follow_master_command':
+        case 'log_destination':
+        case 'syslog_facility':
+        case 'syslog_ident':
+        case 'debug_level':
+        case 'sr_check_period':
+        case 'sr_check_user':
+        case 'sr_check_password':
+        case 'health_check_password':
+        case 'relcache_expire':
+        case 'backend_flag':
+            $add_version = 3.1;
+            break;
+
+        // params added in 3.0
+        case 'master_slave_sub_mode':
+        case 'delay_threshold':
+        case 'log_standby_delay':
+        case 'debug_level':
+        case 'failover_if_affected_tuples_mismatch':
+        case 'white_function_list':
+        case 'black_function_list':
+            $add_version = 3.0;
+            break;
+
+        // params added in 2.3
+        case 'fail_over_on_backend_error':
+        case 'log_per_node_statement':
+        case 'lobj_lock_table':
+        case 'ssl':
+        case 'ssl_key':
+        case 'ssl_cert':
+        case 'ssl_ca_cert':
+        case 'ssl_ca_cert_dir':
+            $add_version = 2.3;
+            break;
+
+        // params added in 2.2
+        case 'pid_file_name':
+        case 'client_idle_limit_in_recovery':
+            $add_version = 2.2;
+            break;
+
+        /* Delete */
+
+        // params deleted in 3.1
+        case 'enable_query_cache':
+            $del_version = 3.1;
+            break;
+
+        // params deleted in 3.0
+        case 'backend_socket_dir':
+            $del_version = 3.0;
+            break;
+
+        // params deleted in 2.1
+        case 'replication_timeout':
+            $del_version = 2.1;
+            break;
+    }
+
+    if ($add_version && $add_version <= _PGPOOL2_VERSION) {
+        return TRUE;
+    } elseif ($del_version && _PGPOOL2_VERSION < $del_version) {
+        return TRUE;
+    }
+    return FALSE;
 }
 ?>
