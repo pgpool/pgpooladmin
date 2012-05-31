@@ -57,7 +57,7 @@ switch ($action) {
                 } else {
                     $configValue[$key] = 'off';
                 }
-            } else {
+            } elseif (isset($_POST[$key])) {
                 $configValue[$key] = trim($_POST[$key]);
             }
         }
@@ -66,19 +66,19 @@ switch ($action) {
         if (isset($_POST['backend_hostname'])) {
             $configValue['backend_hostname'] = $_POST['backend_hostname'];
         } else {
-             $configValue['backend_hostname'] = array();
+            $configValue['backend_hostname'] = array();
 
         }
         if (isset($_POST['backend_port'])) {
             $configValue['backend_port'] = $_POST['backend_port'];
         } else {
-             $configValue['backend_port'] = array();
+            $configValue['backend_port'] = array();
         }
 
         if (isset($_POST['backend_weight'])) {
             $configValue['backend_weight'] = $_POST['backend_weight'];
         } else {
-             $configValue['backend_weight'] = array();
+            $configValue['backend_weight'] = array();
         }
 
         if (isset($_POST['backend_data_directory'])) {
@@ -87,10 +87,12 @@ switch ($action) {
              $configValue['backend_data_directory'] = array();
         }
 
-        if (isset($_POST['backend_flag'])) {
-            $configValue['backend_flag'] = $_POST['backend_flag'];
-        } else {
-             $configValue['backend_flag'] = array();
+        if (paramExists('backend_flag')) {
+            if (isset($_POST['backend_flag'])) {
+                $configValue['backend_flag'] = $_POST['backend_flag'];
+            } else {
+                $configValue['backend_flag'] = array();
+            }
         }
 
         $tpl->assign('params', $configValue);
@@ -109,7 +111,7 @@ switch ($action) {
                 } else {
                     $configValue[$key] = 'off';
                 }
-            } else {
+            } elseif (isset($_POST[$key])) {
                 $configValue[$key] = trim($_POST[$key]);
             }
         }
@@ -170,7 +172,7 @@ switch ($action) {
                 } else {
                     $configValue[$key] = 'false';
                 }
-            } else {
+            } elseif (isset($_POST[$key])) {
                 $configValue[$key] = trim($_POST[$key]);
             }
         }
@@ -178,7 +180,7 @@ switch ($action) {
         /**
          * Confirmations of value except backend host
          */
-        foreach( $pgpoolConfigParam as $key => $value) {
+        foreach ($pgpoolConfigParam as $key => $value) {
             check($key, $value, $configValue, $error);
         }
 
@@ -195,59 +197,45 @@ switch ($action) {
          */
         if (isset($configValue['backend_hostname'])) {
             for ($i = 0; $i < count($configValue['backend_hostname']); $i++) {
-                $hostname       = $configValue['backend_hostname'][$i];
-                $port           = $configValue['backend_port'][$i];
-                $weight         = $configValue['backend_weight'][$i];
-                $data_directory = $configValue['backend_data_directory'][$i];
-                $flag           = $configValue['backend_flag'][$i];
-
                 $result = FALSE;
 
                 // backend_hostname
-                $result = checkString($hostname,
+                $result = checkString($configValue['backend_hostname'][$i],
                                       $pgpoolConfigBackendParam['backend_hostname']['regexp']);
                 if (!$result) {
                     $error['backend_hostname'][$i] = TRUE;
-                } else {
-                    $error['backend_hostname'][$i] = FALSE;
                 }
 
                 // backend_port
-                $result = checkInteger($port,
+                $result = checkInteger($configValue['backend_port'][$i],
                                        $pgpoolConfigBackendParam['backend_port']['min'],
                                        $pgpoolConfigBackendParam['backend_port']['max']);
                 if (!$result) {
                     $error['backend_port'][$i] = TRUE;
-                } else {
-                    $error['backend_port'][$i] = FALSE;
                 }
 
                 // backend_weight
-                $result = checkFloat($weight,
+                $result = checkFloat($configValue['backend_weight'][$i],
                                      $pgpoolConfigBackendParam['backend_weight']['min'],
                                      $pgpoolConfigBackendParam['backend_weight']['max']);
                 if (!$result) {
                     $error['backend_weight'][$i] = TRUE;
-                } else {
-                    $error['backend_weight'][$i] = FALSE;
                 }
 
                 // backend_data_directory
-                $result = checkString($data_directory,
+                $result = checkString($configValue['backend_data_directory'][$i],
                                       $pgpoolConfigBackendParam['backend_data_directory']['regexp']);
                 if (!$result) {
                     $error['backend_data_directory'][$i] = TRUE;
-                } else {
-                    $error['backend_data_directory'][$i] = FALSE;
                 }
 
                 // backend_flag
-                $result = checkString($flag,
-                                      $pgpoolConfigBackendParam['backend_flag']['regexp']);
-                if (!$result) {
-                    $error['backend_flag'][$i] = TRUE;
-                } else {
-                    $error['backend_flag'][$i] = FALSE;
+                if (paramExists('backend_flag')) {
+                    $result = checkString($configValue['backend_flag'][$i],
+                                          $pgpoolConfigBackendParam['backend_flag']['regexp']);
+                    if (!$result) {
+                        $error['backend_flag'][$i] = TRUE;
+                    }
                 }
             }
         }
@@ -503,7 +491,7 @@ function writeConfigFile($configValue, $pgpoolConfigParam)
     }
 
     if (isset($configValue['backend_hostname'])) {
-        for ($i = 0; $i<count($configValue['backend_hostname']); $i++) {
+        for ($i = 0; $i < count($configValue['backend_hostname']); $i++) {
 
             $line = "backend_hostname$i = '" . $configValue['backend_hostname'][$i] . "'\n";
             $configFile[] = $line;
@@ -517,8 +505,10 @@ function writeConfigFile($configValue, $pgpoolConfigParam)
             $line = "backend_data_directory$i = '" . $configValue['backend_data_directory'][$i] . "'\n";
             $configFile[] = $line;
 
-            $line = "backend_flag$i= '" . $configValue['backend_flag'][$i] . "'\n";
-            $configFile[] = $line;
+            if (paramExists('backend_flag')) {
+                $line = "backend_flag$i= '" . $configValue['backend_flag'][$i] . "'\n";
+                $configFile[] = $line;
+            }
         }
     }
 
@@ -535,7 +525,7 @@ function writeConfigFile($configValue, $pgpoolConfigParam)
  * @param int $num
  * @param array $configValue
  */
-function  deleteBackendHost($num, &$configValue)
+function deleteBackendHost($num, &$configValue)
 {
     unset($configValue['backend_hostname'][$num]);
     $configValue['backend_hostname'] = array_values($configValue['backend_hostname']);
@@ -549,8 +539,10 @@ function  deleteBackendHost($num, &$configValue)
     unset($configValue['backend_data_directory'][$num]);
     $configValue['backend_data_directory'] = array_values($configValue['backend_data_directory']);
 
-    unset($configValue['backend_flag'][$num]);
-    $configValue['backend_flag'] = array_values($configValue['backend_flag']);
+    if (paramExists('backend_flag')) {
+        unset($configValue['backend_flag'][$num]);
+        $configValue['backend_flag'] = array_values($configValue['backend_flag']);
+    }
 }
 
 ?>

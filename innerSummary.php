@@ -32,6 +32,8 @@ if (!isset($_SESSION[SESSION_LOGIN_USER])) {
 $params = readConfigParams(array('parallel_mode',
                                  'master_slave_mode',
                                  'master_slave_sub_mode',
+                                 'memory_cache_enabled',
+                                 'memqcache_method',
                                  'enable_query_cache',
                                  'replication_mode',
                                  'load_balance_mode',

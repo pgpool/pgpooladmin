@@ -57,6 +57,8 @@ $errors = array();
  */
 $params['lang']               = (defined('_PGPOOL2_LANG')) ?
                                 _PGPOOL2_LANG : $message['errNoDefined'];
+$params['version']            = (defined('_PGPOOL2_LANG')) ?
+                                _PGPOOL2_VERSION : $message['errNoDefined'];
 $params['pgpool_config_file'] = (defined('_PGPOOL2_CONFIG_FILE')) ?
                                 _PGPOOL2_CONFIG_FILE : $message['errNoDefined'];
 $params['password_file']      = (defined('_PGPOOL2_PASSWORD_FILE')) ?
@@ -89,6 +91,7 @@ switch ( $action ) {
     case 'update':
 
         setValue('lang');
+        setValue('version');
         setValue('pgpool_config_file');
         setValue('password_file');
 
@@ -232,6 +235,8 @@ function writePgmtConf($pgmgtConfigFile)
     fputs($fp, $str);
 
     write($fp, '_PGPOOL2_LANG',               $params['lang']);
+    write($fp, '_PGPOOL2_VERSION',            $params['version']);
+
     write($fp, '_PGPOOL2_CONFIG_FILE',        $params['pgpool_config_file']);
     write($fp, '_PGPOOL2_PASSWORD_FILE',      $params['password_file']);
     write($fp, '_PGPOOL2_COMMAND',            $params['pgpool_command']);

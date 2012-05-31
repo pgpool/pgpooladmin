@@ -106,7 +106,8 @@ for ($i = 0; $i < $nodeCount; $i++) {
                 } else {
                     array_push($nodeInfo[$i], 'none');
                 }
-                if (useStreaming()) {
+                // pcp_promote_node exists after V3.1
+                if (hasPcpPromote() && useStreaming()) {
                     array_push($nodeInfo[$i], 'promote');
                 }
                 break;

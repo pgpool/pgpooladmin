@@ -67,10 +67,18 @@ td > img {
 
     <tr><td>{$message.strQueryCache|escape}</td>
     <td>
-    {if $params.enable_query_cache == 'on'}
-    <img src="images/check.png"> {$message.strOn|escape}
+    {if hasMemqcache()}
+        {if $params.memory_cache_enabled == 'on'}
+        <img src="images/check.png"> {$message.strOn|escape} / {$params.memqcache_method}
+        {else}
+        <img src="images/no.png"> {$message.strOff|escape}
+        {/if}
     {else}
-    <img src="images/no.png"> {$message.strOff|escape}
+        {if $params.enable_query_cache == 'on'}
+        <img src="images/check.png"> {$message.strOn|escape}
+        {else}
+        <img src="images/no.png"> {$message.strOff|escape}
+        {/if}
     {/if}
     </td></tr>
 

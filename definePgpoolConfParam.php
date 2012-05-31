@@ -511,7 +511,7 @@ $pgpoolConfigParam[$key]['max'] = NUM_MAX;
 $key = 'client_idle_limit_in_recovery';
 $pgpoolConfigParam[$key]['type'] = 'N';
 $pgpoolConfigParam[$key]['default'] = 0;
-$pgpoolConfigParam[$key]['min'] = -1;
+$pgpoolConfigParam[$key]['min'] = (3.0 <= _PGPOOL2_VERSION) ? -1 : 0;
 $pgpoolConfigParam[$key]['max'] = NUM_MAX;
 
 #------------------------------------------------------------------------------
@@ -596,4 +596,14 @@ $pgpoolConfigParam[$key]['type'] = 'N';
 $pgpoolConfigParam[$key]['default'] = 0;
 $pgpoolConfigParam[$key]['min'] = 0;
 $pgpoolConfigParam[$key]['max'] = NUM_MAX;
+
+#------------------------------------------------------------------------------
+# Deleted
+#------------------------------------------------------------------------------
+
+$key = 'backend_socket_dir';
+$pgpoolConfigParam[$key]['type'] ='C';
+$pgpoolConfigParam[$key]['default'] ='/tmp';
+$pgpoolConfigParam[$key]['regexp'] = "$dirreg";
+
 ?>

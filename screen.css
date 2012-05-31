@@ -156,6 +156,20 @@ p {
   border-right: 1px solid lightsteelblue;
   border-collapse: collapse;
 }
+.message {
+    margin-top: 10px;
+    border: 5px solid lightsteelblue;
+    border-radius: 5px;
+    background-color: ghostwhite;
+    padding: 10px;
+}
+.message h3 {
+    color: #4682B4;
+}
+.message p {
+    font-family: monospace;
+    border-bottom: 1px dotted #cccccc;
+}
 
 #help {
   float: right;

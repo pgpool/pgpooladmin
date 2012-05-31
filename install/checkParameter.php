@@ -196,6 +196,7 @@ if ($error || (isset($_POST['submitBack']) && $_POST['submitBack'] != NULL)) {
 
 } else {
     $params['lang']                = $_SESSION['lang'];
+    $params['version']             = $_POST['version'];
     $params['pgpool2_config_file'] = $pgpool2_config_file;
     $params['password_file']       = $password_file;
     $params['pcp_client_dir']      = $pcp_client_dir;
@@ -211,6 +212,8 @@ if (!$error && $action == 'next') {
     fputs($fp, "<?php"."\n");
 
     write($fp, '_PGPOOL2_LANG',               $_SESSION['lang']);
+    write($fp, '_PGPOOL2_VERSION',            $_POST['version']);
+
     write($fp, '_PGPOOL2_CONFIG_FILE',        $_POST['pgpool2_config_file']);
     write($fp, '_PGPOOL2_PASSWORD_FILE',      $_POST['password_file']);
     write($fp, '_PGPOOL2_COMMAND',            $_POST['pgpool_command']);
@@ -254,7 +257,6 @@ if (!$error && $action == 'next') {
       <div id="content">
   <h2>Welcome to pgpool-II Administration Tool</h2>
 
-  <h3><?php echo $message['strParameterCheck']; ?></h3>
   <form action="checkParameter.php" method="post" name="CheckPath" id="CheckPath">
     <?php
     if ($error) {
@@ -264,8 +266,36 @@ if (!$error && $action == 'next') {
     }
     ?>
 
-<table>
-  <tbody>
+<?php
+/* --------------------------------------------------------------------- */
+/* Version                                                               */
+/* --------------------------------------------------------------------- */
+?>
+  <h3><?php echo $message['strVersion'] ?></h3>
+
+  <table>
+  <tr>
+    <th><label><?php echo $message['strVersion'] ?></label></th>
+    <td><select name="version" />
+        <?php
+        foreach (versions() as $v) {
+            echo '<option value="'. $v. '">'. $v. '</optgroup>';
+        }
+        ?>
+        </select>
+    <?php showResult($msgCmdM); ?>
+    </td>
+  </tr>
+  </table>
+
+<?php
+/* --------------------------------------------------------------------- */
+/* Config File                                                           */
+/* --------------------------------------------------------------------- */
+?>
+  <h3><?php echo $message['strParameterCheck'] ?></h3>
+
+  <table>
   <tr>
     <th><label><?php echo $message['strPgConfFile'] ?></label></th>
     <td><input name="pgpool2_config_file" type="text" value="<?php echo $pgpool2_config_file?>" size="50" />
@@ -284,11 +314,16 @@ if (!$error && $action == 'next') {
     <?php showResult($msgPgpoolCommand); ?>
     </td>
   </tr>
+  </table>
 
-  <tr>
-    <th colspan="3"><h3><?php echo $message['strPgpoolCommandOption'] ?></h3></th>
-  </tr>
+<?php
+/* --------------------------------------------------------------------- */
+/* Command options                                                       */
+/* --------------------------------------------------------------------- */
+?>
+  <h3><?php echo $message['strPgpoolCommandOption'] ?></h3>
 
+  <table>
   <tr>
     <th><label><?php echo $message['strCmdC'] ?></label></th>
     <td><input type="checkbox" name="c" />
@@ -360,7 +395,6 @@ if (!$error && $action == 'next') {
     <?php showResult($msgPcpRefreshTime); ?>
     </td>
   </tr>
-  </tbody>
 </table>
 
 <p>
@@ -387,6 +421,12 @@ else {
 /* --------------------------------------------------------------------- */
 /* Function                                                              */
 /* --------------------------------------------------------------------- */
+
+function versions()
+{
+    return array('3.2', '3.1', '3.0',
+                 '2.3', '2.2', '2.1', '2.0');
+}
 
 function write($fp, $defname, $val)
 {

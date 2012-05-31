@@ -26,6 +26,7 @@
 $message = array(
     'lang' => 'en',
     'strLang' => 'English',
+    'strVersion' => 'pgpool-II version',
     'strNext' => 'Next',
     'strCheck' => 'Check',
     'strDirectoryCheck' => 'Directory Check',

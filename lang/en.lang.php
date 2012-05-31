@@ -291,6 +291,7 @@ $message = array(
     'strUp' => 'Up',
     'strUpdate' => 'Update',
     'strValue' => 'Value',
+    'strVersion' => 'pgpool-II version',
     'strWeight' => 'Weight',
 
     'e1' => 'pgmgt.conf.php not found.',

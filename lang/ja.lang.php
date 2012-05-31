@@ -283,6 +283,7 @@ $message = array(
     'strUp' => 'アップ',
     'strUpdate' => '更新',
     'strValue' => '値',
+    'strVersion' => 'pgpool-II バージョン',
     'strWeight' => 'ウェイト',
 
     'e1' => 'pgmgt.conf.phpが見つかりません',

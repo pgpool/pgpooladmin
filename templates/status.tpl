@@ -197,6 +197,9 @@ function changeView(chView){
   <input type="hidden" name="action" value="" />
   <input type="hidden" name="nodeNumber" value="" />
 
+<h2>pgpool-II Version</h2>
+{$smarty.const._PGPOOL2_VERSION}
+
 {* --------------------------------------------------------------------- *}
 {* Status Info Buttons                                                   *}
 {* --------------------------------------------------------------------- *}
@@ -244,6 +247,7 @@ function changeView(chView){
     </tr></tfoot>
     <tbody>
 
+        {if hasMemqCache() == false}
         <tr><td>{$message.strCmdC|escape} (-c)</td>
           {if $c == 1}
           <td><input type="checkbox" name="c" checked="checked" /></td>
@@ -251,6 +255,7 @@ function changeView(chView){
           <td><input type="checkbox" name="c" /></td>
           {/if}
         </tr>
+        {/if}
 
         <tr><td>{$message.strCmdLargeD|escape} (-D)</td>
           {if $n == 1}
@@ -268,6 +273,7 @@ function changeView(chView){
           {/if}
         </tr>
 
+        {if hasMemqCache()}
         <tr><td>{$message.strCmdLargeC|escape} (-C)</td>
           {if $C == 1}
           <td><input type="checkbox" name="C" checked="checked" /></td>
@@ -275,6 +281,7 @@ function changeView(chView){
           <td><input type="checkbox" name="C" /></td>
           {/if}
         </tr>
+        {/if}
 
         <tr><td>{$message.strCmdD|escape} (-d)</td>
           {if $d == 1}
@@ -360,6 +367,7 @@ function changeView(chView){
     </tr></tfoot>
     <tbody>
 
+        {if hasMemqCache() == false}
         <tr><td>{$message.strCmdC|escape}(-c)</td>
           {if $c == 1}
           <td><input type="checkbox" name="c" checked="checked" /></td>
@@ -367,6 +375,7 @@ function changeView(chView){
           <td><input type="checkbox" name="c" /></td>
           {/if}
         </tr>
+        {/if}
 
         <tr><td>{$message.strCmdLargeD|escape}(-D)</td>
           {if $n == 1}
@@ -384,6 +393,7 @@ function changeView(chView){
           {/if}
         </tr>
 
+        {if hasMemqCache()}
         <tr><td>{$message.strCmdLargeC|escape} (-C)</td>
           {if $C == 1}
           <td><input type="checkbox" name="C" checked="checked" /></td>
@@ -391,6 +401,7 @@ function changeView(chView){
           <td><input type="checkbox" name="C" /></td>
           {/if}
         </tr>
+        {/if}
 
         <tr><td>{$message.strCmdD|escape}(-d)</td>
           {if $d == 1}
@@ -437,13 +448,20 @@ function changeView(chView){
     {/if}
 
 {* --------------------------------------------------------------------- *}
+{* Start/Stop/Restart messages                                           */
+{* --------------------------------------------------------------------- *}
 
+{if isset($pgpoolStatus)}
+<div class="message">
+<h3>Messages</h3>
     <p>{$pgpoolStatus|escape}</p>
     <p>
     {foreach from=$pgpoolMessage item=lines}
     {$lines|escape}<br />
     {/foreach}
     </p>
+</div>
+{/if}
 
 </form>
 </div>

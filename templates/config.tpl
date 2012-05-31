@@ -52,6 +52,19 @@
             </select>
           </td>
         </tr>
+          <th><label>{$message.strVersion|escape}</label>
+            (float)</th>
+          <td class="input"><select name="version">
+              {foreach key=key item=str from=versions()}
+              {if $params.version == $str}
+              <option value="{$str|escape}" selected="selected">{$str|escape}</option>
+              {else}
+              <option value="{$str|escape}">{$str|escape}</option>
+              {/if}
+              {/foreach}
+            </select>
+          </td>
+        </tr>
         <tr>
           {if isset($errors.pgpool_config_file)}<th class="error">{else}<th>{/if}
             <label>{$message.strPgConfFile|escape}</label>

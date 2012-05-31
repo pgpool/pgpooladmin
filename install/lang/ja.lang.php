@@ -26,6 +26,7 @@
 $message = array(
     'lang' => 'ja',
     'strLang' => '日本語',
+    'strVersion' => 'pgpool-II バージョン',
     'strNext' => '次へ',
     'strCheck' => 'チェック',
     'strDirectoryCheck' => 'ディレクトリ確認',
