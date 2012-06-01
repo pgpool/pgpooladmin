@@ -19,7 +19,7 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2008 PgPool Global Development Group
+ * @copyright  2003-2012 PgPool Global Development Group
  * @version    SVN: $Id$
  */
 
@@ -271,14 +271,18 @@ function NodeStandby($num)
     $params = readHealthCheckParam();
 
     $healthCheckUser = $params['health_check_user'];
+    $healthCheckPw   = (isset($params['health_check_password'])) ?
+                       $params['health_check_password'] : "''";
     $backendHostName = $params['backend_hostname'][$num];
     $backendPort     = $params['backend_port'][$num];
-    $healthCheckDb = 'template1';
+    $healthCheckDb   = 'template1';
 
     if ($backendHostName != '') {
-        $conStr = "dbname=$healthCheckDb user=$healthCheckUser host=$backendHostName port=$backendPort" ;
+        $conStr = "dbname=$healthCheckDb host=$backendHostName port=$backendPort ".
+                  "user=$healthCheckUser password=$healthCheckPw";
     } else {
-        $conStr = "dbname=$healthCheckDb port=$backendPort user=$healthCheckUser" ;
+        $conStr = "dbname=$healthCheckDb port=$backendPort ".
+                  "user=$healthCheckUser password=$healthCheckPw" ;
     }
 
     $conn = @pg_connect($conStr);
@@ -315,6 +319,7 @@ function readHealthCheckParam()
 {
 
     $params = readConfigParams(array('health_check_user',
+                                     'health_check_password',
                                      'backend_hostname',
                                      'backend_port',
                                      'backend_weight'));
@@ -404,6 +409,8 @@ function useStreaming()
  */
 function useSyslog()
 {
+    if (!paramExists('log_destination')) { return FALSE; }
+
     $params = readConfigParams(array('log_destination'));
 
     if ($params['log_destination'] == 'syslog') {
@@ -481,7 +488,9 @@ function readConfigParams($paramList = FALSE)
                    !preg_match("/^backend_data_directory/", $key) &&
                    !preg_match("/^backend_flag/",           $key))
                 {
-                    $results[$key] = $pgpoolConfigParam[$key]['default'];
+                    if (isset($configParam[$key])) {
+                        $results[$key] = $configParam[$key]['default'];
+                    }
                 }
             }
         }
