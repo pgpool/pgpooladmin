@@ -5,34 +5,38 @@
 # Usage: ./make_tarball [version cvs-tag-name]
 #
 
-CVSROOT=:ext:${USER}@cvs.pgfoundry.org:/cvsroot/pgpool
-export CVSROOT
-
 case $# in
 0)
-	TAGOPT="-r HEAD"
+	BRANCH=master
 	VERSION=snapshot
 	;;
 2)
-	TAGOPT="-r $2"
+	BRANCH=$2
 	VERSION=$1
 	;;
 *)
-	echo "Usage: $0 pgpoolAdmin-versino cvs-tag-name" 1>&2
+	echo "Usage: $0 versino git-branch-name" 1>&2
 	exit 1
 	;;
 esac
 
 PACKAGE_DIR=pgpoolAdmin-$VERSION
 
+echo "1. git clone"
 rm -rf $PACKAGE_DIR
-cvs export $TAGOPT -d $PACKAGE_DIR pgpoolAdmin
+git clone ssh://git@git.postgresql.org/pgpooladmin.git $PACKAGE_DIR
+echo ""
 
-# create templates_c directory.
+echo "2. git checkout"
+cd $PACKAGE_DIR
+git checkout $BRANCH
+cd ../
+echo ""
+
+echo "3. Arrange dirs"
 mkdir $PACKAGE_DIR/templates_c
-
-# remove tools directory
 find $PACKAGE_DIR -name tools -type d | xargs rm -rf
+find $PACKAGE_DIR -name .git -type d | xargs rm -rf
 
-# make tar ball
+echo "4. make tar ball"
 tar czf $PACKAGE_DIR.tar.gz $PACKAGE_DIR
