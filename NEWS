@@ -1,35 +1,120 @@
-pgpoolAdmin 3.1.1 2011/12/5
+===============================================================================
+pgpoolAdmin 3.2
+===============================================================================
 
-    * pgpoolAdmin 3.1 adopts pgpool-II 3.1.
+* Version 3.2 2012/06/xx
 
-        * Version 3.1.1 2011/12/5
+  pgpoolAdmin 3.2 adopts pgpool-II 3.2.
 
-            - Fix not to ignore changing boolean values in pgpool.conf. (Anzai)
-            - Fix not to ignore changing D option of pgpool command in pgmgt.conf. (Anzai)
-            - At query cache page it somtimes happen "redeclare function" error,
-              so replace include() to require_once(). (Anzai)
-            - Update french document. (Guillaume Lelarge)
+    - Add new parameters and remove deleted parameters in pgpool-II 3.2.
+      (Anzai, Nagata)
+      - new:
+        health_check_password, health_check_max_retries, health_check_retry_delay,
+        memory_cache_enabled, memqcache_method, memqcache_memcached_host,
+        memqcache_memcached_port, memqcache_total_size, memqcache_max_num_cache,
+        memqcache_cache_block_size, memqcache_expire, memqcache_auto_cache_invalidation,
+        memqcache_maxcache, memqcache_oiddir,
+        white_memqcache_table_list, black_memqcache_table_list
 
-        * Version 3.1 2011/10/14
+      - deleted:
+        enable_query_cache
 
-          - Replace functions deprecated in PHP 5.3 (Anzai)
+    -  Support older version of pgpool-II. (Anzai)
+      - pgpoolAdmin 3.1 was only for pgpool-II 3.1, however the latest
+        pgpoolAdmin is fixed bugs and sometimes enhanced.
+        So we decided adopting these 3 pgpool-II versions: 3.0, 3.1, 3.2.
+      - Now pgmgt.conf has new defined variable as the version of pgpool-II.
 
-          - Sync pgpool.conf Setting with pgpool-II 3.1 (Anzai)
+    - Add "-C" option to the command "pgpool". (Anzai)
 
-          - Add new parameters and remove deleted parameters in pgpool-II 3.1 (Anzai)
-            - new:
-              follow_master_command, relcache_expire, backend_flag, sr_check_period,
-              sr_check_user, sr_check_password, log_destination, syslog_facility, syslog_ident
+    - Use health_check_password for health check. (Anzai)
 
-            - deleted:
-              pcp_timeout, backend_socket_dir
+    - Update helps about pgpool.conf. Sync ones in the manual. (Anzai)
 
-          - Add promote button in Master/Slave mode with streaming replication (Anzai)
-            - This button is to execute pcp_promote_node.
+    - Some visual enhances. (Anzai)
 
-          - Other small changes for pgpool-II 3.1 (Anzai)
-            - When log_destination is syslog, Log button will be invisible.
-            - Allow regex value in black_function_list and white_function_list.
+    - Replace Smarty libralies to 3.1.8. (Anzai)
+      - And Fix a lot of Notice Errors invisible in Smarty 2.x.
 
-          - Some fix (Anzai)
-            - Change to save boolean values in pgpool.conf with on/off format.
+
+===============================================================================
+pgpoolAdmin 3.1
+===============================================================================
+
+* Version 3.1.1 2011/12/5
+
+    - Fix not to ignore changing boolean values in pgpool.conf. (Anzai)
+    - Fix not to ignore changing D option of pgpool command in pgmgt.conf.
+      (Anzai)
+    - At query cache page it somtimes happen "redeclare function" error,
+      so replace include() to require_once(). (Anzai)
+    - Update french document. (Guillaume Lelarge)
+
+-------------------------------------------------------------------------------
+
+* Version 3.1 2011/10/14
+
+  pgpoolAdmin 3.1 adopts pgpool-II 3.1.
+
+    - Replace functions deprecated in PHP 5.3 (Anzai)
+
+    - Sync pgpool.conf Setting with pgpool-II 3.1 (Anzai)
+
+    - Add new parameters and remove deleted parameters in pgpool-II 3.1 (Anzai)
+      - new:
+        follow_master_command, relcache_expire, backend_flag, sr_check_period,
+        sr_check_user, sr_check_password, log_destination,
+        syslog_facility, syslog_ident
+
+      - deleted:
+        pcp_timeout, backend_socket_dir
+
+    - Add promote button in Master/Slave mode with streaming replication (Anzai)
+      - This button is to execute pcp_promote_node.
+
+    - Other small changes for pgpool-II 3.1 (Anzai)
+      - When log_destination is syslog, Log button will be invisible.
+      - Allow regex value in black_function_list and white_function_list.
+
+    - Some fix (Anzai)
+      - Change to save boolean values in pgpool.conf with on/off format.
+
+
+===============================================================================
+pgpoolAdmin 3.0
+===============================================================================
+
+* Version 3.0.3 2011/03/11
+
+    - Update french translation, per a patch from Jean-Paul Argudo(Guillaume)
+
+    - Allow to accept '|' for pgpool logfile in the installation script.
+      This has been alredy possible in pgpool.conf(Tatsuo)
+
+-------------------------------------------------------------------------------
+
+* Version 3.0.1 2010/09/24
+
+  - Update embedded Smarty to 2.6.26(Tatsuo)
+
+-------------------------------------------------------------------------------
+
+* Version 3.0 2010/09/10
+
+  pgpoolAdmin 3.0 adopts pgpool-II 3.0.
+
+  - Add "Discard pgpool_status file(-D)" to pgpoolAdmin Setting. (Anzai)
+
+  - Sync pgpool.conf Setting with pgpool-II 3.0. (Anzai, Tatsuo)
+
+  - Add "Backend pid" (process if of PostgreSQL database server process) and
+    "Frontend connected"(1 if frontend actually connets) to Process Info.
+    (Tatsuo)
+
+  - Replace functions deprecated in PHP 5.3(Anzai)
+
+  - Refactor pgpool status/summary(Tatsuo)
+
+  - Fix connect/disconnect buttons disappering ini node status window.(Tatsuo)
+
+===============================================================================
