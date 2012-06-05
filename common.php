@@ -27,10 +27,10 @@ require_once('version.php');
 require_once('libs/Smarty.class.php');
 error_reporting(E_ALL);
 
-define('SESSION_LOGIN_USER', 'loginUser');
+define('SESSION_LOGIN_USER',          'loginUser');
 define('SESSION_LOGIN_USER_PASSWORD', 'md5pass');
-define('SESSION_LANG', 'lang');
-define('SESSION_MESSAGE', 'message');
+define('SESSION_LANG',                'lang');
+define('SESSION_MESSAGE',             'message');
 
 function versions()
 {
@@ -68,11 +68,19 @@ require_once('conf/pgmgt.conf.php');
 $tpl->assign('isLogin', isset($_SESSION[SESSION_LOGIN_USER]));
 $tpl->assign('isHelp', FALSE);
 
+// If old pgmgt.conf is used, _PGPOOL2_VERSION doen't exist.
+// This defined var exists from pgpoolAdmin 3.2.
+if (!defined('_PGPOOL2_VERSION')) {
+    $versions = versions();
+    define('_PGPOOL2_VERSION', $versions[0]);
+}
+
 /**
  * Check pgmgt.conf.php Parameter
  */
 $errors = array();
 if (!defined('_PGPOOL2_LANG') ||
+    !defined('_PGPOOL2_VERSION') ||
     !defined('_PGPOOL2_CONFIG_FILE') ||
     !defined('_PGPOOL2_PASSWORD_FILE') ||
     !defined('_PGPOOL2_COMMAND') ||
@@ -232,21 +240,7 @@ function isParallelMode()
  */
 function NodeActive($num)
 {
-    $healthCheckDb = 'template1';
-
-    $params = readHealthCheckParam();
-
-    $healthCheckUser = $params['health_check_user'];
-    $backendHostName = $params['backend_hostname'][$num];
-    $backendPort     = $params['backend_port'][$num];
-
-    if ($backendHostName != '') {
-        $conStr = "dbname=$healthCheckDb user=$healthCheckUser host=$backendHostName port=$backendPort" ;
-    } else {
-        $conStr = "dbname=$healthCheckDb port=$backendPort user=$healthCheckUser" ;
-    }
-
-    $conn = @pg_connect($conStr);
+    $conn = @pg_connect(conStr($num));
 
     if ($conn == FALSE) {
         @pg_close($conn);
@@ -268,24 +262,7 @@ function NodeStandby($num)
         return -1;
     }
 
-    $params = readHealthCheckParam();
-
-    $healthCheckUser = $params['health_check_user'];
-    $healthCheckPw   = (isset($params['health_check_password'])) ?
-                       $params['health_check_password'] : "''";
-    $backendHostName = $params['backend_hostname'][$num];
-    $backendPort     = $params['backend_port'][$num];
-    $healthCheckDb   = 'template1';
-
-    if ($backendHostName != '') {
-        $conStr = "dbname=$healthCheckDb host=$backendHostName port=$backendPort ".
-                  "user=$healthCheckUser password=$healthCheckPw";
-    } else {
-        $conStr = "dbname=$healthCheckDb port=$backendPort ".
-                  "user=$healthCheckUser password=$healthCheckPw" ;
-    }
-
-    $conn = @pg_connect($conStr);
+    $conn = @pg_connect(conStr($num, 'stream'));
 
     if ($conn == FALSE) {
         @pg_close($conn);
@@ -294,6 +271,7 @@ function NodeStandby($num)
 
     $res = pg_query($conn, 'SELECT pg_is_in_recovery()');
     if (!pg_result_status($res) == PGSQL_TUPLES_OK) {
+        @pg_close($conn);
         return -1;
     }
 
@@ -311,20 +289,40 @@ function NodeStandby($num)
 }
 
 /**
- * Read parameter from pgpool.conf using health check
- *
- * @return  array
+ * Create connection str for pg_connect()
  */
-function readHealthCheckParam()
+function conStr($num, $mode = NULL)
 {
+    // check user info
+    if ($mode == 'stream' && paramExists('sr_check_user')) {
+        $params = readConfigParams(array('sr_check_user',
+                                         'sr_check_password'));
+        $user     = $params['sr_check_user'];
+        $password = $params['sr_check_password'];
 
-    $params = readConfigParams(array('health_check_user',
-                                     'health_check_password',
-                                     'backend_hostname',
+    } else {
+        $params = readConfigParams(array('health_check_user',
+                                         'health_check_password'));
+        $user     = $params['health_check_user'];
+        $password = (isset($params['health_check_user'])) ?
+                    $params['health_check_pasword'] : NULL;
+    }
+
+    // backkend info
+    $params = readConfigParams(array('backend_hostname',
                                      'backend_port',
                                      'backend_weight'));
+    $conStr = array();
+    if ($params['backend_hostname'][$num] != '') {
+        $conStr[] = "host={$params['backend_hostname'][$num]} ";
+    }
+    $conStr[] = "port='{$params['backend_port'][$num]}'";
+    $conStr[] = "dbname='template1'";
+    $conStr[] = "user='{$user}'";
+    $conStr[] = "password='{$password}'";
 
-    return $params;
+    $conStr = implode($conStr, ' ');
+    return $conStr;
 }
 
 /**
@@ -524,6 +522,7 @@ function hasPcpPromote()
 {
     return (3.1 <= _PGPOOL2_VERSION);
 }
+
 function paramExists($param)
 {
     $add_version = $del_version = 0;
@@ -531,7 +530,6 @@ function paramExists($param)
         /* Add */
 
         // params added in 3.2
-        case 'health_check_password':
         case 'health_check_max_retries':
         case 'health_check_retry_delay':
         case 'memory_cache_enabled':
@@ -596,9 +594,9 @@ function paramExists($param)
 
         /* Delete */
 
-        // params deleted in 3.1
+        // params deleted in 3.2
         case 'enable_query_cache':
-            $del_version = 3.1;
+            $del_version = 3.2;
             break;
 
         // params deleted in 3.0

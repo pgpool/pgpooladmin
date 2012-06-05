@@ -37,20 +37,13 @@ if ($pgCatalog == '') {
 }
 
 // Set Parameters
-$params = readHealthCheckParam();
+$params = readConfigParams();
 
-$dbParams['hostname'] = $params['backend_hostname'][$nodeNum];
-$dbParams['port']     = $params['backend_port'][$nodeNum];
-$dbParams['dbname']   = 'template1';
-$dbParams['user']     = $params['health_check_user'];
-$dbParams['password'] ='';
-
-$tpl->assign('hostname', $dbParams['hostname'] );
-$tpl->assign('port',     $dbParams['port'] );
+$tpl->assign('hostname', $params['backend_hostname'][$nodeNum]);
+$tpl->assign('port',     $params['backend_port'][$nodeNum]);
 
 // Get Data From Database
-$conn = openDBConnection($dbParams);
-
+$conn = @pg_connect(conStr($nodeNum));
 $sql = 'SHOW pool_status';
 
 $rs = execQuery($conn, $sql);

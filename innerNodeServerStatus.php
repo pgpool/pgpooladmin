@@ -19,7 +19,7 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2008 PgPool Global Development Group
+ * @copyright  2003-2012 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
@@ -29,12 +29,7 @@ if (!isset($_SESSION[SESSION_LOGIN_USER])) {
     exit();
 }
 
-$healthCheckDb = 'template1';
-
-$params = readHealthCheckParam();
-
-$healthCheckUser = $params['health_check_user'];
-
+$params = readConfigParams('backend_hostname');
 if (isset($params['backend_hostname'])) {
     $backendHostName = $params['backend_hostname'];
     $backendPort     = $params['backend_port'];
