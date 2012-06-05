@@ -99,6 +99,7 @@ $message = array(
     'descRecovery_2nd_stage_command' => 'オンラインリカバリ第2ステージで実行するコマンド',
     'descRecovery_timeout' => 'オンラインリカバリ終了までの待ち時間(秒)。0 は待ち時間無し',
     'descRelcache_expire' => 'システムカタログキャッシュの有効時間(秒)',
+    'descRelcache_size' => 'システムカタログキャッシュのサイズ(バイト)',
     'descReplication_mode' => 'レプリケーションモードの有効化',
     'descReplication_stop_on_mismatch' => 'マスタ/セカンダリ間のデータ不一致時に縮退運転',
     'descReplicate_select' => 'SELECT 文のレプリケーション',

@@ -162,6 +162,7 @@
       </td>
     </tr>
 
+    {if paramExists('ssl')}
     <tr><th class="category" colspan="2">SSL Connections</th></tr>
 
     <tr>
@@ -220,6 +221,7 @@
       <td>
       </td>
     </tr>
+    {/if}
 
   </tbody>
   <tfoot>
@@ -390,12 +392,14 @@
     </tr>
   </thead>
   <tbody>
+    {if paramExists('backend_socket_dir')}
     <tr>
       <th id="BACKEND_SOCKET_DIR"><label>{$message.descBackend_socket_dir|escape}</label>
       <p>backend_socket_dir (string) *</th>
       <td>PostgreSQL サーバの Unix domain socket のディレクトリです。</p>
        <p>デフォルト値は'/tmp'です。</td>
     </tr>
+    {/if}
 
     <tr>
       <th id="BACKEND_HOSTNAME"><label>{$message.descBackend_hostname|escape}</label>
@@ -479,6 +483,7 @@
       </td>
     </tr>
 
+    {if paramExists('backend_flag')}
     <tr>
       <th id="BACKEND_FLAG"><label>{$message.descBackend_flag|escape}</label>
       <p>backend_flag (string) *</th>
@@ -509,6 +514,7 @@
         </table>
       </td>
     </tr>
+    {/if}
 
   </tbody>
   <tfoot>
@@ -530,6 +536,7 @@
   <tbody>
     <tr><th class="category" colspan="2">Where to log</th></tr>
 
+    {if paramExists('log_destination')}
     <tr>
       <th id="LOG_DESTINATION"><label>{$message.descLog_destination|escape}</label>
       <p>log_destination (string) *</th>
@@ -542,15 +549,16 @@
         </p>
         <p>
         pgpool-II は、syslog ファシリティ LOCAL0 から LOCAL7 までにログを書くことができます
-        （syslog_facilityをご覧ください）。
+        （<a href="#SYSLOG_FACILITY">syslog_facility</a> をご覧ください）。
         しかし、ほとんどのデフォルトの syslog 設定は、そのようなメッセージを廃棄してしまいます。
         そこで、syslog デーモンの以下のような設定が必要になります。
         </p>
-        <pre>
+<pre>
 local0.*    /var/log/pgpool.log
-        </pre>
+</pre>
       </td>
     </tr>
+    {/if}
 
     <tr><th class="category" colspan="2">What to log</th></tr>
 
@@ -618,6 +626,7 @@ local0.*    /var/log/pgpool.log
       </td>
     </tr>
 
+    {if paramExists('syslog_facility')}
     <tr><th class="category" colspan="2">Syslog specific</th></tr>
 
     <tr>
@@ -643,7 +652,9 @@ local0.*    /var/log/pgpool.log
         </p>
       </td>
     </tr>
+    {/if}
 
+    {if paramExists('debug_level')}
     <tr><th class="category" colspan="2">Debug</th></tr>
 
     <tr>
@@ -661,6 +672,7 @@ local0.*    /var/log/pgpool.log
         </p>
       </td>
     </tr>
+    {/if}
 
   </tbody>
   <tfoot>
@@ -689,6 +701,7 @@ local0.*    /var/log/pgpool.log
       <p>デフォルト値は '/tmp' です。</p></td>
     </tr>
 
+    {if paramExists('pid_file_name')}
     <tr>
       <th id="PID_FILE_NAME"><label>{$message.descPid_file_name|escape}</label>
       <p>pid_file_name (string) *</th>
@@ -696,6 +709,7 @@ local0.*    /var/log/pgpool.log
       <p>pgpool-II の pid file（プロセス IDを 格納したファイル）のフルパス名です。</p>
       <p>デフォルト値は'/var/run/pgpool/pgpool.pid'です。</p></td>
     </tr>
+    {/if}
 
   </tbody>
   <tfoot>
@@ -856,6 +870,7 @@ COMMIT;
       </td>
     </tr>
 
+    {if paramExists('lobj_lock_table')}
     <tr>
       <th id="LOBJ_LOCK_TABLE"><label>{$message.descLobj_lock_table|escape}</label>
       <p>lobj_lock_table (string)</th>
@@ -875,6 +890,7 @@ COMMIT;
         </p>
       </td>
     </tr>
+    {/if}
 
    <tr><th class="category" colspan="2">Degenerate handling</th></tr>
 
@@ -906,6 +922,7 @@ COMMIT;
       </td>
     </tr>
 
+    {if paramExists('failover_if_affected_tuples_mismatch')}
     <tr>
       <th id="FAIL_OVER_IF_AFFECTED_TUPLES_MISMATCH"><label>{$message.descFailover_if_affected_tuples_mismatch|escape}</label>
       <p>failover_if_affected_tuples_mismatch (bool)</th>
@@ -926,7 +943,9 @@ COMMIT;
         </p>
       </td>
     </tr>
+    {/if}
 
+    {if paramExists('fail_over_on_backend_error')}
     <tr>
       <th id="FAIL_OVER_ON_BACKEND_ERROR"><label>{$message.descFail_over_on_backend_error|escape}</label>
       <p>fail_over_on_backend_error</th>
@@ -942,6 +961,7 @@ COMMIT;
         </p>
       </td>
     </tr>
+    {/if}
 
     <tr>
       <th id="REPLICATION_TIMEOUT"><label>{$message.descReplication_timeout|escape}</label>
@@ -980,6 +1000,7 @@ COMMIT;
       </td>
     </tr>
 
+    {if paramExists('ignore_leading_white_space')}
     <tr>
       <th id="IGNORE_LEADING_WHITE_SPACE"><label>{$message.descIgnore_leading_white_space|escape}</label>
       <p>ignore_leading_white_space (bool)</th>
@@ -991,7 +1012,9 @@ COMMIT;
         </p>
       </td>
     </tr>
+    {/if}
 
+    {if paramExists('white_function_list')}
     <tr>
       <th id="WHITE_FUNCTION_LIST"><label>{$message.descWhite_function_list|escape}</label>
       <p>white_function_list (string)</th>
@@ -1053,6 +1076,7 @@ black_function_list = 'nextval,setval,lastval,currval'
         </p>
       </td>
     </tr>
+    {/if}
 
   </tbody>
   <tfoot>
@@ -1082,6 +1106,7 @@ black_function_list = 'nextval,setval,lastval,currval'
       </td>
     </tr>
 
+    {if paramExists('sr_check_period')}
     <tr><th class="category" colspan="2">Streaming</th></tr>
 
     <tr>
@@ -1146,7 +1171,9 @@ black_function_list = 'nextval,setval,lastval,currval'
         </p>
       </td>
     </tr>
+    {/if}
 
+    {if paramExists('follow_master_command')}
     <tr><th class="category" colspan="2">Special commands</th></tr>
     <tr>
      <th id="FOLLOW_MASTER_COMMAND"><label>{$message.descFollow_master_command|escape}</label>
@@ -1187,6 +1214,7 @@ black_function_list = 'nextval,setval,lastval,currval'
         </p>
        </td>
      </tr>
+     {/if}
   </tbody>
   <tfoot>
     <tr>
@@ -1215,12 +1243,14 @@ black_function_list = 'nextval,setval,lastval,currval'
       <p>デフォルト値は false です。</td>
     </tr>
 
+    {if paramExists('enable_pool_hba')}
     <tr>
       <th id="ENABLE_QUERY_CACHE"><label>{$message.descEnable_query_cache|escape}</label>
       <p>enable_query_cache *</th>
       <td>SELECT の結果をキャッシュする場合には true にします。
       <p>デフォルト値は false です。</td>
     </tr>
+    {/if}
 
     <tr>
       <th id="PGPOOL2_HOSTNAME"><label>{$message.descPgpool2_hostname|escape}</label>
@@ -1340,6 +1370,7 @@ black_function_list = 'nextval,setval,lastval,currval'
       </td>
     </tr>
 
+    {if paramExists('health_check_password')}
     <tr>
       <th id="HEALTH_CHECK_PASSWORD"><label>{$message.descHealth_check_password|escape}</label>
       <p>health_check_password (string)</th>
@@ -1347,7 +1378,9 @@ black_function_list = 'nextval,setval,lastval,currval'
         <p>ヘルスチェックを行うためのPostgreSQLパスワードです。</p>
       </td>
     </tr>
+    {/if}
 
+    {if paramExists('health_check_max_retries')}
     <tr>
       <th id="HEALTH_CHECK_MAX_RETRIES"><label>{$message.descHealth_check_max_retries|escape}</label>
       <p>health_check_max_retries (integer)</th>
@@ -1364,7 +1397,9 @@ black_function_list = 'nextval,setval,lastval,currval'
         </p>
       </td>
     </tr>
+    {/if}
 
+    {if paramExists('health_check_retry_delay')}
     <tr>
       <th id="HEALTH_CHECK_RETRY_DELAY"><label>{$message.descHealth_check_retry_delay|escape}</label>
       <p>health_check_retry_delay (integer)</th>
@@ -1376,6 +1411,7 @@ black_function_list = 'nextval,setval,lastval,currval'
         </p>
       </td>
     </tr>
+    {/if}
   </tbody>
   <tfoot>
     <tr>
@@ -1586,6 +1622,7 @@ black_function_list = 'nextval,setval,lastval,currval'
       </td>
     </tr>
 
+    {if paramExists('client_idle_limit_in_recovery')}
     <tr>
       <th id="CLIENT_IDLE_LIMIT_IN_RECOVERY"><label>{$message.descClient_idle_limit_in_recovery|escape}</label>
       <p>client_idle_limit_in_recovery (integer)</th>
@@ -1607,6 +1644,7 @@ black_function_list = 'nextval,setval,lastval,currval'
         </p>
       </td>
     </tr>
+    {/if}
 
   </tbody>
   <tfoot>
@@ -1617,6 +1655,7 @@ black_function_list = 'nextval,setval,lastval,currval'
 </table>
 
 
+{if hasMemqcache()}
 <h3><a name="memqcache" id="memqcache">On Memory Query Cache</a></h3>
 
 <table>
@@ -1820,10 +1859,11 @@ black_function_list = 'nextval,setval,lastval,currval'
     </tr>
   </tfoot>
 </table>
-
+{/if}
 
 <h3><a name="others">Others</a></h3>
 
+{if paramExists('relcache_expire')}
 <table>
   <thead>
     <tr>
@@ -1852,6 +1892,19 @@ black_function_list = 'nextval,setval,lastval,currval'
         </p>
       </td>
     </tr>
+
+    {if paramExists('relcache_size')}
+      <th id="RELCACHE_SIZE"><label>{$message.descRelcache_size|escape}</label>
+      <p>relcache_size (integer)</th>
+      <td>
+      <p>リレーションキャッシュのサイズを指定します。 デフォルトは256です。</p>
+<pre>
+"pool_search_relcache: cache replacement happend"
+</pre>
+        <p>のようなメッセージがログに頻繁に出る場合は、この数字を大きくしてください。</p>
+      </td>
+    </tr>
+    {/if}
   </tbody>
   <tfoot>
     <tr>
@@ -1859,6 +1912,7 @@ black_function_list = 'nextval,setval,lastval,currval'
     </tr>
   </tfoot>
 </table>
+{/if}
 
 </div>
 <hr class="hidden" />

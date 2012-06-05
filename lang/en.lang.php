@@ -108,6 +108,7 @@ $message = array(
     'descRecovery_2nd_stage_command' => 'Recovery command to be excuted on the second stage',
     'descRecovery_timeout' => 'Number of seconds to wait for online recovery to complete. 0 means no wait',
     'descRelcache_expire' => 'Life time of relation cache in seconds',
+    'descRelcache_size' => 'Size of relation cache in bytes',
     'descReplication_mode' => 'Set this to true if you are going to use replication functionality',
     'descReplication_stop_on_mismatch' => 'Stop replication mode on data mismatch between master and secondary',
     'descReplicate_select' => 'If true, replicate SELECT queries. If false, send only to master',

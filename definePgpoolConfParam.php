@@ -597,6 +597,12 @@ $pgpoolConfigParam[$key]['default'] = 0;
 $pgpoolConfigParam[$key]['min'] = 0;
 $pgpoolConfigParam[$key]['max'] = NUM_MAX;
 
+$key = 'relcache_size';
+$pgpoolConfigParam[$key]['type'] = 'N';
+$pgpoolConfigParam[$key]['default'] = 0;
+$pgpoolConfigParam[$key]['min'] = 0;
+$pgpoolConfigParam[$key]['max'] = NUM_MAX;
+
 #------------------------------------------------------------------------------
 # Deleted
 #------------------------------------------------------------------------------

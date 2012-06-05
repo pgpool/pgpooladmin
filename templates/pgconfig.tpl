@@ -1332,6 +1332,15 @@ function cancelNode() {
             <td><input type="text" name="relcache_expire" value="{$params.relcache_expire|escape}"/></td>
             </tr>
 
+            {if paramExists('relcache_size')}
+                <tr>
+                <th{if isset($error.relcache_size)} class="error"{/if}>
+                <label>{$message.descRelcache_size|escape}</label>
+                <br />relcache_size (integer)</th>
+                <td><input type="text" name="relcache_size" value="{$params.relcache_size|escape}"/></td>
+                </tr>
+            {/if}
+
           </tbody>
         </table>
     {/if}

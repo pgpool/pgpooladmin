@@ -147,6 +147,7 @@ Please push the delete button at the right of the host setting when you want to 
       </td>
     </tr>
 
+    {if paramExists('ssl')}
     <tr><th class="category" colspan="2">SSL Connections</th></tr>
 
     <tr>
@@ -206,6 +207,7 @@ Please push the delete button at the right of the host setting when you want to 
       <td>
       </td>
     </tr>
+    {/if}
 
   </tbody>
   <tfoot>
@@ -447,6 +449,7 @@ Please push the delete button at the right of the host setting when you want to 
       </td>
     </tr>
 
+    {if paramExists('backend_flag')}
     <tr>
       <th id="BACKEND_FLAG"><label>{$message.descBackend_flag|escape}</label>
       <p>backend_flag (string) *</th>
@@ -476,6 +479,7 @@ Please push the delete button at the right of the host setting when you want to 
         </table>
       </td>
     </tr>
+    {/if}
 
   </tbody>
   <tfoot>
@@ -495,6 +499,7 @@ Please push the delete button at the right of the host setting when you want to 
     </tr>
   </thead>
   <tbody>
+    {if paramExists('log_destination')}
     <tr><th class="category" colspan="2">Where to log</th></tr>
 
     <tr>
@@ -517,6 +522,7 @@ local0.*    /var/log/pgpool.log
           <p>to the syslog daemon's configuration file to make it work.</p>
       </td>
     </tr>
+    {/if}
 
     <tr><th class="category" colspan="2">What to log</th></tr>
 
@@ -559,6 +565,7 @@ local0.*    /var/log/pgpool.log
       </td>
     </tr>
 
+    {if paramExists('log_per_node_statement')}
     <tr>
       <th id~"LOG_PER_NODE_STATEMENT"><label>{$message.descLog_per_node_statement|escape}</label>
       <p>log_per_node_statement (bool)</th>
@@ -569,7 +576,9 @@ local0.*    /var/log/pgpool.log
         </p>
       </td>
     </tr>
+    {/if}
 
+    {if paramExists('log_standby_delay')}
     <tr>
       <th id="LOG_STANDBY_DELAY"><label>{$message.descLog_standby_delay|escape}</label>
       <p>log_standby_delay (string)</th>
@@ -585,7 +594,9 @@ local0.*    /var/log/pgpool.log
         </p>
       </td>
     </tr>
+    {/if}
 
+    {if paramExists('syslog_facility')}
     <tr><th class="category" colspan="2">Syslog specific</th></tr>
 
     <tr>
@@ -608,7 +619,9 @@ local0.*    /var/log/pgpool.log
         </p>
       </td>
     </tr>
+    {/if}
 
+    {if paramExists('debug_level')}
     <tr><th class="category" colspan="2">Debug</th></tr>
 
     <tr>
@@ -621,6 +634,7 @@ local0.*    /var/log/pgpool.log
         </p>
       </td>
     </tr>
+    {/if}
 
   </tbody>
   <tfoot>
@@ -649,6 +663,7 @@ local0.*    /var/log/pgpool.log
       </td>
     </tr>
 
+    {if paramExists('pid_file_name')}
     <tr>
       <th id="PID_FILE_NAME"><label>{$message.descPid_file_name|escape}</label>
       <p>pid_file_name (string) *</th>
@@ -658,6 +673,7 @@ local0.*    /var/log/pgpool.log
         </p>
       </td>
     </tr>
+    {/if}
 
   </tbody>
   <tfoot>
@@ -809,6 +825,7 @@ COMMIT;
       </td>
     </tr>
 
+    {if paramExists('lobj_lock_table')}
     <tr>
       <th id="LOBJ_LOCK_TABLE"><label>{$message.descLobj_lock_table|escape}</label>
       <p>lobj_lock_table (string)</th>
@@ -832,6 +849,7 @@ COMMIT;
         </p>
       </td>
     </tr>
+    {/if}
 
    <tr><th class="category" colspan="2">Degenerate handling</th></tr>
 
@@ -856,6 +874,7 @@ COMMIT;
       </td>
     </tr>
 
+    {if paramExists('failover_if_affected_tuples_mismatch')}
     <tr>
       <th id="FAILOVER_IF_AFFECTED_TUPLES_MISMATCH"><label>{$message.descFailover_if_affected_tuples_mismatch|escape}</label>
       <p>failover_if_affected_tuples_mismatch (bool)</th>
@@ -871,7 +890,9 @@ COMMIT;
         degenerated. Default is false.</p>
       </td>
     </tr>
+    {/if}
 
+    {if paramExists('fail_over_on_backend_error')}
     <tr>
       <th id="FAIL_OVER_ON_BACKEND_ERROR"><label>{$message.descFail_over_on_backend_error|escape}</label>
       <p>fail_over_on_backend_error</th>
@@ -886,6 +907,7 @@ COMMIT;
         </p>
       </td>
     </tr>
+    {/if}
 
   </tbody>
   <tfoot>
@@ -926,6 +948,7 @@ COMMIT;
       </td>
     </tr>
 
+    {if paramExists('white_function_list')}
     <tr>
       <th id="WHITE_FUNCTION_LIST"><label>{$message.descWhite_function_list|escape}</label>
       <p>white_function_list (string)</th>
@@ -982,6 +1005,7 @@ black_function_list = 'nextval,setval,lastval,currval'
         </p>
       </td>
     </tr>
+    {/if}
 
   </tbody>
   <tfoot>
@@ -1015,6 +1039,7 @@ black_function_list = 'nextval,setval,lastval,currval'
       </td>
     </tr>
 
+    {if paramExists('sr_check_period')}
     <tr><th class="category" colspan="2">Streaming</th></tr>
 
     <tr>
@@ -1053,7 +1078,9 @@ black_function_list = 'nextval,setval,lastval,currval'
         </p>
       </td>
     </tr>
+    {/if}
 
+    {if paramExists('delay_threshold')}
     <tr>
      <th id="DELAY_THRESHOLD"><label>{$message.descDelay_threshold|escape}</label>
       <p>delay_threshold (integer)</th>
@@ -1069,7 +1096,9 @@ black_function_list = 'nextval,setval,lastval,currval'
         </p>
       </td>
     </tr>
+    {/if}
 
+    {if paramExists('follow_master_command')}
     <tr><th class="category" colspan="2">Special commands</th></tr>
     <tr>
      <th id="FOLLOW_MASTER_COMMAND"><label>{$message.descFollow_master_command|escape}</label>
@@ -1109,6 +1138,7 @@ black_function_list = 'nextval,setval,lastval,currval'
         </p>
       </td>
      </tr>
+     {/if}
   </tbody>
   <tfoot>
     <tr>
@@ -1141,6 +1171,7 @@ black_function_list = 'nextval,setval,lastval,currval'
       </td>
     </tr>
 
+    {if paramExists('enable_query_cache')}
     <tr>
       <th id="ENABLE_QUERY_CACHE"><label>{$message.descEnable_query_cache|escape}</label>
       <p>enable_query_cache *</th>
@@ -1151,6 +1182,7 @@ black_function_list = 'nextval,setval,lastval,currval'
         </p>
       </td>
     </tr>
+    {/if}
 
     <tr>
       <th id="PGPOOL2_HOSTNAME"><label>{$message.descPgpool2_hostname|escape}</label>
@@ -1280,6 +1312,7 @@ black_function_list = 'nextval,setval,lastval,currval'
       </td>
     </tr>
 
+    {if paramExists('health_check_password')}
     <tr>
       <th id="HEALTH_CHECK_PASSWORD"><label>{$message.descHealth_check_password|escape}</label>
       <p>health_check_password (string)</th>
@@ -1287,7 +1320,9 @@ black_function_list = 'nextval,setval,lastval,currval'
         <p>The password of the user to perform health check.</p>
       </td>
     </tr>
+    {/if}
 
+    {if paramExists('health_check_max_retries')}
     <tr>
       <th id="HEALTH_CHECK_MAX_RETRIES"><label>{$message.descHealth_check_max_retries|escape}</label>
       <p>health_check_max_retries (integer)</th>
@@ -1302,7 +1337,9 @@ black_function_list = 'nextval,setval,lastval,currval'
         </p>
       </td>
     </tr>
+    {/if}
 
+    {if paramExists('health_check_retry_delay')}
     <tr>
       <th id="HEALTH_CHECK_RETRY_DELAY"><label>{$message.descHealth_check_retry_delay|escape}</label>
       <p>health_check_retry_delay (integer)</th>
@@ -1314,6 +1351,7 @@ black_function_list = 'nextval,setval,lastval,currval'
         </p>
       </td>
     </tr>
+    {/if}
   </tbody>
   <tfoot>
     <tr>
@@ -1504,6 +1542,7 @@ black_function_list = 'nextval,setval,lastval,currval'
       </td>
     </tr>
 
+    {if paramExists('client_idle_limit_in_recovery')}
     <tr>
       <th id="CLIENT_IDLE_LIMIT_IN_RECOVERY"><label>{$message.descClient_idle_limit_in_recovery|escape}</label>
       <p>client_idle_limit_in_recovery (integer)</th>
@@ -1526,6 +1565,7 @@ black_function_list = 'nextval,setval,lastval,currval'
         </p>
       </td>
     </tr>
+    {/if}
 
   </tbody>
   <tfoot>
@@ -1536,6 +1576,7 @@ black_function_list = 'nextval,setval,lastval,currval'
 </table>
 
 
+{if hasMemqcache()}
 <h3><a name="memqcache" id="memqcache">On Memory Query Cache</a></h3>
 
 <table>
@@ -1735,8 +1776,10 @@ black_function_list = 'nextval,setval,lastval,currval'
     </tr>
   </tfoot>
 </table>
+{/if}
 
 
+{if paramExists('relcache_expire')}
 <h3><a name="others">Others</a></h3>
 
 <table>
@@ -1768,6 +1811,20 @@ black_function_list = 'nextval,setval,lastval,currval'
         </p>
       </td>
     </tr>
+
+    {if paramExists('relcache_size')}
+        <tr>
+          <th id="RELCACHE_SIZE"><label>{$message.descRelcache_size|escape}</label>
+          <p>relcache_size (integer)</th>
+          <td>
+          <p>Size of relation cache in seconds. Default is 256.
+          If you see following message frequently, increase the number. </p>
+<pre>
+"pool_search_relcache: cache replacement happend"
+</pre>
+          </td>
+        </tr>
+    {/if}
   </tbody>
   <tfoot>
     <tr>
@@ -1775,6 +1832,7 @@ black_function_list = 'nextval,setval,lastval,currval'
     </tr>
   </tfoot>
 </table>
+{/if}
 
 </div>
 <hr class="hidden" />
