@@ -603,6 +603,10 @@ $pgpoolConfigParam[$key]['default'] = 0;
 $pgpoolConfigParam[$key]['min'] = 0;
 $pgpoolConfigParam[$key]['max'] = NUM_MAX;
 
+$key = 'check_temp_table';
+$pgpoolConfigParam[$key]['type'] = 'B';
+$pgpoolConfigParam[$key]['default'] = 'on';
+
 #------------------------------------------------------------------------------
 # Deleted
 #------------------------------------------------------------------------------

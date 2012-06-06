@@ -36,6 +36,7 @@ $message = array(
     'descBackend_data_directory' => 'PostgreSQLサーバのデータベースディレクトリ',
     'descBlack_function_list' => 'データベースに書き込みを行なうカンマ区切りの関数のリスト',
     'descBlack_memqcache_table_list' => 'SELECT結果をキャッシュしたくないテーブル名のカンマ区切りのリスト',
+    'descCheck_temp_table' => '一時テーブルかどうかをチェック',
     'descChild_life_time' => 'pgpoolの子プロセスの寿命',
     'descChild_max_connections' => '各pgpool子プロセスが終了するまでの接続回数',
     'descClient_idle_limit' => 'クライアントからのクエリの最大待ち時間(秒)',

@@ -1825,6 +1825,18 @@ black_function_list = 'nextval,setval,lastval,currval'
           </td>
         </tr>
     {/if}
+
+    {if paramExists('check_temp_table')}
+      <th id="CHECK_TEMP_TABLE"><label>{$message.descCheck_temp_table|escape}</label>
+      <p>check_temp_table (bool)</th>
+      <td>
+      <p>If on, enable temporary table check in SELECT statements.
+      This initiates queries against system catalog of primary/master thus increases load of primary/master.
+      If you are absolutely sure that your system never uses temporary tables and
+      you want to save access to primary/master, you could turn this off. Default is on.</p>
+      </td>
+    </tr>
+    {/if}
   </tbody>
   <tfoot>
     <tr>

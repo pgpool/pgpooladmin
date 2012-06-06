@@ -1905,6 +1905,18 @@ black_function_list = 'nextval,setval,lastval,currval'
       </td>
     </tr>
     {/if}
+
+    {if paramExists('check_temp_table')}
+      <th id="CHECK_TEMP_TABLE"><label>{$message.descCheck_temp_table|escape}</label>
+      <p>check_temp_table (bool)</th>
+      <td>
+      <p>もし on なら、SELECT に含まれるテーブルが一時テーブルかどうかのチェックを行います。
+      このチェックは、primary/master のシステムカタログへのアクセスを発生させ、それなりに負荷を上げます。
+      もし一時テーブルを使っていないということが確かで、primary/master の負荷を少しでも下げたいのであれば、
+      off にすることができます。デフォルトは on です。</p>
+      </td>
+    </tr>
+    {/if}
   </tbody>
   <tfoot>
     <tr>

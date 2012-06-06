@@ -546,6 +546,7 @@ function paramExists($param)
         case 'white_memqcache_table_lsit':
         case 'black_memqcache_table_list':
         case 'relcache_size':
+        case 'check_temp_table':
             $add_version = 3.2;
             break;
 

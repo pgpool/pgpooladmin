@@ -43,6 +43,7 @@ $message = array(
                                            'from a client in on line recovery',
     'descConnection_cache' => 'If true, cache connections to PostgreSQL',
     'descConnection_life_time' => 'Life time for each idle connection in seconds',
+    'descCheck_temp_table' => 'If on, enable temporary table check in SELECT statements',
     'descDelay_threshold' => 'If the standby server delays more than delay_threshold, '.
                              'any query goes to the primary only',
     'descDebug_level' => 'Debug message verbosity level',

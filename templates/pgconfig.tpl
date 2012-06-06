@@ -1341,6 +1341,16 @@ function cancelNode() {
                 </tr>
             {/if}
 
+            {if paramExists('check_temp_table')}
+                <tr>
+                <th{if isset($error.check_temp_table)} class="error"{/if}>
+                <label>{$message.descCheck_temp_table|escape}</label>
+                <br />check_temp_table (bool)</th>
+                <td><input type="checkbox" name="check_temp_table" id="check_temp_table" value="true"
+                    {if $params.check_temp_table == 'on'}checked="checked"{/if} /></td>
+                </tr>
+            {/if}
+
           </tbody>
         </table>
     {/if}
