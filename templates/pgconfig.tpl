@@ -36,6 +36,24 @@ function cancelNode() {
     document.pgconfig.submit();
 }
 
+function addOtherWatchdog() {
+    document.pgconfig.action.value= "add_wd";
+    document.pgconfig.submit();
+}
+
+function cancelOtherWatchdog() {
+    document.pgconfig.action.value= "cancel_wd";
+    document.pgconfig.submit();
+}
+function delOtherWatchdog(num){
+    if(window.confirm(msgDeleteConfirm)){
+        document.pgconfig.action.value= "delete_wd";
+        document.pgconfig.num.value = num;
+        document.pgconfig.submit();
+    }
+}
+
+
 // -->
 </script>
 {/literal}
@@ -90,6 +108,9 @@ function cancelNode() {
       <li><a href="#health-check">Health Check</a></li>
       <li><a href="#failover">Failover and Failback</a></li>
       <li><a href="#recovery">Online Recovery</a></li>
+      {if hasWatchdog()}
+      <li><a href="#watchdog">Watchdog</a></li>
+      {/if}
       {if hasMemqcache()}
       <li><a href="#memqcache">On Memory Query Cache</a></li>
       {/if}
@@ -1178,6 +1199,195 @@ function cancelNode() {
         {/if}
       </tbody>
     </table>
+
+    {if hasMemqcache()}
+    {* --------------------------------------------------------------------- *
+     * Watchdog                                                              *
+     * --------------------------------------------------------------------- *}
+    <h3><a name="watchdog" id="watchdog">Watchdog</a></h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>{$message.strParameter|escape}</th>
+          <th colspan="2">{$message.strValue|escape}</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr>
+        <th{if isset($error.use_watchdog)} class="error"{/if}>
+        <label>{$message.descUse_watchdog|escape}</label>
+        <br />use_watchdog (bool)</th>
+        <td colspan="2"><input type="checkbox" name="use_watchdog" id="use_watchdog" value="true"
+            {if $params.use_watchdog== 'on'}checked="checked"{/if} /></td>
+        </tr>
+
+        <tr><th class="category" colspan="3">Connection to up stream servers</th></tr>
+
+        <tr>
+        <th{if isset($error.trusted_servers)} class="error"{/if}>
+        <label>{$message.descTrusted_servers|escape}</label>
+        <br />trusted_servers (string) *</th>
+        <td colspan="2"><input type="text" name="trusted_servers" value="{$params.trusted_servers|escape}"/></td>
+        </tr>
+
+        <tr>
+        <th{if isset($error.ping_path)} class="error"{/if}>
+        <label>{$message.descPing_path|escape}</label>
+        <br />ping_path (string) *</th>
+        <td colspan="2"><input type="text" name="ping_path" value="{$params.ping_path|escape}"/></td>
+        </tr>
+
+        <tr><th class="category" colspan="3">Lifecheck of pgpol-II</th></tr>
+
+        <tr>
+        <th{if isset($error.wd_interval)} class="error"{/if}>
+        <label>{$message.descWd_interval|escape}</label>
+        <br />wd_interval (integer)</th>
+        <td colspan="2"><input type="text" name="wd_interval" value="{$params.wd_interval|escape}"/></td>
+        </tr>
+
+        <tr>
+        <th{if isset($error.wd_life_point)} class="error"{/if}>
+        <label>{$message.descWd_life_point|escape}</label>
+        <br />wd_life_point(integer)</th>
+        <td colspan="2"><input type="text" name="wd_life_point" value="{$params.wd_life_point|escape}"/></td>
+        </tr>
+
+        <tr>
+        <th{if isset($error.wd_lif_check_query)} class="error"{/if}>
+        <label>{$message.descWd_lifecheck_query|escape}</label>
+        <br />wd_lifecheck_query (string)</th>
+        <td colspan="2"><input type="text" name="wd_lifecheck_query" value="{$params.wd_lifecheck_query|escape}"/></td>
+        </tr>
+
+        <tr><th class="category" colspan="3">Virtual IP address</th></tr>
+
+        <tr>
+        <th{if isset($error.delegate_IP)} class="error"{/if}>
+        <label>{$message.descDelegate_IP|escape}</label>
+        <br />delegate_IP (string)</th>
+        <td colspan="2"><input type="text" name="delegate_IP" value="{$params.delegate_IP|escape}"/></td>
+        </tr>
+
+        <tr>
+        <th{if isset($error.ifconfig_path)} class="error"{/if}>
+        <label>{$message.descIfconfig_path|escape}</label>
+        <br />ifconfig_path (string)</th>
+        <td colspan="2"><input type="text" name="ifconfig_path" value="{$params.ifconfig_path|escape}"/></td>
+        </tr>
+
+        <tr>
+        <th{if isset($error.if_up_cmd)} class="error"{/if}>
+        <label>{$message.descIf_up_cmd|escape}</label>
+        <br />if_up_cmd (string)</th>
+        <td colspan="2"><input type="text" name="if_up_cmd" value="{$params.if_up_cmd|escape}"/></td>
+        </tr>
+
+        <tr>
+        <th{if isset($error.if_down_cmd)} class="error"{/if}>
+        <label>{$message.descIf_down_cmd|escape}</label>
+        <br />if_down_cmd (string)</th>
+        <td colspan="2"><input type="text" name="if_down_cmd" value="{$params.if_down_cmd|escape}"/></td>
+        </tr>
+
+        <tr>
+        <th{if isset($error.arping_path)} class="error"{/if}>
+        <label>{$message.descArping_path|escape}</label>
+        <br />arping_path (string)</th>
+        <td colspan="2"><input type="text" name="arping_path" value="{$params.arping_path|escape}"/></td>
+        </tr>
+
+        <tr>
+        <th{if isset($error.arping_cmd)} class="error"{/if}>
+        <label>{$message.descArping_cmd|escape}</label>
+        <br />arping_cmd (string)</th>
+        <td colspan="2"><input type="text" name="arping_cmd" value="{$params.arping_cmd|escape}"/></td>
+        </tr>
+
+        <tr><th class="category" colspan="3">Server itself to be monitored</th></tr>
+
+        <tr>
+        <th{if isset($error.wd_hostname)} class="error"{/if}>
+        <label>{$message.descWd_hostname|escape}</label>
+        <br />wd_hostname (string)</th>
+        <td colspan="2"><input type="text" name="wd_hostname" value="{$params.wd_hostname|escape}"/></td>
+        </tr>
+
+        <tr>
+        <th{if isset($error.wd_port)} class="error"{/if}>
+        <label>{$message.descWd_port|escape}</label>
+        <br />arping_cmd (integer)</th>
+        <td colspan="2"><input type="text" name="wd_port" value="{$params.wd_port|escape}"/></td>
+        </tr>
+
+        <tr><th class="category" colspan="3">Servers to monitor</th></tr>
+
+          {section name=num loop=$params.other_pgpool_hostname}
+          <tr>
+          <th{if isset($error.other_pgpool_hostname[num])} class="error"{/if}>
+          <label>{$message.descOther_pgpool_hostname|escape}</label>
+          <br />other_pgpool_hostname{$smarty.section.num.index} (string)</th>
+          <td><input type="text" name="other_pgpool_hostname[]" value="{$params.other_pgpool_hostname[num]|escape}" /></td>
+          <td rowspan="3">
+          <input type="button" name="delete" value="{$message.strDelete|escape}"
+          onclick="delOtherWatchdog({$smarty.section.num.index})" /></td>
+          </tr>
+
+          <tr>
+          <th{if isset($error.other_pgpool_port[num])} class="error"{/if}>
+          <label>{$message.descOther_pgpool_port|escape}</label>
+          <br />other_pgpool_port{$smarty.section.num.index|escape} (integer)</th>
+          <td><input type="text" name="other_pgpool_port[]" value="{$params.other_pgpool_port[num]|escape}" /></td>
+          </tr>
+
+          <tr>
+          <th{if isset($error.other_wd_port[num])} class="error"{/if}>
+          <label>{$message.descOther_wd_port|escape}</label>
+          <br />other_wd_port{$smarty.section.num.index|escape} (integer)</th>
+          <td><input type="text" name="other_wd_port[]" value="{$params.other_wd_port[num]|escape}" /></td>
+          </tr>
+          {/section}
+
+          {if isset($isAddWd) && $isAddWd == true}
+              <tr>
+              <th><label>{$message.descOther_pgpool_hostname|escape}</label>
+              <br />other_pgpool_hostname{$smarty.section.num.index} (string)</th>
+              <td><input type="text" name="other_pgpool_hostname[]" value="" /></td>
+              </tr>
+
+              <tr>
+              <th><label>{$message.descOther_pgpool_port|escape}</label>
+              <br />other_pgpool_port{$smarty.section.num.index|escape} (integer)</th>
+              <td><input type="text" name="other_pgpool_port[]" value="" /></td>
+              </tr>
+
+              <tr>
+              <th><label>{$message.descOther_wd_port|escape}</label>
+              <br />other_wd_port{$smarty.section.num.index|escape} (integer)</th>
+              <td><input type="text" name="other_wd_port[]" value="" /></td>
+              </tr>
+          {/if}
+
+      </tbody>
+      {if isset($isAddWd) && $isAddWd == true}
+          <tfoot>
+            <tr>
+               <td colspan="3">
+               <input type="button" name="cancel" value="{$message.strCancel|escape}" onclick="cancelOtherWatchdog()" /></td>
+            </tr>
+          </tfoot>
+      {else}
+          <tfoot>
+            <tr>
+              <td colspan="3">
+              <input type="button" name="add" value="{$message.strAdd|escape}" onclick="addOtherWatchdog()" /></td>
+            </tr>
+          </tfoot>
+      {/if}
+    </table>
+    {/if}
 
     {if hasMemqcache()}
     {* --------------------------------------------------------------------- *

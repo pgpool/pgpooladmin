@@ -448,6 +448,7 @@ function readConfigParams($paramList = FALSE)
             $key = trim($key);
             $value = trim($value);
 
+            // params about backend nodes
             if (preg_match("/^backend_hostname/", $key)) {
                 $num = str_replace('backend_hostname', '', $key);
                 $configParam['backend_hostname'][$num] = str_replace("'", "", $value);
@@ -468,6 +469,19 @@ function readConfigParams($paramList = FALSE)
                 $num = str_replace('backend_flag', '', $key);
                 $configParam['backend_flag'][$num] =str_replace("'", "", $value);
 
+            // params about watchdog monitoring
+            } elseif (preg_match("/^other_pgpool_hostname/", $key)) {
+                $num = str_replace('other_pgpool_hostname', '', $key);
+                $configParam['other_pgpool_hostname'][$num] = str_replace("'", "", $value);
+
+            } elseif (preg_match("/^other_pgpool_port/", $key)) {
+                $num = str_replace('other_pgpool_port', '', $key);
+                $configParam['other_pgpool_port'][$num] = $value;
+
+            } elseif (preg_match("/^other_wd_port/", $key)) {
+                $num = str_replace('other_wd_port', '', $key);
+                $configParam['other_wd_port'][$num] = $value;
+
             } else {
                 $configParam[$key] = str_replace("'", "", $value);
             }
@@ -484,7 +498,11 @@ function readConfigParams($paramList = FALSE)
                    !preg_match("/^backend_port/",           $key) &&
                    !preg_match("/^backend_weight/",         $key) &&
                    !preg_match("/^backend_data_directory/", $key) &&
-                   !preg_match("/^backend_flag/",           $key))
+                   !preg_match("/^backend_flag/",           $key) &&
+                   !preg_match("/^other_pgpool_hostname/",  $key) &&
+                   !preg_match("/^other_pgpool_port/",      $key) &&
+                   !preg_match("/^other_wd_port/",          $key)
+                   )
                 {
                     if (isset($configParam[$key])) {
                         $results[$key] = $configParam[$key]['default'];
@@ -513,6 +531,11 @@ function isTrue($value)
 }
 
 /* check version */
+function hasWatchdog()
+{
+    return (3.2 <= _PGPOOL2_VERSION);
+}
+
 function hasMemqcache()
 {
     return (3.2 <= _PGPOOL2_VERSION);
@@ -532,6 +555,20 @@ function paramExists($param)
         // params added in 3.2
         case 'health_check_max_retries':
         case 'health_check_retry_delay':
+        case 'use_watchdog':
+        case 'trusted_servers':
+        case 'delegate_IP':
+        case 'wd_hostname':
+        case 'wd_port':
+        case 'wd_interval':
+        case 'ping_path':
+        case 'ifconfig_path':
+        case 'if_up_cmd':
+        case 'if_down_cmd':
+        case 'arping_path':
+        case 'arping_cmd':
+        case 'wd_life_point':
+        case 'wd_lifecheck_query':
         case 'memory_cache_enabled':
         case 'memqcache_method':
         case 'memqcache_memcached_host':

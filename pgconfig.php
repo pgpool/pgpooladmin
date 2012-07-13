@@ -19,7 +19,7 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2011 PgPool Global Development Group
+ * @copyright  2003-2012 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
@@ -48,6 +48,7 @@ if (isset($_POST['action'])) {
 
 switch ($action) {
     case 'add':
+    case 'add_wd':
 
         // Boolean value
         foreach ($pgpoolConfigParam as $key => $value) {
@@ -95,13 +96,35 @@ switch ($action) {
             }
         }
 
+        // watchdog settings
+        if (isset($_POST['other_pgpool_hostname'])) {
+            $configValue['other_pgpool_hostname'] = $_POST['other_pgpool_hostname'];
+        } else {
+            $configValue['other_pgpool_hostname'] = array();
+
+        }
+
+        if (isset($_POST['other_pgpool_port'])) {
+            $configValue['other_pgpool_port'] = $_POST['other_pgpool_port'];
+        } else {
+            $configValue['other_pgpool_port'] = array();
+        }
+
+        if (isset($_POST['other_wd_port'])) {
+            $configValue['other_wd_port'] = $_POST['other_wd_port'];
+        } else {
+            $configValue['other_wd_port'] = array();
+        }
+
         $tpl->assign('params', $configValue);
-        $tpl->assign('isAdd', TRUE);
+        $tpl->assign('isAdd', ($action == 'add'));
+        $tpl->assign('isAddWd', ($action == 'add_wd'));
         $tpl->display('pgconfig.tpl');
 
         return;
 
     case 'cancel':
+    case 'cancel_wd':
 
         // Boolean value
         foreach ($pgpoolConfigParam as $key => $value) {
@@ -129,17 +152,32 @@ switch ($action) {
         if (isset($_POST['backend_data_directory'])) {
             $configValue['backend_data_directory'] = $_POST['backend_data_directory'];
         }
-        if (isset($_POST['backend_flag'])) {
+        if (paramExists('backend_flag') && isset($_POST['backend_flag'])) {
             $configValue['backend_flag'] = $_POST['backend_flag'];
         }
-
         array_pop($configValue['backend_hostname']);
         array_pop($configValue['backend_port']);
         array_pop($configValue['backend_weight']);
         array_pop($configValue['backend_data_directory']);
         array_pop($configValue['backend_flag']);
+
+        // watchdog settings
+        if (isset($_POST['other_pgpool_hostname'])) {
+            $configValue['other_pgpool_hostname'] = $_POST['other_pgpool_hostname'];
+        }
+        if (isset($_POST['other_pgpool_port'])) {
+            $configValue['other_pgpool_port'] = $_POST['other_pgpool_port'];
+        }
+        if (isset($_POST['other_wd_port'])) {
+            $configValue['other_wd_port'] = $_POST['other_wd_port'];
+        }
+        array_pop($configValue['other_pgpool_hostname']);
+        array_pop($configValue['other_pgpool_port']);
+        array_pop($configValue['other_wd_port']);
+
         $tpl->assign('params', $configValue);
-        $tpl->assign('isAdd', FALSE);
+        $tpl->assign('isAdd', !($action == 'cancel'));
+        $tpl->assign('isAddWd', !($action == 'cancel_wd'));
         $tpl->display('pgconfig.tpl');
 
         return;
@@ -192,6 +230,7 @@ switch ($action) {
                 $configValue[$key] = $_POST[$key];
             }
         }
+
         /**
          * check backend value
          */
@@ -240,6 +279,44 @@ switch ($action) {
             }
         }
 
+        /**
+         * copy backend value from POST data to $configValue
+         */
+        foreach ($pgpoolConfigWdOtherParam as $key => $value) {
+            if (isset($_POST[$key])) {
+                $configValue[$key] = $_POST[$key];
+            }
+        }
+
+        /**
+         * check other watchdog value
+         */
+        if (isset($configValue['other_pgpool_hostname'])) {
+            for ($i = 0; $i < count($configValue['other_pgpool_hostname']); $i++) {
+                $result = FALSE;
+
+                // other_pgpool_hostname
+                $result = checkString($configValue['other_pgpool_hostname'][$i],
+                                      $pgpoolConfigWdOtherParam['other_pgpool_hostname']['regexp']);
+                if (!$result) {
+                    $error['other_pgpool_hostname'][$i] = TRUE;
+                }
+
+                // other_pgpool_port
+                $result = checkInteger($configValue['other_pgpool_port'][$i],
+                                       $pgpoolConfigWdOtherParam['other_pgpool_port']['min'],
+                                       $pgpoolConfigWdOtherParam['other_pgpool_port']['max']);
+
+                // other_wd_port
+                $result = checkInteger($configValue['other_wd_port'][$i],
+                                       $pgpoolConfigWdOtherParam['other_wd_port']['min'],
+                                       $pgpoolConfigWdOtherParam['other_wd_port']['max']);
+            }
+        }
+
+        /*
+         * Chek if there is errors
+         */
         $isError = FALSE;
         foreach ($error as $key => $value) {
             if (preg_match("/^backend_hostname/",       $key) ||
@@ -254,15 +331,27 @@ switch ($action) {
                     }
                 }
 
-            } else {
-                if ($value == TRUE) {
-                    $isError = TRUE;
+            } elseif (
+                preg_match("/^other_pgpool_hostname/", $key) ||
+                preg_match("/^other_pgpool_port/",     $key) ||
+                preg_match("/^other_wd_port/",         $key))
+            {
+                for ($i = 0; $i < count($value); $i++) {
+                    if ($value[$i] == TRUE) {
+                        $isError = TRUE;
+                    }
                 }
+
+            } elseif ($value == TRUE) {
+                $isError = TRUE;
             }
 
             if ($isError) { break; }
         }
 
+        /**
+         * Display
+         */
         if (!$isError) {
             if (is_writable(_PGPOOL2_CONFIG_FILE)) {
                 writeConfigFile($configValue, $pgpoolConfigParam);
@@ -282,8 +371,15 @@ switch ($action) {
         break;
 
     case 'delete':
+    case 'delete_wd':
         $num = $_POST['num'];
-        deleteBackendHost($num, $configValue);
+
+        switch ($action) {
+            case 'delete':
+                deleteBackendHost($num, $configValue); break;
+            case 'delete_wd':
+                deleteWdOther($num, $configValue); break;
+        }
 
         if (is_writable(_PGPOOL2_CONFIG_FILE)) {
             writeConfigFile($configValue, $pgpoolConfigParam);
@@ -439,8 +535,7 @@ function writeConfigFile($configValue, $pgpoolConfigParam)
 {
     $configFile = @file(_PGPOOL2_CONFIG_FILE);
 
-    $removeBackendConfigFile = array();
-
+    $tmpConfigFile = array();
     for ($i = 0; $i < count($configFile); $i++) {
         $line = $configFile[$i];
 
@@ -452,17 +547,20 @@ function writeConfigFile($configValue, $pgpoolConfigParam)
                 !preg_match("/^backend_port/",           $key) &&
                 !preg_match("/^backend_weight/",         $key) &&
                 !preg_match("/^backend_data_directory/", $key) &&
-                !preg_match("/^backend_flag/",           $key))
+                !preg_match("/^backend_flag/",           $key) &&
+                !preg_match("/^other_pgpool_hostname/",  $key) &&
+                !preg_match("/^other_pgpool_port/",      $key) &&
+                !preg_match("/^other_wd_port/",          $key)
+                )
             {
-                $removeBackendConfigFile[] =  $line;
+                $tmpConfigFile[] =  $line;
             }
 
         } else {
-            $removeBackendConfigFile[] =  $line;
+            $tmpConfigFile[] =  $line;
         }
     }
-
-    $configFile = $removeBackendConfigFile;
+    $configFile = $tmpConfigFile;
 
     foreach ($pgpoolConfigParam as $key => $value) {
         $isWrite = FALSE;
@@ -493,22 +591,22 @@ function writeConfigFile($configValue, $pgpoolConfigParam)
     if (isset($configValue['backend_hostname'])) {
         for ($i = 0; $i < count($configValue['backend_hostname']); $i++) {
 
-            $line = "backend_hostname$i = '" . $configValue['backend_hostname'][$i] . "'\n";
-            $configFile[] = $line;
-
-            $line = "backend_port$i = " . $configValue['backend_port'][$i] . "\n";
-            $configFile[] = $line;
-
-            $line = "backend_weight$i = " . $configValue['backend_weight'][$i] . "\n";
-            $configFile[] = $line;
-
-            $line = "backend_data_directory$i = '" . $configValue['backend_data_directory'][$i] . "'\n";
-            $configFile[] = $line;
+            $configFile[] = "backend_hostname$i = '" . $configValue['backend_hostname'][$i] . "'\n";
+            $configFile[] = "backend_port$i = " . $configValue['backend_port'][$i] . "\n";
+            $configFile[] = "backend_weight$i = " . $configValue['backend_weight'][$i] . "\n";
+            $configFile[] = "backend_data_directory$i = '" . $configValue['backend_data_directory'][$i] . "'\n";
 
             if (paramExists('backend_flag')) {
-                $line = "backend_flag$i= '" . $configValue['backend_flag'][$i] . "'\n";
-                $configFile[] = $line;
+                $configFile[] = "backend_flag$i= '" . $configValue['backend_flag'][$i] . "'\n";
             }
+        }
+    }
+
+    if (isset($configValue['other_pgpool_hostname'])) {
+        for ($i = 0; $i < count($configValue['other_pgpool_hostname']); $i++) {
+            $configFile[] = "other_pgpool_hostname$i = '" . $configValue['other_pgpool_hostname'][$i] . "'\n";
+            $configFile[] = "other_pgpool_port$i = " . $configValue['other_pgpool_port'][$i] . "\n";
+            $configFile[] = "other_wd_port$i = " . $configValue['other_wd_port'][$i] . "\n";
         }
     }
 
@@ -545,4 +643,18 @@ function deleteBackendHost($num, &$configValue)
     }
 }
 
+/**
+ * Delete an other watchdog
+ */
+function deleteWdOther($num, &$configValue)
+{
+    unset($configValue['other_pgpool_hostname'][$num]);
+    $configValue['other_pgpool_hostname'] = array_values($configValue['other_pgpool_hostname']);
+
+    unset($configValue['other_pgpool_port'][$num]);
+    $configValue['other_pgpool_port'] = array_values($configValue['other_pgpool_port']);
+
+    unset($configValue['other_wd_port'][$num]);
+    $configValue['other_wd_port'] = array_values($configValue['other_wd_port']);
+}
 ?>

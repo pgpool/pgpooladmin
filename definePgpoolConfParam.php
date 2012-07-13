@@ -515,7 +515,102 @@ $pgpoolConfigParam[$key]['min'] = (3.0 <= _PGPOOL2_VERSION) ? -1 : 0;
 $pgpoolConfigParam[$key]['max'] = NUM_MAX;
 
 #------------------------------------------------------------------------------
-# ON MEMORY QUERY CACHE 
+# WATCHDOG
+#------------------------------------------------------------------------------
+
+$key = 'use_watchdog';
+$pgpoolConfigParam[$key]['type'] = 'B';
+$pgpoolConfigParam[$key]['default'] = 'off';
+
+$key = 'trusted_servers';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = '';
+$pgpoolConfigParam[$key]['regexp'] = $anyelse;
+
+$key = 'delegate_IP';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = '';
+$pgpoolConfigParam[$key]['regexp'] = $addressreg;
+
+$key = 'wd_hostname';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = '';
+$pgpoolConfigParam[$key]['regexp'] = $addressreg;
+
+$key = 'wd_port';
+$pgpoolConfigParam[$key]['type'] = 'N';
+$pgpoolConfigParam[$key]['default'] = 9000;
+$pgpoolConfigParam[$key]['max'] = NUM_MAX;
+$pgpoolConfigParam[$key]['min'] = 1024;
+
+$key = 'wd_interval';
+$pgpoolConfigParam[$key]['type'] = 'N';
+$pgpoolConfigParam[$key]['default'] = 10;
+$pgpoolConfigParam[$key]['max'] = NUM_MAX;
+$pgpoolConfigParam[$key]['min'] = 0;
+
+$key = 'ping_path';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = '';
+$pgpoolConfigParam[$key]['regexp'] = $anyelse;
+
+$key = 'ifconfig_path';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = '';
+$pgpoolConfigParam[$key]['regexp'] = $anyelse;
+
+$key = 'if_up_cmd';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = '';
+$pgpoolConfigParam[$key]['regexp'] = $anyelse;
+
+$key = 'if_down_cmd';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = '';
+$pgpoolConfigParam[$key]['regexp'] = $anyelse;
+
+$key = 'arping_path';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = '';
+$pgpoolConfigParam[$key]['regexp'] = $anyelse;
+
+$key = 'arping_cmd';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = '';
+$pgpoolConfigParam[$key]['regexp'] = $anyelse;
+
+$key = 'wd_life_point';
+$pgpoolConfigParam[$key]['type'] = 'N';
+$pgpoolConfigParam[$key]['default'] = 3;
+$pgpoolConfigParam[$key]['max'] = NUM_MAX;
+$pgpoolConfigParam[$key]['min'] = 0;
+
+$key = 'wd_lifecheck_query';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = 'SELECT 1';
+$pgpoolConfigParam[$key]['regexp'] = $anyelse;
+
+# Other pgpool Connection Settings
+
+$key = 'other_pgpool_hostname';
+$pgpoolConfigWdOtherParam[$key]['type'] = 'C';
+$pgpoolConfigWdOtherParam[$key]['default'] = '';
+$pgpoolConfigWdOtherParam[$key]['regexp'] = $hostreg;
+
+$key = 'other_pgpool_port';
+$pgpoolConfigWdOtherParam[$key]['type'] = 'N';
+$pgpoolConfigWdOtherParam[$key]['default'] = 9999;
+$pgpoolConfigWdOtherParam[$key]['min'] = 1024;
+$pgpoolConfigWdOtherParam[$key]['max'] = NUM_MAX;
+
+$key = 'other_wd_port';
+$pgpoolConfigWdOtherParam[$key]['type'] = 'N';
+$pgpoolConfigWdOtherParam[$key]['default'] = 9000;
+$pgpoolConfigWdOtherParam[$key]['min'] = 1024;
+$pgpoolConfigWdOtherParam[$key]['max'] = NUM_MAX;
+
+#------------------------------------------------------------------------------
+# ON MEMORY QUERY CACHE
 #------------------------------------------------------------------------------
 
 $key = 'memory_cache_enabled';
