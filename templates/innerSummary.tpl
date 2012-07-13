@@ -65,6 +65,17 @@ td > img {
     {/if}
     </td></tr>
 
+    {if hasWatchdog()}
+    <tr><td>Watchdog</td>
+    <td>
+    {if $params.use_watchdog == 'on'}
+    <img src="images/check.png"> {$message.strOn|escape}
+    {else}
+    <img src="images/no.png"> {$message.strOff|escape}
+    {/if}
+    </td>
+    {/if}
+
     <tr><td>{$message.strQueryCache|escape}</td>
     <td>
     {if hasMemqcache()}

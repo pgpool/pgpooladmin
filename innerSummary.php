@@ -37,6 +37,7 @@ $params = readConfigParams(array('parallel_mode',
                                  'enable_query_cache',
                                  'replication_mode',
                                  'load_balance_mode',
+                                 'use_watchdog',
                                  'health_check_period'));
 
 $tpl->assign('params', $params);
