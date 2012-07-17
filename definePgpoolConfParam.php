@@ -35,6 +35,7 @@ $hostreg    = '^[0-9a-zA-Z\._\-]*$';
 $sslreg     = '^(|\/[0-9a-zA-Z_\/\.\-]*)$';
 $commandreg = '^[0-9a-zA-Z_\/\.\-]*$';
 $addressreg = '^([0-9a-zA-Z\._\-]+|[\*]{1})$';
+$addressreg = '^([0-9a-zA-Z\._\-]+|[\*]{1})$';
 $listreg    = '^[0-9a-zA-Z_,]*$';
 $queryreg   = '^[0-9a-zA-Z; ]+$';
 $userreg    = "^[0-9a-zA-Z_\.\-]+$";
@@ -531,11 +532,13 @@ $key = 'delegate_IP';
 $pgpoolConfigParam[$key]['type'] = 'C';
 $pgpoolConfigParam[$key]['default'] = '';
 $pgpoolConfigParam[$key]['regexp'] = $addressreg;
+$pgpoolConfigParam[$key]['null_ok'] = TRUE;
 
 $key = 'wd_hostname';
 $pgpoolConfigParam[$key]['type'] = 'C';
 $pgpoolConfigParam[$key]['default'] = '';
 $pgpoolConfigParam[$key]['regexp'] = $addressreg;
+$pgpoolConfigParam[$key]['null_ok'] = TRUE;
 
 $key = 'wd_port';
 $pgpoolConfigParam[$key]['type'] = 'N';

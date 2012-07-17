@@ -436,7 +436,7 @@ function check($key, $value, &$configParam ,&$error)
             break;
 
         case 'C':
-            $result = checkString($configParam[$key], $value['regexp']);
+            $result = checkString($configParam[$key], $value);
             break;
 
         case 'F':
@@ -461,8 +461,14 @@ function check($key, $value, &$configParam ,&$error)
  */
 function checkString($str, $pattern)
 {
-    if (preg_match("/$pattern/", $str)) {
+    // NULL is OK?
+    if (empty($str) && isset($pattern['null_ok']) && $pattern['null_ok'] == TRUE) {
         return TRUE;
+
+    // regex test
+    } elseif (preg_match("/{$pattern['regexp']}/", $str)) {
+        return TRUE;
+
     } else {
         return FALSE;
     }
