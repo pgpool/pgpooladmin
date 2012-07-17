@@ -6,12 +6,16 @@ h1 {
   margin: 0px;
 }
 h2 {
-  padding-bottom: 4px;
-  border-bottom: 1px solid red;
-  color: red;
+  margin-top: 50px;
+  padding: 5px;
+  background: #8CD8E2;
 }
 h3 {
-  color: red;
+  margin-top: 30px;
+  padding: 5px;
+  background: #F4F8F1;
+  border: 2px solid #8CD8E2;
+  border-left: 10px solid #8CD8E2;
 }
 ul {
   list-style: square;
@@ -111,6 +115,7 @@ p {
 #submenu h3 {
   margin: 0px;
   padding: 4px 8px;
+  border: 0px solid black;
   border-bottom: 4px solid white;
   color: white;
   background: steelblue;
@@ -164,6 +169,7 @@ p {
     padding: 10px;
 }
 .message h3 {
+    border: 0px solid black;
     color: #4682B4;
 }
 .message p {
