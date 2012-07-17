@@ -921,7 +921,7 @@ function delOtherWatchdog(num){
     {* --------------------------------------------------------------------- *
      * Parallel Mode                                                        *
      * --------------------------------------------------------------------- *}
-    <h3><a name="parallel_mode" id="parallel_mode">Parallel Mode and Query Cache</a></h3>
+    <h3><a name="parallel_mode" id="parallel_mode">{if hasMemqcache()}Parallel Mode{else}Parallel Mode and Query Cache{/if}</a></h3>
 
     <table>
       <thead>
@@ -1256,7 +1256,7 @@ function delOtherWatchdog(num){
         </tr>
 
         <tr>
-        <th{if isset($error.wd_lif_check_query)} class="error"{/if}>
+        <th{if isset($error.wd_lifecheck_query)} class="error"{/if}>
         <label>{$message.descWd_lifecheck_query|escape}</label>
         <br />wd_lifecheck_query (string)</th>
         <td colspan="2"><input type="text" name="wd_lifecheck_query" value="{$params.wd_lifecheck_query|escape}"/></td>
@@ -1318,7 +1318,7 @@ function delOtherWatchdog(num){
         <tr>
         <th{if isset($error.wd_port)} class="error"{/if}>
         <label>{$message.descWd_port|escape}</label>
-        <br />arping_cmd (integer)</th>
+        <br />wd_port (integer)</th>
         <td colspan="2"><input type="text" name="wd_port" value="{$params.wd_port|escape}"/></td>
         </tr>
 
