@@ -650,7 +650,7 @@ $pgpoolConfigParam[$key]['min'] = 0;
 
 $key = 'memqcache_expire';
 $pgpoolConfigParam[$key]['type'] = 'N';
-$pgpoolConfigParam[$key]['default'] = 0; 
+$pgpoolConfigParam[$key]['default'] = 0;
 $pgpoolConfigParam[$key]['max'] = NUM_MAX;
 $pgpoolConfigParam[$key]['min'] = 0;
 
@@ -668,7 +668,7 @@ $key = 'memqcache_cache_block_size';
 $pgpoolConfigParam[$key]['type'] = 'N';
 $pgpoolConfigParam[$key]['default'] = 1048576;
 $pgpoolConfigParam[$key]['max'] = PHP_INT_MAX;
-$pgpoolConfigParam[$key]['min'] = 0;
+$pgpoolConfigParam[$key]['min'] = 512;
 
 $key = 'memqcache_oiddir';
 $pgpoolConfigParam[$key]['type'] = 'C';
