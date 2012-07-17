@@ -315,7 +315,7 @@ switch ($action) {
         }
 
         /*
-         * Chek if there is errors
+         * Chek if there are some errors
          */
         $isError = FALSE;
         foreach ($error as $key => $value) {
@@ -347,6 +347,13 @@ switch ($action) {
             }
 
             if ($isError) { break; }
+        }
+
+        /* check logically */
+        $logical_errors = checkLogical($configValue);
+        if ($logical_errors) {
+            $isError = TRUE;
+            $error += $logical_errors;
         }
 
         /**
@@ -531,6 +538,75 @@ function checkBoolean($str)
     }
 }
 
+function checkLogical($configValue)
+{
+    $errors = array();
+
+    // pgpool's mode
+    if ($configValue['replication_mode'] == 'on' && $configValue['master_slave_mode'] == 'on') {
+        $errors['replication_mode'] = TRUE;
+        $errors['master_slave_mode'] = TRUE;
+    }
+
+    // syslog
+    if ($configValue['log_destination']) {
+        if (empty($configValue['syslog_facility'])) { $errors['syslog_facility'] = TRUE; }
+        if (empty($configValue['syslog_ident'])) { $errors['syslog_ident'] = TRUE; }
+    }
+
+    // health check
+    if ($configValue['health_check_period'] > 0) {
+        if (empty($configValue['health_check_user'])) { $errors['health_check_user'] = TRUE; }
+    }
+
+    // streaming replication
+    if ($configValue['master_slave_mode'] == 'on' &&
+        $configValue['master_slave_sub_mode'] == 'stream')
+    {
+        if (empty($configValue['sr_check_user'])) { $errors['sr_check_user'] = TRUE; }
+    }
+
+    // watchdog
+    if ($configValue['use_watchdog'] == 'on') {
+        if (empty($configValue['delegate_IP'])) { $errors['delegate_IP'] = TRUE; }
+        if (empty($configValue['wd_hostname'])) { $errors['wd_hostname'] = TRUE; }
+    }
+
+    // memqcache
+    if ($configValue['memory_cache_enabled'] == 'on') {
+        if (empty($configValue['wd_lifecheck_query'])) {
+            $errors['wd_lifecheck_query'] = TRUE;
+        }
+
+        switch ($configValue['memqcache_method']) {
+            case 'shmem':
+                if (empty($configValue['memqcache_total_size'])) {
+                    $errors['memqcache_total_size'] = TRUE;
+                }
+                if (empty($configValue['memqcache_max_num_cache'])) {
+                    $errors['memqcache_max_num_cache'] = TRUE;
+                }
+                if (empty($configValue['memqcache_cache_block_size'])) {
+                    $errors['memqcache_cache_block_size'] = TRUE;
+                }
+                break;
+
+            case 'memcached':
+                if (empty($configValue['memqcache_memcached_host'])) {
+                    $errors['memqcache_memcached_host'] = TRUE;
+                }
+                if (empty($configValue['memqcache_memcached_port'])) {
+                    $errors['memqcache_memcached_port'] = TRUE;
+                }
+                break;
+        }
+    }
+
+    return $errors;
+}
+
+/* --------------------------------------------------------------------- */
+
 /**
  * Write pgpool.conf
  *
@@ -663,4 +739,3 @@ function deleteWdOther($num, &$configValue)
     unset($configValue['other_wd_port'][$num]);
     $configValue['other_wd_port'] = array_values($configValue['other_wd_port']);
 }
-?>
