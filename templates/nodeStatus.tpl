@@ -74,11 +74,18 @@
 
     </tr>
   {/section}
+
+  <tfoot>
+  <tr><th></th><th></th><th></th><th></th><th></th></tr>
+  </tfoot>
+
 </table>
 
 {else}
 {$message.strNoNode|escape}
 {/if}
+
+[*] The status is reloaded in every {$smarty.const._PGPOOL2_STATUS_REFRESH_TIME} seconds.
 
 </body>
 </html>
