@@ -105,6 +105,7 @@ switch ( $action ) {
         setBool('d');
         setValue('m');
         setBool('n');
+        setBool('C');
 
         setValue('pgpool_logfile');
         // pipe
@@ -243,7 +244,7 @@ function writePgmtConf($pgmgtConfigFile)
 
     write($fp, '_PGPOOL2_CMD_OPTION_C',       $params['c']);
     write($fp, '_PGPOOL2_CMD_OPTION_LARGE_D', $params['D']);
-    write($fp, '_PGPOOL2_CMD_OPTION_D',       $params['n']);
+    write($fp, '_PGPOOL2_CMD_OPTION_D',       $params['d']);
     write($fp, '_PGPOOL2_CMD_OPTION_M',       $params['m']);
     write($fp, '_PGPOOL2_CMD_OPTION_N',       $params['n']);
     write($fp, '_PGPOOL2_CMD_OPTION_LARGE_C', $params['C']);

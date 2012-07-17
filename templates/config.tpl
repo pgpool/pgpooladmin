@@ -139,6 +139,17 @@
           <br />{$errors.d|escape}
           {/if}
           </td></tr>
+        <tr><td>{$message.strCmdLargeC|escape}(-C)</td>
+          <td>
+          {if $params.C == 1}
+          <input type="checkbox" name="C" checked="checked" />
+          {else}
+          <input type="checkbox" name="C" />
+          {/if}
+          {if isset($errors.n)}
+          <br />{$errors.n|escape}
+          {/if}
+          </td></tr>
         <tr><td>{$message.strCmdM|escape}(-m)</td><td><select name="m">
           {if $params.m == 's'}
                <option value="s" selected="selected">smart</option>
