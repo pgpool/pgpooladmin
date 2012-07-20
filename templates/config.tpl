@@ -92,6 +92,8 @@
           <br />{$errors.pgpool_command|escape}
           {/if}
           </td></tr>
+
+        {if hasMemqCache() == false}
         <tr>
           <th colspan="2"><label>{$message.strPgpoolCommandOption|escape}</label>
             (string)</th></tr>
@@ -106,6 +108,8 @@
           <br />{$errors.c|escape}
           {/if}
           </td></tr>
+        {/if}
+
         <tr><td>{$message.strCmdLargeD|escape}(-D)</td>
           <td>
           {if $params.D == 1}
@@ -128,6 +132,17 @@
           <br />{$errors.n|escape}
           {/if}
           </td></tr>
+        <tr><td>{$message.strCmdLargeC|escape}(-C)</td>
+          <td>
+          {if $params.C == 1}
+          <input type="checkbox" name="C" checked="checked" />
+          {else}
+          <input type="checkbox" name="C" />
+          {/if}
+          {if isset($errors.C)}
+          <br />{$errors.n|escape}
+          {/if}
+          </td></tr>
         <tr><td>{$message.strCmdD|escape}(-d)</td>
           <td>
           {if $params.d == 1}
@@ -137,17 +152,6 @@
           {/if}
           {if isset($errors.d)}
           <br />{$errors.d|escape}
-          {/if}
-          </td></tr>
-        <tr><td>{$message.strCmdLargeC|escape}(-C)</td>
-          <td>
-          {if $params.C == 1}
-          <input type="checkbox" name="C" checked="checked" />
-          {else}
-          <input type="checkbox" name="C" />
-          {/if}
-          {if isset($errors.n)}
-          <br />{$errors.n|escape}
           {/if}
           </td></tr>
         <tr><td>{$message.strCmdM|escape}(-m)</td><td><select name="m">
