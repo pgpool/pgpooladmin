@@ -84,6 +84,9 @@ switch ($action) {
         if (isset($_POST['d'])) {
             $args = $args . "-d ";
         }
+        if (isset($_POST['C'])) {
+            $args = $args . "-C ";
+        }
         if (isset($_POST['n'])) {
             $pgpoolLog = _PGPOOL2_LOG_FILE;
             if ($pgpoolLog == '') {
@@ -95,9 +98,6 @@ switch ($action) {
             } else {
                 $args = "$args -n > $pgpoolLog ";
             }
-        }
-        if (isset($_POST['C'])) {
-            $args = $args . "-C ";
         }
 
         $ret = execPcp('PCP_START_PGPOOL', $args);
