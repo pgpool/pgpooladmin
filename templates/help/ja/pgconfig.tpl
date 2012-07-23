@@ -33,7 +33,12 @@
       <li><a href="#health-check">Health Check</a></li>
       <li><a href="#failover">Failover and Failback</a></li>
       <li><a href="#online-recovery">Online Recovery</a></li>
+      {if paramExists('use_watchdog')}
+      <li><a href="#watchdog">Watchdog</a></li>
+      {/if}
+      {if hasMemqcache()}
       <li><a href="#memqcache">On Memory Query Cache</a></li>
+      {/if}
       <li><a href="#others">Others</a></li>
     </ul>
 </div>
@@ -1654,6 +1659,184 @@ black_function_list = 'nextval,setval,lastval,currval'
   </tfoot>
 </table>
 
+{if paramExists('use_watchdog')}
+<h3><a name="watchdog" id="watchdog">Watchdog</a></h3>
+
+<table>
+  <thead>
+    <tr>
+      <th width="240">{$message.strParameter|escape}</th>
+      <th>{$message.strDetail|escape}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th id="USE_WATCHDOG"><label>{$message.descUse_watchdog|escape}</label>
+      <p>use_watchdog (bool)</th>
+      <td>
+      <p>watchdog を有効にするには on にします。デフォルトは off です。</p>
+      </td>
+    </tr>
+
+    <tr><th class="category" colspan="2">Connection to up stream servers</th></tr>
+
+    <tr>
+      <th id="TRUSTED_SERVERS"><label>{$message.descTrusted_servers|escape}</label>
+      <p>trusted_servers (string)</th>
+      <td>
+      <p>上位接続を確認するための信頼できるサーバリストです。 ping の応答が得られる必要があります。
+      "hostA,hostB,hostC ..." のようにカンマで区切って複数のサーバを指定できます。</p>
+      <p>指定がない場合は上位サーバへのネットワーク到達監視をしません。</p>
+      </td>
+    </tr>
+
+    <tr>
+      <th id="PING_PATH"><label>{$message.descPing_path|escape}</label>
+      <p>ping_path (string)</th>
+      <td>
+      <p>上位サーバへの接続監視に利用する ping コマンドのパスです。 "/bin" のようにパスだけを指定します。 </p>
+      </td>
+    </tr>
+
+    <tr><th class="category" colspan="2">Lifecheck of pgpol-II</th></tr>
+
+    <tr>
+      <th id="WD_INTERVAL"><label>{$message.descWd_interval|escape}</label>
+      <p>wd_interval (integer)</th>
+      <td>
+      <p>pgpool-II への生存監視の間隔（秒）です。 （1 以上の数値） </p>
+      </td>
+    </tr>
+
+    <tr>
+      <th id="WD_LIFE_POINT"><label>{$message.descWd_life_point|escape}</label>
+      <p>wd_life_point (string)</th>
+      <td>
+      <p>pgpool-II の死活監視で応答が得られなかった場合のリトライ回数です。 （1 以上の数値） </p>
+      </td>
+    </tr>
+
+    <tr>
+      <th id="WD_LIFECHECK_QUERY"><label>{$message.descWd_lifecheck_query|escape}</label>
+      <p>wd_lifecheck_query (string)</th>
+      <td>
+      <p>pgpool-II の死活監視のために発行されるクエリです。 デフォルトは "SELECT 1" です。</p>
+      </td>
+    </tr>
+
+    <tr><th class="category" colspan="2">Virtual IP address</th></tr>
+
+    <tr>
+      <th id="DELEGATE_IP"><label>{$message.descDelegate_IP|escape}</label>
+      <p>delegate_IP (string)</th>
+      <td>
+      <p>（アプリケーションサーバなど）外部からの接続される pgpool-II の仮想 IP アドレスです。
+      スタンバイからアクティブに切り替わる際、pgpool はこの仮想 IP を引き継ぎます。 </p>
+      </td>
+    </tr>
+
+    <tr>
+      <th id="IFCONFIG_PATH"><label>{$message.descIfconfig_path|escape}</label>
+      <p>ifconfig_path (string)</th>
+      <td>
+      <p>IP アドレス切り替えに利用するコマンドのパスです。 "/sbin" のようにパスだけを指定します。</p>
+      </td>
+    </tr>
+
+    <tr>
+      <th id="IF_UP_CMD"><label>{$message.descIf_up_cmd|escape}</label>
+      <p>if_up_cmd (string)</th>
+      <td>
+      <p>仮想 IP を起動するために実行するコマンドです。
+      "ifconfig eth0:0 inet $_IP_$ netmask 255.255.255.0" のようにコマンドとパラメータを指定します。
+      $_IP_$　は <a href="#DELEGATE_IP">delegate_IP</a> で指定された IP アドレスに置換されます。 </p>
+      </td>
+    </tr>
+
+    <tr>
+      <th id="IF_DOWN_CMD"><label>{$message.descIf_down_cmd|escape}</label>
+      <p>if_down_cmd (string)</th>
+      <td>
+      <p>仮想IPを停止するために実行するコマンドです。
+      "ifconfig eth0:0 down" のようにコマンドとパラメータを指定します。</p>
+      </td>
+    </tr>
+
+    <tr>
+      <th id="ARPING_PATH"><label>{$message.descArping_path|escape}</label>
+      <p>arping_path (string)</th>
+      <td>
+      <p>IP アドレス切り替え後に ARP リクエストを送信するコマンドのパスです。
+      "/usr/sbin" のようにパスだけを指定します。 </p>
+      </td>
+    </tr>
+
+    <tr>
+      <th id="ARPING_CMD"><label>{$message.descArping_cmd|escape}</label>
+      <p>arping_cmd (string)</th>
+      <td>
+      <p>IPアドレス切り替え後にARPリクエストを送信するコマンドです。
+         "arping -U $_IP_$ -w 1" のようにコマンドとパラメータを指定します。
+         $_IP_$ は <a href="#DELEGATE_IP">delegate_IP</a> で指定された IP アドレスに置換されます。 </p>
+      </td>
+    </tr>
+
+    <tr><th class="category" colspan="2">Server itself to be monitored</th></tr>
+
+    <tr>
+      <th id="WD_HOSTNAME"><label>{$message.descWd_hostname|escape}</label>
+      <p>wd_hostname (string)</th>
+      <td>
+      <p>watchdog プロセスが相互監視を受信する為のホスト名または IP アドレスです。 </p>
+      </td>
+    </tr>
+
+    <tr>
+      <th id="WD_PORT"><label>{$message.descWd_port|escape}</label>
+      <p>wd_port (integer)</th>
+      <td>
+      <p>watchdog プロセスが相互監視を受信する為のポート番号です。 </p>
+      </td>
+    </tr>
+
+    <tr><th class="category" colspan="2">Servers to monitor</th></tr>
+
+    <tr>
+      <th id="OTHER_PGPOOL_HOSTNAME"><label>{$message.descOther_pgpool_hostname|escape}</label>
+      <p>other_pgpool_hostname (string)</th>
+      <td>
+      <p>監視対象のpgpool-IIサーバのホスト名を指定します。 数値の部分は監視対象サーバの番号です。
+      監視対象のサーバ毎に 0 からの連番にします。</p>
+      </td>
+    </tr>
+
+    <tr>
+      <th id="OTHER_PGPOOL_PORT"><label>{$message.descOther_pgpool_port|escape}</label>
+      <p>other_pgpool_port (integer)</th>
+      <td>
+      <p>監視対象のpgpool-IIサーバのpgpool用のポート番号を指定します。 数値の部分は監視対象サーバの番号です。
+      監視対象のサーバ毎に 0 からの連番にします。 </p>
+      </td>
+    </tr>
+
+    <tr>
+      <th id="OTHER_WD_PORT"><label>{$message.descOther_wd_port|escape}</label>
+      <p>other_wd_port (integer)</th>
+      <td>
+      <p>監視対象のpgpool-IIサーバのwatchdog用のポート番号を指定します 数値の部分は監視対象サーバの番号です。
+      監視対象のサーバ毎に 0 からの連番にします。</p>
+      </td>
+    </tr>
+
+
+  </tbody>
+  <tfoot>
+    <tr>
+      <td colspan="2"></td>
+    </tr>
+  </tfoot>
+</table>
+{/if}
 
 {if hasMemqcache()}
 <h3><a name="memqcache" id="memqcache">On Memory Query Cache</a></h3>
@@ -1834,7 +2017,8 @@ black_function_list = 'nextval,setval,lastval,currval'
         <p>
         VIEW やunloggedテーブルを使っているSELECTは通常キャッシュの対象になりませんが、
         white_memqcache_table_list に記述しておくことで、キャッシュされるようになります。
-        テーブル名はカンマ区切りで指定します。正規表現も利用できます。
+        テーブル名はカンマ区切りで指定します。
+        正規表現も利用できます（指定した各表現に ^ と $ をつけた形で使われます）。
         <p>
         なお、同じテーブル・VIEW が <a href="#BLACK_MEMQCACHE_TABLE_LIST">black_memqcache_table_list</a> と両方に
         指定されている場合は、white_memqcache_table_list が優先され、キャッシュを利用します。
@@ -1847,7 +2031,8 @@ black_function_list = 'nextval,setval,lastval,currval'
       <p>black_memqcache_table_list(string)</th>
       <td>
         <p>
-        SELECT 結果をキャッシュしたくないテーブル名をカンマ区切りで指定します。正規表現も利用できます。
+        SELECT 結果をキャッシュしたくないテーブル名をカンマ区切りで指定します。
+        正規表現も利用できます（指定した各表現に ^ と $ をつけた形で使われます）。
         </p>
       </td>
     </tr>

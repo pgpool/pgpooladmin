@@ -33,7 +33,12 @@
       <li><a href="#health-check">Health Check</a></li>
       <li><a href="#failover">Failover and Failback</a></li>
       <li><a href="#online-recovery">Online Recovery</a></li>
+      {if paramExists('use_watchdog')}
+      <li><a href="#watchdog">Watchdog</a></li>
+      {/if}
+      {if hasMemqcache()}
       <li><a href="#memqcache">On Memory Query Cache</a></li>
+      {/if}
       <li><a href="#others">Others</a></li>
     </ul>
 </div>
@@ -1576,6 +1581,195 @@ black_function_list = 'nextval,setval,lastval,currval'
 </table>
 
 
+
+{if paramExists('use_watchdog')}
+<h3><a name="watchdog" id="watchdog">Watchdog</a></h3>
+
+<table>
+  <thead>
+    <tr>
+      <th width="240">{$message.strParameter|escape}</th>
+      <th>{$message.strDetail|escape}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th id="USE_WATCHDOG"><label>{$message.descUse_watchdog|escape}</label>
+      <p>use_watchdog (bool)</th>
+      <td>
+      <p>If on, activates watchdog. Default is off. </p>
+      </td>
+    </tr>
+
+    <tr><th class="category" colspan="2">Connection to up stream servers</th></tr>
+
+    <tr>
+      <th id="TRUSTED_SERVERS"><label>{$message.descTrusted_servers|escape}</label>
+      <p>trusted_servers (string)</th>
+      <td>
+      <p>
+      The list of trusted servers to check the up stream connections.
+      Each server is required to respond to ping.
+      Specify a comma separated list of servers such as "hostA,hostB,hostC".
+      </p>
+      </td>
+    </tr>
+
+    <tr>
+      <th id="PING_PATH"><label>{$message.descPing_path|escape}</label>
+      <p>ping_path (string)</th>
+      <td>
+      <p>This parameter specifies a path of ping command for monitoring connection to the upper servers.
+      Set the only path such as "/bin". </p>
+      </td>
+    </tr>
+
+    <tr><th class="category" colspan="2">Lifecheck of pgpol-II</th></tr>
+
+    <tr>
+      <th id="WD_INTERVAL"><label>{$message.descWd_interval|escape}</label>
+      <p>wd_interval (integer)</th>
+      <td>
+      <p>This parameter specifies the interval between life checks of pgpool-II in second.
+      (A number greater than or equal to 1) </p>
+      </td>
+    </tr>
+
+    <tr>
+      <th id="WD_LIFE_POINT"><label>{$message.descWd_life_point|escape}</label>
+      <p>wd_life_point (string)</th>
+      <td>
+      <p>The times to retry a failed life check of pgpool-II. (A number greater than or equal to 1) </p>
+      </td>
+    </tr>
+
+    <tr>
+      <th id="WD_LIFECHECK_QUERY"><label>{$message.descWd_lifecheck_query|escape}</label>
+      <p>wd_lifecheck_query (string)</th>
+      <td>
+      <p>Actual query to check pgpool-II. Default is "SELECT 1".</p>
+      </td>
+    </tr>
+
+    <tr><th class="category" colspan="2">Virtual IP address</th></tr>
+
+    <tr>
+      <th id="DELEGATE_IP"><label>{$message.descDelegate_IP|escape}</label>
+      <p>delegate_IP (string)</th>
+      <td>
+      <p>Specifies the virtual IP address (VIP) of pgpool-II that is connected from client servers
+      (application servers etc.).
+      When a pgpool is switched from standby to active, the pgpool takes over this VIP. </p>
+      </td>
+    </tr>
+
+    <tr>
+      <th id="IFCONFIG_PATH"><label>{$message.descIfconfig_path|escape}</label>
+      <p>ifconfig_path (string)</th>
+      <td>
+      <p>This parameter specifies a path of a command to switch the IP address.
+      Set the only path such as "/sbin". </p>
+      </td>
+    </tr>
+
+    <tr>
+      <th id="IF_UP_CMD"><label>{$message.descIf_up_cmd|escape}</label>
+      <p>if_up_cmd (string)</th>
+      <td>
+      <p>This parameter specifies a command to bring up the virtual IP.
+      Set the command and parameters such as "ifconfig eth0:0 inet $_IP_$ netmask 255.255.255.0".
+      $_IP_$ is replaced by the IP address specified in <a href="#DELEGATE_IP">delegate_IP</a>. </p>
+      </td>
+    </tr>
+
+    <tr>
+      <th id="IF_DOWN_CMD"><label>{$message.descIf_down_cmd|escape}</label>
+      <p>if_down_cmd (string)</th>
+      <td>
+      <p>This parameter specifies a command to bring down the virtual IP.
+      Set the command and parameters such as "ifconfig eth0:0 down". </p>
+      </td>
+    </tr>
+
+    <tr>
+      <th id="ARPING_PATH"><label>{$message.descArping_path|escape}</label>
+      <p>arping_path (string)</th>
+      <td>
+      <p>This parameter specifies a path of a command to send an ARP request after the virtual IP is switched.
+      Set the only path such as "/usr/sbin". </p>
+      </td>
+    </tr>
+
+    <tr>
+      <th id="ARPING_CMD"><label>{$message.descArping_cmd|escape}</label>
+      <p>arping_cmd (string)</th>
+      <td>
+      <p>This parameter specifies a command to send an ARP request after the virtual IP is switched.
+      Set the command and parameters such as "arping -U $_IP_$ -w 1".
+      $_IP_$ is replaced by the IP address specified in <a href="DELEGATE_IP">delegate_IP</a>. </p>
+      </td>
+    </tr>
+
+    <tr><th class="category" colspan="2">Server itself to be monitored</th></tr>
+
+    <tr>
+      <th id="WD_HOSTNAME"><label>{$message.descWd_hostname|escape}</label>
+      <p>wd_hostname (string)</th>
+      <td>
+      <p>Specifies the hostname or IP address for mutual monitoring of watchdog processes. </p>
+      </td>
+    </tr>
+
+    <tr>
+      <th id="WD_PORT"><label>{$message.descWd_port|escape}</label>
+      <p>wd_port (integer)</th>
+      <td>
+      <p>Specifies the port number for mutual monitoring of watchdog processes. </p>
+      </td>
+    </tr>
+
+    <tr><th class="category" colspan="2">Servers to monitor</th></tr>
+
+    <tr>
+      <th id="OTHER_PGPOOL_HOSTNAME"><label>{$message.descOther_pgpool_hostname|escape}</label>
+      <p>other_pgpool_hostname (string)</th>
+      <td>
+      <p>Specifies the hostname pgpool-II server to be monitored.
+      The number at the end of the parameter name is referred as "server id", and it starts from 0. </p>
+      </td>
+    </tr>
+
+    <tr>
+      <th id="OTHER_PGPOOL_PORT"><label>{$message.descOther_pgpool_port|escape}</label>
+      <p>other_pgpool_port (integer)</th>
+      <td>
+      <p>Specifies the port number for pgpool on pgpool-II server to be monitored.
+      The number at the end of the parameter name is referred as "server id", and it starts from 0.
+      </p>
+      </td>
+    </tr>
+
+    <tr>
+      <th id="OTHER_WD_PORT"><label>{$message.descOther_wd_port|escape}</label>
+      <p>other_wd_port (integer)</th>
+      <td>
+      <p>Specifies the port number for watchdog on pgpool-II server to be monitored.
+      The number at the end of the parameter name is referred as "server id", and it starts from 0.
+      </p>
+      </td>
+    </tr>
+
+
+  </tbody>
+  <tfoot>
+    <tr>
+      <td colspan="2"></td>
+    </tr>
+  </tfoot>
+</table>
+{/if}
+
+
 {if hasMemqcache()}
 <h3><a name="memqcache" id="memqcache">On Memory Query Cache</a></h3>
 
@@ -1749,7 +1943,7 @@ black_function_list = 'nextval,setval,lastval,currval'
       <td>
         <p>
         Specify a comma separated list of table names whose SELECT results are to be cached even if
-        they are VIEWs or unlogged tables. You can use regular expression.
+        they are VIEWs or unlogged tables. You can use regular expression (to which added automatically ^ and $).
         </p>
         <p>
         TABLEs and VIEWs in both of white_memqcache_table_list and
@@ -1764,7 +1958,7 @@ black_function_list = 'nextval,setval,lastval,currval'
       <td>
         <p>
         Specify a comma separated list of table names whose SELECT results are <strong>NOT</strong> to be cached.
-        You can use regular expression.
+        You can use regular expression (to which added automatically ^ and $).
         </p>
       </td>
     </tr>
