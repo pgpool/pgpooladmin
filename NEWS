@@ -2,24 +2,36 @@
 pgpoolAdmin 3.2
 ===============================================================================
 
-* Version 3.2 2012/06/xx
+* Version 3.2 2012/08/03
 
   pgpoolAdmin 3.2 adopts pgpool-II 3.2.
 
     - Add new parameters and remove deleted parameters in pgpool-II 3.2.
       (Anzai, Nagata)
       - new:
-        health_check_password, health_check_max_retries, health_check_retry_delay,
+        [ Health Check ]
+        health_check_password, health_check_max_retries, health_check_retry_delay
+
+        [ On Memory Query Cache ]
         memory_cache_enabled, memqcache_method, memqcache_memcached_host,
         memqcache_memcached_port, memqcache_total_size, memqcache_max_num_cache,
         memqcache_cache_block_size, memqcache_expire, memqcache_auto_cache_invalidation,
         memqcache_maxcache, memqcache_oiddir,
         white_memqcache_table_list, black_memqcache_table_list
 
+        [ Watchdog ]
+        use_watchdog, trusted_servers, ping_path, wd_interval, wd_life_point,
+        wd_lifecheck_query, delegate_IP, ifconfig_path, if_up_cmd, if_down_cmd,
+        arping_path, arping_cmd, wd_hostname, wd_port,
+        other_pgpool_hostname, other_pgpool_port, other_wd_port
+
+        [ Others ]
+        relcache_size, check_temp_table
+
       - deleted:
         enable_query_cache
 
-    -  Support older version of pgpool-II. (Anzai)
+    -  Support older versions of pgpool-II. (Anzai)
       - pgpoolAdmin 3.1 was only for pgpool-II 3.1, however the latest
         pgpoolAdmin is fixed bugs and sometimes enhanced.
         So we decided adopting these 3 pgpool-II versions: 3.0, 3.1, 3.2.
