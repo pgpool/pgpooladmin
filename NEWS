@@ -2,6 +2,16 @@
 pgpoolAdmin 3.2
 ===============================================================================
 
+* Version 3.2.1 2012/10/15
+
+	- Revise the default value of relcache_size from 0 to 256. (Nagata)
+
+	- Update Smarty to 3.1.12.
+
+	  This version has a security fix for Cross-Site Scripting (XSS)
+	  vulnerability. (Nagata)
+
+
 * Version 3.2 2012/08/03
 
   pgpoolAdmin 3.2 adopts pgpool-II 3.2.
