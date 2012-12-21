@@ -305,7 +305,7 @@ function conStr($num, $mode = NULL)
                                          'health_check_password'));
         $user     = $params['health_check_user'];
         $password = (isset($params['health_check_user'])) ?
-                    $params['health_check_pasword'] : NULL;
+                    $params['health_check_password'] : NULL;
     }
 
     // backkend info
