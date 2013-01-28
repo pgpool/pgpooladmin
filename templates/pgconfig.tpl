@@ -895,7 +895,7 @@ function delOtherWatchdog(num){
             <tr>
             <th{if isset($error.delay_threshold)} class="error"{/if}>
             <label>{$message.descDelay_threshold|escape}</label>
-            <br />delay_threshold (bool)</th>
+            <br />delay_threshold (integer)</th>
             <td><input type="text" name="delay_threshold"
                  id="delay_threshold" value="{$params.delay_threshold|escape}" /></td>
             </tr>
