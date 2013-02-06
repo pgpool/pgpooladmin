@@ -116,6 +116,11 @@ $key = 'enable_pool_hba';
 $pgpoolConfigParam[$key]['type'] = 'B';
 $pgpoolConfigParam[$key]['default'] = 'off';
 
+$key = 'pool_passwd';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = 'pool_passwd';
+$pgpoolConfigParam[$key]['regexp'] = $anyelse;
+
 $key = 'authentication_timeout';
 $pgpoolConfigParam[$key]['type'] = 'N';
 $pgpoolConfigParam[$key]['default'] = 60;

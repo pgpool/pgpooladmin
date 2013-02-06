@@ -208,6 +208,15 @@ function delOtherWatchdog(num){
             {if $params.enable_pool_hba == 'on'}checked="checked"{/if} /></td>
         </tr>
 
+        {if paramExists('pool_passwd')}
+           <tr>
+           <th{if isset($error.pool_passwd)} class="error"{/if}>
+           <label>{$message.descPool_passwd|escape}</label>
+           <br />pool_passwd (string) *</th>
+           <td><input type="text" name="pool_passwd" value="{$params.pool_passwd|escape}"/></td>
+           </tr>
+        {/if}
+
         <tr>
         <th{if isset($error.authentication_timeout)} class="error"{/if}>
         <label>{$message.descAuthentication_timeout|escape}</label>
@@ -223,7 +232,7 @@ function delOtherWatchdog(num){
             <tr>
             <th{if isset($error.ssl)} class="error"{/if}>
             <label>{$message.descSsl|escape}</label>
-            <br />ssl (bool)</th>
+            <br />ssl (bool) *</th>
             <td><input type="checkbox" name="ssl" id="ssl" value="true"
                  {if $params.ssl == 'on'} checked="checked"{/if} /></td>
             </tr>
@@ -231,28 +240,28 @@ function delOtherWatchdog(num){
             <tr>
             <th{if isset($error.ssl_key)} class="error"{/if}>
             <label>{$message.descSsl_key|escape}</label>
-            <br />ssl_key (string)</th>
+            <br />ssl_key (string) *</th>
             <td><input type="text" name="ssl_key" id="ssl_key" value="{$params.ssl_key|escape}" /></td>
             </tr>
 
             <tr>
             <th{if isset($error.ssl_cert)} class="error"{/if}>
             <label>{$message.descSsl_cert|escape}</label>
-            <br />ssl_cert (string)</th>
+            <br />ssl_cert (string) *</th>
             <td><input type="text" name="ssl_cert" id="ssl_cert" value="{$params.ssl_cert|escape}" /></td>
             </tr>
 
             <tr>
             <th{if isset($error.ssl_ca_cert)} class="error"{/if}>
             <label>{$message.descSsl_ca_cert|escape}</label>
-            <br />ssl_ca_cert (string)</th>
+            <br />ssl_ca_cert (string) *</th>
             <td><input type="text" name="ssl_ca_cert" id="ssl_ca_cert" value="{$params.ssl_ca_cert|escape}" /></td>
             </tr>
 
             <tr>
             <th{if isset($error.ssl_ca_cert_dir)} class="error"{/if}>
             <label>{$message.descSsl_ca_cert_dir|escape}</label>
-            <br />ssl_ca_cert_dir (string)</th>
+            <br />ssl_ca_cert_dir (string) *</th>
             <td><input type="text" name="ssl_ca_cert_dir" id="ssl_ca_cert_dir"
                  value="{$params.ssl_ca_cert_dir|escape}" /></td>
             </tr>
@@ -657,7 +666,7 @@ function delOtherWatchdog(num){
         <tr>
         <th{if isset($error.connection_cache)} class="error"{/if}>
         <label>{$message.descConnection_cache|escape}</label>
-        <br />connection_cache  (bool)*</th>
+        <br />connection_cache (bool) *</th>
         <td><input type="checkbox" name="connection_cache"
             id="connection_cache" value="true"
             {if $params.connection_cache == 'on'}checked="checked"{/if} /></td>
@@ -1200,7 +1209,7 @@ function delOtherWatchdog(num){
       </tbody>
     </table>
 
-    {if hasMemqcache()}
+    {if hasWatchdog()}
     {* --------------------------------------------------------------------- *
      * Watchdog                                                              *
      * --------------------------------------------------------------------- *}
@@ -1218,7 +1227,7 @@ function delOtherWatchdog(num){
         <tr>
         <th{if isset($error.use_watchdog)} class="error"{/if}>
         <label>{$message.descUse_watchdog|escape}</label>
-        <br />use_watchdog (bool)</th>
+        <br />use_watchdog (bool) *</th>
         <td colspan="2"><input type="checkbox" name="use_watchdog" id="use_watchdog" value="true"
             {if $params.use_watchdog== 'on'}checked="checked"{/if} /></td>
         </tr>
@@ -1244,21 +1253,21 @@ function delOtherWatchdog(num){
         <tr>
         <th{if isset($error.wd_interval)} class="error"{/if}>
         <label>{$message.descWd_interval|escape}</label>
-        <br />wd_interval (integer)</th>
+        <br />wd_interval (integer) *</th>
         <td colspan="2"><input type="text" name="wd_interval" value="{$params.wd_interval|escape}"/></td>
         </tr>
 
         <tr>
         <th{if isset($error.wd_life_point)} class="error"{/if}>
         <label>{$message.descWd_life_point|escape}</label>
-        <br />wd_life_point(integer)</th>
+        <br />wd_life_point(integer) *</th>
         <td colspan="2"><input type="text" name="wd_life_point" value="{$params.wd_life_point|escape}"/></td>
         </tr>
 
         <tr>
         <th{if isset($error.wd_lifecheck_query)} class="error"{/if}>
         <label>{$message.descWd_lifecheck_query|escape}</label>
-        <br />wd_lifecheck_query (string)</th>
+        <br />wd_lifecheck_query (string) *</th>
         <td colspan="2"><input type="text" name="wd_lifecheck_query" value="{$params.wd_lifecheck_query|escape}"/></td>
         </tr>
 
@@ -1267,42 +1276,42 @@ function delOtherWatchdog(num){
         <tr>
         <th{if isset($error.delegate_IP)} class="error"{/if}>
         <label>{$message.descDelegate_IP|escape}</label>
-        <br />delegate_IP (string)</th>
+        <br />delegate_IP (string) *</th>
         <td colspan="2"><input type="text" name="delegate_IP" value="{$params.delegate_IP|escape}"/></td>
         </tr>
 
         <tr>
         <th{if isset($error.ifconfig_path)} class="error"{/if}>
         <label>{$message.descIfconfig_path|escape}</label>
-        <br />ifconfig_path (string)</th>
+        <br />ifconfig_path (string) *</th>
         <td colspan="2"><input type="text" name="ifconfig_path" value="{$params.ifconfig_path|escape}"/></td>
         </tr>
 
         <tr>
         <th{if isset($error.if_up_cmd)} class="error"{/if}>
         <label>{$message.descIf_up_cmd|escape}</label>
-        <br />if_up_cmd (string)</th>
+        <br />if_up_cmd (string) *</th>
         <td colspan="2"><input type="text" name="if_up_cmd" value="{$params.if_up_cmd|escape}"/></td>
         </tr>
 
         <tr>
         <th{if isset($error.if_down_cmd)} class="error"{/if}>
         <label>{$message.descIf_down_cmd|escape}</label>
-        <br />if_down_cmd (string)</th>
+        <br />if_down_cmd (string) *</th>
         <td colspan="2"><input type="text" name="if_down_cmd" value="{$params.if_down_cmd|escape}"/></td>
         </tr>
 
         <tr>
         <th{if isset($error.arping_path)} class="error"{/if}>
         <label>{$message.descArping_path|escape}</label>
-        <br />arping_path (string)</th>
+        <br />arping_path (string) *</th>
         <td colspan="2"><input type="text" name="arping_path" value="{$params.arping_path|escape}"/></td>
         </tr>
 
         <tr>
         <th{if isset($error.arping_cmd)} class="error"{/if}>
         <label>{$message.descArping_cmd|escape}</label>
-        <br />arping_cmd (string)</th>
+        <br />arping_cmd (string) *</th>
         <td colspan="2"><input type="text" name="arping_cmd" value="{$params.arping_cmd|escape}"/></td>
         </tr>
 
@@ -1311,14 +1320,14 @@ function delOtherWatchdog(num){
         <tr>
         <th{if isset($error.wd_hostname)} class="error"{/if}>
         <label>{$message.descWd_hostname|escape}</label>
-        <br />wd_hostname (string)</th>
+        <br />wd_hostname (string) *</th>
         <td colspan="2"><input type="text" name="wd_hostname" value="{$params.wd_hostname|escape}"/></td>
         </tr>
 
         <tr>
         <th{if isset($error.wd_port)} class="error"{/if}>
         <label>{$message.descWd_port|escape}</label>
-        <br />wd_port (integer)</th>
+        <br />wd_port (integer) *</th>
         <td colspan="2"><input type="text" name="wd_port" value="{$params.wd_port|escape}"/></td>
         </tr>
 

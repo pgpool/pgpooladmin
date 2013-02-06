@@ -111,6 +111,7 @@ $message = array(
     'descPcp_socket_dir' => 'The socket directory pcp could connect',
     'descPcp_timeout' => 'When there is no response in this time from client, it disconnects and stop',
     'descPgpool2_hostname' => 'Pgpool2 server name where running on',
+    'descPool_passwd' => 'File name of pool_passwd for md5 authentication',
     'descPort' => 'The port number where pgpool is running on',
     'descPrint_timestamp' => 'If true, timestamp is added to each log line',
     'descRecovery_user' => 'PostgreSQL user name for online recovery',

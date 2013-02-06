@@ -603,6 +603,7 @@ function paramExists($param)
             break;
 
         // params added in 3.0
+        case 'pool_passwd':
         case 'master_slave_sub_mode':
         case 'delay_threshold':
         case 'log_standby_delay':

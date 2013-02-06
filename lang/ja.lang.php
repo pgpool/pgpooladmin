@@ -101,6 +101,7 @@ $message = array(
     'descPcp_socket_dir' => 'pcpがコネクションを受け付けるUnix domain socketディレクトリ',
     'descPcp_timeout' => 'この時間内にクライアントから応答がない場合はコネクションを切断して終了',
     'descPgpool2_hostname' => 'pgpool2 が動作しているホスト名',
+    'descPool_passwd' => 'md5 認証で用いる認証ファイル',
     'descPing_path' => 'ping コマンドのパス',
     'descPort' => 'pgpoolがコネクションを受け付けるポート番号',
     'descPrint_timestamp' => 'pgpoolのログにタイムスタンプを追加',

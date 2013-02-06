@@ -134,7 +134,7 @@ Please push the delete button at the right of the host setting when you want to 
     <tr><th class="category" colspan="2">Authentication</th></tr>
     <tr>
       <th id="ENABLE_POOL_HBA"><label>{$message.descEnable_pool_hba|escape}</label>
-      <p>enable_pool_hba (bool) *</th>
+      <p>enable_pool_hba (bool)</th>
       <td>
         <p>
         If true, use pool_hba.conf for client authentication.
@@ -143,8 +143,19 @@ Please push the delete button at the right of the host setting when you want to 
     </tr>
 
     <tr>
+      <th id="POOL_PASSWD"><label>{$message.descPool_passwd|escape}</label>
+      <p>pool_passwd (string) *</th>
+      <td>
+        <p>
+        Specify the file name of pool_passwd for md5 authentication.
+        Default value is "pool_passwd". "" disables to read pool_passwd. 
+        </p>
+      </td>
+    </tr>
+
+    <tr>
       <th id="AUTHENTICATION_TIMEOUT"><label>{$message.descAuthentication_timeout|escape}</label>
-      <p>authentication_timeout (integer) *</th>
+      <p>authentication_timeout (integer)</th>
       <td>
         <p>Specify the timeout for pgpool authentication. 0 disables the time out.
         Default value is 60.
@@ -172,7 +183,7 @@ Please push the delete button at the right of the host setting when you want to 
 
     <tr>
       <th><label>{$message.descSsl_key|escape}</label>
-      <p id="SSL_KEY">ssl_key (string)</th>
+      <p id="SSL_KEY">ssl_key (string) *</th>
       <td>
         <p>
         The path to the private key file to use for incoming frontend connections.
@@ -186,7 +197,7 @@ Please push the delete button at the right of the host setting when you want to 
 
     <tr>
       <th><label>{$message.descSsl_cert|escape}</label>
-      <p id="SSL_CERT">ssl_cert (string)</th>
+      <p id="SSL_CERT">ssl_cert (string) *</th>
       <td>
         <p>
         The path to the public x509 certificate file to use for incoming
@@ -201,14 +212,14 @@ Please push the delete button at the right of the host setting when you want to 
 
     <tr>
       <th id="SSL_CA_CERT"><label>{$message.descSsl_ca_cert|escape}</label>
-      <p>ssl_ca_cert (string)</th>
+      <p>ssl_ca_cert (string) *</th>
       <td>
       </td>
     </tr>
 
     <tr>
       <th id="SSL_CA_CERT_DIR"><label>{$message.descSsl_ca_cert_dir|escape}</label>
-      <p>ssl_ca_cert_dir (string)</th>
+      <p>ssl_ca_cert_dir (string) *</th>
       <td>
       </td>
     </tr>
@@ -1595,7 +1606,7 @@ black_function_list = 'nextval,setval,lastval,currval'
   <tbody>
     <tr>
       <th id="USE_WATCHDOG"><label>{$message.descUse_watchdog|escape}</label>
-      <p>use_watchdog (bool)</th>
+      <p>use_watchdog (bool) *</th>
       <td>
       <p>If on, activates watchdog. Default is off. </p>
       </td>
@@ -1605,7 +1616,7 @@ black_function_list = 'nextval,setval,lastval,currval'
 
     <tr>
       <th id="TRUSTED_SERVERS"><label>{$message.descTrusted_servers|escape}</label>
-      <p>trusted_servers (string)</th>
+      <p>trusted_servers (string) *</th>
       <td>
       <p>
       The list of trusted servers to check the up stream connections.
@@ -1617,7 +1628,7 @@ black_function_list = 'nextval,setval,lastval,currval'
 
     <tr>
       <th id="PING_PATH"><label>{$message.descPing_path|escape}</label>
-      <p>ping_path (string)</th>
+      <p>ping_path (string) *</th>
       <td>
       <p>This parameter specifies a path of ping command for monitoring connection to the upper servers.
       Set the only path such as "/bin". </p>
@@ -1628,7 +1639,7 @@ black_function_list = 'nextval,setval,lastval,currval'
 
     <tr>
       <th id="WD_INTERVAL"><label>{$message.descWd_interval|escape}</label>
-      <p>wd_interval (integer)</th>
+      <p>wd_interval (integer) *</th>
       <td>
       <p>This parameter specifies the interval between life checks of pgpool-II in second.
       (A number greater than or equal to 1) </p>
@@ -1637,7 +1648,7 @@ black_function_list = 'nextval,setval,lastval,currval'
 
     <tr>
       <th id="WD_LIFE_POINT"><label>{$message.descWd_life_point|escape}</label>
-      <p>wd_life_point (string)</th>
+      <p>wd_life_point (string) *</th>
       <td>
       <p>The times to retry a failed life check of pgpool-II. (A number greater than or equal to 1) </p>
       </td>
@@ -1645,7 +1656,7 @@ black_function_list = 'nextval,setval,lastval,currval'
 
     <tr>
       <th id="WD_LIFECHECK_QUERY"><label>{$message.descWd_lifecheck_query|escape}</label>
-      <p>wd_lifecheck_query (string)</th>
+      <p>wd_lifecheck_query (string) *</th>
       <td>
       <p>Actual query to check pgpool-II. Default is "SELECT 1".</p>
       </td>
@@ -1655,7 +1666,7 @@ black_function_list = 'nextval,setval,lastval,currval'
 
     <tr>
       <th id="DELEGATE_IP"><label>{$message.descDelegate_IP|escape}</label>
-      <p>delegate_IP (string)</th>
+      <p>delegate_IP (string) *</th>
       <td>
       <p>Specifies the virtual IP address (VIP) of pgpool-II that is connected from client servers
       (application servers etc.).
@@ -1665,7 +1676,7 @@ black_function_list = 'nextval,setval,lastval,currval'
 
     <tr>
       <th id="IFCONFIG_PATH"><label>{$message.descIfconfig_path|escape}</label>
-      <p>ifconfig_path (string)</th>
+      <p>ifconfig_path (string) *</th>
       <td>
       <p>This parameter specifies a path of a command to switch the IP address.
       Set the only path such as "/sbin". </p>
@@ -1674,7 +1685,7 @@ black_function_list = 'nextval,setval,lastval,currval'
 
     <tr>
       <th id="IF_UP_CMD"><label>{$message.descIf_up_cmd|escape}</label>
-      <p>if_up_cmd (string)</th>
+      <p>if_up_cmd (string) *</th>
       <td>
       <p>This parameter specifies a command to bring up the virtual IP.
       Set the command and parameters such as "ifconfig eth0:0 inet $_IP_$ netmask 255.255.255.0".
@@ -1684,7 +1695,7 @@ black_function_list = 'nextval,setval,lastval,currval'
 
     <tr>
       <th id="IF_DOWN_CMD"><label>{$message.descIf_down_cmd|escape}</label>
-      <p>if_down_cmd (string)</th>
+      <p>if_down_cmd (string) *</th>
       <td>
       <p>This parameter specifies a command to bring down the virtual IP.
       Set the command and parameters such as "ifconfig eth0:0 down". </p>
@@ -1693,7 +1704,7 @@ black_function_list = 'nextval,setval,lastval,currval'
 
     <tr>
       <th id="ARPING_PATH"><label>{$message.descArping_path|escape}</label>
-      <p>arping_path (string)</th>
+      <p>arping_path (string) *</th>
       <td>
       <p>This parameter specifies a path of a command to send an ARP request after the virtual IP is switched.
       Set the only path such as "/usr/sbin". </p>
@@ -1702,7 +1713,7 @@ black_function_list = 'nextval,setval,lastval,currval'
 
     <tr>
       <th id="ARPING_CMD"><label>{$message.descArping_cmd|escape}</label>
-      <p>arping_cmd (string)</th>
+      <p>arping_cmd (string) *</th>
       <td>
       <p>This parameter specifies a command to send an ARP request after the virtual IP is switched.
       Set the command and parameters such as "arping -U $_IP_$ -w 1".
@@ -1714,7 +1725,7 @@ black_function_list = 'nextval,setval,lastval,currval'
 
     <tr>
       <th id="WD_HOSTNAME"><label>{$message.descWd_hostname|escape}</label>
-      <p>wd_hostname (string)</th>
+      <p>wd_hostname (string) *</th>
       <td>
       <p>Specifies the hostname or IP address for mutual monitoring of watchdog processes. </p>
       </td>
@@ -1722,7 +1733,7 @@ black_function_list = 'nextval,setval,lastval,currval'
 
     <tr>
       <th id="WD_PORT"><label>{$message.descWd_port|escape}</label>
-      <p>wd_port (integer)</th>
+      <p>wd_port (integer) *</th>
       <td>
       <p>Specifies the port number for mutual monitoring of watchdog processes. </p>
       </td>

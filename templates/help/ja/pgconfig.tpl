@@ -149,10 +149,20 @@
     <tr><th class="category" colspan="2">Authentication</th></tr>
     <tr>
       <th id="ENABLE_POOL_HBA"><label>{$message.descEnable_pool_hba|escape}</label>
-      <p>enable_pool_hba</th>
+      <p>enable_pool_hba (bool)</th>
       <td>
       <p>true ならば、pool_hba.conf に従ってクライアント認証を行います。</p>
       <p>デフォルト値は false です。</p>
+      </td>
+    </tr>
+
+    <tr>
+      <th id="POOL_PASSWD"><label>{$message.descPool_passwd|escape}</label>
+      <p>pool_passwd (string) *</th>
+      <td>
+      <p>md5 認証で用いる認証ファイルのファイル名を指定します。</p>
+      <p>デフォルト値は "pool_passwd" です。</p>
+      <p>空文字列（""）を指定すると 認証ファイルの読込は無効になります。  </p>
       </td>
     </tr>
 
@@ -187,7 +197,7 @@
 
     <tr>
       <th><label>{$message.descSsl_key|escape}</label>
-      <p id="SSL_KEY">ssl_key (string)</th>
+      <p id="SSL_KEY">ssl_key (string) *</th>
       <td>
         <p>
         フロントエンドとの接続に使用するプライベートキーファイルのフルパスを指定します。
@@ -201,7 +211,7 @@
 
     <tr>
       <th><label>{$message.descSsl_cert|escape}</label>
-      <p id="SSL_CERT">ssl_cert (string)</th>
+      <p id="SSL_CERT">ssl_cert (string) *</th>
       <td>
         <p>
         フロントエンドとの接続に使用する公開x509証明書のフルパスを指定します。
@@ -215,14 +225,14 @@
 
     <tr>
       <th id="SSL_CA_CERT"><label>{$message.descSsl_ca_cert|escape}</label>
-      <p>ssl_ca_cert (string)</th>
+      <p>ssl_ca_cert (string) *</th>
       <td>
       </td>
     </tr>
 
     <tr>
       <th id="SSL_CA_CERT_DIR"><label>{$message.descSsl_ca_cert_dir|escape}</label>
-      <p>ssl_ca_cert_dir (string)</th>
+      <p>ssl_ca_cert_dir (string) *</th>
       <td>
       </td>
     </tr>
@@ -1672,7 +1682,7 @@ black_function_list = 'nextval,setval,lastval,currval'
   <tbody>
     <tr>
       <th id="USE_WATCHDOG"><label>{$message.descUse_watchdog|escape}</label>
-      <p>use_watchdog (bool)</th>
+      <p>use_watchdog (bool) *</th>
       <td>
       <p>watchdog を有効にするには on にします。デフォルトは off です。</p>
       </td>
@@ -1682,7 +1692,7 @@ black_function_list = 'nextval,setval,lastval,currval'
 
     <tr>
       <th id="TRUSTED_SERVERS"><label>{$message.descTrusted_servers|escape}</label>
-      <p>trusted_servers (string)</th>
+      <p>trusted_servers (string) *</th>
       <td>
       <p>上位接続を確認するための信頼できるサーバリストです。 ping の応答が得られる必要があります。
       "hostA,hostB,hostC ..." のようにカンマで区切って複数のサーバを指定できます。</p>
@@ -1692,7 +1702,7 @@ black_function_list = 'nextval,setval,lastval,currval'
 
     <tr>
       <th id="PING_PATH"><label>{$message.descPing_path|escape}</label>
-      <p>ping_path (string)</th>
+      <p>ping_path (string) *</th>
       <td>
       <p>上位サーバへの接続監視に利用する ping コマンドのパスです。 "/bin" のようにパスだけを指定します。 </p>
       </td>
@@ -1702,7 +1712,7 @@ black_function_list = 'nextval,setval,lastval,currval'
 
     <tr>
       <th id="WD_INTERVAL"><label>{$message.descWd_interval|escape}</label>
-      <p>wd_interval (integer)</th>
+      <p>wd_interval (integer) *</th>
       <td>
       <p>pgpool-II への生存監視の間隔（秒）です。 （1 以上の数値） </p>
       </td>
@@ -1710,7 +1720,7 @@ black_function_list = 'nextval,setval,lastval,currval'
 
     <tr>
       <th id="WD_LIFE_POINT"><label>{$message.descWd_life_point|escape}</label>
-      <p>wd_life_point (string)</th>
+      <p>wd_life_point (string) *</th>
       <td>
       <p>pgpool-II の死活監視で応答が得られなかった場合のリトライ回数です。 （1 以上の数値） </p>
       </td>
@@ -1718,7 +1728,7 @@ black_function_list = 'nextval,setval,lastval,currval'
 
     <tr>
       <th id="WD_LIFECHECK_QUERY"><label>{$message.descWd_lifecheck_query|escape}</label>
-      <p>wd_lifecheck_query (string)</th>
+      <p>wd_lifecheck_query (string) *</th>
       <td>
       <p>pgpool-II の死活監視のために発行されるクエリです。 デフォルトは "SELECT 1" です。</p>
       </td>
@@ -1728,7 +1738,7 @@ black_function_list = 'nextval,setval,lastval,currval'
 
     <tr>
       <th id="DELEGATE_IP"><label>{$message.descDelegate_IP|escape}</label>
-      <p>delegate_IP (string)</th>
+      <p>delegate_IP (string) *</th>
       <td>
       <p>（アプリケーションサーバなど）外部からの接続される pgpool-II の仮想 IP アドレスです。
       スタンバイからアクティブに切り替わる際、pgpool はこの仮想 IP を引き継ぎます。 </p>
@@ -1737,7 +1747,7 @@ black_function_list = 'nextval,setval,lastval,currval'
 
     <tr>
       <th id="IFCONFIG_PATH"><label>{$message.descIfconfig_path|escape}</label>
-      <p>ifconfig_path (string)</th>
+      <p>ifconfig_path (string) *</th>
       <td>
       <p>IP アドレス切り替えに利用するコマンドのパスです。 "/sbin" のようにパスだけを指定します。</p>
       </td>
@@ -1745,7 +1755,7 @@ black_function_list = 'nextval,setval,lastval,currval'
 
     <tr>
       <th id="IF_UP_CMD"><label>{$message.descIf_up_cmd|escape}</label>
-      <p>if_up_cmd (string)</th>
+      <p>if_up_cmd (string) *</th>
       <td>
       <p>仮想 IP を起動するために実行するコマンドです。
       "ifconfig eth0:0 inet $_IP_$ netmask 255.255.255.0" のようにコマンドとパラメータを指定します。
@@ -1755,7 +1765,7 @@ black_function_list = 'nextval,setval,lastval,currval'
 
     <tr>
       <th id="IF_DOWN_CMD"><label>{$message.descIf_down_cmd|escape}</label>
-      <p>if_down_cmd (string)</th>
+      <p>if_down_cmd (string) *</th>
       <td>
       <p>仮想IPを停止するために実行するコマンドです。
       "ifconfig eth0:0 down" のようにコマンドとパラメータを指定します。</p>
@@ -1764,7 +1774,7 @@ black_function_list = 'nextval,setval,lastval,currval'
 
     <tr>
       <th id="ARPING_PATH"><label>{$message.descArping_path|escape}</label>
-      <p>arping_path (string)</th>
+      <p>arping_path (string) *</th>
       <td>
       <p>IP アドレス切り替え後に ARP リクエストを送信するコマンドのパスです。
       "/usr/sbin" のようにパスだけを指定します。 </p>
@@ -1773,7 +1783,7 @@ black_function_list = 'nextval,setval,lastval,currval'
 
     <tr>
       <th id="ARPING_CMD"><label>{$message.descArping_cmd|escape}</label>
-      <p>arping_cmd (string)</th>
+      <p>arping_cmd (string) *</th>
       <td>
       <p>IPアドレス切り替え後にARPリクエストを送信するコマンドです。
          "arping -U $_IP_$ -w 1" のようにコマンドとパラメータを指定します。
@@ -1785,7 +1795,7 @@ black_function_list = 'nextval,setval,lastval,currval'
 
     <tr>
       <th id="WD_HOSTNAME"><label>{$message.descWd_hostname|escape}</label>
-      <p>wd_hostname (string)</th>
+      <p>wd_hostname (string) *</th>
       <td>
       <p>watchdog プロセスが相互監視を受信する為のホスト名または IP アドレスです。 </p>
       </td>
@@ -1793,7 +1803,7 @@ black_function_list = 'nextval,setval,lastval,currval'
 
     <tr>
       <th id="WD_PORT"><label>{$message.descWd_port|escape}</label>
-      <p>wd_port (integer)</th>
+      <p>wd_port (integer) *</th>
       <td>
       <p>watchdog プロセスが相互監視を受信する為のポート番号です。 </p>
       </td>
