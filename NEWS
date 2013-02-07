@@ -2,15 +2,26 @@
 pgpoolAdmin 3.2
 ===============================================================================
 
+* Version 3.2.2 2013/2/8
+
+    - Fix typo: health_check_pasword -> health_check_password (Anzai)
+
+    - Fix the type of delay_threshold: bool -> integer (Anzai)
+
+    - Add pool_passwd parameter. (Nagata)
+
+-------------------------------------------------------------------------------
+
 * Version 3.2.1 2012/10/15
 
-	- Revise the default value of relcache_size from 0 to 256. (Nagata)
+    - Revise the default value of relcache_size from 0 to 256. (Nagata)
 
-	- Update Smarty to 3.1.12.
+    - Update Smarty to 3.1.12.
 
-	  This version has a security fix for Cross-Site Scripting (XSS)
-	  vulnerability. (Nagata)
+      This version has a security fix for Cross-Site Scripting (XSS)
+      vulnerability. (Nagata)
 
+-------------------------------------------------------------------------------
 
 * Version 3.2 2012/08/03
 
