@@ -19,11 +19,12 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2011 PgPool Global Development Group
+ * @copyright  2003-2013 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
 require_once('../version.php');
+require_once('../bootstrap.php');
 
 session_start();
 
@@ -117,7 +118,7 @@ if ($error) {
 </div>
     <div id="footer">
       <address>Version <?php echo $version;?><br />
-      Copyright &copy; 2006 - <?php echo date('Y'); ?> <a href="http://pgpool.projects.postgresql.org/">pgpool Global Development Group</a>. All rights reserved.</address>
+      Copyright &copy; 2006 - <?php echo date('Y'); ?> <a href="<?php echo PGPOOL_OFFICIAL_SITE; ?>">pgpool Global Development Group</a>. All rights reserved.</address>
     </div>
   </body>
 </html>
