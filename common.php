@@ -25,12 +25,8 @@
 
 require_once('version.php');
 require_once('libs/Smarty.class.php');
+require_once('bootstrap.php');
 error_reporting(E_ALL);
-
-define('SESSION_LOGIN_USER',          'loginUser');
-define('SESSION_LOGIN_USER_PASSWORD', 'md5pass');
-define('SESSION_LANG',                'lang');
-define('SESSION_MESSAGE',             'message');
 
 function versions()
 {
@@ -39,12 +35,6 @@ function versions()
 }
 
 session_start();
-
-/**
- * Smarty Parameter
- */
-define('SMARTY_TEMPLATE_DIR', dirname(__FILE__) . '/templates' );
-define('SMARTY_COMPILE_DIR', dirname(__FILE__) . '/templates_c' );
 
 /**
  * Initialize Smartry
@@ -269,13 +259,13 @@ function NodeStandby($num)
         return -1;
     }
 
-    $res = pg_query($conn, 'SELECT pg_is_in_recovery()');
-    if (!pg_result_status($res) == PGSQL_TUPLES_OK) {
+    $result = pg_query($conn, 'SELECT pg_is_in_recovery()');
+    if (!pg_result_status($result) == PGSQL_TUPLES_OK) {
         @pg_close($conn);
         return -1;
     }
 
-    $rr = pg_fetch_array($res);
+    $rr = pg_fetch_array($result);
 
     if ($rr[0][0] == 't') {
         $r = 1;
@@ -283,7 +273,7 @@ function NodeStandby($num)
         $r = 0;
     }
 
-    @pg_free_result($res);
+    @pg_free_result($result);
     @pg_close($conn);
     return $r;
 }
@@ -308,13 +298,13 @@ function conStr($num, $mode = NULL)
                     $params['health_check_password'] : NULL;
     }
 
-    // backkend info
+    // backend info
     $params = readConfigParams(array('backend_hostname',
                                      'backend_port',
                                      'backend_weight'));
     $conStr = array();
     if ($params['backend_hostname'][$num] != '') {
-        $conStr[] = "host={$params['backend_hostname'][$num]} ";
+        $conStr[] = "host='{$params['backend_hostname'][$num]}'";
     }
     $conStr[] = "port='{$params['backend_port'][$num]}'";
     $conStr[] = "dbname='template1'";
@@ -657,4 +647,53 @@ function paramExists($param)
     }
     return FALSE;
 }
-?>
+
+/* Get if loginUser is super user */
+function isSuperUser($user_name)
+{
+    if (DoesPgpoolPidExist() && isset($_SESSION[SESSION_IS_SUPER_USER])) {
+        return $_SESSION[SESSION_IS_SUPER_USER];
+    }
+    $conn = @pg_connect(conStrPgpool());
+
+    if ($conn == FALSE) {
+        @pg_close($conn);
+        return NULL;
+    }
+
+    $result = pg_query($conn, "SELECT usesuper FROM pg_user WHERE usename = '{$user_name}'");
+
+   if (!pg_result_status($result) == PGSQL_TUPLES_OK) {
+        @pg_close($conn);
+        return NULL;
+    }
+
+    $rr = pg_fetch_array($result);
+    $rtn = (isset($rr['usesuper']) && $rr['usesuper'] == 't');
+
+    @pg_free_result($result);
+    @pg_close($conn);
+
+     $_SESSION[SESSION_IS_SUPER_USER] = $rtn;
+    return $rtn;
+}
+
+function conStrPgpool()
+{
+    $params = readConfigParams(array('port'));
+    $conStr[] = "port='{$params['port']}'";
+    $conStr[] = "dbname='template1'";
+    $conStr[] = "user='{$_SESSION[SESSION_LOGIN_USER]}'";
+    $conStr[] = "password='{$_SESSION[SESSION_LOGIN_USER_PASSWORD]}'";
+
+    $conStr = implode($conStr, ' ');
+    return $conStr;
+}
+
+/* for debug */
+function pr($array)
+{
+    echo '<pre>';
+    print_r($array);
+    echo '</pre>';
+}

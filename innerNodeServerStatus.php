@@ -19,39 +19,56 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2012 PgPool Global Development Group
+ * @copyright  2003-2013 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
 require_once('common.php');
+require_once('command.php');
 
+/* --------------------------------------------------------------------- */
+/* InnerNodeServerStatus.php                                             */
+/* --------------------------------------------------------------------- */
+
+// Check login status
 if (!isset($_SESSION[SESSION_LOGIN_USER])) {
     exit();
 }
 
-$params = readConfigParams('backend_hostname');
+// Get backend info
+$params = readConfigParams(array('backend_hostname', 'backend_port'));
 if (isset($params['backend_hostname'])) {
     $backendHostName = $params['backend_hostname'];
     $backendPort     = $params['backend_port'];
 
 } else {
     $backendHostName = array();
+    $backendHostPort = array();
 }
 
-$result = array();
+$is_pgpool_active = DoesPgpoolPidExist();
+$nodeInfo = array();
 foreach($backendHostName as $num => $hostname) {
-    $result[$num]['hostname'] = $backendHostName[$num];
-    $result[$num]['port']     = $backendPort[$num];
+    $nodeInfo[$num]['hostname'] = $backendHostName[$num];
+    $nodeInfo[$num]['port']     = $backendPort[$num];
+    $nodeInfo[$num]['is_active'] = NodeActive($num);
 
-    if (NodeActive($num)) {
-        $result[$num]['status'] = TRUE;
-    } else {
-        $result[$num]['status'] = FALSE;
+    if ($is_pgpool_active) {
+        $result = getNodeInfo($num);
+        $nodeInfo[$num]['status'] = $result['status'];
     }
 }
 
-$tpl->assign('nodeServerStatus', $result);
-$tpl->assign('nodeCount', count($result));
-$tpl->display('innerNodeServerStatus.tpl');
+// Get node num
+$nodeNum = (isset($_GET['num'])) ? $_GET['num'] : NULL;
 
-?>
+// Set vars
+$tpl->assign('pgpoolIsActive',   $is_pgpool_active);
+$tpl->assign('nodeServerStatus', $nodeInfo);
+$tpl->assign('nodeCount',        count($nodeInfo));
+$tpl->assign('nodeNum',          $nodeNum);
+$tpl->assign('refreshTime',      (0 <= _PGPOOL2_STATUS_REFRESH_TIME) ?
+                                 _PGPOOL2_STATUS_REFRESH_TIME * 1000 : 5000);
+
+// Display
+$tpl->display('innerNodeServerStatus.tpl');

@@ -19,15 +19,19 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2012 PgPool Global Development Group
+ * @copyright  2003-2013 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
 require_once('common.php');
 require_once('command.php');
 
-$success = FALSE;
+/* --------------------------------------------------------------------- */
+/* login.php                                                             */
+/* --------------------------------------------------------------------- */
 
+// Check loginstatus
+$success = FALSE;
 if (isset($_SESSION[SESSION_LOGIN_USER])) {
     $success = TRUE;
 }
@@ -77,35 +81,6 @@ if ($success == FALSE) {
     }
 }
 
-// If user has already logined, show nodeStatus page.
-$tpl->assign('isLogin', TRUE);
-$tpl->assign('viewPHP', 'nodeStatus.php');
-
-$refreshTime = 5000;
-if (_PGPOOL2_STATUS_REFRESH_TIME >= 0 ) {
-    $refreshTime = _PGPOOL2_STATUS_REFRESH_TIME * 1000;
-}
-if (DoesPgpoolPidExist()) {
-    $tpl->assign('pgpoolIsActive', TRUE);
-} else {
-    $tpl->assign('pgpoolIsActive', FALSE);
-}
-
-$tpl->assign('c', _PGPOOL2_CMD_OPTION_C);
-$tpl->assign('D', _PGPOOL2_CMD_OPTION_LARGE_D);
-$tpl->assign('d', _PGPOOL2_CMD_OPTION_D);
-$tpl->assign('m', _PGPOOL2_CMD_OPTION_M);
-$tpl->assign('n', _PGPOOL2_CMD_OPTION_N);
-$tpl->assign('C', _PGPOOL2_CMD_OPTION_LARGE_C);
-
-$tpl->assign('pgpoolStatus',  NULL);
-$tpl->assign('pgpoolMessage', NULL);
-$tpl->assign('pgpoolConf',    _PGPOOL2_CONFIG_FILE);
-$tpl->assign('pcpConf',       _PGPOOL2_PASSWORD_FILE);
-$tpl->assign('refreshTime',   $refreshTime);
-$tpl->assign('useSyslog',     useSyslog());
-$tpl->assign('msgStopPgpool', $message['msgStopPgpool']);
-$tpl->assign('help', 'status');
-$tpl->display('status.tpl');
-
-?>
+// If user has already logined, show status page.
+header("Location: status.php");
+exit();

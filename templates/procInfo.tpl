@@ -7,6 +7,16 @@
 </head>
 <body>
 <h3>{$message.strProcInfo|escape}</h3>
+
+{if $smarty.const._PGPOOL2_STATUS_REFRESH_TIME > 0}
+    <div class="auto_reloading">
+    <span><img src="images/refresh.png">
+          Refresh info: {$smarty.const._PGPOOL2_STATUS_REFRESH_TIME} seconds
+    </span>
+    </div>
+    <br clear="all">
+{/if}
+
 <table>
   <thead>
   <tr>
@@ -48,7 +58,7 @@
         <td>{$data.9|escape}</td>
         <td>{$data.10|escape}</td>
       </tr>
-    {/if}    
+    {/if}
   {/foreach}
 {/foreach}
 </table>

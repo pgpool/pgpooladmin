@@ -1,7 +1,12 @@
 body {
   margin: 0px;
-  font: x-small Verdana, Arial, Helvetica, sans-serif
+  font: x-small Verdana, Arial, Helvetica, sans-serif;
 }
+
+/* --------------------------------------------------------------------- */
+/* header                                                                */
+/* --------------------------------------------------------------------- */
+
 h1 {
   margin: 0px;
 }
@@ -17,9 +22,11 @@ h3 {
   border: 2px solid #8CD8E2;
   border-left: 10px solid #8CD8E2;
 }
-ul {
-  list-style: square;
-}
+
+/* --------------------------------------------------------------------- */
+/* table                                                                 */
+/* --------------------------------------------------------------------- */
+
 table {
   border-top: 1px solid lightsteelblue;
   border-collapse: collapse;
@@ -40,6 +47,22 @@ tbody th.category {
   color: #709CD1;
   font-size: small;
 }
+
+table#complete_msg
+{
+    margin-bottom: 20px;
+}
+
+td.pgconfig_msg img {
+  vertical-align: middle;
+  margin-right: 5px;
+  height: 12px;
+}
+
+/* --------------------------------------------------------------------- */
+/* link                                                                  */
+/* --------------------------------------------------------------------- */
+
 a:link {
   color: red;
   text-decoration: none;
@@ -55,9 +78,79 @@ a:link:hover, a:visited:hover {
 a img {
   border: none;
 }
+
+/* --------------------------------------------------------------------- */
+/* input                                                                 */
+/* --------------------------------------------------------------------- */
+
 input {
   font: x-small Verdana, Arial, Helvetica, sans-serif;
 }
+input[type=button], input[type=submit] {
+  border-radius: 3px;
+  padding: 2px 5px;
+
+  vertical-align: middle;
+
+  border-top: 1px solid #aaa;
+  border-right: 1px solid #666;
+  border-bottom: 1px solid #666;
+  border-left: 1px solid #aaa;
+
+  -webkit-border-radius: 3px;
+  -moz-border-radius:    3px;
+  border-radius:         3px;
+
+  background: #ffffff;
+  background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#eeeeee));
+  background: -moz-linear-gradient(top, #ffffff, #eeeeee);
+}
+
+input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover {
+  border-top: 1px solid #666;
+  border-right: 1px solid #aaa;
+  border-bottom: 1px solid #aaa;
+  border-left: 1px solid #666;
+
+  background: #f3f3f3;
+  background: -webkit-gradient(linear, left top, left bottom, from(#eeeeee), to(#ffffff));
+  background: -moz-linear-gradient(top, #eeeeee, #ffffff);
+  color: #5f5f5f;
+}
+input[type=button]:active, input[type=submit]:active, input[type=reset]:active {
+  border-top: 1px solid #666;
+  border-right: 1px solid #aaa;
+  border-bottom: 1px solid #aaa;
+  border-left: 1px solid #666;
+
+  background: #cccccc;
+  color: #000000;
+}
+input[type=button].command_active {
+  background: yellow;
+  background: -webkit-gradient(linear, left top, left bottom, from(yellow), to(#FCE114));
+  background: -moz-linear-gradient(top, yellow, #FCE114);
+  border-color: #BC4B00;
+}
+
+input[type=button][disabled], input[type=button][disabled]:hover {
+  border-top: 1px solid #aaa;
+  border-right: 1px solid #666;
+  border-bottom: 1px solid #666;
+  border-left: 1px solid #aaa;
+
+  background: #dedede;
+  color: #777777;
+  text-shadow: #eeeeee 0 1px 0;
+}
+input[type=button][disabled]:hover {
+  background: #f0f0f0;
+}
+
+/* --------------------------------------------------------------------- */
+/* text                                                                  */
+/* --------------------------------------------------------------------- */
+
 label {
   font-weight: bold;
 }
@@ -68,11 +161,21 @@ pre {
 p {
     margin: 5px;
 }
+ul {
+  list-style: square;
+}
+/* --------------------------------------------------------------------- */
+/* div                                                                   */
+/* --------------------------------------------------------------------- */
+
+/* header */
 #header {
   padding: 8px;
   border-bottom: 8px solid white;
   background: steelblue url("images/sea.jpg") no-repeat bottom right;
 }
+
+/* menu */
 #menu {
   padding-bottom: 40px;
   border-top: 1px solid lightsteelblue;
@@ -101,11 +204,15 @@ p {
 #menu a:hover {
   background: antiquewhite url("images/marker.gif") no-repeat 8px;
 }
+
+/* content */
 #content {
   padding: 8px 8px 40px 185px;
   border-top: 1px solid lightsteelblue;
   background: white url("images/background.gif") repeat-y left;
 }
+
+/* submenu */
 #submenu {
   border: 1px solid lightsteelblue;
   float: right;
@@ -127,6 +234,8 @@ p {
   border-top: 1px solid lightsteelblue;
   list-style: square inside;
 }
+
+/* footer */
 #footer {
   padding: 8px 8px 20px;
   clear: left;
@@ -144,6 +253,21 @@ p {
   color: white;
   font-weight: bold;
 }
+
+/* help */
+#help {
+  float: right;
+}
+
+/* commands */
+#div_commands {
+  margin-bottom: 20px;
+}
+
+/* --------------------------------------------------------------------- */
+/* other                                                                 */
+/* --------------------------------------------------------------------- */
+
 .hidden {
   display: none;
 }
@@ -155,7 +279,7 @@ p {
 .error {
   font-weight: normal;
   text-align: left;
-  background: red;
+  background: #FFB499;
 }
 .right_border {
   border-right: 1px solid lightsteelblue;
@@ -177,6 +301,20 @@ p {
     border-bottom: 1px dotted #cccccc;
 }
 
-#help {
+/* --------------------------------------------------------------------- */
+/* Refresh info                                                          */
+/* --------------------------------------------------------------------- */
+
+div.auto_reloading {
   float: right;
+  margin-bottom: 10px;
+}
+div.auto_reloading img {
+  vertical-align: middle;
+  height: 13px;
+}
+div.auto_reloading span {
+  padding: 2px 5px;
+  margin: 5px;
+  color: #2D1D00;
 }

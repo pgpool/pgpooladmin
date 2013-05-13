@@ -19,16 +19,22 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2008 PgPool Global Development Group
+ * @copyright  2003-2013 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
 require_once('common.php');
 
+/* --------------------------------------------------------------------- */
+/* InnerSystemCatalog.php                                                */
+/* --------------------------------------------------------------------- */
+
+// Check login status
 if (!isset($_SESSION[SESSION_LOGIN_USER])) {
     exit();
 }
 
+// Get node num
 $pgCatalog = pg_escape_string($_GET['catalog']);
 $nodeNum = $_GET['num'];
 
@@ -37,10 +43,7 @@ if ($pgCatalog == '') {
 }
 
 // Set Parameters
-$params = readConfigParams();
-
-$tpl->assign('hostname', $params['backend_hostname'][$nodeNum]);
-$tpl->assign('port',     $params['backend_port'][$nodeNum]);
+$params = readConfigParams(array('backend_hostname', 'backend_port'));
 
 // Get Data From Database
 $conn = @pg_connect(conStr($nodeNum));
@@ -68,8 +71,11 @@ $results = pg_fetch_all($rs);
 
 closeDBConnection($conn);
 
-// Show
+// Set vars
+$tpl->assign('hostname', $params['backend_hostname'][$nodeNum]);
+$tpl->assign('port',     $params['backend_port'][$nodeNum]);
 $tpl->assign('results', $results);
-$tpl->display('innerSystemCatalog.tpl');
+$tpl->assign('nodeNum', $nodeNum);
 
-?>
+// Display
+$tpl->display('innerSystemCatalog.tpl');

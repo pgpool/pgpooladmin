@@ -10,35 +10,52 @@
 <table>
   <thead>
   <tr>
+    <th></th>
     <th><label>{$message.strIPaddress|escape}</label></th>
     <th><label>{$message.strPort|escape}</label></th>
-    <th><label>{$message.strStatus|escape}</label></th>
+    <th colspan="2"><label>{$message.strStatus|escape}</label></th>
     <th></th>
   </thead>
   <tbody>
-  {section name=num loop=$nodeServerStatus}
-    {if ($smarty.section.num.index+1) % 2 == 0}
-    <tr class="even">
-    {else}
-    <tr class="odd">
+  {$i = 0}
+  {foreach from=$nodeServerStatus key=node_num item=v}
+    {$i = $i + 1}
+    <tr class="{if $i % 2 == 0}even{else}odd{/if}">
+    <td class="input">node {$node_num}</td>
+    <td class="input">{$nodeServerStatus.$node_num.hostname|escape}</td>
+    <td class="input">{$nodeServerStatus.$node_num.port|escape}</td>
+    <td>
+    {if $pgpoolIsActive}
+        {if $nodeServerStatus.$node_num.status == $smarty.const.NODE_ACTIVE_NO_CONNECT}
+          {$message.strNodeStatus1|escape}
+        {elseif $nodeServerStatus.$node_num.status == $smarty.const.NODE_ACTIVE_CONNECTED}
+          {$message.strNodeStatus2|escape}
+        {elseif $nodeServerStatus.$node_num.status == $smarty.const.NODE_DOWN}
+          {$message.strNodeStatus3|escape}
+        {/if}
     {/if}
-    <td class="input">{$nodeServerStatus[num].hostname|escape}</td>
-    <td class="input">{$nodeServerStatus[num].port|escape}</td>
-    <td class="input">
-    {if $nodeServerStatus[num].status == true}
-    {$message.strUp|escape}
     </td>
-    <td><input type="button" name="detail" value="{$message.strDetail}" onclick="showDetail({$smarty.section.num.index})" /></td>
+    {if $nodeServerStatus.$node_num.is_active}
+        <td class="input">
+        postgres: {$message.strUp|escape}
+        </td>
+        <td>
+        <input type="button" name="detail" value="{$message.strSystemCatalog|escape}"
+               {if $smarty.section.num.index == $nodeNum}class="active_command"{/if}
+               onclick="showDetail({$node_num})" /></td>
     {else}
-    {$message.strDown|escape}
-    </td>
-    <td></td>
+        <td class="input">
+        postgres: {$message.strDown|escape}
+        </td>
+        <td>
+        <input type="button" name="detail" value="{$message.strSystemCatalog|escape}" disabled /></td>
+        </td>
     {/if}
-  {/section}
+  {/foreach}
   </tbody>
 </table>
 {else}
-{$message.strNoNode|escape}
+    {$message.strNoNode|escape}
 {/if}
 </body>
 </html>

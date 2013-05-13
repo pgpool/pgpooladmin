@@ -60,6 +60,7 @@ for ($i = 0; $i < count($logFile); $i++) {
     $logFile[$i]['message'] = trim($logFile[$i]['message']);
 }
 
+$tpl->assign('refreshTimeLog', REFRESH_LOG_SECONDS);
 $tpl->assign('logFile', $logFile);
 $tpl->display('innerLog.tpl');
 ?>

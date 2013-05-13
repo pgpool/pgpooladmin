@@ -78,13 +78,16 @@ function delOtherWatchdog(num){
     {if $status == 'success'}
     <table>
       <tr>
-      <td>{$message.msgUpdateComplete|escape}</td>
+      <td class="pgconfig_msg">
+      <p>{$message.msgUpdateComplete|escape}</p>
+      <p><img src="images/warning.png"> {$message.msgUpdateCompleteInfo|escape}</p>
+      </td>
       </tr>
     </table>
     {elseif $status == 'fail'}
     <table>
       <tr>
-      <td>{$message.msgUpdateFailed|escape}</td>
+      <td class="pgconfig_msg"><p><img src="images/error.png"> {$message.msgUpdateFailed|escape}</p></td>
       </tr>
     </table>
     {/if}
@@ -350,6 +353,7 @@ function delOtherWatchdog(num){
     <table>
       <thead>
         <tr>
+          <th></th>
           <th>{$message.strParameter|escape}</th>
           <th>{$message.strValue|escape}</th>
           <td></td>
@@ -359,70 +363,72 @@ function delOtherWatchdog(num){
       {if isset($isAdd) && $isAdd == true}
           <tfoot>
             <tr>
-               <td colspan="3">
+               <td colspan="4">
                <input type="button" name="cancel" value="{$message.strCancel|escape}" onclick="cancelNode()" /></td>
             </tr>
           </tfoot>
       {else}
           <tfoot>
             <tr>
-              <td colspan="3">
+              <td colspan="4">
               <input type="button" name="add" value="{$message.strAdd|escape}" onclick="addNode()" /></td>
             </tr>
           </tfoot>
       {/if}
           <tbody>
 
-          {section name=num loop=$params.backend_hostname}
+          {foreach from=$params.backend_hostname key=node_num item=v}
           <tr>
-          <th{if isset($error.backend_hostname[num])} class="error"{/if}>
+          <td rowspan="{if paramExists('backend_flag')}5{else}4{/if}">node {$node_num}</td>
+          <th{if isset($error.backend_hostname.$node_num)} class="error"{/if}>
           <label>{$message.descBackend_hostname|escape}</label>
-          <br />backend_hostname{$smarty.section.num.index} (string)</th>
-          <td><input type="text" name="backend_hostname[]" value="{$params.backend_hostname[num]|escape}" /></td>
+          <br />backend_hostname{$node_num} (string)</th>
+          <td><input type="text" name="backend_hostname[]" value="{$params.backend_hostname.$node_num|escape}" /></td>
           <td rowspan="{if paramExists('backend_flag')}5{else}4{/if}">
           <input type="button" name="delete" value="{$message.strDelete|escape}"
-          onclick="del({$smarty.section.num.index})" /></td>
+                 onclick="del({$node_num})" /></td>
           </tr>
 
           <tr>
-          <th{if isset($error.backend_port[num])} class="error"{/if}>
+          <th{if isset($error.backend_port.$node_num)} class="error"{/if}>
           <label>{$message.descBackend_port|escape}</label>
-          <br />backend_port{$smarty.section.num.index|escape} (integer)</th>
-          <td><input type="text" name="backend_port[]" value="{$params.backend_port[num]|escape}" /></td>
+          <br />backend_port{$node_num|escape} (integer)</th>
+          <td><input type="text" name="backend_port[]" value="{$params.backend_port.$node_num|escape}" /></td>
           </tr>
 
           <tr>
-          <th{if isset($error.backend_weight[num])} class="error"{/if}>
+          <th{if isset($error.backend_weight.$node_num)} class="error"{/if}>
           <label>{$message.descBackend_weight|escape}</label>
-          <br />backend_weight{$smarty.section.num.index|escape} (float)</th>
-          <td><input type="text" name="backend_weight[]" value="{$params.backend_weight[num]|escape}" /></td>
+          <br />backend_weight{$node_num|escape} (float)</th>
+          <td><input type="text" name="backend_weight[]" value="{$params.backend_weight.$node_num|escape}" /></td>
           </tr>
 
           <tr>
-          <th{if isset($error.backend_data_directory[num])} class="error"{/if}>
+          <th{if isset($error.backend_data_directory.$node_num)} class="error"{/if}>
           <label>{$message.descBackend_data_directory|escape}</label>
-          <br />backend_data_directory{$smarty.section.num.index|escape} (string)</th>
+          <br />backend_data_directory{$node_num|escape} (string)</th>
           <td><input type="text" name="backend_data_directory[]"
-               value="{$params.backend_data_directory[num]|escape}" /></td>
+               value="{$params.backend_data_directory.$node_num|escape}" /></td>
           </tr>
 
           {if paramExists('backend_flag')}
               <tr>
-              <th{if isset($error.backend_flag[num])} class="error"{/if}>
+              <th{if isset($error.backend_flag.$node_num)} class="error"{/if}>
               <label>{$message.descBackend_flag|escape}</label>
-              <br />backend_flag{$smarty.section.num.index|escape} (string) *</th>
+              <br />backend_flag{$node_num|escape} (string) *</th>
               <td><select name="backend_flag[]" id="backend_flag[]">
                   <option value="ALLOW_TO_FAILOVER"
-                  {if $params.backend_flag[num] == 'ALLOW_TO_FAILOVER'}selected{/if}>ALLOW_TO_FAILOVER</option>
+                  {if $params.backend_flag.$node_num == 'ALLOW_TO_FAILOVER'}selected{/if}>ALLOW_TO_FAILOVER</option>
                   <option value="DISALLOW_TO_FAILOVER"
-                  {if $params.backend_flag[num] == 'DISALLOW_TO_FAILOVER'}selected{/if}>DISALLOW_TO_FAILOVER</option>
+                  {if $params.backend_flag.$node_num == 'DISALLOW_TO_FAILOVER'}selected{/if}>DISALLOW_TO_FAILOVER</option>
                   </select></td>
               </tr>
           {/if}
-          {/section}
+          {/foreach}
 
           {if isset($isAdd) && $isAdd == true}
               <tr>
+              <td rowspan="{if paramExists('backend_flag')}5{else}4{/if}">node [new]</td>
               <th><label>{$message.descBackend_hostname|escape}</label>
               <br />backend_hostname{$smarty.section.num.index} (string)</th>
               <td><input type="text" name="backend_hostname[]" value="" /></td>
@@ -1333,31 +1339,32 @@ function delOtherWatchdog(num){
 
         <tr><th class="category" colspan="3">Servers to monitor</th></tr>
 
-          {section name=num loop=$params.other_pgpool_hostname}
+          {foreach from=$params.other_pgpool_hostname key=host_num item=v}
           <tr>
           <th{if isset($error.other_pgpool_hostname[num])} class="error"{/if}>
           <label>{$message.descOther_pgpool_hostname|escape}</label>
-          <br />other_pgpool_hostname{$smarty.section.num.index} (string)</th>
-          <td><input type="text" name="other_pgpool_hostname[]" value="{$params.other_pgpool_hostname[num]|escape}" /></td>
+          <br />other_pgpool_hostname{$host_num} (string)</th>
+          <td><input type="text" name="other_pgpool_hostname[]"
+                     value="{$params.other_pgpool_hostname.$host_num|escape}" /></td>
           <td rowspan="3">
           <input type="button" name="delete" value="{$message.strDelete|escape}"
-          onclick="delOtherWatchdog({$smarty.section.num.index})" /></td>
+                 onclick="delOtherWatchdog({$host_num})" /></td>
           </tr>
 
           <tr>
           <th{if isset($error.other_pgpool_port[num])} class="error"{/if}>
           <label>{$message.descOther_pgpool_port|escape}</label>
-          <br />other_pgpool_port{$smarty.section.num.index|escape} (integer)</th>
-          <td><input type="text" name="other_pgpool_port[]" value="{$params.other_pgpool_port[num]|escape}" /></td>
+          <br />other_pgpool_port{$host_num|escape} (integer)</th>
+          <td><input type="text" name="other_pgpool_port[]" value="{$params.other_pgpool_port.$host_num|escape}" /></td>
           </tr>
 
           <tr>
           <th{if isset($error.other_wd_port[num])} class="error"{/if}>
           <label>{$message.descOther_wd_port|escape}</label>
-          <br />other_wd_port{$smarty.section.num.index|escape} (integer)</th>
-          <td><input type="text" name="other_wd_port[]" value="{$params.other_wd_port[num]|escape}" /></td>
+          <br />other_wd_port{$host_num|escape} (integer)</th>
+          <td><input type="text" name="other_wd_port[]" value="{$params.other_wd_port.$host_num|escape}" /></td>
           </tr>
-          {/section}
+          {/foreach}
 
           {if isset($isAddWd) && $isAddWd == true}
               <tr>

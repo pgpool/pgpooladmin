@@ -4,185 +4,10 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>{$message.strPgpoolStatus|escape}</title>
 <link href="screen.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript">
-<!--
-
-var strConnError = "{$message.strConnectionError|escape}";
-var strUp        = "{$message.strUp|escape}";
-var strDown      = "{$message.strDown|escape}";
-var strDataError = "{$message.strDataError|escape}";
-var refreshTime  = "{$refreshTime|escape}";
-var view         = "{$viewPHP|escape}";
-var msgStopPgpool    = "{$message.msgStopPgpool|escape}";
-var msgRestartPgpool = "{$message.msgRestartPgpool|escape}";
-var msgReloadPgpool  = "{$message.msgReloadPgpool|escape}";
-
-{literal}
-
-function load() {
-    var xmlhttp = false;
-
-    if (typeof XMLHttpRequest!='undefined') {
-        xmlhttp = new XMLHttpRequest();
-    } else {
-        xmlhttp = new ActiveXObject("MSXML2.XMLHTTP");
-    }
-
-    if (!xmlhttp) {
-        alert('Sorry, cannot use XMLHttpRequest');
-        return;
-    }
-
-    xmlhttp.onreadystatechange = function() {
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            var content = document.getElementById('status');
-            var ret = xmlhttp.responseText;
-
-            content.innerHTML  = ret;
-            if(view != "innerLog.php")
-                timer(2000);
-        }
-    }
-    xmlhttp.open('GET', view, true);
-    xmlhttp.setRequestHeader("If-Modified-Since", "Thu, 01 Jun 1970 00:00:00 GMT");
-    xmlhttp.send("");
-}
-
-/* --------------------------------------------------------------------- */
-
-function reload() {
-    var xmlhttp = false;
-    if (typeof XMLHttpRequest!='undefined') {
-        xmlhttp = new XMLHttpRequest();
-    } else {
-        xmlhttp = new ActiveXObject("MSXML2.XMLHTTP");
-    }
-
-    if (!xmlhttp) {
-        alert('Sorry, cannot use XMLHttpRequest');
-        return;
-    }
-
-    xmlhttp.onreadystatechange = function() {
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            var content = document.getElementById('status');
-            var ret = xmlhttp.responseText;
-
-            content.innerHTML  = ret;
-            if(refreshTime > 0)
-                timer(refreshTime);
-        }
-    }
-    xmlhttp.open('GET', view, true);
-    xmlhttp.setRequestHeader("If-Modified-Since", "Thu, 01 Jun 1970 00:00:00 GMT");
-    xmlhttp.send("");
-}
-
-/* --------------------------------------------------------------------- */
-
-function timer(interval) {
-    setTimeout("reload()",interval);
-}
-
-function sendCommand(command, nodeNumber, message){
-    if (window.confirm(message)) {
-        document.Command.action.value= command;
-        document.Command.nodeNumber.value= nodeNumber;
-        document.Command.submit();
-    }
-}
-
-/* --------------------------------------------------------------------- */
-/* buttons                                                               */
-/* --------------------------------------------------------------------- */
-
-function startPgpool() {
-    document.Command.action.value= "start";
-    document.Command.submit();
-}
-
-function stopPgpool() {
-    var stopOption = document.getElementById('stopOption');
-    stopOption.style.visibility = "visible";
-    stopOption.style.position = "";
-    stopOption.style.height = "";
-
-    var cmdBtn = document.getElementById('cmdBtn');
-    cmdBtn.style.visibility = "hidden";
-    cmdBtn.style.position = "absolute";
-    cmdBtn.style.height = "0";
-}
-
-function restartPgpool() {
-    var stopOption = document.getElementById('stopOption');
-    stopOption.style.visibility = "hidden";
-    stopOption.style.position = "absolute";
-    stopOption.style.height = "0";
-
-    var restartOption = document.getElementById('restartOption');
-    restartOption.style.visibility = "visible";
-    restartOption.style.position = "";
-    restartOption.style.height = "";
-
-    var cmdBtn = document.getElementById('cmdBtn');
-    cmdBtn.style.visibility = "hidden";
-    cmdBtn.style.position = "absolute";
-    cmdBtn.style.height = "0";
-}
-
-function cancelCmd() {
-    var stopOption = document.getElementById('stopOption');
-    stopOption.style.visibility = "hidden";
-    stopOption.style.position = "absolute";
-    stopOption.style.height = "0";
-
-    var restartOption = document.getElementById('restartOption');
-    restartOption.style.visibility = "hidden";
-    restartOption.style.position = "absolute";
-    restartOption.style.height = "0";
-
-    var cmdBtn = document.getElementById('cmdBtn');
-    cmdBtn.style.visibility = "visible";
-    cmdBtn.style.position = "";
-    cmdBtn.style.height = "";
-}
-
-/* --------------------------------------------------------------------- */
-/* execute                                                               */
-/* --------------------------------------------------------------------- */
-
-function execRestartPgpool() {
-   if (window.confirm(msgRestartPgpool)){
-    document.Command.action.value= "restart";
-    document.Command.submit();
-   }
-}
-
-function execReloadPgpool() {
-   if (window.confirm(msgReloadPgpool)){
-    document.Command.action.value= "reload";
-    document.Command.submit();
-   }
-}
-
-function execStopPgpool() {
-   if (window.confirm(msgStopPgpool)){
-    document.Command.action.value= "stop";
-    document.Command.submit();
-   }
-}
-
-function changeView(chView){
-    document.Command.action.value= chView;
-    document.Command.submit();
-}
-
-// -->
-</script>
-{/literal}
+{include file="elements/status_js.tpl"}
 </head>
 
-<body onload="load()">
+<body onLoad="load()">
 <div id="header">
   <h1><img src="images/logo.gif" alt="pgpoolAdmin" /></h1>
 </div>
@@ -190,281 +15,173 @@ function changeView(chView){
 <div id="menu">
 {include file="menu.tpl"}
 </div>
+
 <div id="content">
-<div id="help"><a href="help.php?help={$help|escape}"><img src="images/question.gif" alt="help"/>{$message.strHelp|escape}</a></div>
-
-<form action="status.php" name="Command" method="post">
-  <input type="hidden" name="action" value="" />
-  <input type="hidden" name="nodeNumber" value="" />
-
-<h2>pgpool-II Version</h2>
-{$smarty.const._PGPOOL2_VERSION}
-
-{* --------------------------------------------------------------------- *}
-{* Status Info Buttons                                                   *}
-{* --------------------------------------------------------------------- *}
-
-<h2>{$message.strPgpoolStatus|escape}</h2>
-
-{if $pgpoolIsActive == true}
-<p>
-    <input type="button" name="command" onclick="changeView('summary')" value="{$message.strPgpoolSummary|escape}" />
-    <input type="button" name="command" onclick="changeView('proc')" value="{$message.strProcInfo|escape}" />
-    <input type="button" name="command" onclick="changeView('node')" value="{$message.strNodeInfo|escape}" />
-    {if $useSyslog == FALSE && $n == 1 && $pipe == 0}
-    <input type="button" name="command" onclick="changeView('log')" value="{$message.strLog|escape}" />
-    {/if}
-</p>
-  <div id="status"></div>
-<p>
-    <input type="button" name="command" onclick="changeView('summary')" value="{$message.strPgpoolSummary|escape}" />
-    <input type="button" name="command" onclick="changeView('proc')" value="{$message.strProcInfo|escape}" />
-    <input type="button" name="command" onclick="changeView('node')" value="{$message.strNodeInfo|escape}" />
-    {if $useSyslog == FALSE && $n == 1 && $pipe == 0}
-    <input type="button" name="command" onclick="changeView('log')" value="{$message.strLog|escape}" />
-    {/if}
-</p>
-{else}
-{$message.strStopPgpool|escape}
-{/if}
-
-{* --------------------------------------------------------------------- *}
-
-<h2>{$message.strPgpool|escape}</h2>
+    <div id="help">
+    <a href="help.php?help={$help|escape}"><img src="images/question.gif" alt="help"/>{$message.strHelp|escape}</a>
+    </div>
 
     {* --------------------------------------------------------------------- *}
-    {* Start Options                                                         *}
+    {* pgpool's version                                                      *}
     {* --------------------------------------------------------------------- *}
 
-    {if $pgpoolIsActive == false}
-    <table>
-    <thead><tr><th colspan="2">{$message.strStartOption|escape}</th></tr></thead>
-    <tfoot><tr>
-      <td colspan="2">
-      <input type="button" name="command" onclick="startPgpool()"
-       value="{$message.strStartPgpool|escape}" />
-      </td>
-    </tr></tfoot>
-    <tbody>
+    <h2>pgpool-II Version</h2>
+    {$smarty.const._PGPOOL2_VERSION}
 
-        {if hasMemqCache() == false}
-        <tr><td>{$message.strCmdC|escape} (-c)</td>
-          {if $c == 1}
-          <td><input type="checkbox" name="c" checked="checked" /></td>
-          {else}
-          <td><input type="checkbox" name="c" /></td>
-          {/if}
+    <p>login user: {$login_user}</p>
+    <p>is_superuser: {if $is_superuser}yes{else}no{/if}</p>
+
+    {* --------------------------------------------------------------------- *}
+    {* Status Info Buttons                                                   *}
+    {* --------------------------------------------------------------------- *}
+
+    <h2>Backend info (PostgreSQL)</h2>
+
+    {if isset($complete_msg)}{$complete_msg}{/if}
+
+    {* --------------------------------------------------------------------- *}
+    {* Succeeed / Failed                                                     *}
+    {* --------------------------------------------------------------------- *}
+
+    {if isset($status)}
+      {if $status == 'success'}
+      <table id="complete_msg">
+        <tr>
+        <td class="pgconfig_msg"><p>{$message.msgUpdateComplete|escape}</p></td>
         </tr>
+      </table>
+      {elseif $status == 'fail'}
+      <table id="command">
+        <tr>
+        <td class="pgconfig_msg"><p><img src="images/error.png"> {$message.msgUpdateFailed|escape}</p></td>
+        </tr>
+      </table>
+      {/if}
+    {/if}
+
+    {if $pgpoolIsActive == true}
+        <p>
+        <input type="button" name="command" onClick="changeView('summary')"
+               {if $action == 'summary'}class="command_active"{/if}
+               value="{$message.strPgpoolSummary|escape}" />
+
+        <input type="button" name="command" onClick="changeView('proc')"
+               {if $action == 'proc'}class="command_active"{/if}
+               value="{$message.strProcInfo|escape}" />
+
+        {if $params.use_watchdog == 'on'}
+        <input type="button" name="command" onClick="changeView('watchdog')"
+               {if $action == 'watchdog'}class="command_active"{/if}
+               value="Watchdog" />
         {/if}
 
-        <tr><td>{$message.strCmdLargeD|escape} (-D)</td>
-          {if $D == 1}
-          <td><input type="checkbox" name="D" checked="checked" /></td>
-          {else}
-          <td><input type="checkbox" name="D" /></td>
-          {/if}
-        </tr>
+        <input type="button" name="command" onClick="changeView('node')"
+               {if $action == NULL || $action == 'node'}class="command_active"{/if}
+               value="{$message.strNodeInfo|escape}" />
 
-        <tr><td>{$message.strCmdN|escape} (-n)</td>
-          {if $n == 1}
-          <td><input type="checkbox" name="n" checked="checked" /></td>
-          {else}
-          <td><input type="checkbox" name="n" /></td>
-          {/if}
-        </tr>
-
-        {if hasMemqCache()}
-        <tr><td>{$message.strCmdLargeC|escape} (-C)</td>
-          {if $C == 1}
-          <td><input type="checkbox" name="C" checked="checked" /></td>
-          {else}
-          <td><input type="checkbox" name="C" /></td>
-          {/if}
-        </tr>
+        {if $useSyslog == FALSE && $n == 1 && $pipe == 0}
+        <input type="button" name="command" onClick="changeView('log')"
+               {if $action == 'log'}class="command_active"{/if}
+               value="{$message.strLog|escape}" />
         {/if}
+        </p>
 
-        <tr><td>{$message.strCmdD|escape} (-d)</td>
-          {if $d == 1}
-          <td><input type="checkbox" name="d" checked="checked" /></td>
-          {else}
-          <td><input type="checkbox" name="d" /></td>
-          {/if}
-        </tr>
+        <div id="div_status"></div>{* show elements/status_nodeinfo.tpl *}
 
-        <tr><td>{$message.strCmdPgpoolFile|escape} (-f)</td>
-          <td>{$pgpoolConf|escape}</td>
-        </tr>
-
-        <tr><td>{$message.strCmdPcpFile|escape} (-F)</td>
-          <td>{$pcpConf|escape}</td>
-        </tr>
-
-    </tbody>
-    </table>
     {else}
+        <table>
+          <thead>
+          <tr>
+            <th></th>
+            <th><label>{$message.strIPaddress|escape}</label></th>
+            <th><label>{$message.strPort|escape}</label></th>
+            <th><label>{$message.strStatus|escape}</label></th>
+            <th></th>
+          </tr>
+          </thead>
 
-    {* --------------------------------------------------------------------- *}
-    {* Command Buttons                                                       *}
-    {* --------------------------------------------------------------------- *}
+          <tbody>
+          {if isset($params.backend_hostname)}
+              {$i = 0}
+              {foreach from=$params.backend_hostname key=node_num item=v}
+                  {$i = $i + 1}
+                  <tr class="{if $i % 2 == 0}even{else}odd{/if}">
+                  <td>node {$node_num}</td>
+                  <td class="input">{$params.backend_hostname.$node_num|escape}</td>
+                  <td class="input">{$params.backend_port.$node_num|escape}</td>
+                  <td>postgres:
+                      {if $nodeInfo.$node_num.is_active}{$message.strUp|escape}
+                      {else}{$message.strDown|escape}
+                      {/if}
+                  </td>
+                  <td>{include file="elements/status_pgsql_buttons.tpl"}</td>
+                  </tr>
+              {/foreach}
 
-    <div id="cmdBtn" style="visibility: visible">
-    <input type="button" name="command" onclick="stopPgpool()" value="{$message.strStopPgpool|escape}" />
-    <input type="button" name="command" onclick="restartPgpool()" value="{$message.strRestartPgpool|escape}" />
-    <input type="button" name="command" onclick="execReloadPgpool()" value="{$message.strReloadPgpool|escape}" />
-    </div>
-
-    {* --------------------------------------------------------------------- *}
-    {* Stop Options                                                          *}
-    {* --------------------------------------------------------------------- *}
-    <div id="stopOption" style="visibility: hidden; position: absolute">
-
-    <table>
-    <thead><tr><th colspan="2">{$message.strStopOption|escape}</th></tr></thead>
-    <tfoot><tr>
-      <td colspan="2">
-      <input type="button" name="command" onclick="execStopPgpool()" value="{$message.strExecute|escape}" />
-      <input type="button" name="command" onclick="cancelCmd()" value="{$message.strCancel|escape}" />
-      </td>
-    </tr></tfoot>
-    <tbody>
-          <tr><td>{$message.strCmdM|escape}(-m)</td>
-          <td><select name="stop_mode">
-          {if $m == 's'}
-               <option value="s" selected="selected">smart</option>
-               <option value="f">fast</option>
-               <option value="i">immediate</option>
-          {elseif $m == 'f'}
-               <option value="s">smart</option>
-               <option value="f" selected="selected">fast</option>
-               <option value="i">immediate</option>
-          {elseif $m == 'i'}
-               <option value="s">smart</option>
-               <option value="f">fast</option>
-               <option value="i" selected="selected">immediate</option>
           {else}
-               <option value="s">smart</option>
-               <option value="f">fast</option>
-               <option value="i">immediate</option>
+            <tr><td colspan="5">{$message.strNoNode|escape}</td></tr>
           {/if}
-          </select>
-          </td></tr>
-    </tbody>
-    </table>
-    </div>
+          </tbody>
 
-    {* --------------------------------------------------------------------- *}
-    {* Restart Options                                                       *}
-    {* --------------------------------------------------------------------- *}
-    <div id="restartOption" style="visibility: hidden; position: absolute">
-
-    <table>
-    <thead><tr><th colspan="2">{$message.strRestartOption|escape}</th></tr></thead>
-    <tfoot><tr>
-      <td colspan="2">
-      <input type="button" name="command" onclick="execRestartPgpool()" value="{$message.strExecute|escape}" />
-      <input type="button" name="command" onclick="cancelCmd()" value="{$message.strCancel|escape}" />
-      </td>
-    </tr></tfoot>
-    <tbody>
-
-        {if hasMemqCache() == false}
-        <tr><td>{$message.strCmdC|escape}(-c)</td>
-          {if $c == 1}
-          <td><input type="checkbox" name="c" checked="checked" /></td>
-          {else}
-          <td><input type="checkbox" name="c" /></td>
-          {/if}
-        </tr>
-        {/if}
-
-        <tr><td>{$message.strCmdLargeD|escape}(-D)</td>
-          {if $D == 1}
-          <td><input type="checkbox" name="D" checked="checked" /></td>
-          {else}
-          <td><input type="checkbox" name="D" /></td>
-          {/if}
-        </tr>
-
-        <tr><td>{$message.strCmdN|escape}(-n)</td>
-          {if $n == 1}
-          <td><input type="checkbox" name="n" checked="checked" /></td>
-          {else}
-          <td><input type="checkbox" name="n" /></td>
-          {/if}
-        </tr>
-
-        {if hasMemqCache()}
-        <tr><td>{$message.strCmdLargeC|escape} (-C)</td>
-          {if $C == 1}
-          <td><input type="checkbox" name="C" checked="checked" /></td>
-          {else}
-          <td><input type="checkbox" name="C" /></td>
-          {/if}
-        </tr>
-        {/if}
-
-        <tr><td>{$message.strCmdD|escape}(-d)</td>
-          {if $d == 1}
-          <td><input type="checkbox" name="d" checked="checked" /></td>
-          {else}
-          <td><input type="checkbox" name="d" /></td>
-          {/if}
-        </tr>
-
-        <tr><td>{$message.strCmdM|escape}(-m)</td><td>
-          <select name="restart_mode">
-          {if $m == 's'}
-               <option value="s" selected="selected">smart</option>
-               <option value="f">fast</option>
-               <option value="i">immediate</option>
-          {elseif $m == 'f'}
-               <option value="s">smart</option>
-               <option value="f" selected="selected">fast</option>
-               <option value="i">immediate</option>
-          {elseif $m == 'i'}
-               <option value="s">smart</option>
-               <option value="f">fast</option>
-               <option value="i" selected="selected">immediate</option>
-          {else}
-               <option value="s">smart</option>
-               <option value="f">fast</option>
-               <option value="i">immediate</option>
-          {/if}
-          </select>
-          </td>
-        </tr>
-
-        <tr><td>{$message.strCmdPgpoolFile|escape}(-f)</td>
-          <td>{$pgpoolConf|escape}</td>
-        </tr>
-
-        <tr><td>{$message.strCmdPcpFile|escape}(-F)</td>
-          <td>{$pcpConf|escape}</td>
-        </tr>
-
-    </tbody>
-    </table>
-    </div>
+          <tfoot>
+          <tr><th colspan="5" align="right">
+              <input type="button" onClick="addBackendButtonHandler()"
+                     value="{$message.strAddBackend|escape}">
+              </th></tr>
+          </tfoot>
+        </table>
     {/if}
 
-{* --------------------------------------------------------------------- *}
-{* Start/Stop/Restart messages                                           */
-{* --------------------------------------------------------------------- *}
+    {* ---------------------------------------------------------------------- *}
+    {* Form to add a new backend                                              *}
+    {* ---------------------------------------------------------------------- *}
 
-{if isset($pgpoolStatus)}
-<div class="message">
-<h3>Messages</h3>
-    <p>{$pgpoolStatus|escape}</p>
-    <p>
-    {foreach from=$pgpoolMessage item=lines}
-    {$lines|escape}<br />
-    {/foreach}
-    </p>
-</div>
-{/if}
+    <div id="addBackendDiv" style="visibility: hidden; position: absolute;">
+    <h3>{$message.strAddBackend|escape}  (node {$next_node_num})</h3>
+    <form action="status.php" name="addBackendForm" method="post"
+          onSubmit="return checkAddForm()" />
+    <input type="hidden" name="action" value="addBackend" />
 
-</form>
-</div>
+    <table>
+    <thead>
+        <tr><th colspan="2">new backend</th></tr>
+    </thead>
+    <tbody>
+        {include file="elements/pgconfig_new_backend.tpl"}
+        <tr>
+        <th>{$message.strAddBackendNow|escape}</th>
+        <td><input type="checkbox" name="reload_ok" id="reload_ok" checked></td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr><td colspan="2">
+        <input type="submit"
+               value="{$message.strAdd|escape}" />
+        <input type="button" name="command" onclick="cancelButtonHandler('addBackendDiv')"
+               value="{$message.strCancel|escape}" />
+        </td></tr>
+    </tfoot>
+    </table>
+
+    </form>
+    </div>
+
+    {* --------------------------------------------------------------------- *}
+    {* Form of options to stop/restart PostgreSQL                            *}
+    {* --------------------------------------------------------------------- *}
+
+    {include file="elements/status_pgsql_options.tpl"}
+
+    {* --------------------------------------------------------------------- *}
+    {* start / stop / reload                                                 *}
+    {* --------------------------------------------------------------------- *}
+
+    <h2>{$message.strPgpool|escape}
+    {if !$pgpoolIsActive}[ {$message.strStoppingNow|escape} ]{/if}
+    </h2>
+    {include file="elements/status_options.tpl"}
+
+</div>{* end div#content *}
 
 <div id="footer">
 {include file='footer.tpl'}

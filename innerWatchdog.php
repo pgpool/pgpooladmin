@@ -3,7 +3,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
 /**
- * Status information of the servers registered at backend host in pgpool.conf
+ * Infomation of the pgpool summary
  *
  * PHP versions 4 and 5
  *
@@ -19,26 +19,21 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2013 PgPool Global Development Group
+ * @copyright  2003-2011 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
-/* --------------------------------------------------------------------- */
-/* nodeServerStatus.php                                                  */
-/* --------------------------------------------------------------------- */
-
 require_once('common.php');
 
-// Check login status
 if (!isset($_SESSION[SESSION_LOGIN_USER])) {
-    header('Location: login.php');
     exit();
 }
 
-// Set Vars
-$tpl->assign('help', basename( __FILE__, '.php'));
+$params = readConfigParams(array('port', 'wd_hostname', 'wd_port', 'delegate_IP',
+                                 'other_pgpool_hostname', 'other_pgpool_port', 'other_wd_port',
+                                 'wd_interval', 'wd_life_point', 'wd_lifecheck_query'));
 
-// Display
-$is_pgpool_active = DoesPgpoolPidExist();
-$tpl->assign('pgpoolIsActive', $is_pgpool_active);
-$tpl->display('nodeServerStatus.tpl');
+$tpl->assign('params', $params);
+$tpl->display('innerWatchdog.tpl');
+
+?>

@@ -19,15 +19,11 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2009 PgPool Global Development Group
+ * @copyright  2003-2013 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
 require_once('common.php');
-
-// timeout seconds
-// (The parameter "pcp_timeout" existed till V3.0.)
-define('PCP_TIMEOUT', 10);
 
 /**
  * Execute pcp command
@@ -169,5 +165,47 @@ function readPcpInfo()
 {
     $params = readConfigParams(array('pcp_port'));
     return $params;
+}
+
+/** Get node count */
+function getNodeCount()
+{
+    global $tpl;
+
+    $result = execPcp('PCP_NODE_COUNT');
+
+    if (!array_key_exists('SUCCESS', $result)) {
+        $errorCode = 'e1002';
+        $tpl->assign('errorCode', $errorCode);
+        $tpl->display('innerError.tpl');
+        exit();
+    }
+
+    return $result['SUCCESS'];
+}
+
+/** Get info of the specified node */
+function getNodeInfo($i)
+{
+    global $tpl;
+
+    // execute "pcp_node_info" command
+    // ex) host1 5432 1 1073741823.500000
+    $result = execPcp('PCP_NODE_INFO', $i);
+
+    if (!array_key_exists('SUCCESS', $result)) {
+        $errorCode = 'e1003';
+        $tpl->assign('errorCode', $errorCode);
+        $tpl->display('innerError.tpl');
+        exit();
+    }
+
+    $arr = explode(" ", $result['SUCCESS']);
+    $rtn['hostname'] = $arr[0];
+    $rtn['port']     = $arr[1];
+    $rtn['status']   = $arr[2];
+    $rtn['weight']   = sprintf('%.3f', $arr[3]);
+
+    return $rtn;
 }
 ?>

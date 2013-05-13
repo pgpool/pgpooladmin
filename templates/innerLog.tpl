@@ -6,14 +6,26 @@
 <link href="screen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
+
+<h3>{$message.strLog|escape}</h3>
+
+{if $smarty.const._PGPOOL2_STATUS_REFRESH_TIME > 0}
+    <div class="auto_reloading">
+    <span><img src="images/refresh.png">
+          Refresh info: {$refreshTimeLog} seconds
+    </span>
+    </div>
+    <br clear="all">
+{/if}
+
 <table>
   <thead>
   </thead>
   <tbody>
   {section name=num loop=$logFile}
-    {if $logFile[num][2] == 'ERROR:' }
+    {if $logFile[num]['level'] == 'ERROR:' }
     <tr class="error">
-    {elseif  ($smarty.section.num.index+1) % 2 == 0}
+    {elseif  ($smarty.section.num.index + 1) % 2 == 0}
     <tr class="even">
     {else}
     <tr class="odd">

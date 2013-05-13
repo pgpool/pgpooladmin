@@ -15,6 +15,16 @@ td > img {
 
 <body>
 <h3>{$message.strPgpoolSummary|escape}</h3>
+
+{if $smarty.const._PGPOOL2_STATUS_REFRESH_TIME > 0}
+    <div class="auto_reloading">
+    <span><img src="images/refresh.png">
+          Refresh info: {$smarty.const._PGPOOL2_STATUS_REFRESH_TIME} seconds
+    </span>
+    </div>
+    <br clear="all">
+{/if}
+
 <table>
   <tbody>
     <tr><td>{$message.strReplicationMode|escape}</td>

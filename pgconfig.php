@@ -19,7 +19,7 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2012 PgPool Global Development Group
+ * @copyright  2003-2013 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
@@ -67,32 +67,32 @@ switch ($action) {
         if (isset($_POST['backend_hostname'])) {
             $configValue['backend_hostname'] = $_POST['backend_hostname'];
         } else {
-            $configValue['backend_hostname'] = array();
+            $configValue['backend_hostname'][0] = NULL;
 
         }
         if (isset($_POST['backend_port'])) {
             $configValue['backend_port'] = $_POST['backend_port'];
         } else {
-            $configValue['backend_port'] = array();
+            $configValue['backend_port'][0] = NULL;
         }
 
         if (isset($_POST['backend_weight'])) {
             $configValue['backend_weight'] = $_POST['backend_weight'];
         } else {
-            $configValue['backend_weight'] = array();
+            $configValue['backend_weight'][0] = NULL;
         }
 
         if (isset($_POST['backend_data_directory'])) {
             $configValue['backend_data_directory'] = $_POST['backend_data_directory'];
         } else {
-             $configValue['backend_data_directory'] = array();
+             $configValue['backend_data_directory'][0] = NULL;
         }
 
         if (paramExists('backend_flag')) {
             if (isset($_POST['backend_flag'])) {
                 $configValue['backend_flag'] = $_POST['backend_flag'];
             } else {
-                $configValue['backend_flag'] = array();
+                $configValue['backend_flag'][0] = NULL;
             }
         }
 
@@ -100,20 +100,20 @@ switch ($action) {
         if (isset($_POST['other_pgpool_hostname'])) {
             $configValue['other_pgpool_hostname'] = $_POST['other_pgpool_hostname'];
         } else {
-            $configValue['other_pgpool_hostname'] = array();
+            $configValue['other_pgpool_hostname'][0] = NULL;
 
         }
 
         if (isset($_POST['other_pgpool_port'])) {
             $configValue['other_pgpool_port'] = $_POST['other_pgpool_port'];
         } else {
-            $configValue['other_pgpool_port'] = array();
+            $configValue['other_pgpool_port'][0] = NULL;
         }
 
         if (isset($_POST['other_wd_port'])) {
             $configValue['other_wd_port'] = $_POST['other_wd_port'];
         } else {
-            $configValue['other_wd_port'] = array();
+            $configValue['other_wd_port'][0] = NULL;
         }
 
         $tpl->assign('params', $configValue);
@@ -405,6 +405,20 @@ switch ($action) {
     default:
 }
 
+if (!isset($configValue['backend_hostname'])) {
+    $configValue['backend_hostname'][0] = NULL;
+    $configValue['backend_port'][0]     = NULL;
+    $configValue['backend_weight'][0]   = NULL;
+    $configValue['backend_data_directory'][0] = NULL;
+    $configValue['backend_flag'][0]     = NULL;
+}
+
+if (!isset($configValue['other_pgpool_hostname'])) {
+    $configValue['other_pgpool_hostname'][0] = NULL;
+    $configValue['other_pgpool_port'][0]     = NULL;
+    $configValue['other_wd_port'][0]         = NULL;
+}
+
 $tpl->assign('params', $configValue);
 $tpl->assign('error', $error);
 
@@ -646,7 +660,7 @@ function writeConfigFile($configValue, $pgpoolConfigParam)
 
     foreach ($pgpoolConfigParam as $key => $value) {
         $isWrite = FALSE;
-        for ($j = 0; $j<count($configFile); $j++) {
+        for ($j = 0; $j < count($configFile); $j++) {
             $line = $configFile[$j];
             $line = trim($line);
 
@@ -707,6 +721,8 @@ function writeConfigFile($configValue, $pgpoolConfigParam)
  */
 function deleteBackendHost($num, &$configValue)
 {
+    if (!isset($configValue['backend_hostname'])) { return; }
+
     unset($configValue['backend_hostname'][$num]);
     $configValue['backend_hostname'] = array_values($configValue['backend_hostname']);
 
@@ -730,6 +746,8 @@ function deleteBackendHost($num, &$configValue)
  */
 function deleteWdOther($num, &$configValue)
 {
+    if (!isset($configValue['other_pgpool_hostname'])) { return; }
+
     unset($configValue['other_pgpool_hostname'][$num]);
     $configValue['other_pgpool_hostname'] = array_values($configValue['other_pgpool_hostname']);
 

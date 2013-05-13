@@ -6,7 +6,7 @@
 <link href="screen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-<h2>{$message.strDetailInfo|escape}</h2>
+<h2>{$message.strSystemCatalog|escape} (node {$nodeNum})</h2>
 <table>
   <thead>
   <tr>
@@ -23,14 +23,14 @@
 <table>
   <thead>
   <tr>
-  {foreach from=$results[0] key=column item=value} 
+  {foreach from=$results[0] key=column item=value}
     <th><label>{$column|escape}</label></th>
     {/foreach}
   </tr>
   </thead>
   <tbody>
     {section name=num loop=$results}
-    {if ($smarty.section.num.index+1) % 2 == 0}
+    {if ($smarty.section.num.index + 1) % 2 == 0}
     <tr class="even">
     {else}
     <tr class="odd">

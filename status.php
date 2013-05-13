@@ -19,37 +19,52 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2012 PgPool Global Development Group
+ * @copyright  2003-2013 PgPool Global Development Group
  * @version    SVN: $Id$
  */
 
 require_once('common.php');
 require_once('command.php');
-$tpl->assign('help', basename( __FILE__, '.php'));
 
-$viewPHP = 'nodeStatus.php';
-$refreshTime = 5000;
-if (isset($_POST['nodeNumber'])) {
-    $nodeNumber = $_POST['nodeNumber'];
-} else {
-    $nodeNumber = -1;
-}
+/* --------------------------------------------------------------------- */
+/* Status.php                                                            */
+/* --------------------------------------------------------------------- */
 
-
+// Check login status
 if (!isset($_SESSION[SESSION_LOGIN_USER])) {
     header('Location: login.php');
     exit();
 }
 
-if (isset($_POST['action'])) {
-    $action = $_POST['action'];
-} else {
-    $action = FALSE;
-}
+$is_pgpool_active = DoesPgpoolPidExist();
 
-/**
- * Set pgpool command option
- */
+// Do action
+$nodeNumber = (isset($_POST['nodeNumber'])) ? $_POST['nodeNumber'] : -1;
+$action     = (isset($_POST['action'])) ?  $_POST['action'] : FALSE;
+$viewPHP    = _doAction($action, $nodeNumber);
+
+// Set vars
+setNodeInfoFromConf();
+$tpl->assign('action',         $action);
+$tpl->assign('pgpoolIsActive', $is_pgpool_active);
+$tpl->assign('viewPHP',        $viewPHP);
+$tpl->assign('help',           basename( __FILE__, '.php'));
+$tpl->assign('pgpoolConf',     _PGPOOL2_CONFIG_FILE);
+$tpl->assign('pcpConf',        _PGPOOL2_PASSWORD_FILE);
+$tpl->assign('refreshTime',    (0 <= _PGPOOL2_STATUS_REFRESH_TIME) ?
+                               _PGPOOL2_STATUS_REFRESH_TIME * 1000 : 5000);
+$tpl->assign('refreshTimeLog', REFRESH_LOG_SECONDS);
+$tpl->assign('useSyslog',      useSyslog());
+$tpl->assign('pipe',           (isPipe(_PGPOOL2_LOG_FILE)) ? 1 : 0);
+$tpl->assign('msgStopPgpool',  $message['msgStopPgpool']);
+$tpl->assign('login_user',     $_SESSION[SESSION_LOGIN_USER]);
+$tpl->assign('is_superuser',   isSuperUser($_SESSION[SESSION_LOGIN_USER]));
+
+// Set params
+$configValue = readConfigParams('use_watchdog');
+$tpl->assign('params', $configValue);
+
+// Set pgpool command option
 $tpl->assign('c', _PGPOOL2_CMD_OPTION_C);
 $tpl->assign('D', _PGPOOL2_CMD_OPTION_LARGE_D);
 $tpl->assign('d', _PGPOOL2_CMD_OPTION_D);
@@ -57,269 +72,436 @@ $tpl->assign('m', _PGPOOL2_CMD_OPTION_M);
 $tpl->assign('n', _PGPOOL2_CMD_OPTION_N);
 $tpl->assign('C', _PGPOOL2_CMD_OPTION_LARGE_C);
 
-if (isPipe(_PGPOOL2_LOG_FILE)) {
-    $tpl->assign('pipe', 1);
-} else {
-    $tpl->assign('pipe', 0);
-}
-
-$tpl->assign('pgpoolStatus', NULL);
-$tpl->assign('pgpoolMessage', NULL);
-
-switch ($action) {
-
-    /* --------------------------------------------------------------------- */
-    /* start                                                                 */
-    /* --------------------------------------------------------------------- */
-
-    case 'start':
-        $args = ' ';
-
-        if (isset($_POST['c'])) {
-            $args = $args . "-c ";
-        }
-        if (isset($_POST['D'])) {
-            $args = $args . "-D ";
-        }
-        if (isset($_POST['d'])) {
-            $args = $args . "-d ";
-        }
-        if (isset($_POST['C'])) {
-            $args = $args . "-C ";
-        }
-        if (isset($_POST['n'])) {
-            $pgpoolLog = _PGPOOL2_LOG_FILE;
-            if ($pgpoolLog == '') {
-                $logDir = readLogDir();
-                $pgpoolLog = "$logDir/pgpool.log";
-            }
-            if (isPipe($pgpoolLog)) {
-                $args = "$args -n 2>&1 $pgpoolLog ";
-            } else {
-                $args = "$args -n > $pgpoolLog ";
-            }
-        }
-
-        $ret = execPcp('PCP_START_PGPOOL', $args);
-        if (!array_key_exists('SUCCESS', $ret)) {
-            $tpl->assign('pgpoolStatus', 'pgpool start failed.');
-            $tpl->assign('pgpoolMessage', $ret);
-        } else {
-            for ($i = 0; $i < 10; $i++) {
-                if (DoesPgpoolPidExist()) {
-                    break;
-                } else {
-                    sleep(1);
-                }
-            }
-
-            if (DoesPgpoolPidExist()) {
-                $tpl->assign('pgpoolStatus', 'pgpool start succeed');
-            } else {
-                $tpl->assign('pgpoolStatus', 'pgpool start failed. pgpool.pid not found');
-            }
-            $tpl->assign('pgpoolMessage', $ret['SUCCESS']);
-        }
-
-        break;
-
-    /* --------------------------------------------------------------------- */
-    /* stop                                                                  */
-    /* --------------------------------------------------------------------- */
-
-    case 'stop':
-        $m = $_POST['stop_mode'];
-
-        $ret = execPcp('PCP_STOP_PGPOOL', $m);
-        if (!array_key_exists('SUCCESS', $ret)) {
-            $errorCode = 'e1006';
-            $tpl->assign('errorCode', $errorCode);
-            $tpl->display('error.tpl');
-            exit();
-
-        } else {
-            for ($i = 0; $i < 10; $i++) {
-                if (DoesPgpoolPidExist()) {
-                    sleep(1);
-                } else {
-                    break;
-                }
-            }
-
-            if (DoesPgpoolPidExist()) {
-                $tpl->assign('pgpoolStatus', 'pgpool stop failed. pgpool.pid exists.');
-            } else {
-                $tpl->assign('pgpoolStatus', 'pgpool stop succeed');
-            }
-        }
-
-        break;
-
-    /* --------------------------------------------------------------------- */
-    /* restart                                                               */
-    /* --------------------------------------------------------------------- */
-
-    case 'restart':
-        /**
-         * Stop pgpool
-         */
-        $m = $_POST['restart_mode'];
-
-        $ret = execPcp('PCP_STOP_PGPOOL', $m);
-        if (!array_key_exists('SUCCESS', $ret)) {
-            $errorCode = 'e1006';
-            $tpl->assign('errorCode', $errorCode);
-            $tpl->display('error.tpl');
-            exit();
-
-        } else {
-            for ($i = 0; $i < 10; $i++) {
-                if (DoesPgpoolPidExist()) {
-                    sleep(1);
-                } else {
-                    break;
-                }
-            }
-        }
-
-        if (DoesPgpoolPidExist()) {
-            $tpl->assign('pgpoolStatus', 'pgpool restart failed. pgpool.pid exists.');
-            break;
-        }
-
-        /**
-         * Start pgpool
-         */
-        $args = ' ';
-
-        if (isset($_POST['c'])) {
-            $args = $args . "-c ";
-        }
-        if (isset($_POST['D'])) {
-            $args = $args . "-D ";
-        }
-        if (isset($_POST['d'])) {
-            $args = $args . "-d ";
-        }
-        if (isset($_POST['n'])) {
-            $pgpoolLog = _PGPOOL2_LOG_FILE;
-            if ($pgpoolLog == '') {
-                $logDir = readLogDir();
-                $pgpoolLog = "$logDir/pgpool.log";
-            }
-            if (isPipe($pgpoolLog)) {
-                $args = "$args -n 2>&1 $pgpoolLog ";
-            } else {
-                $args = "$args -n > $pgpoolLog ";
-            }
-        }
-        if (isset($_POST['C'])) {
-            $args = $args . "-C ";
-        }
-
-        $ret = execPcp('PCP_START_PGPOOL', $args);
-        if (!array_key_exists('SUCCESS', $ret)) {
-            $tpl->assign('pgpoolStatus', 'pgpool restart failed.');
-            $tpl->assign('pgpoolMessage', $ret);
-
-        } else {
-            for ($i = 0; $i < 10; $i++) {
-                if (DoesPgpoolPidExist()) {
-                    $tpl->assign('pgpoolStatus', 'pgpool restart succeed');
-                    break;
-                } else {
-                    sleep(1);
-                }
-            }
-            if (!DoesPgpoolPidExist()) {
-                $tpl->assign('pgpoolStatus', 'pgpool restart failed. pgpool.pid not found');
-            }
-            $tpl->assign('pgpoolMessage', $ret['SUCCESS']);
-        }
-        break;
-
-    /* --------------------------------------------------------------------- */
-    /* other                                                                 */
-    /* --------------------------------------------------------------------- */
-
-    case 'reload':
-        $args = ' ';
-        $ret = execPcp('PCP_RELOAD_PGPOOL', $args);
-        break;
-
-    case 'return':
-        $ret = execPcp('PCP_ATTACH_NODE', $nodeNumber);
-        if (!array_key_exists('SUCCESS', $ret)) {
-            $errorCode = 'e1010';
-            $tpl->assign('errorCode', $errorCode);
-            $tpl->display('error.tpl');
-            exit();
-        }
-        break;
-
-    case 'recovery':
-        $ret = execPcp('PCP_RECOVERY_NODE', $nodeNumber);
-        if (!array_key_exists('SUCCESS', $ret)) {
-            $errorCode = 'e1012';
-            $tpl->assign('errorCode', $errorCode);
-            $tpl->display('error.tpl');
-            exit();
-        }
-        break;
-
-    case 'detach':
-        $ret = execPcp('PCP_DETACH_NODE', $nodeNumber);
-        if (!array_key_exists('SUCCESS', $ret)) {
-            $errorCode = 'e1007';
-            $tpl->assign('errorCode', $errorCode);
-            $tpl->display('error.tpl');
-            exit();
-        }
-        break;
-
-    case 'promote':
-        $ret = execPcp('PCP_PROMOTE_NODE', $nodeNumber);
-        if (!array_key_exists('SUCCESS', $ret)) {
-            $errorCode = 'e1007';
-            $tpl->assign('errorCode', $errorCode);
-            $tpl->display('error.tpl');
-            exit();
-        }
-        break;
-
-    case 'summary':
-        $viewPHP = 'innerSummary.php';
-        break;
-
-    case 'proc':
-        $viewPHP = 'procInfo.php';
-        break;
-
-    case 'node':
-        $viewPHP = 'nodeStatus.php';
-        break;
-
-    case 'log':
-        $viewPHP = 'innerLog.php';
-        break;
-}
-
-if (DoesPgpoolPidExist()) {
-    $tpl->assign('pgpoolIsActive', TRUE);
-} else {
-    $tpl->assign('pgpoolIsActive', FALSE);
-}
-
-if (_PGPOOL2_STATUS_REFRESH_TIME >= 0 ) {
-    $refreshTime = _PGPOOL2_STATUS_REFRESH_TIME * 1000;
-}
-
-$tpl->assign('viewPHP',       $viewPHP);
-$tpl->assign('pgpoolConf',    _PGPOOL2_CONFIG_FILE);
-$tpl->assign('pcpConf',       _PGPOOL2_PASSWORD_FILE);
-$tpl->assign('refreshTime',   $refreshTime);
-$tpl->assign('useSyslog',     useSyslog());
-$tpl->assign('msgStopPgpool', $message['msgStopPgpool']);
+// Display
 $tpl->display('status.tpl');
 
-?>
+/* --------------------------------------------------------------------- */
+/* Functions                                                             */
+/* --------------------------------------------------------------------- */
+
+/** Execute a command */
+function _doAction($action, $nodeNumber)
+{
+    global $tpl;
+
+    $viewPHP = 'nodeStatus.php';
+    $tpl->assign('pgpoolStatus',   NULL);
+    $tpl->assign('pgpoolMessage',  NULL);
+
+    switch ($action) {
+        /* --------------------------------------------------------------------- */
+        /* pgpool                                                                */
+        /* --------------------------------------------------------------------- */
+
+        case 'startPgpool':
+            _startPgpool();
+            break;
+
+        case 'stopPgpool':
+            _stopPgpool();
+            break;
+
+        case 'restartPgpool':
+            _restartPgpool();
+            break;
+
+        case 'reloadPgpool':
+            $args = ' ';
+            $result = execPcp('PCP_RELOAD_PGPOOL', $args);
+            break;
+
+        /* --------------------------------------------------------------------- */
+        /* other command                                                         */
+        /* --------------------------------------------------------------------- */
+
+        case 'return':
+            if (_execPcp('PCP_ATTACH_NODE', $nodeNumber, 'e1010') === FALSE) { exit(); }
+            break;
+
+        case 'recovery':
+            if (_execPcp('PCP_RECOVERY_NODE', $nodeNumber, 'e1012') === FALSE) { exit(); }
+            break;
+
+        case 'detach':
+            if (_execPcp('PCP_DETACH_NODE', $nodeNumber, 'e1007') === FALSE) { exit(); }
+            break;
+
+        case 'promote':
+            if (_execPcp('PCP_PROMOTE_NODE', $nodeNumber, 'e1007') === FALSE) { exit(); }
+            break;
+
+        /* --------------------------------------------------------------------- */
+        /* PostgreSQL                                                            */
+        /* --------------------------------------------------------------------- */
+
+        case 'startPgsql':
+            // ...
+            break;
+
+        case 'stopPgsql':
+            _doPgCtl($nodeNumber, 'stop');
+            break;
+
+        case 'restartPgsql':
+            _doPgCtl($nodeNumber, 'restart');
+            break;
+
+        case 'reloadPgsql':
+            $result = _doPgCtl($nodeNumber, 'reload');
+            $tpl->assign('status', ($result) ? 'success' : 'fail');
+            break;
+
+        case 'addBackend':
+            $result = _addNewBackend();
+            $tpl->assign('status', ($result) ? 'success' : 'fail');
+            break;
+
+        case 'removeBackend':
+            $result = _removeBackend();
+            $tpl->assign('status', ($result) ? 'success' : 'fail');
+            break;
+
+        /* --------------------------------------------------------------------- */
+        /* other                                                                 */
+        /* --------------------------------------------------------------------- */
+
+        case 'summary':
+            $viewPHP = 'innerSummary.php';
+            break;
+
+        case 'proc':
+            $viewPHP = 'procInfo.php';
+            break;
+
+        case 'watchdog':
+            $viewPHP = 'innerWatchdog.php';
+            break;
+
+        case 'node':
+            $viewPHP = 'nodeStatus.php';
+            break;
+
+        case 'log':
+            $viewPHP = 'innerLog.php';
+            break;
+    }
+
+    return $viewPHP;
+}
+
+/** Set node info from pgpool.conf when pgpool isn't active */
+function setNodeInfoFromConf()
+{
+    global $tpl;
+    global $is_pgpool_active;
+
+    if (!$is_pgpool_active) {
+        $nodeInfo = array();
+
+        $configValue = readConfigParams(array('backend_hostname', 'backend_port'));
+        if (isset($configValue['backend_hostname'])) {
+            foreach ($configValue['backend_hostname'] as $i => $backend_hostname) {
+                $nodeInfo[$i]['backend_hostname'] = $backend_hostname;
+                $nodeInfo[$i]['backend_port']     = $configValue['backend_port'][$i];
+                $nodeInfo[$i]['is_active']        = NodeActive($i);
+            }
+        }
+        $tpl->assign('nodeInfo', $nodeInfo);
+    }
+
+    $configValue = readConfigParams('backend_hostname');
+    $tpl->assign('next_node_num', (isset($configValue['backend_hostname'])) ?
+                                  max(array_keys($configValue['backend_hostname'])) + 1 : 0);
+}
+
+/** Modify start options */
+function _setStartArgs()
+{
+    $args = ' ';
+
+    if (isset($_POST['c'])) {
+        $args = $args . "-c ";
+    }
+    if (isset($_POST['D'])) {
+        $args = $args . "-D ";
+    }
+    if (isset($_POST['d'])) {
+        $args = $args . "-d ";
+    }
+    if (isset($_POST['n'])) {
+        $pgpoolLog = _PGPOOL2_LOG_FILE;
+        if ($pgpoolLog == '') {
+            $logDir = readLogDir();
+            $pgpoolLog = "$logDir/pgpool.log";
+        }
+        if (isPipe($pgpoolLog)) {
+            $args = "$args -n 2>&1 $pgpoolLog ";
+        } else {
+            $args = "$args -n > $pgpoolLog ";
+        }
+    }
+    if (isset($_POST['C'])) {
+        $args = $args . "-C ";
+    }
+
+    return $args;
+}
+
+/** Wait to find pgpool.pid */
+function _waitForPidFile()
+{
+    for ($i = 0; $i < PGPOOL_WAIT_SECONDS; $i++) {
+        if (DoesPgpoolPidExist()) {
+            return TRUE;
+        } else {
+            sleep(1);
+        }
+    }
+    return FALSE;
+}
+
+/** Wait that pgpool.pid disappears */
+function _waitForNoPidFile()
+{
+    for ($i = 0; $i < PGPOOL_WAIT_SECONDS; $i++) {
+        if (DoesPgpoolPidExist()) {
+            sleep(1);
+        } else {
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
+/** Start pgpool */
+function _startPgpool()
+{
+    global $tpl;
+
+    $args = _setStartArgs();
+    $result = execPcp('PCP_START_PGPOOL', $args);
+    if (!array_key_exists('SUCCESS', $result)) {
+        $pgpoolStatus = 'pgpool start failed.';
+        $pgpoolMessage = $result;
+
+    } else {
+        if (_waitForPidFile()) {
+            $pgpoolStatus = 'pgpool start succeed';
+        } else {
+            $pgpoolStatus = 'pgpool start failed. pgpool.pid not found';
+        }
+        $pgpoolMessage = $result['SUCCESS'];
+    }
+
+    $tpl->assign('pgpoolStatus', $pgpoolStatus);
+    $tpl->assign('pgpoolMessage', $pgpoolMessage);
+}
+
+/** Stop pgpool */
+function _stopPgpool()
+{
+    global $_POST;
+    global $tpl;
+
+    $m = $_POST['stop_mode'];
+
+    $result = execPcp('PCP_STOP_PGPOOL', $m);
+    if (!array_key_exists('SUCCESS', $result)) {
+        $errorCode = 'e1006';
+        $tpl->assign('errorCode', $errorCode);
+        $tpl->display('error.tpl');
+        exit();
+
+    } else {
+        if (_waitForNoPidFile()) {
+            $pgpoolStatus = 'pgpool stop succeed';
+        } else {
+            $pgpoolStatus = 'pgpool stop failed. pgpool.pid exists.';
+        }
+        $tpl->assign('pgpoolStatus', $pgpoolStatus);
+    }
+}
+
+/** Restart pgpool */
+function _restartPgpool()
+{
+    global $_POST;
+    global $tpl;
+
+    // Stop pgpool
+    $m = $_POST['stop_mode'];
+
+    $result = execPcp('PCP_STOP_PGPOOL', $m);
+    if (!array_key_exists('SUCCESS', $result)) {
+        $errorCode = 'e1006';
+        $tpl->assign('errorCode', $errorCode);
+        $tpl->display('error.tpl');
+        exit();
+    }
+
+    if (_waitForNoPidFile()) {
+        // Start pgpool
+        $args = _setStartArgs();
+        $result = execPcp('PCP_START_PGPOOL', $args);
+        if (!array_key_exists('SUCCESS', $result)) {
+            $pgpoolStatus = 'pgpool restart failed.';
+            $pgpoolMessage = $result;
+
+        } else {
+            if (_waitForPidFile()) {
+                $pgpoolStatus = 'pgpool restart succeed';
+            } else {
+                $pgpoolStatus = 'pgpool restart failed. pgpool.pid not found';
+            }
+            $pgpoolMessage = $result['SUCCESS'];
+        }
+
+    } else {
+        $pgpoolStatus = 'pgpool restart failed. pgpool.pid exists.';
+    }
+
+    $tpl->assign('pgpoolStatus', $pgpoolStatus);
+    $tpl->assign('pgpoolMessage', $pgpoolMessage);
+}
+
+/** Execute PCP command with node number */
+function _execPcp($pcp_command, $nodeNumber, $errorCode)
+{
+    global $tpl;
+
+    $result = execPcp($pcp_command, $nodeNumber);
+
+    if (!array_key_exists('SUCCESS', $result)) {
+        $tpl->assign('errorCode', $errorCode);
+        $tpl->display('error.tpl');
+        return FALSE;
+    }
+
+    return TRUE;
+}
+
+/** Add a new backend and reload conf */
+function _addNewBackend()
+{
+    global $is_pgpool_active;
+    global $_POST;
+
+    // Check
+    if ($_POST['backend_hostname'][0] == NULL || $_POST['backend_port'][0] == NULL ||
+        $_POST['backend_weight'][0] == NULL)
+    {
+        return FALSE;
+    }
+
+    // Get next nodeNumber
+    $configValue = readConfigParams('backend_hostname');
+    $i = (isset($configValue['backend_hostname'])) ?
+         max(array_keys($configValue['backend_hostname'])) + 1 : 0;
+
+    // add
+    $lines[] = "backend_hostname{$i} = '{$_POST['backend_hostname'][0]}'\n";
+    $lines[] = "backend_port{$i} = {$_POST['backend_port'][0]}\n";
+    $lines[] = "backend_weight{$i} = {$_POST['backend_weight'][0]}\n";
+    $lines[] = "backend_data_directory{$i} = '{$_POST['backend_data_directory'][0]}'\n";
+    if (paramExists('backend_flag')) {
+        $lines[] = "backend_flag{$i}= '{$_POST['backend_flag'][0]}'\n";
+    }
+
+    // Write pgpool.conf
+    $outfp = fopen(_PGPOOL2_CONFIG_FILE, 'a');
+    if (!$outfp) { return FALSE; }
+    foreach ($lines as $line) {
+        if (fputs($outfp, $line) === FALSE) {
+            return FALSE;
+        }
+    }
+    fclose($outfp);
+
+    // Reload pgpool
+    $result = TRUE;
+    if (isset($_POST['reload_ok']) && $is_pgpool_active) {
+        $result = execPcp('PCP_RELOAD_PGPOOL', NO_ARGS);
+    }
+
+    return $result;
+}
+
+/** Remove a backend and reload conf */
+function _removeBackend()
+{
+    global $is_pgpool_active;
+    global $_POST;
+
+    if (!isset($_POST['nodeNumber'])) { return FALSE; }
+    $nodeNumber = $_POST['nodeNumber'];
+
+    // Read execept backend info of node $nodeNumber
+    $lines_to_write = array();
+    $fd = fopen(_PGPOOL2_CONFIG_FILE, 'r');
+    if (!$fd) { return FALSE; }
+    while (!feof($fd)) {
+        $line = fgets($fd);
+
+        if (strpos($line, "backend_hostname") !== FALSE ||
+            strpos($line, "backend_port") !== FALSE ||
+            strpos($line, "backend_weight") !== FALSE ||
+            strpos($line, "backend_data_directory") !== FALSE ||
+            strpos($line, "backend_flag") !== FALSE)
+        {
+            continue;
+        }
+        $lines_to_write[] = $line;
+    }
+    fclose($fd);
+
+
+    // Get all the current backends' info
+    $params = readConfigParams(array('backend_hostname', 'backend_port', 'backend_weight',
+                                     'backend_data_directory', 'backend_flag'));
+    $i = 0;
+    foreach ($params['backend_hostname'] as $old_i => $arr) {
+        if ($old_i == $nodeNumber) { continue; }
+
+        $lines_to_write[] = "backend_hostname{$i} = '{$params['backend_hostname'][$old_i]}'\n";
+        $lines_to_write[] = "backend_port{$i} = {$params['backend_port'][$old_i]}\n";
+        $lines_to_write[] = "backend_weight{$i} = {$params['backend_weight'][$old_i]}\n";
+        $lines_to_write[] = "backend_data_directory{$i} = '{$params['backend_data_directory'][$old_i]}'\n";
+        if (paramExists('backend_flag')) {
+            $lines_to_write[] = "backend_flag{$i} = '{$params['backend_flag'][$old_i]}'\n";
+        }
+        $i++;
+    }
+
+    // Write editted lines
+    $fd = fopen(_PGPOOL2_CONFIG_FILE, 'w');
+    if (!$fd) { return FALSE; }
+    foreach ($lines_to_write as $line) {
+        if (fputs($fd, $line) === FALSE) {
+            return FALSE;
+        }
+    }
+    fclose($fd);
+
+    // Reload pgpool
+    $result = TRUE;
+    if ($is_pgpool_active) {
+        $result = execPcp('PCP_RELOAD_PGPOOL', NO_ARGS);
+    }
+    return $result;
+}
+
+/** Execute pg_ctl through pgpool_pgctl() */
+function _doPgCtl($nodeNumber, $pg_ctl_action)
+{
+    global $_POST;
+
+    if (isSuperUser($_SESSION[SESSION_LOGIN_USER]) == FALSE) { return FALSE; }
+
+    $conn = @pg_connect(conStr($nodeNumber));
+    $query = sprintf("SELECT pgpool_pgctl('%s', '%s')",
+                     $pg_ctl_action,
+                     (isset($_POST['stop_mode'])) ? $_POST['stop_mode'] : NULL);
+    $result = execQuery($conn, $query);
+
+    return $result;
+}

@@ -19,66 +19,20 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2011 PgPool Global Development Group
+ * @copyright  2003-2013 PgPool Global Development Group
  * @version    SVN: $Id$
  */
 
 require_once('common.php');
 require_once('command.php');
-$tpl->assign('help', basename( __FILE__, '.php'));
 
-$MAX_VALUE = PHP_INT_MAX;
+/* --------------------------------------------------------------------- */
+/* nodeStatus.php                                                        */
+/* --------------------------------------------------------------------- */
 
-// node status in "pcp_node_info" result
-define('NODE_ACTIVE_NO_CONNECT', 1);
-define('NODE_ACTIVE_CONNECTED',  2);
-define('NODE_DOWN',              3);
-
+// Check login status
 if (!isset($_SESSION[SESSION_LOGIN_USER])) {
     exit();
-}
-
-// cout nodes
-$ret = execPcp('PCP_NODE_COUNT');
-if (!array_key_exists('SUCCESS', $ret)) {
-    $errorCode = 'e1002';
-    $tpl->assign('errorCode', $errorCode);
-    $tpl->display('innerError.tpl');
-    exit();
-} else {
-    $nodeCount = $ret['SUCCESS'];
-}
-
-$tpl->assign('nodeCount', $nodeCount);
-
-$nodeInfo = array();
-$node_alive = FALSE;
-
-// get nodes' status
-for ($i = 0; $i < $nodeCount; $i++) {
-    // execute "pcp_node_info" command
-    // ex) host1 5432 1 1073741823.500000
-    $ret = execPcp('PCP_NODE_INFO', $i);
-
-    if (!array_key_exists('SUCCESS', $ret)) {
-        $errorCode = 'e1003';
-        $tpl->assign('errorCode', $errorCode);
-        $tpl->display('innerError.tpl');
-        exit();
-
-    } else {
-        $ret = $ret['SUCCESS'];
-    }
-
-    $nodeInfo[$i] = explode(" ", $ret);
-
-    // load balance weight: normalize format
-    $nodeInfo[$i][3] =  sprintf('%.3f', $nodeInfo[$i][3]);
-
-    // node is active?
-    if ($nodeInfo[$i][2] != NODE_DOWN) {
-        $node_alive = TRUE;
-    }
 }
 
 // select buttons to each nodes depending on their status
@@ -86,55 +40,97 @@ $isParallelMode    = isParallelMode();
 $isReplicationMode = isReplicationMode();
 $isMasterSlaveMode = isMasterSlaveMode();
 
-for ($i = 0; $i < $nodeCount; $i++) {
-    if ($node_alive == FALSE) {
-        if (($isReplicationMode || $isMasterSlaveMode) && NodeActive($i)) {
-            array_push($nodeInfo[$i], 'return');
-        } else {
-            array_push($nodeInfo[$i], 'none');
-        }
+$configValue = readConfigParams(array('backend_hostname', 'backend_port'));
+if (!isset($configValue['backend_hostname'])) { return; }
+$backends_in_conf = $configValue['backend_hostname'];
 
-    } elseif ($isParallelMode ) {
-        array_push($nodeInfo[$i], 'none');
+// Get nodes' status
+$nodeCount = NULL;
+$is_pgpool_active = DoesPgpoolPidExist();
+if ($is_pgpool_active) {
+    $nodeCount = getNodeCount();
+}
+$has_not_loaded_node = FALSE;
 
-    } else {
-        switch($nodeInfo[$i][2]) {
+// Merge backends in pgpool.conf and them in pgpool
+// ex) when remove a backend but not reload yet
+if (count($backends_in_conf) < $nodeCount) {
+    for ($i = 0; $i < $nodeCount; $i++) {
+        $backends_in_conf[$i] = array();
+    }
+}
+
+$nodeInfo = array();
+foreach ($backends_in_conf as $i => $backend) {
+    // Set buttons
+    $nodeInfo[$i]['return']     = FALSE;
+    $nodeInfo[$i]['disconnect'] = FALSE;
+    $nodeInfo[$i]['promote']    = FALSE;
+    $nodeInfo[$i]['recovery']   = FALSE;
+
+    // The flag if postgres is active or sleeping
+    $nodeInfo[$i]['is_active'] = NodeActive($i);
+
+    // nodes recognized by pgpool
+    if ($nodeCount != NULL/* && $i < $nodeCount*/) {
+        // Get info by pcp_node_info
+        $nodeInfo[$i] += getNodeInfo($i);
+
+        // Get the result of "SELECT pg_is_in_recovery()" as integer(0, 1, -1)
+        // (If pgpool don't act in Master/Slave & SR mode, this value will be ignored.)
+        $nodeInfo[$i]['is_standby'] = NodeStandby($i);
+
+        switch($nodeInfo[$i]['status']) {
             case NODE_ACTIVE_NO_CONNECT:
             case NODE_ACTIVE_CONNECTED:
                 if ($isReplicationMode || $isMasterSlaveMode) {
-                    array_push($nodeInfo[$i], 'disconnect');
-                } else {
-                    array_push($nodeInfo[$i], 'none');
+                    if ($nodeInfo[$i]['is_active']) {
+                        $nodeInfo[$i]['disconnect'] = TRUE;
+                    }
                 }
+
                 // pcp_promote_node exists after V3.1
                 if (hasPcpPromote() && useStreaming()) {
-                    array_push($nodeInfo[$i], 'promote');
+                    $nodeInfo[$i]['promote'] = TRUE;
                 }
                 break;
 
             case NODE_DOWN:
                 if ($isReplicationMode || $isMasterSlaveMode) {
-                    if (NodeActive($i)) {
-                        array_push($nodeInfo[$i], 'return');
+                    if ($nodeInfo[$i]['is_active']) {
+                        $nodeInfo[$i]['return'] = TRUE;
                     } else {
-                        array_push($nodeInfo[$i], 'recovery');
+                        $nodeInfo[$i]['recovery'] = TRUE;
                     }
-                } else {
-                    array_push($nodeInfo[$i], 'none');
                 }
                 break;
         }
-    }
 
-    // result of "SELECT pg_is_in_recovery()" as integer(0, 1, -1)
-    // (If pgpool don't act in Master/Slave & SR mode, this value will be ignored.)
-    $nodeInfo[$i][6] = NodeStandby($i);
+    // nodes not working as backend (just written in pgpool.conf)
+    } else {
+        $has_not_loaded_node = TRUE;
+        $nodeInfo[$i]['hostname'] = $configValue['backend_hostname'][$i];
+        $nodeInfo[$i]['port'] = $configValue['backend_port'][$i];
+        $nodeInfo[$i]['weight'] = 0;
+        $nodeInfo[$i]['status'] =  NODE_NOT_LOADED;
+        $nodeInfo[$i]['is_standby'] = NULL;
+    }
 }
+
+// Set vars
+$tpl->assign('help', basename( __FILE__, '.php'));
 
 $tpl->assign('refreshTime',   _PGPOOL2_STATUS_REFRESH_TIME * 1000);
 $tpl->assign('nodeInfo',      $nodeInfo);
 $tpl->assign('parallelMode',  $isParallelMode);
 $tpl->assign('msgStopPgpool', $message['msgStopPgpool']);
-$tpl->display('nodeStatus.tpl');
+$tpl->assign('nodeCount',     $nodeCount);
+$tpl->assign('has_not_loaded_node', $has_not_loaded_node);
+$tpl->assign('pgpoolIsActive', $is_pgpool_active);
 
-?>
+// Set params
+$configValue = readConfigParams('recovery_1st_stage');
+$tpl->assign('params', $configValue);
+
+// Display
+$tpl->display('nodeStatus.tpl');
