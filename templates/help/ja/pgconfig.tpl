@@ -1734,6 +1734,30 @@ black_function_list = 'nextval,setval,lastval,currval'
       </td>
     </tr>
 
+    <tr>
+      <th id="WD_LIFECHECK_DBNAME"><label>{$message.descWd_lifecheck_dbname|escape}</label>
+      <p>wd_lifecheck_dbnam(string) *</th>
+      <td>
+      <p>pgpool-II の死活監視を行なうのに接続するデータベースです。 デフォルトは "template1" です。</p>
+      </td>
+    </tr>
+
+    <tr>
+      <th id="WD_LIFECHECK_USER"><label>{$message.descWd_lifecheck_user|escape}</label>
+      <p>wd_lifecheck_user(string) *</th>
+      <td>
+      <p>pgpool-II の死活監視を行なうユーザです。 デフォルトは "nobody" です。</p>
+      </td>
+    </tr>
+
+    <tr>
+      <th id="WD_LIFECHECK_PASSWORD"><label>{$message.descWd_lifecheck_password|escape}</label>
+      <p>wd_lifecheck_query (string) *</th>
+      <td>
+      <p>pgpool-II の死活監視を行なうユーザのパスワードです。 </p>
+      </td>
+    </tr>
+
     <tr><th class="category" colspan="2">Virtual IP address</th></tr>
 
     <tr>

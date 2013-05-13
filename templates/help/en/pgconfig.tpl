@@ -1662,6 +1662,31 @@ black_function_list = 'nextval,setval,lastval,currval'
       </td>
     </tr>
 
+    <tr>
+      <th id="WD_LIFECHECK_DBNAME"><label>{$message.descWd_lifecheck_dbname|escape}</label>
+      <p>wd_lifecheck_dbnam(string) *</th>
+      <td>
+      <p>The database name connected for checking pgpool-II. Default is "template1"</p>
+      </td>
+    </tr>
+
+    <tr>
+      <th id="WD_LIFECHECK_USER"><label>{$message.descWd_lifecheck_user|escape}</label>
+      <p>wd_lifecheck_user(string) *</th>
+      <td>
+      <p>The user name to check pgpool-II. This user must exist in all the PostgreSQL backends.
+         Default is "nobody" .</p>
+      </td>
+    </tr>
+
+    <tr>
+      <th id="WD_LIFECHECK_PASSWORD"><label>{$message.descWd_lifecheck_password|escape}</label>
+      <p>wd_lifecheck_query (string) *</th>
+      <td>
+      <p>The password of the user to check pgpool-II. Default is "".</p>
+      </td>
+    </tr>
+
     <tr><th class="category" colspan="2">Virtual IP address</th></tr>
 
     <tr>

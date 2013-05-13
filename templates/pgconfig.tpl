@@ -1277,6 +1277,29 @@ function delOtherWatchdog(num){
         <td colspan="2"><input type="text" name="wd_lifecheck_query" value="{$params.wd_lifecheck_query|escape}"/></td>
         </tr>
 
+        {if paramExists('wd_lifecheck_dbname')}
+        <tr>
+        <th{if isset($error.wd_lifecheck_dbname)} class="error"{/if}>
+        <label>{$message.descWd_lifecheck_dbname|escape}</label>
+        <br />wd_lifecheck_dbname (string) *</th>
+        <td colspan="2"><input type="text" name="wd_lifecheck_dbname" value="{$params.wd_lifecheck_dbname|escape}"/></td>
+        </tr>
+
+        <tr>
+        <th{if isset($error.wd_lifecheck_user)} class="error"{/if}>
+        <label>{$message.descWd_lifecheck_user|escape}</label>
+        <br />wd_lifecheck_user (string) *</th>
+        <td colspan="2"><input type="text" name="wd_lifecheck_user" value="{$params.wd_lifecheck_user|escape}"/></td>
+        </tr>
+
+        <tr>
+        <th{if isset($error.wd_lifecheck_password)} class="error"{/if}>
+        <label>{$message.descWd_lifecheck_password|escape}</label>
+        <br />wd_lifecheck_password (string) *</th>
+        <td colspan="2"><input type="text" name="wd_lifecheck_password" value="{$params.wd_lifecheck_password|escape}"/></td>
+        </tr>
+        {/if}
+
         <tr><th class="category" colspan="3">Virtual IP address</th></tr>
 
         <tr>

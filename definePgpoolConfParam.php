@@ -598,6 +598,21 @@ $pgpoolConfigParam[$key]['type'] = 'C';
 $pgpoolConfigParam[$key]['default'] = 'SELECT 1';
 $pgpoolConfigParam[$key]['regexp'] = $anyelse;
 
+$key = 'wd_lifecheck_dbname';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = 'template1';
+$pgpoolConfigParam[$key]['regexp'] = $anyelse;
+
+$key = 'wd_lifecheck_user';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = 'nobody';
+$pgpoolConfigParam[$key]['regexp'] = $anyelse;
+
+$key = 'wd_lifecheck_password';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = '';
+$pgpoolConfigParam[$key]['regexp'] = $anyelse;
+
 # Other pgpool Connection Settings
 
 $key = 'other_pgpool_hostname';

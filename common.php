@@ -542,6 +542,13 @@ function paramExists($param)
     switch ($param) {
         /* Add */
 
+        // params added in 3.3
+        case 'wd_lifecheck_dbname':
+        case 'wd_lifecheck_user':
+        case 'wd_lifecheck_password':
+            $add_version = 3.3;
+            break;
+
         // params added in 3.2
         case 'health_check_max_retries':
         case 'health_check_retry_delay':
