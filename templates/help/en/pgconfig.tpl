@@ -44,7 +44,7 @@
 </div>
 
 <h3>{$message.strSummary|escape}</h3>
-The content of pgpool.conf that is the configuration file of pgpool set can be displayed and be changed. 
+The content of pgpool.conf that is the configuration file of pgpool set can be displayed and be changed.
 
 <h3>{$message.strFeature|escape}</h3>
 Please input the value that wants to change and push the update button.
@@ -1604,6 +1604,10 @@ black_function_list = 'nextval,setval,lastval,currval'
     </tr>
   </thead>
   <tbody>
+
+    {* --------------------------------------------------------------------- *}
+    <tr><th class="category" colspan="4">Enabling</th></tr>
+
     <tr>
       <th id="USE_WATCHDOG"><label>{$message.descUse_watchdog|escape}</label>
       <p>use_watchdog (bool) *</th>
@@ -1612,6 +1616,7 @@ black_function_list = 'nextval,setval,lastval,currval'
       </td>
     </tr>
 
+    {* --------------------------------------------------------------------- *}
     <tr><th class="category" colspan="2">Connection to up stream servers</th></tr>
 
     <tr>
@@ -1635,58 +1640,39 @@ black_function_list = 'nextval,setval,lastval,currval'
       </td>
     </tr>
 
-    <tr><th class="category" colspan="2">Lifecheck of pgpol-II</th></tr>
+    {* --------------------------------------------------------------------- *}
+    <tr><th class="category" colspan="2">Watchdog communication Settings</th></tr>
 
     <tr>
-      <th id="WD_INTERVAL"><label>{$message.descWd_interval|escape}</label>
-      <p>wd_interval (integer) *</th>
+      <th id="WD_HOSTNAME"><label>{$message.descWd_hostname|escape}</label>
+      <p>wd_hostname (string) *</th>
       <td>
-      <p>This parameter specifies the interval between life checks of pgpool-II in second.
-      (A number greater than or equal to 1) </p>
+      <p>Specifies the hostname or IP address for mutual monitoring of watchdog processes. </p>
       </td>
     </tr>
 
     <tr>
-      <th id="WD_LIFE_POINT"><label>{$message.descWd_life_point|escape}</label>
-      <p>wd_life_point (string) *</th>
+      <th id="WD_PORT"><label>{$message.descWd_port|escape}</label>
+      <p>wd_port (integer) *</th>
       <td>
-      <p>The times to retry a failed life check of pgpool-II. (A number greater than or equal to 1) </p>
+      <p>Specifies the port number for mutual monitoring of watchdog processes. </p>
       </td>
     </tr>
 
+    {if paramExists('wd_authkey')}
     <tr>
-      <th id="WD_LIFECHECK_QUERY"><label>{$message.descWd_lifecheck_query|escape}</label>
-      <p>wd_lifecheck_query (string) *</th>
+      <th id="WD_AUTHKEY"><label>{$message.descWd_authkey|escape}</label>
+      <p>wd_authkey (string) *</th>
       <td>
-      <p>Actual query to check pgpool-II. Default is "SELECT 1".</p>
+      <p>Specifies the authentication key used in watchdog communication.
+         All the pgpool-II must have the same key. Packets from watchdog of wrong key will be rejects.
+         This authentication is applied also for heatrbeat singals if lifecheck method is heartbeat mode.</p>
+      <p>If this is empty (default), watchdog doesn't conduct authenticate. </p>
       </td>
     </tr>
+    {/if}
 
-    <tr>
-      <th id="WD_LIFECHECK_DBNAME"><label>{$message.descWd_lifecheck_dbname|escape}</label>
-      <p>wd_lifecheck_dbnam(string) *</th>
-      <td>
-      <p>The database name connected for checking pgpool-II. Default is "template1"</p>
-      </td>
-    </tr>
-
-    <tr>
-      <th id="WD_LIFECHECK_USER"><label>{$message.descWd_lifecheck_user|escape}</label>
-      <p>wd_lifecheck_user(string) *</th>
-      <td>
-      <p>The user name to check pgpool-II. This user must exist in all the PostgreSQL backends.
-         Default is "nobody" .</p>
-      </td>
-    </tr>
-
-    <tr>
-      <th id="WD_LIFECHECK_PASSWORD"><label>{$message.descWd_lifecheck_password|escape}</label>
-      <p>wd_lifecheck_query (string) *</th>
-      <td>
-      <p>The password of the user to check pgpool-II. Default is "".</p>
-      </td>
-    </tr>
-
+    {* --------------------------------------------------------------------- *}
     <tr><th class="category" colspan="2">Virtual IP address</th></tr>
 
     <tr>
@@ -1713,7 +1699,7 @@ black_function_list = 'nextval,setval,lastval,currval'
       <p>if_up_cmd (string) *</th>
       <td>
       <p>This parameter specifies a command to bring up the virtual IP.
-      Set the command and parameters such as "ifconfig eth0:0 inet $_IP_$ netmask 255.255.255.0".
+      Set the command and parameters such as "<code>ifconfig eth0:0 inet $_IP_$ netmask 255.255.255.0</code>".
       $_IP_$ is replaced by the IP address specified in <a href="#DELEGATE_IP">delegate_IP</a>. </p>
       </td>
     </tr>
@@ -1723,7 +1709,7 @@ black_function_list = 'nextval,setval,lastval,currval'
       <p>if_down_cmd (string) *</th>
       <td>
       <p>This parameter specifies a command to bring down the virtual IP.
-      Set the command and parameters such as "ifconfig eth0:0 down". </p>
+      Set the command and parameters such as "<code>ifconfig eth0:0 down</code>". </p>
       </td>
     </tr>
 
@@ -1741,29 +1727,168 @@ black_function_list = 'nextval,setval,lastval,currval'
       <p>arping_cmd (string) *</th>
       <td>
       <p>This parameter specifies a command to send an ARP request after the virtual IP is switched.
-      Set the command and parameters such as "arping -U $_IP_$ -w 1".
+      Set the command and parameters such as "<code>arping -U $_IP_$ -w 1</code>".
       $_IP_$ is replaced by the IP address specified in <a href="DELEGATE_IP">delegate_IP</a>. </p>
       </td>
     </tr>
 
-    <tr><th class="category" colspan="2">Server itself to be monitored</th></tr>
+    {* --------------------------------------------------------------------- *}
+    {if paramExists('clear_memqcache_on_escalation')}
+    <tr><th class="category" colspan="2">Behaivor on escalation Setting</th></tr>
 
     <tr>
-      <th id="WD_HOSTNAME"><label>{$message.descWd_hostname|escape}</label>
-      <p>wd_hostname (string) *</th>
+      <th id="CLEAR_MEMQCACHE_ON_ESCALATION"><label>{$message.descClear_memqcache_on_escalation|escape}</label>
+      <p>clear_memqcache_on_escalation (bool) *</th>
       <td>
-      <p>Specifies the hostname or IP address for mutual monitoring of watchdog processes. </p>
+      <p>If this is on, watchdog clears all the query cache in the shared memory
+         when pgpool-II escaltes to active.
+         This prevents the new active pgpool-II from using old query caches inconsistence to the old active.
+         Default is on.</p>
       </td>
     </tr>
 
     <tr>
-      <th id="WD_PORT"><label>{$message.descWd_port|escape}</label>
-      <p>wd_port (integer) *</th>
+      <th id="WD_ESCALATION_COMMAND"><label>{$message.descWd_escalation_command|escape}</label>
+      <p>wd_escalation_command (string) *</th>
       <td>
-      <p>Specifies the port number for mutual monitoring of watchdog processes. </p>
+      <p>pgpool-II がアクティブに昇格した時に、ここで指定したコマンドが実行されます。
+         コマンドは、仮想 IP が立ち上がる直前のタイミングで実行されます。 </p>
+      </td>
+    </tr>
+    {/if}
+
+    {* --------------------------------------------------------------------- *}
+    <tr><th class="category" colspan="2">Lifecheck Setting (common)</th></tr>
+
+    {if paramExists('wd_lifecheck_method')}
+    <tr>
+      <th id="WD_LIFECHECK_METHOD"><label>{$message.descWd_lifecheck_method|escape}</label>
+      <p>wd_lifecheck_method (string) *</th>
+      <td>
+      <p>Specifies the method of life check. This is either of 'heartbeat' (default) or 'query'. </p>
+      <dl>
+      <dt>heartbeat</dt>
+          <dd>
+          Watchdog sends heartbeat singals (UDP packets) periodically to other pgpool-II.
+          Watchdog also receives the signals from other pgpool-II.
+          If there are no signal for a certain period, watchdog regards is as failure of the pgpool-II.
+          </dd>
+       <dt>query</dt>
+           <dd>watchdog sends monitoring queries to other pgpool-II and checks the response.</dd>
+      </dl>
+      </td>
+    </tr>
+    {/if}
+
+    <tr>
+      <th id="WD_INTERVAL"><label>{$message.descWd_interval|escape}</label>
+      <p>wd_interval (integer) *</th>
+      <td>
+      <p>This parameter specifies the interval between life checks of pgpool-II in second.
+      (A number greater than or equal to 1) </p>
       </td>
     </tr>
 
+    {* --------------------------------------------------------------------- *}
+    {if paramExists('wd_lifecheck_method')}
+    <tr><th class="category" colspan="2">Lifecheck Setting (heartbeat mode)</th></tr>
+
+    <tr>
+      <th id="WD_HEARTBEAT_PORT"><label>{$message.descWd_heartbeat_port|escape}</label>
+      <p>wd_heartbeat_port (integer) *</th>
+      <td>
+      <p>Specifies the port number to receive heartbeat signals.</p>
+      </td>
+    </tr>
+
+    <tr>
+      <th id="WD_HEARTBEAT_KEEPALIVE"><label>{$message.descWd_heartbeat_keepalive|escape}</label>
+      <p>wd_heartbeat_keepalive (integer) *</th>
+      <td>
+      <p>Specifies the interval time in seconds of sending heartbeat signals. Default is 2.</p>
+      </td>
+    </tr>
+
+    <tr>
+      <th id="WD_HEARTBEAT_DEADTIME"><label>{$message.descWd_heartbeat_deadtime|escape}</label>
+      <p>wd_heartbeat_deadtime (integer) *</th>
+      <td>
+      <p>If there are no heartbeat signal for the period specified by this option,
+         watchdog regards it as failure of the remote pgpool-II.</p>
+      </td>
+    </tr>
+
+    <tr>
+      <th id="HEARTBEAT_DEVICE"><label>{$message.descHeartbeat_device|escape}</label>
+      <p>heartbeat_device (string) *</th>
+      <td>
+      <p>Specifies the network device name for sending heartbeat signals.
+         You can use multiple devices.
+         The number at the end of the parameter name is referred as "device number", and it starts from 0.
+         If you want to set mutiple destination (<a href="#HEARTBEAT_DESTINATION">heartbeat_destiationN</a>) for one device,
+         specify the device name repeatedly using different numbers.</p>
+      </td>
+    </tr>
+
+    <tr>
+      <th id="HEARTBEAT_DESTINATION"><label>{$message.descHeartbeat_destination|escape}</label>
+      <p>heartbeat_destination (string) *</th>
+      <td>
+      <p>Specifies the destination of heartbeat signals which is sent from the device
+         specified by <a href="#HEARTBEAT_DEVICE">heartbeat_deviceX</a>.
+         Use IP address or hostname. The number at the end of the parameter name is referred as "device number",
+         and it starts from 0. This works only heartbeat mode. </p>
+      </td>
+    </tr>
+    {/if}
+
+    {* --------------------------------------------------------------------- *}
+    <tr><th class="category" colspan="2">Lifecheck Setting (query mode)</th></tr>
+
+    <tr>
+      <th id="WD_LIFE_POINT"><label>{$message.descWd_life_point|escape}</label>
+      <p>wd_life_point (string) *</th>
+      <td>
+      <p>The times to retry a failed life check of pgpool-II. (A number greater than or equal to 1) </p>
+      </td>
+    </tr>
+
+    <tr>
+      <th id="WD_LIFECHECK_QUERY"><label>{$message.descWd_lifecheck_query|escape}</label>
+      <p>wd_lifecheck_query (string) *</th>
+      <td>
+      <p>Actual query to check pgpool-II. Default is "SELECT 1".</p>
+      </td>
+    </tr>
+
+    {if paramExists('wd_lifecheck_dbname')}
+    <tr>
+      <th id="WD_LIFECHECK_DBNAME"><label>{$message.descWd_lifecheck_dbname|escape}</label>
+      <p>wd_lifecheck_dbnam(string) *</th>
+      <td>
+      <p>The database name connected for checking pgpool-II. Default is "template1"</p>
+      </td>
+    </tr>
+
+    <tr>
+      <th id="WD_LIFECHECK_USER"><label>{$message.descWd_lifecheck_user|escape}</label>
+      <p>wd_lifecheck_user(string) *</th>
+      <td>
+      <p>The user name to check pgpool-II. This user must exist in all the PostgreSQL backends.
+         Default is "nobody" .</p>
+      </td>
+    </tr>
+
+    <tr>
+      <th id="WD_LIFECHECK_PASSWORD"><label>{$message.descWd_lifecheck_password|escape}</label>
+      <p>wd_lifecheck_query (string) *</th>
+      <td>
+      <p>The password of the user to check pgpool-II. Default is "".</p>
+      </td>
+    </tr>
+    {/if}
+
+    {* --------------------------------------------------------------------- *}
     <tr><th class="category" colspan="2">Servers to monitor</th></tr>
 
     <tr>

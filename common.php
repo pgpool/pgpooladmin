@@ -30,7 +30,7 @@ error_reporting(E_ALL);
 
 function versions()
 {
-    return array('3.2', '3.1', '3.0',
+    return array('3.3', '3.2', '3.1', '3.0',
                  '2.3', '2.2', '2.1', '2.0');
 }
 
@@ -543,6 +543,15 @@ function paramExists($param)
         /* Add */
 
         // params added in 3.3
+        case 'clear_memqcache_on_escalation':
+        case 'heartbeat_device':
+        case 'heartbeat_destination':
+        case 'wd_authkey':
+        case 'wd_escalation_command':
+        case 'wd_lifecheck_method':
+        case 'wd_heartbeat_port':
+        case 'wd_heartbeat_keepalive':
+        case 'wd_heartbeat_deadtime':
         case 'wd_lifecheck_dbname':
         case 'wd_lifecheck_user':
         case 'wd_lifecheck_password':

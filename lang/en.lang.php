@@ -41,6 +41,7 @@ $message = array(
     'descBlack_memqcache_table_list' => 'Comma separated list of table names not to be cached',
     'descChild_life_time' => 'Life of an idle child process in seconds',
     'descChild_max_connections' => 'If child_max_connections connections were received, child exits',
+    'descClear_memqcache_on_escalation' => 'If on, watchdog clears all the query cache in the shared memory when pgpool-II escaltes to active',
     'descClient_idle_limit' => 'Timeout in seconds while waiting for a query from a client',
     'descClient_idle_limit_in_recovery' => 'Timeout in seconds while waiting for a query '.
                                            'from a client in on line recovery',
@@ -58,6 +59,8 @@ $message = array(
                                                   'in UPDATE/DELETE',
     'descFail_over_on_backend_error' => 'Fail over when socket communication error to backend occurs',
     'descFollow_master_command' => 'Command to run only after a master failover',
+    'descHeartbeat_destination' => 'The destination of heartbeat signals which is sent from the device. Specify by hostname or IP address.',
+    'descHeartbeat_device' => 'The network device name for sending heartbeat signals',
     'descHealth_check_period' => 'Specifies the interval for next health checking. 0 means no health checking, '.
                                  '-1 means no wait',
     'descHealth_check_timeout' => 'Pgpool does "health check" periodically to detect PostgreSQL servers down, '.
@@ -146,10 +149,16 @@ $message = array(
     'descSystem_db_user' => 'The username when connection system database',
     'descTrusted_servers' => 'The list of trusted servers to check the up stream connections',
     'descUse_watchdog' => 'Enable watchdog',
+    'descWd_authkey' => 'The authentication key used in watchdog communication',
+    'descWd_escalation_command' => 'The command which will be executed on the new active when pgpool-II escaltes to active',
+    'descWd_heartbeat_deadtime' => 'If there are no heartbeat signal for the period specified by this option, watchdog regards it as failure of the remote pgpool-II.',
+    'descWd_heartbeat_keepalive' => 'The interval time of sending heartbeat signals in seconds',
+    'descWd_heartbeat_port' => 'The port number to receive heartbeat signals',
     'descWd_hostname' => 'The hostname or IP address in which pgpool-II works',
     'descWd_interval' => 'The interval between life checks of pgpool-II in second',
     'descWd_life_point' => 'The times to retry a failed life check of pgpool-II',
     'descWd_lifecheck_dbname' => 'The database name connected for checking pgpool-II',
+    'descWd_lifecheck_method' => 'The method of life check',
     'descWd_lifecheck_query' => 'Actual query to check pgpool-II',
     'descWd_lifecheck_password' => 'The user name to check pgpool-II',
     'descWd_lifecheck_user' => 'The password of the user to check pgpool-II',

@@ -238,14 +238,14 @@ $pgpoolConfigParam[$key]['regexp'] = selectreg(array('always', 'if_over_threshol
 # - Syslog specific - 
 
 $key = 'syslog_facility';
-$pgpoolConfigBackendParam[$key]['type'] = 'C';
-$pgpoolConfigBackendParam[$key]['default'] = 'LOCAL0';
-$pgpoolConfigBackendParam[$key]['regexp'] = $strreg;
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = 'LOCAL0';
+$pgpoolConfigParam[$key]['regexp'] = $strreg;
 
 $key = 'syslog_ident';
-$pgpoolConfigBackendParam[$key]['type'] = 'C';
-$pgpoolConfigBackendParam[$key]['default'] = 'pgpool';
-$pgpoolConfigBackendParam[$key]['regexp'] = $strreg;
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = 'pgpool';
+$pgpoolConfigParam[$key]['regexp'] = $strreg;
 
 # - Debug -
 
@@ -524,20 +524,13 @@ $pgpoolConfigParam[$key]['max'] = NUM_MAX;
 # WATCHDOG
 #------------------------------------------------------------------------------
 
+# Enabling
+
 $key = 'use_watchdog';
 $pgpoolConfigParam[$key]['type'] = 'B';
 $pgpoolConfigParam[$key]['default'] = 'off';
 
-$key = 'trusted_servers';
-$pgpoolConfigParam[$key]['type'] = 'C';
-$pgpoolConfigParam[$key]['default'] = '';
-$pgpoolConfigParam[$key]['regexp'] = $anyelse;
-
-$key = 'delegate_IP';
-$pgpoolConfigParam[$key]['type'] = 'C';
-$pgpoolConfigParam[$key]['default'] = '';
-$pgpoolConfigParam[$key]['regexp'] = $addressreg;
-$pgpoolConfigParam[$key]['null_ok'] = TRUE;
+# Watchdog communication
 
 $key = 'wd_hostname';
 $pgpoolConfigParam[$key]['type'] = 'C';
@@ -551,16 +544,31 @@ $pgpoolConfigParam[$key]['default'] = 9000;
 $pgpoolConfigParam[$key]['max'] = NUM_MAX;
 $pgpoolConfigParam[$key]['min'] = 1024;
 
-$key = 'wd_interval';
-$pgpoolConfigParam[$key]['type'] = 'N';
-$pgpoolConfigParam[$key]['default'] = 10;
-$pgpoolConfigParam[$key]['max'] = NUM_MAX;
-$pgpoolConfigParam[$key]['min'] = 0;
+$key = 'wd_authkey';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = '';
+$pgpoolConfigParam[$key]['regexp'] = $anyelse;
+$pgpoolConfigParam[$key]['null_ok'] = TRUE;
+
+# Connection to up stream servers
+
+$key = 'trusted_servers';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = '';
+$pgpoolConfigParam[$key]['regexp'] = $anyelse;
 
 $key = 'ping_path';
 $pgpoolConfigParam[$key]['type'] = 'C';
 $pgpoolConfigParam[$key]['default'] = '';
 $pgpoolConfigParam[$key]['regexp'] = $anyelse;
+
+# Virtual IP control
+
+$key = 'delegate_IP';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = '';
+$pgpoolConfigParam[$key]['regexp'] = $addressreg;
+$pgpoolConfigParam[$key]['null_ok'] = TRUE;
 
 $key = 'ifconfig_path';
 $pgpoolConfigParam[$key]['type'] = 'C';
@@ -586,6 +594,64 @@ $key = 'arping_cmd';
 $pgpoolConfigParam[$key]['type'] = 'C';
 $pgpoolConfigParam[$key]['default'] = '';
 $pgpoolConfigParam[$key]['regexp'] = $anyelse;
+
+# Behaivor on escalation
+
+$key = 'clear_memqcache_on_escalation';
+$pgpoolConfigParam[$key]['type'] = 'B';
+$pgpoolConfigParam[$key]['default'] = 'on';
+
+$key = 'wd_escalation_command';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = '';
+$pgpoolConfigParam[$key]['regexp'] = $anyelse;
+
+# Life checking pgpool-II
+
+# (Common)
+
+$key = 'wd_lifecheck_method';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = 'heartbeat';
+$pgpoolConfigParam[$key]['regexp'] = selectreg(array('heartbeat', 'query'));
+
+$key = 'wd_interval';
+$pgpoolConfigParam[$key]['type'] = 'N';
+$pgpoolConfigParam[$key]['default'] = 10;
+$pgpoolConfigParam[$key]['max'] = NUM_MAX;
+$pgpoolConfigParam[$key]['min'] = 0;
+
+# (Configuration of heartbeat mode)
+
+$key = 'wd_heartbeat_port';
+$pgpoolConfigParam[$key]['type'] = 'N';
+$pgpoolConfigParam[$key]['default'] = 9694;
+$pgpoolConfigParam[$key]['max'] = NUM_MAX;
+$pgpoolConfigParam[$key]['min'] = 0;
+
+$key = 'wd_heartbeat_keepalive';
+$pgpoolConfigParam[$key]['type'] = 'N';
+$pgpoolConfigParam[$key]['default'] = 2;
+$pgpoolConfigParam[$key]['max'] = NUM_MAX;
+$pgpoolConfigParam[$key]['min'] = 0;
+
+$key = 'wd_heartbeat_deadtime';
+$pgpoolConfigParam[$key]['type'] = 'N';
+$pgpoolConfigParam[$key]['default'] = 30;
+$pgpoolConfigParam[$key]['max'] = NUM_MAX;
+$pgpoolConfigParam[$key]['min'] = 0;
+
+$key = 'heartbeat_device';
+$pgpoolConfigHbDeviceParam[$key]['type'] = 'C';
+$pgpoolConfigHbDeviceParam[$key]['default'] = 'eth0';
+$pgpoolConfigHbDeviceParam[$key]['regexp'] = $anyelse;
+
+$key = 'heartbeat_destination';
+$pgpoolConfigHbDeviceParam[$key]['type'] = 'C';
+$pgpoolConfigHbDeviceParam[$key]['default'] = '';
+$pgpoolConfigHbDeviceParam[$key]['regexp'] = $anyelse;
+
+# (Configuration of query mode)
 
 $key = 'wd_life_point';
 $pgpoolConfigParam[$key]['type'] = 'N';
@@ -613,7 +679,7 @@ $pgpoolConfigParam[$key]['type'] = 'C';
 $pgpoolConfigParam[$key]['default'] = '';
 $pgpoolConfigParam[$key]['regexp'] = $anyelse;
 
-# Other pgpool Connection Settings
+# Servers to monitor
 
 $key = 'other_pgpool_hostname';
 $pgpoolConfigWdOtherParam[$key]['type'] = 'C';

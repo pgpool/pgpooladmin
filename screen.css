@@ -35,7 +35,10 @@ th, td {
   padding: 4px 8px;
   border-bottom: 1px solid lightsteelblue;
 }
-thead th, thead td, tfoot th, tfoot td {
+thead th, thead td,
+tfoot th, tfoot td,
+tr.tr_add_button th,
+tr.tr_add_button td {
   background: ghostwhite;
 }
 tbody th {
@@ -299,6 +302,12 @@ ul {
 .message p {
     font-family: monospace;
     border-bottom: 1px dotted #cccccc;
+}
+.param_group {
+    background-color: #78A1D3;
+    padding: 3px 5px;
+    border-radius: 3px;
+    color: white;
 }
 
 /* --------------------------------------------------------------------- */

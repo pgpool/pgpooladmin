@@ -18,16 +18,17 @@ function resetData(){
     document.pgconfig.submit();
 }
 
-function del(num){
-    if(window.confirm(msgDeleteConfirm)){
-        document.pgconfig.action.value= "delete";
-        document.pgconfig.num.value = num;
-        document.pgconfig.submit();
-    }
-}
 
 function addNode() {
     document.pgconfig.action.value= "add";
+    document.pgconfig.submit();
+}
+function addOtherWatchdog() {
+    document.pgconfig.action.value= "add_wd";
+    document.pgconfig.submit();
+}
+function addHeartbeatDevice() {
+    document.pgconfig.action.value= "add_heartbeat_device";
     document.pgconfig.submit();
 }
 
@@ -35,15 +36,21 @@ function cancelNode() {
     document.pgconfig.action.value= "cancel";
     document.pgconfig.submit();
 }
-
-function addOtherWatchdog() {
-    document.pgconfig.action.value= "add_wd";
-    document.pgconfig.submit();
-}
-
 function cancelOtherWatchdog() {
     document.pgconfig.action.value= "cancel_wd";
     document.pgconfig.submit();
+}
+function cancelHeartbeatDevice() {
+    document.pgconfig.action.value= "cancel_heartbeat_device";
+    document.pgconfig.submit();
+}
+
+function deleteNode(num){
+    if(window.confirm(msgDeleteConfirm)){
+        document.pgconfig.action.value= "delete";
+        document.pgconfig.num.value = num;
+        document.pgconfig.submit();
+    }
 }
 function delOtherWatchdog(num){
     if(window.confirm(msgDeleteConfirm)){
@@ -52,7 +59,13 @@ function delOtherWatchdog(num){
         document.pgconfig.submit();
     }
 }
-
+function delHeartbeatDevice(num){
+    if(window.confirm(msgDeleteConfirm)){
+        document.pgconfig.action.value= "delete_heartbeat_device";
+        document.pgconfig.num.value = num;
+        document.pgconfig.submit();
+    }
+}
 
 // -->
 </script>
@@ -363,15 +376,15 @@ function delOtherWatchdog(num){
       {if isset($isAdd) && $isAdd == true}
           <tfoot>
             <tr>
-               <td colspan="4">
-               <input type="button" name="cancel" value="{$message.strCancel|escape}" onclick="cancelNode()" /></td>
+            <td colspan="4">
+            <input type="button" name="cancel" value="{$message.strCancel|escape}" onclick="cancelNode()" /></td>
             </tr>
           </tfoot>
       {else}
           <tfoot>
             <tr>
-              <td colspan="4">
-              <input type="button" name="add" value="{$message.strAdd|escape}" onclick="addNode()" /></td>
+            <td colspan="4">
+            <input type="button" name="add" value="{$message.strAdd|escape}" onclick="addNode()" /></td>
             </tr>
           </tfoot>
       {/if}
@@ -379,14 +392,15 @@ function delOtherWatchdog(num){
 
           {foreach from=$params.backend_hostname key=node_num item=v}
           <tr>
-          <td rowspan="{if paramExists('backend_flag')}5{else}4{/if}">node {$node_num}</td>
+          <td rowspan="{if paramExists('backend_flag')}5{else}4{/if}">
+          <span class="param_group">node {$node_num}</span></td>
           <th{if isset($error.backend_hostname.$node_num)} class="error"{/if}>
           <label>{$message.descBackend_hostname|escape}</label>
           <br />backend_hostname{$node_num} (string)</th>
           <td><input type="text" name="backend_hostname[]" value="{$params.backend_hostname.$node_num|escape}" /></td>
           <td rowspan="{if paramExists('backend_flag')}5{else}4{/if}">
           <input type="button" name="delete" value="{$message.strDelete|escape}"
-                 onclick="del({$node_num})" /></td>
+                 onclick="deleteNode({$node_num})" /></td>
           </tr>
 
           <tr>
@@ -428,7 +442,8 @@ function delOtherWatchdog(num){
 
           {if isset($isAdd) && $isAdd == true}
               <tr>
-              <td rowspan="{if paramExists('backend_flag')}5{else}4{/if}">node [new]</td>
+              <td rowspan="{if paramExists('backend_flag')}5{else}4{/if}">
+              <span class="param_group">node {$node_num + 1}</span></td>
               <th><label>{$message.descBackend_hostname|escape}</label>
               <br />backend_hostname{$smarty.section.num.index} (string)</th>
               <td><input type="text" name="backend_hostname[]" value="" /></td>
@@ -1229,141 +1244,269 @@ function delOtherWatchdog(num){
         </tr>
       </thead>
       <tbody>
+        {* --------------------------------------------------------------------- *}
+        <tr><th class="category" colspan="4">Enabling</th></tr>
 
         <tr>
-        <th{if isset($error.use_watchdog)} class="error"{/if}>
+        <th{if isset($error.use_watchdog)} class="error"{/if} colspan="2">
         <label>{$message.descUse_watchdog|escape}</label>
         <br />use_watchdog (bool) *</th>
         <td colspan="2"><input type="checkbox" name="use_watchdog" id="use_watchdog" value="true"
             {if $params.use_watchdog== 'on'}checked="checked"{/if} /></td>
         </tr>
 
-        <tr><th class="category" colspan="3">Connection to up stream servers</th></tr>
+        {* --------------------------------------------------------------------- *}
+        <tr><th class="category" colspan="4">Connection to up stream servers</th></tr>
 
         <tr>
-        <th{if isset($error.trusted_servers)} class="error"{/if}>
+        <th{if isset($error.trusted_servers)} class="error"{/if} colspan="2">
         <label>{$message.descTrusted_servers|escape}</label>
         <br />trusted_servers (string) *</th>
         <td colspan="2"><input type="text" name="trusted_servers" value="{$params.trusted_servers|escape}"/></td>
         </tr>
 
         <tr>
-        <th{if isset($error.ping_path)} class="error"{/if}>
+        <th{if isset($error.ping_path)} class="error"{/if} colspan="2">
         <label>{$message.descPing_path|escape}</label>
         <br />ping_path (string) *</th>
         <td colspan="2"><input type="text" name="ping_path" value="{$params.ping_path|escape}"/></td>
         </tr>
 
-        <tr><th class="category" colspan="3">Lifecheck of pgpol-II</th></tr>
+        {* --------------------------------------------------------------------- *}
+        <tr><th class="category" colspan="4">Watchdog communication Settings</th></tr>
 
         <tr>
-        <th{if isset($error.wd_interval)} class="error"{/if}>
-        <label>{$message.descWd_interval|escape}</label>
-        <br />wd_interval (integer) *</th>
-        <td colspan="2"><input type="text" name="wd_interval" value="{$params.wd_interval|escape}"/></td>
-        </tr>
-
-        <tr>
-        <th{if isset($error.wd_life_point)} class="error"{/if}>
-        <label>{$message.descWd_life_point|escape}</label>
-        <br />wd_life_point(integer) *</th>
-        <td colspan="2"><input type="text" name="wd_life_point" value="{$params.wd_life_point|escape}"/></td>
-        </tr>
-
-        <tr>
-        <th{if isset($error.wd_lifecheck_query)} class="error"{/if}>
-        <label>{$message.descWd_lifecheck_query|escape}</label>
-        <br />wd_lifecheck_query (string) *</th>
-        <td colspan="2"><input type="text" name="wd_lifecheck_query" value="{$params.wd_lifecheck_query|escape}"/></td>
-        </tr>
-
-        {if paramExists('wd_lifecheck_dbname')}
-        <tr>
-        <th{if isset($error.wd_lifecheck_dbname)} class="error"{/if}>
-        <label>{$message.descWd_lifecheck_dbname|escape}</label>
-        <br />wd_lifecheck_dbname (string) *</th>
-        <td colspan="2"><input type="text" name="wd_lifecheck_dbname" value="{$params.wd_lifecheck_dbname|escape}"/></td>
-        </tr>
-
-        <tr>
-        <th{if isset($error.wd_lifecheck_user)} class="error"{/if}>
-        <label>{$message.descWd_lifecheck_user|escape}</label>
-        <br />wd_lifecheck_user (string) *</th>
-        <td colspan="2"><input type="text" name="wd_lifecheck_user" value="{$params.wd_lifecheck_user|escape}"/></td>
-        </tr>
-
-        <tr>
-        <th{if isset($error.wd_lifecheck_password)} class="error"{/if}>
-        <label>{$message.descWd_lifecheck_password|escape}</label>
-        <br />wd_lifecheck_password (string) *</th>
-        <td colspan="2"><input type="text" name="wd_lifecheck_password" value="{$params.wd_lifecheck_password|escape}"/></td>
-        </tr>
-        {/if}
-
-        <tr><th class="category" colspan="3">Virtual IP address</th></tr>
-
-        <tr>
-        <th{if isset($error.delegate_IP)} class="error"{/if}>
-        <label>{$message.descDelegate_IP|escape}</label>
-        <br />delegate_IP (string) *</th>
-        <td colspan="2"><input type="text" name="delegate_IP" value="{$params.delegate_IP|escape}"/></td>
-        </tr>
-
-        <tr>
-        <th{if isset($error.ifconfig_path)} class="error"{/if}>
-        <label>{$message.descIfconfig_path|escape}</label>
-        <br />ifconfig_path (string) *</th>
-        <td colspan="2"><input type="text" name="ifconfig_path" value="{$params.ifconfig_path|escape}"/></td>
-        </tr>
-
-        <tr>
-        <th{if isset($error.if_up_cmd)} class="error"{/if}>
-        <label>{$message.descIf_up_cmd|escape}</label>
-        <br />if_up_cmd (string) *</th>
-        <td colspan="2"><input type="text" name="if_up_cmd" value="{$params.if_up_cmd|escape}"/></td>
-        </tr>
-
-        <tr>
-        <th{if isset($error.if_down_cmd)} class="error"{/if}>
-        <label>{$message.descIf_down_cmd|escape}</label>
-        <br />if_down_cmd (string) *</th>
-        <td colspan="2"><input type="text" name="if_down_cmd" value="{$params.if_down_cmd|escape}"/></td>
-        </tr>
-
-        <tr>
-        <th{if isset($error.arping_path)} class="error"{/if}>
-        <label>{$message.descArping_path|escape}</label>
-        <br />arping_path (string) *</th>
-        <td colspan="2"><input type="text" name="arping_path" value="{$params.arping_path|escape}"/></td>
-        </tr>
-
-        <tr>
-        <th{if isset($error.arping_cmd)} class="error"{/if}>
-        <label>{$message.descArping_cmd|escape}</label>
-        <br />arping_cmd (string) *</th>
-        <td colspan="2"><input type="text" name="arping_cmd" value="{$params.arping_cmd|escape}"/></td>
-        </tr>
-
-        <tr><th class="category" colspan="3">Server itself to be monitored</th></tr>
-
-        <tr>
-        <th{if isset($error.wd_hostname)} class="error"{/if}>
+        <th{if isset($error.wd_hostname)} class="error"{/if} colspan="2">
         <label>{$message.descWd_hostname|escape}</label>
         <br />wd_hostname (string) *</th>
         <td colspan="2"><input type="text" name="wd_hostname" value="{$params.wd_hostname|escape}"/></td>
         </tr>
 
         <tr>
-        <th{if isset($error.wd_port)} class="error"{/if}>
+        <th{if isset($error.wd_port)} class="error"{/if} colspan="2">
         <label>{$message.descWd_port|escape}</label>
         <br />wd_port (integer) *</th>
         <td colspan="2"><input type="text" name="wd_port" value="{$params.wd_port|escape}"/></td>
         </tr>
 
-        <tr><th class="category" colspan="3">Servers to monitor</th></tr>
+        <tr>
+        <th{if isset($error.wd_authkey)} class="error"{/if} colspan="2">
+        <label>{$message.descWd_authkey|escape}</label>
+        <br />wd_authkey (string) *</th>
+        <td colspan="2"><input type="text" name="wd_authkey" value="{$params.wd_authkey|escape}"/></td>
+        </tr>
+
+        {* --------------------------------------------------------------------- *}
+        <tr><th class="category" colspan="4">Virtual IP control Setting</th></tr>
+
+        <tr>
+        <th{if isset($error.delegate_IP)} class="error"{/if} colspan="2">
+        <label>{$message.descDelegate_IP|escape}</label>
+        <br />delegate_IP (string) *</th>
+        <td colspan="2"><input type="text" name="delegate_IP" value="{$params.delegate_IP|escape}"/></td>
+        </tr>
+
+        <tr>
+        <th{if isset($error.ifconfig_path)} class="error"{/if} colspan="2">
+        <label>{$message.descIfconfig_path|escape}</label>
+        <br />ifconfig_path (string) *</th>
+        <td colspan="2"><input type="text" name="ifconfig_path" value="{$params.ifconfig_path|escape}"/></td>
+        </tr>
+
+        <tr>
+        <th{if isset($error.if_up_cmd)} class="error"{/if} colspan="2">
+        <label>{$message.descIf_up_cmd|escape}</label>
+        <br />if_up_cmd (string) *</th>
+        <td colspan="2"><input type="text" name="if_up_cmd" value="{$params.if_up_cmd|escape}"/></td>
+        </tr>
+
+        <tr>
+        <th{if isset($error.if_down_cmd)} class="error"{/if} colspan="2">
+        <label>{$message.descIf_down_cmd|escape}</label>
+        <br />if_down_cmd (string) *</th>
+        <td colspan="2"><input type="text" name="if_down_cmd" value="{$params.if_down_cmd|escape}"/></td>
+        </tr>
+
+        <tr>
+        <th{if isset($error.arping_path)} class="error"{/if} colspan="2">
+        <label>{$message.descArping_path|escape}</label>
+        <br />arping_path (string) *</th>
+        <td colspan="2"><input type="text" name="arping_path" value="{$params.arping_path|escape}"/></td>
+        </tr>
+
+        <tr>
+        <th{if isset($error.arping_cmd)} class="error"{/if} colspan="2">
+        <label>{$message.descArping_cmd|escape}</label>
+        <br />arping_cmd (string) *</th>
+        <td colspan="2"><input type="text" name="arping_cmd" value="{$params.arping_cmd|escape}"/></td>
+        </tr>
+
+        {* --------------------------------------------------------------------- *}
+        <tr><th class="category" colspan="4">Behaivor on escalation Setting</th></tr>
+
+        <tr>
+        <th{if isset($error.clear_memqcache_on_escalation)} class="error"{/if} colspan="2">
+        <label>{$message.descClear_memqcache_on_escalation|escape}</label>
+        <br />clear_memqcache_on_escalation (bool)</th>
+        <td><input type="checkbox" name="clear_memqcache_on_escalation"
+            id="clear_memqcache_on_escalation" value="true"
+            {if $params.clear_memqcache_on_escalation== 'on'}checked="checked"{/if} /></td>
+        </tr>
+
+        <tr>
+        <th{if isset($error.wd_escalation_command)} class="error"{/if} colspan="2">
+        <label>{$message.descWd_escalation_command|escape}</label>
+        <br />wd_escalation_command (string) *</th>
+        <td colspan="2"><input type="text" name="wd_escalation_command" value="{$params.wd_escalation_command|escape}"/></td>
+        </tr>
+
+        {* --------------------------------------------------------------------- *}
+        <tr><th class="category" colspan="4">Lifecheck Setting (common)</th></tr>
+
+        {if paramExists('heartbeat_device')}
+        <tr>
+        <th{if isset($error.wd_lifecheck_method)} class="error"{/if} colspan="2">
+        <label>{$message.descWd_lifecheck_method|escape}</label>
+        <br />wd_lifecheck_method (string) *</th>
+        <td colspan="2">
+        <input type="text" name="wd_lifecheck_method" value="{$params.wd_lifecheck_method|escape}"/></td>
+        </tr>
+        {/if}
+
+        <tr>
+        <th{if isset($error.wd_interval)} class="error"{/if} colspan="2">
+        <label>{$message.descWd_interval|escape}</label>
+        <br />wd_interval (integer) *</th>
+        <td colspan="2"><input type="text" name="wd_interval" value="{$params.wd_interval|escape}"/></td>
+        </tr>
+
+        {* --------------------------------------------------------------------- *}
+        {if paramExists('heartbeat_device')}
+            <tr><th class="category" colspan="4">Lifecheck Setting (heartbeat mode)</th></tr>
+
+            <tr>
+            <th{if isset($error.wd_heartbeat_port)} class="error"{/if} colspan="2">
+            <label>{$message.descWd_heartbeat_port|escape}</label>
+            <br />wd_heartbeat_port (integer) *</th>
+            <td colspan="2">
+            <input type="text" name="wd_heartbeat_port" value="{$params.wd_heartbeat_port|escape}"/></td>
+            </tr>
+
+            <tr>
+            <th{if isset($error.wd_heartbeat_keepalive)} class="error"{/if} colspan="2">
+            <label>{$message.descWd_heartbeat_keepalive|escape}</label>
+            <br />wd_heartbeat_keepalive (integer) *</th>
+            <td colspan="2">
+            <input type="text" name="wd_heartbeat_keepalive" value="{$params.wd_heartbeat_keepalive|escape}"/></td>
+            </tr>
+
+            <tr>
+            <th{if isset($error.wd_heartbeat_deadtime)} class="error"{/if} colspan="2">
+            <label>{$message.descWd_heartbeat_deadtime|escape}</label>
+            <br />wd_heartbeat_deadtime (integer) *</th>
+            <td colspan="2">
+            <input type="text" name="wd_heartbeat_deadtime" value="{$params.wd_heartbeat_deadtime|escape}"/></td>
+            </tr>
+
+            {if paramExists('heartbeat_device')}
+                {foreach from=$params.heartbeat_device key=device_num item=v}
+                  <tr>
+                  <th rowspan="2"><span class="param_group">device {$device_num}</span></th>
+                  <th{if isset($error.heartbeat_device[num])} class="error"{/if}>
+                  <label>{$message.descHeartbeat_device|escape}</label>
+                  <br />heartbeat_device{$device_num} (string)</th>
+                  <td><input type="text" name="heartbeat_device[]"
+                             value="{$params.heartbeat_device.$device_num|escape}" /></td>
+                  <td rowspan="2">
+                  <input type="button" name="delete" value="{$message.strDelete|escape}"
+                         onclick="delHeartbeatDevice({$device_num})" /></td>
+                  </tr>
+
+                  <tr>
+                  <th{if isset($error.heartbeat_destination[num])} class="error"{/if}>
+                  <label>{$message.descHeartbeat_destination|escape}</label>
+                  <br />heartbeat_destination{$device_num|escape} (integer)</th>
+                  <td><input type="text" name="heartbeat_destination[]"
+                       value="{$params.heartbeat_destination.$device_num|escape}" /></td>
+                  </tr>
+                {/foreach}
+
+                {if isset($isAddHeartbeatDevice) && $isAddHeartbeatDevice == true}
+                  <tr>
+                  <th rowspan="2"><span class="param_group">device {$device_num + 1}</span></th>
+                  <th><label>{$message.descHeartbeat_device|escape}</label>
+                  <br />heartbeat_device{$smarty.section.device_num.index} (string)</th>
+                  <td><input type="text" name="heartbeat_destination[]" value="" /></td>
+                  </tr>
+
+                  <tr>
+                  <th><label>{$message.descHeartbeat_destination|escape}</label>
+                  <br />heartbeat_destination{$smarty.section.device_num.index|escape} (integer)</th>
+                  <td><input type="text" name="heartbeat_device[]" value="" /></td>
+                  </tr>
+
+                  <tr class="tr_add_button">
+                  <td colspan="4">
+                  <input type="button" name="cancel" value="{$message.strCancel|escape}"
+                         onclick="cancelHeartbeatDevice()" /></td>
+                  </tr>
+                {else}
+                  <tr class="tr_add_button">
+                  <td colspan="4">
+                  <input type="button" name="add" value="{$message.strAdd|escape}"
+                         onclick="addHeartbeatDevice()" /></td>
+                  </tr>
+                {/if}
+            {/if}
+        {/if}
+
+        {* --------------------------------------------------------------------- *}
+        <tr><th class="category" colspan="4">Lifecheck Setting (query mode)</th></tr>
+
+        <tr>
+        <th{if isset($error.wd_life_point)} class="error"{/if} colspan="2">
+        <label>{$message.descWd_life_point|escape}</label>
+        <br />wd_life_point(integer) *</th>
+        <td colspan="2"><input type="text" name="wd_life_point" value="{$params.wd_life_point|escape}"/></td>
+        </tr>
+
+        <tr>
+        <th{if isset($error.wd_lifecheck_query)} class="error"{/if} colspan="2">
+        <label>{$message.descWd_lifecheck_query|escape}</label>
+        <br />wd_lifecheck_query (string) *</th>
+        <td colspan="2">
+        <input type="text" name="wd_lifecheck_query" value="{$params.wd_lifecheck_query|escape}"/></td>
+        </tr>
+
+        {if paramExists('wd_lifecheck_dbname')}
+        <tr>
+        <th{if isset($error.wd_lifecheck_dbname)} class="error"{/if} colspan="2">
+        <label>{$message.descWd_lifecheck_dbname|escape}</label>
+        <br />wd_lifecheck_dbname (string) *</th>
+        <td colspan="2"><input type="text" name="wd_lifecheck_dbname" value="{$params.wd_lifecheck_dbname|escape}"/></td>
+        </tr>
+
+        <tr>
+        <th{if isset($error.wd_lifecheck_user)} class="error"{/if} colspan="2">
+        <label>{$message.descWd_lifecheck_user|escape}</label>
+        <br />wd_lifecheck_user (string) *</th>
+        <td colspan="2"><input type="text" name="wd_lifecheck_user" value="{$params.wd_lifecheck_user|escape}"/></td>
+        </tr>
+
+        <tr>
+        <th{if isset($error.wd_lifecheck_password)} class="error"{/if} colspan="2">
+        <label>{$message.descWd_lifecheck_password|escape}</label>
+        <br />wd_lifecheck_password (string) *</th>
+        <td colspan="2"><input type="text" name="wd_lifecheck_password" value="{$params.wd_lifecheck_password|escape}"/></td>
+        </tr>
+        {/if}
+
+        {* --------------------------------------------------------------------- *}
+        <tr><th class="category" colspan="4">Other pgpool Connection Settings</th></tr>
 
           {foreach from=$params.other_pgpool_hostname key=host_num item=v}
           <tr>
+          <th rowspan="3"><span class="param_group">other {$host_num}</span></th>
           <th{if isset($error.other_pgpool_hostname[num])} class="error"{/if}>
           <label>{$message.descOther_pgpool_hostname|escape}</label>
           <br />other_pgpool_hostname{$host_num} (string)</th>
@@ -1391,6 +1534,7 @@ function delOtherWatchdog(num){
 
           {if isset($isAddWd) && $isAddWd == true}
               <tr>
+              <th rowspan="3"><span class="param_group">other {$host_num + 1}</span></th>
               <th><label>{$message.descOther_pgpool_hostname|escape}</label>
               <br />other_pgpool_hostname{$smarty.section.num.index} (string)</th>
               <td><input type="text" name="other_pgpool_hostname[]" value="" /></td>
@@ -1413,15 +1557,15 @@ function delOtherWatchdog(num){
       {if isset($isAddWd) && $isAddWd == true}
           <tfoot>
             <tr>
-               <td colspan="3">
-               <input type="button" name="cancel" value="{$message.strCancel|escape}" onclick="cancelOtherWatchdog()" /></td>
+            <td colspan="4">
+            <input type="button" name="cancel" value="{$message.strCancel|escape}" onclick="cancelOtherWatchdog()" /></td>
             </tr>
           </tfoot>
       {else}
           <tfoot>
             <tr>
-              <td colspan="3">
-              <input type="button" name="add" value="{$message.strAdd|escape}" onclick="addOtherWatchdog()" /></td>
+            <td colspan="4">
+            <input type="button" name="add" value="{$message.strAdd|escape}" onclick="addOtherWatchdog()" /></td>
             </tr>
           </tfoot>
       {/if}
@@ -1607,9 +1751,10 @@ function delOtherWatchdog(num){
     {* --------------------------------------------------------------------- *
      * Form End                                                              *
      * --------------------------------------------------------------------- *}
-    <p>
-      <input type="button" name="btnSubmit" value="{$message.strUpdate|escape}" onclick="update()"/>
-      <input type="button" name="btnReset" value="{$message.strReset|escape}" onclick="resetData()"/>
+    <hr style="margin: 30px auto">
+    <p align="center">
+      <input type="button" name="btnSubmit" value="  {$message.strUpdate|escape}  " onclick="update()"/>
+      <input type="button" name="btnReset" value="  {$message.strReset|escape}  " onclick="resetData()"/>
     </p>
   </form>
 

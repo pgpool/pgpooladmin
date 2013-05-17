@@ -27,7 +27,6 @@ require_once('common.php');
 require('definePgpoolConfParam.php');
 $tpl->assign('help', basename( __FILE__, '.php'));
 
-
 if (!isset($_SESSION[SESSION_LOGIN_USER])) {
     header('Location: login.php');
     exit();
@@ -49,135 +48,28 @@ if (isset($_POST['action'])) {
 switch ($action) {
     case 'add':
     case 'add_wd':
-
-        // Boolean value
-        foreach ($pgpoolConfigParam as $key => $value) {
-            if ($pgpoolConfigParam[$key]['type'] == 'B') {
-                if (isset($_POST[$key])) {
-                    $configValue[$key] = 'on';
-                } else {
-                    $configValue[$key] = 'off';
-                }
-            } elseif (isset($_POST[$key])) {
-                $configValue[$key] = trim($_POST[$key]);
-            }
-        }
-
-        // Backend settings
-        if (isset($_POST['backend_hostname'])) {
-            $configValue['backend_hostname'] = $_POST['backend_hostname'];
-        } else {
-            $configValue['backend_hostname'][0] = NULL;
-
-        }
-        if (isset($_POST['backend_port'])) {
-            $configValue['backend_port'] = $_POST['backend_port'];
-        } else {
-            $configValue['backend_port'][0] = NULL;
-        }
-
-        if (isset($_POST['backend_weight'])) {
-            $configValue['backend_weight'] = $_POST['backend_weight'];
-        } else {
-            $configValue['backend_weight'][0] = NULL;
-        }
-
-        if (isset($_POST['backend_data_directory'])) {
-            $configValue['backend_data_directory'] = $_POST['backend_data_directory'];
-        } else {
-             $configValue['backend_data_directory'][0] = NULL;
-        }
-
-        if (paramExists('backend_flag')) {
-            if (isset($_POST['backend_flag'])) {
-                $configValue['backend_flag'] = $_POST['backend_flag'];
-            } else {
-                $configValue['backend_flag'][0] = NULL;
-            }
-        }
-
-        // watchdog settings
-        if (isset($_POST['other_pgpool_hostname'])) {
-            $configValue['other_pgpool_hostname'] = $_POST['other_pgpool_hostname'];
-        } else {
-            $configValue['other_pgpool_hostname'][0] = NULL;
-
-        }
-
-        if (isset($_POST['other_pgpool_port'])) {
-            $configValue['other_pgpool_port'] = $_POST['other_pgpool_port'];
-        } else {
-            $configValue['other_pgpool_port'][0] = NULL;
-        }
-
-        if (isset($_POST['other_wd_port'])) {
-            $configValue['other_wd_port'] = $_POST['other_wd_port'];
-        } else {
-            $configValue['other_wd_port'][0] = NULL;
-        }
+    case 'add_heartbeat_device':
+        $configValue = arrangePostData();
+        $configValue = doAdd($configValue);
 
         $tpl->assign('params', $configValue);
-        $tpl->assign('isAdd', ($action == 'add'));
+        $tpl->assign('isAdd',   ($action == 'add'));
         $tpl->assign('isAddWd', ($action == 'add_wd'));
+        $tpl->assign('isAddHeartbeatDevice', ($action == 'add_heartbeat_device'));
         $tpl->display('pgconfig.tpl');
 
         return;
 
     case 'cancel':
     case 'cancel_wd':
-
-        // Boolean value
-        foreach ($pgpoolConfigParam as $key => $value) {
-            if ($pgpoolConfigParam[$key]['type'] == 'B') {
-                if (isset($_POST[$key])) {
-                    $configValue[$key] = 'on';
-                } else {
-                    $configValue[$key] = 'off';
-                }
-            } elseif (isset($_POST[$key])) {
-                $configValue[$key] = trim($_POST[$key]);
-            }
-        }
-
-        // Backend settings
-        if (isset($_POST['backend_hostname'])) {
-            $configValue['backend_hostname'] = $_POST['backend_hostname'];
-        }
-        if (isset($_POST['backend_port'])) {
-            $configValue['backend_port'] = $_POST['backend_port'];
-        }
-        if (isset($_POST['backend_weight'])) {
-            $configValue['backend_weight'] = $_POST['backend_weight'];
-        }
-        if (isset($_POST['backend_data_directory'])) {
-            $configValue['backend_data_directory'] = $_POST['backend_data_directory'];
-        }
-        if (paramExists('backend_flag') && isset($_POST['backend_flag'])) {
-            $configValue['backend_flag'] = $_POST['backend_flag'];
-        }
-        array_pop($configValue['backend_hostname']);
-        array_pop($configValue['backend_port']);
-        array_pop($configValue['backend_weight']);
-        array_pop($configValue['backend_data_directory']);
-        array_pop($configValue['backend_flag']);
-
-        // watchdog settings
-        if (isset($_POST['other_pgpool_hostname'])) {
-            $configValue['other_pgpool_hostname'] = $_POST['other_pgpool_hostname'];
-        }
-        if (isset($_POST['other_pgpool_port'])) {
-            $configValue['other_pgpool_port'] = $_POST['other_pgpool_port'];
-        }
-        if (isset($_POST['other_wd_port'])) {
-            $configValue['other_wd_port'] = $_POST['other_wd_port'];
-        }
-        array_pop($configValue['other_pgpool_hostname']);
-        array_pop($configValue['other_pgpool_port']);
-        array_pop($configValue['other_wd_port']);
+    case 'cancel_heartbeat_device':
+        $configValue = arrangePostData();
+        $configValue = doCancel($configValue, $action);
 
         $tpl->assign('params', $configValue);
-        $tpl->assign('isAdd', !($action == 'cancel'));
-        $tpl->assign('isAddWd', !($action == 'cancel_wd'));
+        $tpl->assign('isAdd',  FALSE);
+        $tpl->assign('isAddWd', FALSE);
+        $tpl->assign('isAddHeartbeatDevice', FALSE);
         $tpl->display('pgconfig.tpl');
 
         return;
@@ -199,171 +91,15 @@ foreach ($pgpoolConfigParam as $key => $value) {
 
 switch ($action) {
     case 'update':
+        $configValue = arrangePostData();
+        $error = doCheck();
 
-        /**
-         * copy from POST data to $configValue except backend value
-         */
-        foreach ($pgpoolConfigParam as $key => $value) {
-            if ($pgpoolConfigParam[$key]['type'] == 'B') {
-                if (isset($_POST[$key])) {
-                    $configValue[$key] = 'true';
-                } else {
-                    $configValue[$key] = 'false';
-                }
-            } elseif (isset($_POST[$key])) {
-                $configValue[$key] = trim($_POST[$key]);
-            }
-        }
-
-        /**
-         * Confirmations of value except backend host
-         */
-        foreach ($pgpoolConfigParam as $key => $value) {
-            check($key, $value, $configValue, $error);
-        }
-
-        /**
-         * copy backend value from POST data to $configValue
-         */
-        foreach ($pgpoolConfigBackendParam as $key => $value) {
-            if (isset($_POST[$key])) {
-                $configValue[$key] = $_POST[$key];
-            }
-        }
-
-        /**
-         * check backend value
-         */
-        if (isset($configValue['backend_hostname'])) {
-            for ($i = 0; $i < count($configValue['backend_hostname']); $i++) {
-                $result = FALSE;
-
-                // backend_hostname
-                $result = checkString($configValue['backend_hostname'][$i],
-                                      $pgpoolConfigBackendParam['backend_hostname']['regexp']);
-                if (!$result) {
-                    $error['backend_hostname'][$i] = TRUE;
-                }
-
-                // backend_port
-                $result = checkInteger($configValue['backend_port'][$i],
-                                       $pgpoolConfigBackendParam['backend_port']['min'],
-                                       $pgpoolConfigBackendParam['backend_port']['max']);
-                if (!$result) {
-                    $error['backend_port'][$i] = TRUE;
-                }
-
-                // backend_weight
-                $result = checkFloat($configValue['backend_weight'][$i],
-                                     $pgpoolConfigBackendParam['backend_weight']['min'],
-                                     $pgpoolConfigBackendParam['backend_weight']['max']);
-                if (!$result) {
-                    $error['backend_weight'][$i] = TRUE;
-                }
-
-                // backend_data_directory
-                $result = checkString($configValue['backend_data_directory'][$i],
-                                      $pgpoolConfigBackendParam['backend_data_directory']['regexp']);
-                if (!$result) {
-                    $error['backend_data_directory'][$i] = TRUE;
-                }
-
-                // backend_flag
-                if (paramExists('backend_flag')) {
-                    $result = checkString($configValue['backend_flag'][$i],
-                                          $pgpoolConfigBackendParam['backend_flag']['regexp']);
-                    if (!$result) {
-                        $error['backend_flag'][$i] = TRUE;
-                    }
-                }
-            }
-        }
-
-        /**
-         * copy backend value from POST data to $configValue
-         */
-        foreach ($pgpoolConfigWdOtherParam as $key => $value) {
-            if (isset($_POST[$key])) {
-                $configValue[$key] = $_POST[$key];
-            }
-        }
-
-        /**
-         * check other watchdog value
-         */
-        if (isset($configValue['other_pgpool_hostname'])) {
-            for ($i = 0; $i < count($configValue['other_pgpool_hostname']); $i++) {
-                $result = FALSE;
-
-                // other_pgpool_hostname
-                $result = checkString($configValue['other_pgpool_hostname'][$i],
-                                      $pgpoolConfigWdOtherParam['other_pgpool_hostname']['regexp']);
-                if (!$result) {
-                    $error['other_pgpool_hostname'][$i] = TRUE;
-                }
-
-                // other_pgpool_port
-                $result = checkInteger($configValue['other_pgpool_port'][$i],
-                                       $pgpoolConfigWdOtherParam['other_pgpool_port']['min'],
-                                       $pgpoolConfigWdOtherParam['other_pgpool_port']['max']);
-
-                // other_wd_port
-                $result = checkInteger($configValue['other_wd_port'][$i],
-                                       $pgpoolConfigWdOtherParam['other_wd_port']['min'],
-                                       $pgpoolConfigWdOtherParam['other_wd_port']['max']);
-            }
-        }
-
-        /*
-         * Chek if there are some errors
-         */
-        $isError = FALSE;
-        foreach ($error as $key => $value) {
-            if (preg_match("/^backend_hostname/",       $key) ||
-                preg_match("/^backend_port/",           $key) ||
-                preg_match("/^backend_weight/",         $key) ||
-                preg_match("/^backend_data_directory/", $key) ||
-                preg_match("/^backend_flag/",           $key))
-            {
-                for ($i = 0; $i < count($value); $i++) {
-                    if ($value[$i] == TRUE) {
-                        $isError = TRUE;
-                    }
-                }
-
-            } elseif (
-                preg_match("/^other_pgpool_hostname/", $key) ||
-                preg_match("/^other_pgpool_port/",     $key) ||
-                preg_match("/^other_wd_port/",         $key))
-            {
-                for ($i = 0; $i < count($value); $i++) {
-                    if ($value[$i] == TRUE) {
-                        $isError = TRUE;
-                    }
-                }
-
-            } elseif ($value == TRUE) {
-                $isError = TRUE;
-            }
-
-            if ($isError) { break; }
-        }
-
-        /* check logically */
-        $logical_errors = checkLogical($configValue);
-        if ($logical_errors) {
-            $isError = TRUE;
-            $error += $logical_errors;
-        }
-
-        /**
-         * Display
-         */
-        if (!$isError) {
+        if (! $error) {
             if (is_writable(_PGPOOL2_CONFIG_FILE)) {
                 writeConfigFile($configValue, $pgpoolConfigParam);
                 $configValue = readConfigParams();
                 $tpl->assign('status', 'success');
+
             } else {
                 $errorCode = 'e4003';
                 $tpl->assign('errorCode', $errorCode);
@@ -379,6 +115,7 @@ switch ($action) {
 
     case 'delete':
     case 'delete_wd':
+    case 'delete_heartbeat_device':
         $num = $_POST['num'];
 
         switch ($action) {
@@ -386,6 +123,8 @@ switch ($action) {
                 deleteBackendHost($num, $configValue); break;
             case 'delete_wd':
                 deleteWdOther($num, $configValue); break;
+            case 'cancel_heartbeat_device':
+                deleteHeartbeatDevice($num, $configValue); break;
         }
 
         if (is_writable(_PGPOOL2_CONFIG_FILE)) {
@@ -405,12 +144,18 @@ switch ($action) {
     default:
 }
 
+/* Set each empty object if null */
 if (!isset($configValue['backend_hostname'])) {
     $configValue['backend_hostname'][0] = NULL;
     $configValue['backend_port'][0]     = NULL;
     $configValue['backend_weight'][0]   = NULL;
     $configValue['backend_data_directory'][0] = NULL;
     $configValue['backend_flag'][0]     = NULL;
+}
+
+if (!isset($configValue['heartbeat_device'])) {
+    $configValue['heartbeat_device'][0]      = NULL;
+    $configValue['heartbeat_destination'][0] = NULL;
 }
 
 if (!isset($configValue['other_pgpool_hostname'])) {
@@ -552,6 +297,9 @@ function checkBoolean($str)
     }
 }
 
+/**
+ * Check if there is no paradoxes in settings
+ */
 function checkLogical($configValue)
 {
     $errors = array();
@@ -646,7 +394,9 @@ function writeConfigFile($configValue, $pgpoolConfigParam)
                 !preg_match("/^backend_flag/",           $key) &&
                 !preg_match("/^other_pgpool_hostname/",  $key) &&
                 !preg_match("/^other_pgpool_port/",      $key) &&
-                !preg_match("/^other_wd_port/",          $key)
+                !preg_match("/^other_wd_port/",          $key) &&
+                !preg_match("/^heartbeat_device/",       $key) &&
+                !preg_match("/^heartbeat_destination/",  $key)
                 )
             {
                 $tmpConfigFile[] =  $line;
@@ -706,6 +456,13 @@ function writeConfigFile($configValue, $pgpoolConfigParam)
         }
     }
 
+    if (isset($configValue['heartbeat_device'])) {
+        for ($i = 0; $i < count($configValue['heartbeat_device']); $i++) {
+            $configFile[] = "heartbeat_device$i = '" . $configValue['heartbeat_device'][$i] . "'\n";
+            $configFile[] = "heartbeat_destination$i = " . $configValue['heartbeat_destination'][$i] . "\n";
+        }
+    }
+
     $outfp = fopen(_PGPOOL2_CONFIG_FILE, 'w');
     foreach ($configFile as $line) {
         fputs($outfp, $line);
@@ -756,4 +513,329 @@ function deleteWdOther($num, &$configValue)
 
     unset($configValue['other_wd_port'][$num]);
     $configValue['other_wd_port'] = array_values($configValue['other_wd_port']);
+}
+
+/**
+ * Delete an heartbeat device
+ */
+function deleteHeartbeatDevice($num, &$configValue)
+{
+    if (!isset($configValue['heartbeat_device'])) { return; }
+
+    unset($configValue['heartbeat_device'][$num]);
+    $configValue['heartbeat_device'] = array_values($configValue['heartbeat_device']);
+
+    unset($configValue['heartbeat_destination'][$num]);
+    $configValue['heartbeat_destination'] = array_values($configValue['heartbeat_destination']);
+}
+
+/**
+ * Arrange post data
+ */
+function arrangePostData()
+{
+    global $pgpoolConfigParam;
+    global $_POST;
+
+    $configValue = array();
+    foreach ($pgpoolConfigParam as $key => $value) {
+        if ($pgpoolConfigParam[$key]['type'] == 'B') {
+            $configValue[$key] = (isset($_POST[$key])) ? 'on' : 'off';
+
+        } elseif (isset($_POST[$key])) {
+            $configValue[$key] = trim($_POST[$key]);
+        }
+    }
+
+    return $configValue;
+}
+
+/**
+ * Add action
+ */
+function doAdd($configValue)
+{
+    global $_POST;
+
+    // Backend settings
+    if (isset($_POST['backend_hostname'])) {
+        $configValue['backend_hostname'] = $_POST['backend_hostname'];
+    } else {
+        $configValue['backend_hostname'][0] = NULL;
+
+    }
+    if (isset($_POST['backend_port'])) {
+        $configValue['backend_port'] = $_POST['backend_port'];
+    } else {
+        $configValue['backend_port'][0] = NULL;
+    }
+
+    if (isset($_POST['backend_weight'])) {
+        $configValue['backend_weight'] = $_POST['backend_weight'];
+    } else {
+        $configValue['backend_weight'][0] = NULL;
+    }
+
+    if (isset($_POST['backend_data_directory'])) {
+        $configValue['backend_data_directory'] = $_POST['backend_data_directory'];
+    } else {
+         $configValue['backend_data_directory'][0] = NULL;
+    }
+
+    if (paramExists('backend_flag')) {
+        if (isset($_POST['backend_flag'])) {
+            $configValue['backend_flag'] = $_POST['backend_flag'];
+        } else {
+            $configValue['backend_flag'][0] = NULL;
+        }
+    }
+
+    // watchdog's device settings
+    if (isset($_POST['heartbeat_device'])) {
+        $configValue['heartbeat_device'] = $_POST['heartbeat_device'];
+    } else {
+        $configValue['heartbeat_device'][0] = NULL;
+    }
+
+    if (isset($_POST['heartbeat_destination'])) {
+        $configValue['heartbeat_destination'] = $_POST['heartbeat_destination'];
+    } else {
+        $configValue['heartbeat_destination'][0] = NULL;
+    }
+
+    // watchdog's other pgpool settings
+    if (isset($_POST['other_pgpool_hostname'])) {
+        $configValue['other_pgpool_hostname'] = $_POST['other_pgpool_hostname'];
+    } else {
+        $configValue['other_pgpool_hostname'][0] = NULL;
+    }
+
+    if (isset($_POST['other_pgpool_port'])) {
+        $configValue['other_pgpool_port'] = $_POST['other_pgpool_port'];
+    } else {
+        $configValue['other_pgpool_port'][0] = NULL;
+    }
+
+    if (isset($_POST['other_wd_port'])) {
+        $configValue['other_wd_port'] = $_POST['other_wd_port'];
+    } else {
+        $configValue['other_wd_port'][0] = NULL;
+    }
+
+    return $configValue;
+}
+
+/**
+ * Cancel action
+ */
+function doCancel($configValue, $action)
+{
+    global $_POST;
+
+    // Backend settings
+    if (isset($_POST['backend_hostname'])) {
+        $configValue['backend_hostname'] = $_POST['backend_hostname'];
+    }
+    if (isset($_POST['backend_port'])) {
+        $configValue['backend_port'] = $_POST['backend_port'];
+    }
+    if (isset($_POST['backend_weight'])) {
+        $configValue['backend_weight'] = $_POST['backend_weight'];
+    }
+    if (isset($_POST['backend_data_directory'])) {
+        $configValue['backend_data_directory'] = $_POST['backend_data_directory'];
+    }
+    if (paramExists('backend_flag') && isset($_POST['backend_flag'])) {
+        $configValue['backend_flag'] = $_POST['backend_flag'];
+    }
+
+    if ($action == 'cancel') {
+        array_pop($configValue['backend_hostname']);
+        array_pop($configValue['backend_port']);
+        array_pop($configValue['backend_weight']);
+        array_pop($configValue['backend_data_directory']);
+        array_pop($configValue['backend_flag']);
+    }
+
+    // watchdog's device settings
+    if (isset($_POST['heartbeat_device'])) {
+        $configValue['heartbeat_device'] = $_POST['heartbeat_device'];
+    }
+    if (isset($_POST['heartbeat_destination'])) {
+        $configValue['heartbeat_destination'] = $_POST['heartbeat_destination'];
+    }
+    if ($action == 'cancel_heartbeat_device') {
+        array_pop($configValue['heartbeat_device']);
+        array_pop($configValue['heartbeat_destination']);
+    }
+
+    // watchdog's other pgpool settings
+    if (isset($_POST['other_pgpool_hostname'])) {
+        $configValue['other_pgpool_hostname'] = $_POST['other_pgpool_hostname'];
+    }
+    if (isset($_POST['other_pgpool_port'])) {
+        $configValue['other_pgpool_port'] = $_POST['other_pgpool_port'];
+    }
+    if (isset($_POST['other_wd_port'])) {
+        $configValue['other_wd_port'] = $_POST['other_wd_port'];
+    }
+    if ($action == 'cancel_wd') {
+        array_pop($configValue['other_pgpool_hostname']);
+        array_pop($configValue['other_pgpool_port']);
+        array_pop($configValue['other_wd_port']);
+    }
+
+    return $configValue;
+}
+
+/**
+ * Check all params
+ */
+function doCheck()
+{
+    global $pgpoolConfigParam;
+    global $configValue;
+    global $pgpoolConfigBackendParam;
+    global $pgpoolConfigWdOtherParam;
+    global $_POST;
+
+    $error = array();
+
+    /*
+     * Confirmations of value except backend host
+     */
+    foreach ($pgpoolConfigParam as $key => $value) {
+        check($key, $value, $configValue, $error);
+    }
+
+    /*
+     * copy backend value from POST data to $configValue
+     */
+    foreach ($pgpoolConfigBackendParam as $key => $value) {
+        if (isset($_POST[$key])) {
+            $configValue[$key] = $_POST[$key];
+        }
+    }
+
+    /*
+     * check backend value
+     */
+    if (isset($configValue['backend_hostname'])) {
+        for ($i = 0; $i < count($configValue['backend_hostname']); $i++) {
+            $result = FALSE;
+
+            // backend_hostname
+            $result = checkString($configValue['backend_hostname'][$i],
+                                  $pgpoolConfigBackendParam['backend_hostname']['regexp']);
+            if (!$result) {
+                $error['backend_hostname'][$i] = TRUE;
+            }
+
+            // backend_port
+            $result = checkInteger($configValue['backend_port'][$i],
+                                   $pgpoolConfigBackendParam['backend_port']['min'],
+                                   $pgpoolConfigBackendParam['backend_port']['max']);
+            if (!$result) {
+                $error['backend_port'][$i] = TRUE;
+            }
+
+            // backend_weight
+            $result = checkFloat($configValue['backend_weight'][$i],
+                                 $pgpoolConfigBackendParam['backend_weight']['min'],
+                                 $pgpoolConfigBackendParam['backend_weight']['max']);
+            if (!$result) {
+                $error['backend_weight'][$i] = TRUE;
+            }
+
+            // backend_data_directory
+            $result = checkString($configValue['backend_data_directory'][$i],
+                                  $pgpoolConfigBackendParam['backend_data_directory']['regexp']);
+            if (!$result) {
+                $error['backend_data_directory'][$i] = TRUE;
+            }
+
+            // backend_flag
+            if (paramExists('backend_flag')) {
+                $result = checkString($configValue['backend_flag'][$i],
+                                      $pgpoolConfigBackendParam['backend_flag']['regexp']);
+                if (!$result) {
+                    $error['backend_flag'][$i] = TRUE;
+                }
+            }
+        }
+    }
+
+    /*
+     * check watchdof's device value
+     */
+    if (isset($configValue['heartbeat_device'])) {
+        for ($i = 0; $i < count($configValue['heartbeat_device']); $i++) {
+            $result = FALSE;
+
+            // heartbeat_device
+            $result = checkString($configValue['heartbeat_device'][$i],
+                                  $pgpoolConfigWdOtherParam['heartbeat_device']['regexp']);
+            if (!$result) {
+                $error['heartbeat_device'][$i] = TRUE;
+            }
+
+            // heartbeat_destination
+            $result = checkString($configValue['heartbeat_destination'][$i],
+                                  $pgpoolConfigWdOtherParam['heartbeat_destination']['regexp']);
+            if (!$result) {
+                $error['heartbeat_destination'][$i] = TRUE;
+            }
+        }
+    }
+
+    /*
+     * check watchdog's other pgpool value
+     */
+    foreach ($pgpoolConfigWdOtherParam as $key => $value) {
+        if (isset($_POST[$key])) {
+            $configValue[$key] = $_POST[$key];
+        }
+    }
+    if (isset($configValue['other_pgpool_hostname'])) {
+        for ($i = 0; $i < count($configValue['other_pgpool_hostname']); $i++) {
+            $result = FALSE;
+
+            // other_pgpool_hostname
+            $result = checkString($configValue['other_pgpool_hostname'][$i],
+                                  $pgpoolConfigWdOtherParam['other_pgpool_hostname']['regexp']);
+            if (!$result) {
+                $error['other_pgpool_hostname'][$i] = TRUE;
+            }
+
+            // other_pgpool_port
+            $result = checkInteger($configValue['other_pgpool_port'][$i],
+                                   $pgpoolConfigWdOtherParam['other_pgpool_port']['min'],
+                                   $pgpoolConfigWdOtherParam['other_pgpool_port']['max']);
+            if (!$result) {
+                $error['other_pgpool_port'][$i] = TRUE;
+            }
+
+            // other_wd_port
+            $result = checkInteger($configValue['other_wd_port'][$i],
+                                   $pgpoolConfigWdOtherParam['other_wd_port']['min'],
+                                   $pgpoolConfigWdOtherParam['other_wd_port']['max']);
+            if (!$result) {
+                $error['other_wd_port'][$i] = TRUE;
+            }
+        }
+    }
+
+    /*
+     * check logically
+     */
+    $logical_errors = checkLogical($configValue);
+    if ($logical_errors) {
+        $isError = TRUE;
+        $error += $logical_errors;
+    }
+
+    /**
+     * return params which has errors
+     */
+    return $error;
 }

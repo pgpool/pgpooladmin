@@ -1421,7 +1421,7 @@ black_function_list = 'nextval,setval,lastval,currval'
       <td>
         <p>
         ヘルスチェックのリトライの間の秒数を指定します
-        （health_check_max_retries &gt; 0でなければ有効になりません）。
+        （<a href="HEALTH_CHECK_MAX_RETRIES">health_check_max_retries</a> &gt; 0でなければ有効になりません）。
         0を指定すると、待ちなしに直ちにリトライします。
         </p>
       </td>
@@ -1680,6 +1680,10 @@ black_function_list = 'nextval,setval,lastval,currval'
     </tr>
   </thead>
   <tbody>
+
+    {* --------------------------------------------------------------------- *}
+    <tr><th class="category" colspan="4">Enabling</th></tr>
+
     <tr>
       <th id="USE_WATCHDOG"><label>{$message.descUse_watchdog|escape}</label>
       <p>use_watchdog (bool) *</th>
@@ -1688,6 +1692,7 @@ black_function_list = 'nextval,setval,lastval,currval'
       </td>
     </tr>
 
+    {* --------------------------------------------------------------------- *}
     <tr><th class="category" colspan="2">Connection to up stream servers</th></tr>
 
     <tr>
@@ -1708,56 +1713,39 @@ black_function_list = 'nextval,setval,lastval,currval'
       </td>
     </tr>
 
-    <tr><th class="category" colspan="2">Lifecheck of pgpol-II</th></tr>
+    {* --------------------------------------------------------------------- *}
+    <tr><th class="category" colspan="2">Watchdog communication Settings</th></tr>
 
     <tr>
-      <th id="WD_INTERVAL"><label>{$message.descWd_interval|escape}</label>
-      <p>wd_interval (integer) *</th>
+      <th id="WD_HOSTNAME"><label>{$message.descWd_hostname|escape}</label>
+      <p>wd_hostname (string) *</th>
       <td>
-      <p>pgpool-II への生存監視の間隔（秒）です。 （1 以上の数値） </p>
+      <p>watchdog プロセスが相互監視を受信する為のホスト名または IP アドレスです。 </p>
       </td>
     </tr>
 
     <tr>
-      <th id="WD_LIFE_POINT"><label>{$message.descWd_life_point|escape}</label>
-      <p>wd_life_point (string) *</th>
+      <th id="WD_PORT"><label>{$message.descWd_port|escape}</label>
+      <p>wd_port (integer) *</th>
       <td>
-      <p>pgpool-II の死活監視で応答が得られなかった場合のリトライ回数です。 （1 以上の数値） </p>
+      <p>watchdog プロセスが相互監視を受信する為のポート番号です。 </p>
       </td>
     </tr>
 
+    {if paramExists('wd_authkey')}
     <tr>
-      <th id="WD_LIFECHECK_QUERY"><label>{$message.descWd_lifecheck_query|escape}</label>
-      <p>wd_lifecheck_query (string) *</th>
+      <th id="WD_AUTHKEY"><label>{$message.descWd_authkey|escape}</label>
+      <p>wd_authkey (string) *</th>
       <td>
-      <p>pgpool-II の死活監視のために発行されるクエリです。 デフォルトは "SELECT 1" です。</p>
+      <p>wachdog 間通信で用いられる認証キーです。 全ての pgpool-II で同じキーを指定する必要があります。
+         認証キーが異なる watchdog からの通信は拒絶されます。
+         死活監視をハートビートモードで行う場合には、この認証はハートビート信号にも適用されます。</p>
+      <p>指定が無い場合には認証は行われず、これがデフォルトです。</p>
       </td>
     </tr>
+    {/if}
 
-    <tr>
-      <th id="WD_LIFECHECK_DBNAME"><label>{$message.descWd_lifecheck_dbname|escape}</label>
-      <p>wd_lifecheck_dbnam(string) *</th>
-      <td>
-      <p>pgpool-II の死活監視を行なうのに接続するデータベースです。 デフォルトは "template1" です。</p>
-      </td>
-    </tr>
-
-    <tr>
-      <th id="WD_LIFECHECK_USER"><label>{$message.descWd_lifecheck_user|escape}</label>
-      <p>wd_lifecheck_user(string) *</th>
-      <td>
-      <p>pgpool-II の死活監視を行なうユーザです。 デフォルトは "nobody" です。</p>
-      </td>
-    </tr>
-
-    <tr>
-      <th id="WD_LIFECHECK_PASSWORD"><label>{$message.descWd_lifecheck_password|escape}</label>
-      <p>wd_lifecheck_query (string) *</th>
-      <td>
-      <p>pgpool-II の死活監視を行なうユーザのパスワードです。 </p>
-      </td>
-    </tr>
-
+    {* --------------------------------------------------------------------- *}
     <tr><th class="category" colspan="2">Virtual IP address</th></tr>
 
     <tr>
@@ -1782,7 +1770,7 @@ black_function_list = 'nextval,setval,lastval,currval'
       <p>if_up_cmd (string) *</th>
       <td>
       <p>仮想 IP を起動するために実行するコマンドです。
-      "ifconfig eth0:0 inet $_IP_$ netmask 255.255.255.0" のようにコマンドとパラメータを指定します。
+      "<code>ifconfig eth0:0 inet $_IP_$ netmask 255.255.255.0</code>" のようにコマンドとパラメータを指定します。
       $_IP_$　は <a href="#DELEGATE_IP">delegate_IP</a> で指定された IP アドレスに置換されます。 </p>
       </td>
     </tr>
@@ -1792,7 +1780,7 @@ black_function_list = 'nextval,setval,lastval,currval'
       <p>if_down_cmd (string) *</th>
       <td>
       <p>仮想IPを停止するために実行するコマンドです。
-      "ifconfig eth0:0 down" のようにコマンドとパラメータを指定します。</p>
+      "<code>ifconfig eth0:0 down</code>" のようにコマンドとパラメータを指定します。</p>
       </td>
     </tr>
 
@@ -1809,29 +1797,168 @@ black_function_list = 'nextval,setval,lastval,currval'
       <th id="ARPING_CMD"><label>{$message.descArping_cmd|escape}</label>
       <p>arping_cmd (string) *</th>
       <td>
-      <p>IPアドレス切り替え後にARPリクエストを送信するコマンドです。
-         "arping -U $_IP_$ -w 1" のようにコマンドとパラメータを指定します。
+      <p>IPアドレス切り替え後に ARP リクエストを送信するコマンドです。
+         "<code>arping -U $_IP_$ -w 1</code>" のようにコマンドとパラメータを指定します。
          $_IP_$ は <a href="#DELEGATE_IP">delegate_IP</a> で指定された IP アドレスに置換されます。 </p>
       </td>
     </tr>
 
-    <tr><th class="category" colspan="2">Server itself to be monitored</th></tr>
+    {* --------------------------------------------------------------------- *}
+    {if paramExists('clear_memqcache_on_escalation')}
+    <tr><th class="category" colspan="2">Behaivor on escalation Setting</th></tr>
 
     <tr>
-      <th id="WD_HOSTNAME"><label>{$message.descWd_hostname|escape}</label>
-      <p>wd_hostname (string) *</th>
+      <th id="CLEAR_MEMQCACHE_ON_ESCALATION"><label>{$message.descClear_memqcache_on_escalation|escape}</label>
+      <p>clear_memqcache_on_escalation (bool) *</th>
       <td>
-      <p>watchdog プロセスが相互監視を受信する為のホスト名または IP アドレスです。 </p>
+      <p>このオプションが on の場合、pgpool-II がアクティブに昇格した時に、
+         共有メモリ上のクエリキャッシュを全て削除します。
+         これにより、旧アクティブと非整合な古いクエリキャッシュが使われることを防止します。</p>
+      <p><a href="MEMQCACHE_METHOD">memqcache_method</a> が 'shmem' の場合のみ有効です。 デフォルトは on です。</p>
       </td>
     </tr>
 
     <tr>
-      <th id="WD_PORT"><label>{$message.descWd_port|escape}</label>
-      <p>wd_port (integer) *</th>
+      <th id="WD_ESCALATION_COMMAND"><label>{$message.descWd_escalation_command|escape}</label>
+      <p>wd_escalation_command (string) *</th>
       <td>
-      <p>watchdog プロセスが相互監視を受信する為のポート番号です。 </p>
+      <p>pgpool-II がアクティブに昇格した時に、ここで指定したコマンドが実行されます。
+         コマンドは、仮想 IP が立ち上がる直前のタイミングで実行されます。 </p>
       </td>
     </tr>
+    {/if}
+
+    {* --------------------------------------------------------------------- *}
+    <tr><th class="category" colspan="2">Lifecheck Setting (common)</th></tr>
+
+    {if paramExists('wd_lifecheck_method')}
+    <tr>
+      <th id="WD_LIFECHECK_METHOD"><label>{$message.descWd_lifecheck_method|escape}</label>
+      <p>wd_lifecheck_method (string) *</th>
+      <td>
+      <p>死活監視の方法を指定します。指定できる値は 'heartbeat' (デフォルト)か 'query' です。</p>
+      <dl>
+      <dt>heartbeat</dt>
+          <dd>
+          監視は「ハートビートモード」で行われます。
+          watchdog は一定間隔でハートビート信号（UDP パケット）を他の pgpool-II へ送信します。
+          また watchdog は他の pgpool-II から送られてくる信号を受信し、これが一定時間以上途絶えた場合には
+          その pgpool-II に障害が発生したと判断します。
+          </dd>
+       <dt>query</dt>
+           <dd>
+           監視は「クエリモード」で行われます。
+           watchdog は監視用のクエリを pgpool-II に発行し、それが成功するかどうかで
+           pgpool-II が生きているかどうかを判断します。 </p>
+           </dd>
+      </dl>
+      </td>
+    </tr>
+    {/if}
+
+    <tr>
+      <th id="WD_INTERVAL"><label>{$message.descWd_interval|escape}</label>
+      <p>wd_interval (integer) *</th>
+      <td>
+      <p>pgpool-II への生存監視の間隔（秒）です。 （1 以上の数値） </p>
+      </td>
+    </tr>
+
+    {* --------------------------------------------------------------------- *}
+    {if paramExists('wd_lifecheck_method')}
+    <tr><th class="category" colspan="2">Lifecheck Setting (heartbeat mode)</th></tr>
+
+    <tr>
+      <th id="WD_HEARTBEAT_PORT"><label>{$message.descWd_heartbeat_port|escape}</label>
+      <p>wd_heartbeat_port (integer) *</th>
+      <td>
+      <p>ハートビート信号を受信するポート番号を指定します。</p>
+      </td>
+    </tr>
+
+    <tr>
+      <th id="WD_HEARTBEAT_KEEPALIVE"><label>{$message.descWd_heartbeat_keepalive|escape}</label>
+      <p>wd_heartbeat_keepalive (integer) *</th>
+      <td>
+      <p>ハートビート信号を送信する間隔（秒）を指定します。 デフォルトは 2 です。</p>
+      </td>
+    </tr>
+
+    <tr>
+      <th id="WD_HEARTBEAT_DEADTIME"><label>{$message.descWd_heartbeat_deadtime|escape}</label>
+      <p>wd_heartbeat_deadtime (integer) *</th>
+      <td>
+      <p>このオプションで指定された間隔（秒）の間ハートビート信号が途絶えた場合、
+         その pgpool-II に障害が発生したとみなされます。</p>
+      </td>
+    </tr>
+
+    <tr>
+      <th id="HEARTBEAT_DEVICE"><label>{$message.descHeartbeat_device|escape}</label>
+      <p>heartbeat_device (string) *</th>
+      <td>
+      <p>ハートビートの送受信に用いるネットワークデバイス名を指定します。 複数のデバイスが設定可能です。
+         数値の部分はデバイスの番号です。 デバイス毎に 0 からの連番にします。
+         １つのデバイスに複数のハートビート送信先（<a href="HEARTBEAT_DESTINATION">heartbeat_destiationN</a>）を設定する場合は、
+         重複するデバイス名を異なる番号で指定してください。 </p>
+      </td>
+    </tr>
+
+    <tr>
+      <th id="HEARTBEAT_DESTINATION"><label>{$message.descHeartbeat_destination|escape}</label>
+      <p>heartbeat_destination (string) *</th>
+      <td>
+      <p><a href="#HEARTBEAT_DEVICE">heartbeat_deviceX</a> に指定したデバイスから送るハートビート信号の宛先を、
+         ホスト名か IP で指定します。
+         数値の部分はデバイスの番号です。 デバイス毎に 0 からの連番にします。 </p>
+      </td>
+    </tr>
+    {/if}
+
+    {* --------------------------------------------------------------------- *}
+    <tr><th class="category" colspan="2">Lifecheck Setting (query mode)</th></tr>
+
+    <tr>
+      <th id="WD_LIFE_POINT"><label>{$message.descWd_life_point|escape}</label>
+      <p>wd_life_point (string) *</th>
+      <td>
+      <p>pgpool-II の死活監視で応答が得られなかった場合のリトライ回数です。 （1 以上の数値） </p>
+      </td>
+    </tr>
+
+    <tr>
+      <th id="WD_LIFECHECK_QUERY"><label>{$message.descWd_lifecheck_query|escape}</label>
+      <p>wd_lifecheck_query (string) *</th>
+      <td>
+      <p>pgpool-II の死活監視のために発行されるクエリです。 デフォルトは "SELECT 1" です。</p>
+      </td>
+    </tr>
+
+    {if paramExists('wd_lifecheck_dbname')}
+    <tr>
+      <th id="WD_LIFECHECK_DBNAME"><label>{$message.descWd_lifecheck_dbname|escape}</label>
+      <p>wd_lifecheck_dbname(string) *</th>
+      <td>
+      <p>pgpool-II の死活監視を行なうのに接続するデータベースです。 デフォルトは "template1" です。</p>
+      </td>
+    </tr>
+
+    <tr>
+      <th id="WD_LIFECHECK_USER"><label>{$message.descWd_lifecheck_user|escape}</label>
+      <p>wd_lifecheck_user(string) *</th>
+      <td>
+      <p>pgpool-II の死活監視を行なうユーザです。 デフォルトは "nobody" です。</p>
+      </td>
+    </tr>
+
+    <tr>
+      <th id="WD_LIFECHECK_PASSWORD"><label>{$message.descWd_lifecheck_password|escape}</label>
+      <p>wd_lifecheck_query (string) *</th>
+      <td>
+      <p>pgpool-II の死活監視を行なうユーザのパスワードです。 </p>
+      </td>
+    </tr>
+    {/if}
 
     <tr><th class="category" colspan="2">Servers to monitor</th></tr>
 
@@ -1970,10 +2097,10 @@ black_function_list = 'nextval,setval,lastval,currval'
         memqcache_cache_block_size のブロックに分けて利用します。
         検索結果のキャッシュはこのブロックに入るだけ詰め込まれます。
         ただし、キャッシュは複数のブロックにまたがって格納されないので、
-        memqcache_cache_block_sizeを検索結果が超えると、キャッシュに格納できなくなります。
+        memqcache_cache_block_size を検索結果が超えると、キャッシュに格納できなくなります。
         </p>
         <p>
-        memqcache_cache_block_sizeは、512 以上の値でなければなりません。
+        memqcache_cache_block_size は、512 以上の値でなければなりません。
         </p>
       </td>
     </tr>
