@@ -5,6 +5,7 @@ var refreshTimeLog  = "{$refreshTimeLog|escape}";
 var view         = "{$viewPHP|escape}";
 var msgStartPgpool   = "{$message.msgStartPgpool|escape}";
 var msgStopPgpool    = "{$message.msgStopPgpool|escape}";
+var msgReloadPgpool    = "{$message.msgReloadPgpool|escape}";
 var msgRestartPgpool = "{$message.msgRestartPgpool|escape}";
 var msgAddBackend    = "{$message.msgAddBackend|escape}";
 var msgAddBackendNg  = "{$message.msgAddBackendNg|escape}";
@@ -184,7 +185,13 @@ function execRemoveBackend(node_num)
 function execute(action, confirm_text, node_num)
 {
     elements = document.getElementsByName(action + 'Form');
-    if (elements.length != 1) { alert('Unknown error.'); return; }
+    if (elements.length != 1) {
+        elements = document.getElementsByName('commandForm');
+        if (elements.length != 1) {
+            alerr('Unknown error');
+            return;
+        }
+    }
     target_form = elements[0];
 
     if (confirm_text == null || window.confirm(confirm_text)) {

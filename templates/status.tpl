@@ -181,6 +181,18 @@
     </h2>
     {include file="elements/status_options.tpl"}
 
+    {* ---------------------------------------------------------------------- *}
+    {* Command form to execute a command without any option                   *}
+    {* ---------------------------------------------------------------------- *}
+
+    <div id="commandDiv">
+    <form action="status.php" name="commandForm" method="post" />
+      <input type="hidden" name="action" />
+      <input type="hidden" name="nodeNumber" />
+    </form>
+    </div>
+
+
 </div>{* end div#content *}
 
 <div id="footer">

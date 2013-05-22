@@ -6,9 +6,6 @@
     <h3>{$message.strStartOption|escape}</h3>
 
     <form action="status.php" name="startPgpoolForm" method="post">
-    <input type="hidden" name="action" value="startPgpool" />
-    <input type="hidden" name="nodeNumber" value="" />
-
     <table>
     <thead><tr><th colspan="2">{$message.strStartOption|escape}</th></tr></thead>
     <tbody>
@@ -21,6 +18,8 @@
       </td>
     </tr></tfoot>
     </table>
+    <input type="hidden" name="action" value="startPgpool" />
+    <input type="hidden" name="nodeNumber" value="" />
     </form>
 
 {else}
@@ -44,8 +43,6 @@
     <h3>{$message.strStopOption|escape}</h3>
 
     <form action="status.php" name="stopPgpoolForm" method="post">
-    <input type="hidden" name="action" value="stopPgpool" />
-    <input type="hidden" name="nodeNumber" value="" />
     <table>
     <thead><tr><th colspan="2">{$message.strStopOption|escape}</th></tr></thead>
     <tfoot><tr>
@@ -60,6 +57,8 @@
     {include file="elements/status_stop_option.tpl"}
     </tbody>
     </table>
+    <input type="hidden" name="action" value="stopPgpool" />
+    <input type="hidden" name="nodeNumber" value="" />
     </form>
     </div>
 
@@ -70,8 +69,6 @@
     <h3>{$message.strRestartOption|escape}</h3>
 
     <form action="status.php" name="restartPgpoolForm" method="post">
-    <input type="hidden" name="action" value="restartPgpool" />
-    <input type="hidden" name="nodeNumber" value="" />
     <table>
     <thead><tr><th colspan="2">{$message.strRestartOption|escape}</th></tr></thead>
     <tfoot><tr>
@@ -87,6 +84,8 @@
     {include file="elements/status_start_option.tpl"}
     </tbody>
     </table>
+    <input type="hidden" name="action" value="restartPgpool" />
+    <input type="hidden" name="nodeNumber" value="" />
     </form>
     </div>
 
