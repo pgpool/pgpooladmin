@@ -183,6 +183,8 @@ $tpl->display('pgconfig.tpl');
  */
 function check($key, $value, &$configParam ,&$error)
 {
+    if (!isset($configParam[$key])) { continue; }
+
     $type = $value['type'];
     $result = FALSE;
     switch ($type) {
@@ -260,7 +262,7 @@ function checkInteger($str, $min, $max)
             return TRUE;
         }
     }
-    return FALSE;
+    return TRUE;
 }
 
 /**
@@ -279,7 +281,7 @@ function checkFloat($str, $min, $max)
         }
         return TRUE;
     }
-    return FALSE;
+    return TRUE;
 }
 
 /**
