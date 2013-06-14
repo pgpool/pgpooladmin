@@ -15,7 +15,7 @@ case $# in
 	VERSION=$1
 	;;
 *)
-	echo "Usage: $0 versino git-branch-name" 1>&2
+	echo "Usage: $0 version git-branch-name" 1>&2
 	exit 1
 	;;
 esac
