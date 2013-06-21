@@ -25,6 +25,8 @@
 
 $pgpoolConfigParam = array();
 $pgpoolConfigBackendParam = array();
+$pgpoolConfigWdOtherParam = array();
+$pgpoolConfigHbDestinationParam = array();
 
 define('NUM_MAX', 65535);
 
@@ -34,7 +36,6 @@ $dirreg     = '^\/[0-9a-zA-Z\._\/\-]+$';
 $hostreg    = '^[0-9a-zA-Z\._\-]*$';
 $sslreg     = '^(|\/[0-9a-zA-Z_\/\.\-]*)$';
 $commandreg = '^[0-9a-zA-Z_\/\.\-]*$';
-$addressreg = '^([0-9a-zA-Z\._\-]+|[\*]{1})$';
 $addressreg = '^([0-9a-zA-Z\._\-]+|[\*]{1})$';
 $listreg    = '^[0-9a-zA-Z_,]*$';
 $queryreg   = '^[0-9a-zA-Z; ]+$';
@@ -235,7 +236,7 @@ $pgpoolConfigParam[$key]['type'] = 'C';
 $pgpoolConfigParam[$key]['default'] = 'none';
 $pgpoolConfigParam[$key]['regexp'] = selectreg(array('always', 'if_over_threshold', 'none'));
 
-# - Syslog specific - 
+# - Syslog specific -
 
 $key = 'syslog_facility';
 $pgpoolConfigParam[$key]['type'] = 'C';
@@ -535,7 +536,7 @@ $pgpoolConfigParam[$key]['default'] = 'off';
 $key = 'wd_hostname';
 $pgpoolConfigParam[$key]['type'] = 'C';
 $pgpoolConfigParam[$key]['default'] = '';
-$pgpoolConfigParam[$key]['regexp'] = $addressreg;
+$pgpoolConfigParam[$key]['regexp'] = $hostreg;
 $pgpoolConfigParam[$key]['null_ok'] = TRUE;
 
 $key = 'wd_port';
@@ -567,7 +568,7 @@ $pgpoolConfigParam[$key]['regexp'] = $anyelse;
 $key = 'delegate_IP';
 $pgpoolConfigParam[$key]['type'] = 'C';
 $pgpoolConfigParam[$key]['default'] = '';
-$pgpoolConfigParam[$key]['regexp'] = $addressreg;
+$pgpoolConfigParam[$key]['regexp'] = $hostreg;
 $pgpoolConfigParam[$key]['null_ok'] = TRUE;
 
 $key = 'ifconfig_path';
@@ -641,15 +642,21 @@ $pgpoolConfigParam[$key]['default'] = 30;
 $pgpoolConfigParam[$key]['max'] = NUM_MAX;
 $pgpoolConfigParam[$key]['min'] = 0;
 
-$key = 'heartbeat_device';
-$pgpoolConfigHbDeviceParam[$key]['type'] = 'C';
-$pgpoolConfigHbDeviceParam[$key]['default'] = 'eth0';
-$pgpoolConfigHbDeviceParam[$key]['regexp'] = $anyelse;
-
 $key = 'heartbeat_destination';
-$pgpoolConfigHbDeviceParam[$key]['type'] = 'C';
-$pgpoolConfigHbDeviceParam[$key]['default'] = '';
-$pgpoolConfigHbDeviceParam[$key]['regexp'] = $anyelse;
+$pgpoolConfigHbDestinationParam[$key]['type'] = 'C';
+$pgpoolConfigHbDestinationParam[$key]['default'] = '';
+$pgpoolConfigHbDestinationParam[$key]['regexp'] = $hostreg;
+
+$key = 'heartbeat_destination_port';
+$pgpoolConfigHbDestinationParam[$key]['type'] = 'N';
+$pgpoolConfigHbDestinationParam[$key]['default'] = 9694;
+$pgpoolConfigHbDestinationParam[$key]['min'] = 1024;
+$pgpoolConfigHbDestinationParam[$key]['max'] = NUM_MAX;
+
+$key = 'heartbeat_device';
+$pgpoolConfigHbDestinationParam[$key]['type'] = 'C';
+$pgpoolConfigHbDestinationParam[$key]['default'] = 'eth0';
+$pgpoolConfigHbDestinationParam[$key]['regexp'] = $anyelse;
 
 # (Configuration of query mode)
 

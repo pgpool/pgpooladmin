@@ -59,7 +59,8 @@ $message = array(
                                                   'in UPDATE/DELETE',
     'descFail_over_on_backend_error' => 'Fail over when socket communication error to backend occurs',
     'descFollow_master_command' => 'Command to run only after a master failover',
-    'descHeartbeat_destination' => 'The destination of heartbeat signals which is sent from the device. Specify by hostname or IP address.',
+    'descHeartbeat_destination' => 'The destination of heartbeat signals. Specify by hostname or IP address.',
+    'descHeartbeat_destination_port' => 'The port number of the destination of heartbeat signals.',
     'descHeartbeat_device' => 'The network device name for sending heartbeat signals',
     'descHealth_check_period' => 'Specifies the interval for next health checking. 0 means no health checking, '.
                                  '-1 means no wait',

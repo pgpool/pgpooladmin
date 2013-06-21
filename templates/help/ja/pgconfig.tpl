@@ -1894,23 +1894,34 @@ black_function_list = 'nextval,setval,lastval,currval'
     </tr>
 
     <tr>
-      <th id="HEARTBEAT_DEVICE"><label>{$message.descHeartbeat_device|escape}</label>
-      <p>heartbeat_device (string) *</th>
+      <th id="HEARTBEAT_DESTINATION"><label>{$message.descHeartbeat_destination|escape}</label>
+      <p>heartbeat_destination (string) *</th>
       <td>
-      <p>ハートビートの送受信に用いるネットワークデバイス名を指定します。 複数のデバイスが設定可能です。
-         数値の部分はデバイスの番号です。 デバイス毎に 0 からの連番にします。
-         １つのデバイスに複数のハートビート送信先（<a href="HEARTBEAT_DESTINATION">heartbeat_destiationN</a>）を設定する場合は、
-         重複するデバイス名を異なる番号で指定してください。 </p>
+      <p>ハートビート信号の宛先をホスト名か IP で指定します。
+         数値の部分は送り先の番号です。 0 からの連番にします。 </p>
       </td>
     </tr>
 
     <tr>
-      <th id="HEARTBEAT_DESTINATION"><label>{$message.descHeartbeat_destination|escape}</label>
-      <p>heartbeat_destination (string) *</th>
+      <th id="HEARTBEAT_DESTINATION_PORT"><label>{$message.descHeartbeat_destination_port|escape}</label>
+      <p>heartbeat_destination_port (string) *</th>
       <td>
-      <p><a href="#HEARTBEAT_DEVICE">heartbeat_deviceX</a> に指定したデバイスから送るハートビート信号の宛先を、
-         ホスト名か IP で指定します。
-         数値の部分はデバイスの番号です。 デバイス毎に 0 からの連番にします。 </p>
+      <p><a href="HEARTBEAT_DESTINATION">heartbeat_destinationX</a>に指定したハートビート信号の送り先のポート番号を指定します。
+         通常は <a href="WD_HEARTBEAT_PORT">wd_heartbeat_port</a> と同じ値を指定します。
+         そのポート番号が使用できないホストや、同じホストで複数の pgpool-II を動作させる場合には、異なる値を指定する必要があります。
+         数値の部分は送り先の番号です。0 からの連番にします。</p>
+      </td>
+    </tr>
+
+    <tr>
+      <th id="HEARTBEAT_DEVICE"><label>{$message.descHeartbeat_device|escape}</label>
+      <p>heartbeat_device (string) *</th>
+      <td>
+      <p><a href="HEARTBEAT_DESTINATION">heartbeat_destinationX</a>に指定した送り先とのハートビートの送受信に用いるネットワークデバイス名を指定します。
+         数値の部分は送り先の番号です。デバイス毎に 0 からの連番にします。
+         複数の異なる送り先に同じデバイスを設定することが可能です。
+         ハートビートモードの場合のみ有効です。
+	     また、SO_BINDTODEVICE ソケットオプションを使用しているため、pgpool-II が Linux で root 権限で起動している場合のみ有効です。</p>
       </td>
     </tr>
     {/if}

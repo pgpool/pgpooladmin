@@ -27,8 +27,8 @@ function addOtherWatchdog() {
     document.pgconfig.action.value= "add_wd";
     document.pgconfig.submit();
 }
-function addHeartbeatDevice() {
-    document.pgconfig.action.value= "add_heartbeat_device";
+function addHeartbeatDestination() {
+    document.pgconfig.action.value= "add_heartbeat_destination";
     document.pgconfig.submit();
 }
 
@@ -40,8 +40,8 @@ function cancelOtherWatchdog() {
     document.pgconfig.action.value= "cancel_wd";
     document.pgconfig.submit();
 }
-function cancelHeartbeatDevice() {
-    document.pgconfig.action.value= "cancel_heartbeat_device";
+function cancelHeartbeatDestination() {
+    document.pgconfig.action.value= "cancel_heartbeat_destination";
     document.pgconfig.submit();
 }
 
@@ -59,9 +59,9 @@ function delOtherWatchdog(num){
         document.pgconfig.submit();
     }
 }
-function delHeartbeatDevice(num){
+function delHeartbeatDestination(num){
     if(window.confirm(msgDeleteConfirm)){
-        document.pgconfig.action.value= "delete_heartbeat_device";
+        document.pgconfig.action.value= "delete_heartbeat_destination";
         document.pgconfig.num.value = num;
         document.pgconfig.submit();
     }
@@ -1363,7 +1363,7 @@ function delHeartbeatDevice(num){
         {* --------------------------------------------------------------------- *}
         <tr><th class="category" colspan="4">Lifecheck Setting (common)</th></tr>
 
-        {if paramExists('heartbeat_device')}
+        {if paramExists('wd_lifecheck_method')}
         <tr>
         <th{if isset($error.wd_lifecheck_method)} class="error"{/if} colspan="2">
         <label>{$message.descWd_lifecheck_method|escape}</label>
@@ -1381,7 +1381,7 @@ function delHeartbeatDevice(num){
         </tr>
 
         {* --------------------------------------------------------------------- *}
-        {if paramExists('heartbeat_device')}
+        {if paramExists('heartbeat_destination')}
             <tr><th class="category" colspan="4">Lifecheck Setting (heartbeat mode)</th></tr>
 
             <tr>
@@ -1408,53 +1408,69 @@ function delHeartbeatDevice(num){
             <input type="text" name="wd_heartbeat_deadtime" value="{$params.wd_heartbeat_deadtime|escape}"/></td>
             </tr>
 
-            {if paramExists('heartbeat_device')}
-                {foreach from=$params.heartbeat_device key=device_num item=v}
+            {if paramExists('heartbeat_destination')}
+                {foreach from=$params.heartbeat_destination key=dest_num item=v}
                   <tr>
-                  <th rowspan="2"><span class="param_group">device {$device_num}</span></th>
-                  <th{if isset($error.heartbeat_device[num])} class="error"{/if}>
-                  <label>{$message.descHeartbeat_device|escape}</label>
-                  <br />heartbeat_device{$device_num} (string)</th>
-                  <td><input type="text" name="heartbeat_device[]"
-                             value="{$params.heartbeat_device.$device_num|escape}" /></td>
-                  <td rowspan="2">
+                  <th rowspan="3"><span class="param_group">destination {$dest_num}</span></th>
+
+                  <th{if isset($error.heartbeat_destination[num])} class="error"{/if}>
+                  <label>{$message.descHeartbeat_destination|escape}</label>
+                  <br />heartbeat_destination{$dest_num|escape} (string)</th>
+                  <td><input type="text" name="heartbeat_destination[]"
+                       value="{$params.heartbeat_destination.$dest_num|escape}" /></td>
+
+                  <td rowspan="3">
                   <input type="button" name="delete" value="{$message.strDelete|escape}"
-                         onclick="delHeartbeatDevice({$device_num})" /></td>
+                         onclick="delHeartbeatDestination({$dest_num})" /></td>
                   </tr>
 
                   <tr>
-                  <th{if isset($error.heartbeat_destination[num])} class="error"{/if}>
-                  <label>{$message.descHeartbeat_destination|escape}</label>
-                  <br />heartbeat_destination{$device_num|escape} (integer)</th>
-                  <td><input type="text" name="heartbeat_destination[]"
-                       value="{$params.heartbeat_destination.$device_num|escape}" /></td>
+                  <th{if isset($error.heartbeat_destination_port[num])} class="error"{/if}>
+                  <label>{$message.descHeartbeat_destination_port|escape}</label>
+                  <br />heartbeat_destination_port{$dest_num} (integer)</th>
+                  <td><input type="text" name="heartbeat_destination_port[]"
+                             value="{$params.heartbeat_destination_port.$dest_num|escape}" /></td>
+                  </tr>
+
+                  <tr>
+                  <th{if isset($error.heartbeat_device[num])} class="error"{/if}>
+                  <label>{$message.descHeartbeat_device|escape}</label>
+                  <br />heartbeat_device{$dest_num} (string)</th>
+                  <td><input type="text" name="heartbeat_device[]"
+                             value="{$params.heartbeat_device.$dest_num|escape}" /></td>
                   </tr>
                 {/foreach}
 
-                {if isset($isAddHeartbeatDevice) && $isAddHeartbeatDevice == true}
+                {if isset($isAddHeartbeatDestination) && $isAddHeartbeatDestination == true}
                   <tr>
-                  <th rowspan="2"><span class="param_group">device {$device_num + 1}</span></th>
-                  <th><label>{$message.descHeartbeat_device|escape}</label>
-                  <br />heartbeat_device{$smarty.section.device_num.index} (string)</th>
+                  <th rowspan="3"><span class="param_group">destination {$dest_num + 1}</span></th>
+                  <th><label>{$message.descHeartbeat_destination|escape}</label>
+                  <br />heartbeat_destination{$smarty.section.dest_num.index|escape} (string)</th>
                   <td><input type="text" name="heartbeat_destination[]" value="" /></td>
                   </tr>
 
                   <tr>
-                  <th><label>{$message.descHeartbeat_destination|escape}</label>
-                  <br />heartbeat_destination{$smarty.section.device_num.index|escape} (integer)</th>
+                  <th><label>{$message.descHeartbeat_destination_port|escape}</label>
+                  <br />heartbeat_destination_port{$smarty.section.dest_num.index|escape} (integer)</th>
+                  <td><input type="text" name="heartbeat_destination_port[]" value="" /></td>
+                  </tr>
+
+                  <tr>
+                  <th><label>{$message.descHeartbeat_device|escape}</label>
+                  <br />heartbeat_device{$smarty.section.dest_num.index} (string)</th>
                   <td><input type="text" name="heartbeat_device[]" value="" /></td>
                   </tr>
 
                   <tr class="tr_add_button">
                   <td colspan="4">
                   <input type="button" name="cancel" value="{$message.strCancel|escape}"
-                         onclick="cancelHeartbeatDevice()" /></td>
+                         onclick="cancelHeartbeatDestination()" /></td>
                   </tr>
                 {else}
                   <tr class="tr_add_button">
                   <td colspan="4">
                   <input type="button" name="add" value="{$message.strAdd|escape}"
-                         onclick="addHeartbeatDevice()" /></td>
+                         onclick="addHeartbeatDestination()" /></td>
                   </tr>
                 {/if}
             {/if}

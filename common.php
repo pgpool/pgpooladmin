@@ -472,6 +472,19 @@ function readConfigParams($paramList = FALSE)
                 $num = str_replace('other_wd_port', '', $key);
                 $configParam['other_wd_port'][$num] = $value;
 
+            // params about watchdog heartbeat 
+            } elseif (preg_match("/^heartbeat_destination_port/", $key)) {
+                $num = str_replace('heartbeat_destination_port', '', $key);
+                $configParam['heartbeat_destination_port'][$num] = $value;
+
+            } elseif (preg_match("/^heartbeat_destination/", $key)) {
+                $num = str_replace('heartbeat_destination', '', $key);
+                $configParam['heartbeat_destination'][$num] = str_replace("'", "", $value);
+
+            } elseif (preg_match("/^heartbeat_device/", $key)) {
+                $num = str_replace('heartbeat_device', '', $key);
+                $configParam['heartbeat_device'][$num] = str_replace("'", "", $value);
+
             } else {
                 $configParam[$key] = str_replace("'", "", $value);
             }
@@ -484,14 +497,17 @@ function readConfigParams($paramList = FALSE)
                 $results[$key] = $configParam[$key];
             } else {
                 require_once('definePgpoolConfParam.php');
-                if(!preg_match("/^backend_hostname/",       $key) &&
-                   !preg_match("/^backend_port/",           $key) &&
-                   !preg_match("/^backend_weight/",         $key) &&
-                   !preg_match("/^backend_data_directory/", $key) &&
-                   !preg_match("/^backend_flag/",           $key) &&
-                   !preg_match("/^other_pgpool_hostname/",  $key) &&
-                   !preg_match("/^other_pgpool_port/",      $key) &&
-                   !preg_match("/^other_wd_port/",          $key)
+                if(!preg_match("/^backend_hostname/",           $key) &&
+                   !preg_match("/^backend_port/",               $key) &&
+                   !preg_match("/^backend_weight/",             $key) &&
+                   !preg_match("/^backend_data_directory/",     $key) &&
+                   !preg_match("/^backend_flag/",               $key) &&
+                   !preg_match("/^other_pgpool_hostname/",      $key) &&
+                   !preg_match("/^other_pgpool_port/",          $key) &&
+                   !preg_match("/^other_wd_port/",              $key) &&
+                   !preg_match("/^heartbeat_destination/",      $key) &&
+                   !preg_match("/^heartbeat_destination_port/", $key) &&
+                   !preg_match("/^heartbeat_device/",           $key)
                    )
                 {
                     if (isset($configParam[$key])) {
@@ -544,8 +560,9 @@ function paramExists($param)
 
         // params added in 3.3
         case 'clear_memqcache_on_escalation':
-        case 'heartbeat_device':
         case 'heartbeat_destination':
+        case 'heartbeat_destination_port':
+        case 'heartbeat_device':
         case 'wd_authkey':
         case 'wd_escalation_command':
         case 'wd_lifecheck_method':

@@ -48,28 +48,28 @@ if (isset($_POST['action'])) {
 switch ($action) {
     case 'add':
     case 'add_wd':
-    case 'add_heartbeat_device':
+    case 'add_heartbeat_destination':
         $configValue = arrangePostData();
         $configValue = doAdd($configValue);
 
         $tpl->assign('params', $configValue);
         $tpl->assign('isAdd',   ($action == 'add'));
         $tpl->assign('isAddWd', ($action == 'add_wd'));
-        $tpl->assign('isAddHeartbeatDevice', ($action == 'add_heartbeat_device'));
+        $tpl->assign('isAddHeartbeatDestination', ($action == 'add_heartbeat_destination'));
         $tpl->display('pgconfig.tpl');
 
         return;
 
     case 'cancel':
     case 'cancel_wd':
-    case 'cancel_heartbeat_device':
+    case 'cancel_heartbeat_destination':
         $configValue = arrangePostData();
         $configValue = doCancel($configValue, $action);
 
         $tpl->assign('params', $configValue);
         $tpl->assign('isAdd',  FALSE);
         $tpl->assign('isAddWd', FALSE);
-        $tpl->assign('isAddHeartbeatDevice', FALSE);
+        $tpl->assign('isAddHeartbeatDestination', FALSE);
         $tpl->display('pgconfig.tpl');
 
         return;
@@ -115,7 +115,7 @@ switch ($action) {
 
     case 'delete':
     case 'delete_wd':
-    case 'delete_heartbeat_device':
+    case 'delete_heartbeat_destination':
         $num = $_POST['num'];
 
         switch ($action) {
@@ -123,8 +123,8 @@ switch ($action) {
                 deleteBackendHost($num, $configValue); break;
             case 'delete_wd':
                 deleteWdOther($num, $configValue); break;
-            case 'cancel_heartbeat_device':
-                deleteHeartbeatDevice($num, $configValue); break;
+            case 'delete_heartbeat_destination':
+                deleteHeartbeatDestination($num, $configValue); break;
         }
 
         if (is_writable(_PGPOOL2_CONFIG_FILE)) {
@@ -153,9 +153,10 @@ if (!isset($configValue['backend_hostname'])) {
     $configValue['backend_flag'][0]     = NULL;
 }
 
-if (!isset($configValue['heartbeat_device'])) {
-    $configValue['heartbeat_device'][0]      = NULL;
+if (!isset($configValue['heartbeat_destination'])) {
     $configValue['heartbeat_destination'][0] = NULL;
+    $configValue['heartbeat_destination_port'][0] = NULL;
+    $configValue['heartbeat_device'][0]      = NULL;
 }
 
 if (!isset($configValue['other_pgpool_hostname'])) {
@@ -183,7 +184,8 @@ $tpl->display('pgconfig.tpl');
  */
 function check($key, $value, &$configParam ,&$error)
 {
-    if (!isset($configParam[$key])) { continue; }
+    //if (!isset($configParam[$key])) { continue; }
+    if (!isset($configParam[$key])) { return; }
 
     $type = $value['type'];
     $result = FALSE;
@@ -398,6 +400,7 @@ function writeConfigFile($configValue, $pgpoolConfigParam)
                 !preg_match("/^other_pgpool_port/",      $key) &&
                 !preg_match("/^other_wd_port/",          $key) &&
                 !preg_match("/^heartbeat_device/",       $key) &&
+                !preg_match("/^heartbeat_destination_port/", $key) &&
                 !preg_match("/^heartbeat_destination/",  $key)
                 )
             {
@@ -458,10 +461,11 @@ function writeConfigFile($configValue, $pgpoolConfigParam)
         }
     }
 
-    if (isset($configValue['heartbeat_device'])) {
-        for ($i = 0; $i < count($configValue['heartbeat_device']); $i++) {
-            $configFile[] = "heartbeat_device$i = '" . $configValue['heartbeat_device'][$i] . "'\n";
+    if (isset($configValue['heartbeat_destination'])) {
+        for ($i = 0; $i < count($configValue['heartbeat_destination']); $i++) {
             $configFile[] = "heartbeat_destination$i = " . $configValue['heartbeat_destination'][$i] . "\n";
+            $configFile[] = "heartbeat_destination_port$i = " . $configValue['heartbeat_destination_port'][$i] . "\n";
+            $configFile[] = "heartbeat_device$i = '" . $configValue['heartbeat_device'][$i] . "'\n";
         }
     }
 
@@ -520,15 +524,18 @@ function deleteWdOther($num, &$configValue)
 /**
  * Delete an heartbeat device
  */
-function deleteHeartbeatDevice($num, &$configValue)
+function deleteHeartbeatDestination($num, &$configValue)
 {
-    if (!isset($configValue['heartbeat_device'])) { return; }
-
-    unset($configValue['heartbeat_device'][$num]);
-    $configValue['heartbeat_device'] = array_values($configValue['heartbeat_device']);
+    if (!isset($configValue['heartbeat_destination'])) { return; }
 
     unset($configValue['heartbeat_destination'][$num]);
     $configValue['heartbeat_destination'] = array_values($configValue['heartbeat_destination']);
+
+    unset($configValue['heartbeat_destination_port'][$num]);
+    $configValue['heartbeat_destination_port'] = array_values($configValue['heartbeat_destination_port']);
+
+    unset($configValue['heartbeat_device'][$num]);
+    $configValue['heartbeat_device'] = array_values($configValue['heartbeat_device']);
 }
 
 /**
@@ -592,11 +599,17 @@ function doAdd($configValue)
         }
     }
 
-    // watchdog's device settings
+    // watchdog's heartbeat destination settings
     if (isset($_POST['heartbeat_device'])) {
         $configValue['heartbeat_device'] = $_POST['heartbeat_device'];
     } else {
         $configValue['heartbeat_device'][0] = NULL;
+    }
+
+    if (isset($_POST['heartbeat_destination_port'])) {
+        $configValue['heartbeat_destination_port'] = $_POST['heartbeat_destination_port'];
+    } else {
+        $configValue['heartbeat_destination_port'][0] = NULL;
     }
 
     if (isset($_POST['heartbeat_destination'])) {
@@ -666,9 +679,13 @@ function doCancel($configValue, $action)
     if (isset($_POST['heartbeat_destination'])) {
         $configValue['heartbeat_destination'] = $_POST['heartbeat_destination'];
     }
-    if ($action == 'cancel_heartbeat_device') {
-        array_pop($configValue['heartbeat_device']);
+    if (isset($_POST['heartbeat_destination_port'])) {
+        $configValue['heartbeat_destination_port'] = $_POST['heartbeat_destination_port'];
+    }
+    if ($action == 'cancel_heartbeat_destination') {
         array_pop($configValue['heartbeat_destination']);
+        array_pop($configValue['heartbeat_destination_port']);
+        array_pop($configValue['heartbeat_device']);
     }
 
     // watchdog's other pgpool settings
@@ -698,6 +715,7 @@ function doCheck()
     global $pgpoolConfigParam;
     global $configValue;
     global $pgpoolConfigBackendParam;
+    global $pgpoolConfigHbDestinationParam;
     global $pgpoolConfigWdOtherParam;
     global $_POST;
 
@@ -768,24 +786,37 @@ function doCheck()
     }
 
     /*
-     * check watchdof's device value
+     * check watchdog heartbeat destination value
      */
-    if (isset($configValue['heartbeat_device'])) {
-        for ($i = 0; $i < count($configValue['heartbeat_device']); $i++) {
+    foreach ($pgpoolConfigHbDestinationParam as $key => $value) {
+        if (isset($_POST[$key])) {
+            $configValue[$key] = $_POST[$key];
+        }
+    }
+    if (isset($configValue['heartbeat_destination'])) {
+        for ($i = 0; $i < count($configValue['heartbeat_destination']); $i++) {
             $result = FALSE;
-
-            // heartbeat_device
-            $result = checkString($configValue['heartbeat_device'][$i],
-                                  $pgpoolConfigWdOtherParam['heartbeat_device']['regexp']);
-            if (!$result) {
-                $error['heartbeat_device'][$i] = TRUE;
-            }
 
             // heartbeat_destination
             $result = checkString($configValue['heartbeat_destination'][$i],
-                                  $pgpoolConfigWdOtherParam['heartbeat_destination']['regexp']);
+                                  $pgpoolConfigHbDestinationParam['heartbeat_destination']['regexp']);
             if (!$result) {
                 $error['heartbeat_destination'][$i] = TRUE;
+            }
+
+            // heartbeat_destination_port
+            $result = checkInteger($configValue['heartbeat_destination_port'][$i],
+                                   $pgpoolConfigHbDestinationParam['heartbeat_destination_port']['min'],
+                                   $pgpoolConfigHbDestinationParam['heartbeat_destination_port']['max']);
+            if (!$result) {
+                $error['heartbeat_destination_port'][$i] = TRUE;
+            }
+
+            // heartbeat_device
+            $result = checkString($configValue['heartbeat_device'][$i],
+                                  $pgpoolConfigHbDestinationParam['heartbeat_device']['regexp']);
+            if (!$result) {
+                $error['heartbeat_device'][$i] = TRUE;
             }
         }
     }

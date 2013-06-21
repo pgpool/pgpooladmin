@@ -57,6 +57,7 @@ $message = array(
     'descFail_over_on_backend_error' => 'DBノードへのソケット通信エラー時にフェイルオーバ',
     'descFollow_master_command' => 'マスタのフェイルオーバ後に実行するコマンド',
     'descHeartbeat_destination' => 'ハートビート信号の送信先ホスト名または IP アドレス',
+    'descHeartbeat_destination_port' => 'ハートビート信号の送信先ポート番号',
     'descHeartbeat_device' => 'ハートビートの送受信に用いるネットワークデバイス名',
     'descHealth_check_period' => 'ヘルスチェックを行う間隔(秒)',
     'descHealth_check_timeout' => 'ヘルスチェックが長時間待たされるのを防ぐためのタイムアウト値(秒)',

@@ -1819,25 +1819,44 @@ black_function_list = 'nextval,setval,lastval,currval'
     </tr>
 
     <tr>
-      <th id="HEARTBEAT_DEVICE"><label>{$message.descHeartbeat_device|escape}</label>
-      <p>heartbeat_device (string) *</th>
+      <th id="HEARTBEAT_DESTINATION"><label>{$message.descHeartbeat_destination|escape}</label>
+      <p>heartbeat_destination (string) *</th>
       <td>
-      <p>Specifies the network device name for sending heartbeat signals.
-         You can use multiple devices.
-         The number at the end of the parameter name is referred as "device number", and it starts from 0.
-         If you want to set mutiple destination (<a href="#HEARTBEAT_DESTINATION">heartbeat_destiationN</a>) for one device,
-         specify the device name repeatedly using different numbers.</p>
+      <p>Specifies the destination of heartbeat signals by IP address or hostname.
+         You can use multiple destination.
+         The number at the end of the parameter name is referred as "destination number",
+         and it starts from 0.
+         This works only heartbeat mode.</p>
       </td>
     </tr>
 
     <tr>
-      <th id="HEARTBEAT_DESTINATION"><label>{$message.descHeartbeat_destination|escape}</label>
+      <th id="HEARTBEAT_DESTINATION_PORT"><label>{$message.descHeartbeat_destination_port|escape}</label>
       <p>heartbeat_destination (string) *</th>
       <td>
-      <p>Specifies the destination of heartbeat signals which is sent from the device
-         specified by <a href="#HEARTBEAT_DEVICE">heartbeat_deviceX</a>.
-         Use IP address or hostname. The number at the end of the parameter name is referred as "device number",
-         and it starts from 0. This works only heartbeat mode. </p>
+      <p>Specifies the port number of destination of heartbeat signals
+	     which is specified by <a href="HEARTBEAT_DESTINATION">heartbeat_destinationX</a>.
+         This is usually the same value as <a href="WD_HEARTBEAT_PORT">wd_heartbeat_port</a>
+         You must use another value if the port number is unusable on a certain host or
+	     there are more than two pgpool-IIs in a host.
+         The number at the end of the parameter name is referred as "destination number",
+         and it starts from 0.
+         This works only heartbeat mode.</p>
+      </td>
+    </tr>
+
+    <tr>
+      <th id="HEARTBEAT_DEVICE"><label>{$message.descHeartbeat_device|escape}</label>
+      <p>heartbeat_device (string) *</th>
+      <td>
+      <p>Specifies the network device name for sending heartbeat signals to
+	     destination specified by <a href="HEARTBEAT_DESTINATION">heartbeat_destinationX</a>.
+         You can use the same device for different distinations.
+         The number at the end of the parameter name is referred as "destination number",
+         and it starts from 0.
+         This works only heartbeat mode.
+	     In addition, this works only when pgpool-II has root privilege and are running on Linux,
+	     because this uses SO_BINDTODEVICE socket option.</p>
       </td>
     </tr>
     {/if}
