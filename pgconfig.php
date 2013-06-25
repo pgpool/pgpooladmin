@@ -463,7 +463,7 @@ function writeConfigFile($configValue, $pgpoolConfigParam)
 
     if (isset($configValue['heartbeat_destination'])) {
         for ($i = 0; $i < count($configValue['heartbeat_destination']); $i++) {
-            $configFile[] = "heartbeat_destination$i = " . $configValue['heartbeat_destination'][$i] . "\n";
+            $configFile[] = "heartbeat_destination$i = '" . $configValue['heartbeat_destination'][$i] . "'\n";
             $configFile[] = "heartbeat_destination_port$i = " . $configValue['heartbeat_destination_port'][$i] . "\n";
             $configFile[] = "heartbeat_device$i = '" . $configValue['heartbeat_device'][$i] . "'\n";
         }
