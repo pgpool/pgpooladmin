@@ -17,6 +17,9 @@ define('SMARTY_COMPILE_DIR',  dirname(__FILE__) . '/templates_c' );
 // pgpool-II
 define('PGPOOL_OFFICIAL_SITE', 'http://www.pgpool.net/');
 
+// pgpoolAdmin
+define('PGPOOLADMIN_HOST', exec('hostname -f'));
+
 // node status in "pcp_node_info" result
 // http://www.pgpool.net/pgpool-web/pgpool-II/doc/pgpool-ja.html#pcp_node_info
 define('NODE_ACTIVE_NO_CONNECT', 1);

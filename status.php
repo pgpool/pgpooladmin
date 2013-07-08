@@ -94,15 +94,21 @@ function _doAction($action, $nodeNumber)
         /* --------------------------------------------------------------------- */
 
         case 'startPgpool':
-            _startPgpool();
+            if (_startPgpool()) {
+                header("Location: " . $_SERVER['PHP_SELF']);
+            }
             break;
 
         case 'stopPgpool':
-            _stopPgpool();
+            if (_stopPgpool()) {
+                header("Location: " . $_SERVER['PHP_SELF']);
+            }
             break;
 
         case 'restartPgpool':
-            _restartPgpool();
+            if (_restartPgpool()) {
+                header("Location: " . $_SERVER['PHP_SELF']);
+            }
             break;
 
         case 'reloadPgpool':
@@ -277,6 +283,7 @@ function _waitForNoPidFile()
 function _startPgpool()
 {
     global $tpl;
+    $rtn = FALSE;
 
     $args = _setStartArgs();
     $result = execPcp('PCP_START_PGPOOL', $args);
@@ -287,6 +294,7 @@ function _startPgpool()
     } else {
         if (_waitForPidFile()) {
             $pgpoolStatus = 'pgpool start succeed';
+            $rtn = TRUE;
         } else {
             $pgpoolStatus = 'pgpool start failed. pgpool.pid not found';
         }
@@ -295,6 +303,8 @@ function _startPgpool()
 
     $tpl->assign('pgpoolStatus', $pgpoolStatus);
     $tpl->assign('pgpoolMessage', $pgpoolMessage);
+
+    return $rtn;
 }
 
 /** Stop pgpool */
@@ -302,6 +312,7 @@ function _stopPgpool()
 {
     global $_POST;
     global $tpl;
+    $rtn = FALSE;
 
     $m = $_POST['stop_mode'];
 
@@ -315,11 +326,14 @@ function _stopPgpool()
     } else {
         if (_waitForNoPidFile()) {
             $pgpoolStatus = 'pgpool stop succeed';
+            $rtn = TRUE;
         } else {
             $pgpoolStatus = 'pgpool stop failed. pgpool.pid exists.';
         }
         $tpl->assign('pgpoolStatus', $pgpoolStatus);
     }
+
+    return $rtn;
 }
 
 /** Restart pgpool */
@@ -327,6 +341,7 @@ function _restartPgpool()
 {
     global $_POST;
     global $tpl;
+    $rtn = FALSE;
 
     // Stop pgpool
     $m = $_POST['stop_mode'];
@@ -350,6 +365,7 @@ function _restartPgpool()
         } else {
             if (_waitForPidFile()) {
                 $pgpoolStatus = 'pgpool restart succeed';
+                $rtn = TRUE;
             } else {
                 $pgpoolStatus = 'pgpool restart failed. pgpool.pid not found';
             }
@@ -362,6 +378,8 @@ function _restartPgpool()
 
     $tpl->assign('pgpoolStatus', $pgpoolStatus);
     $tpl->assign('pgpoolMessage', $pgpoolMessage);
+
+    return $rtn;
 }
 
 /** Execute PCP command with node number */

@@ -25,11 +25,19 @@
     {* pgpool's version                                                      *}
     {* --------------------------------------------------------------------- *}
 
-    <h2>pgpool-II Version</h2>
-    {$smarty.const._PGPOOL2_VERSION}
-
-    <p>login user: {$login_user}</p>
-    <p>is_superuser: {if $is_superuser}yes{else}no{/if}</p>
+    <h2>pgpoolAdmin</h2>
+    <ul>
+    <li>This is pgpoolAdmin on {$smarty.const.PGPOOLADMIN_HOST}</li>
+    <li>For pgpool-II {$smarty.const._PGPOOL2_VERSION}.</li>
+    <li>Login
+        <ul>
+        <li>login user: {$login_user}</li>
+        <li>superuser: {if $is_superuser == NULL}unknown (Connection error)
+                       {elseif $is_superuser == TRUE}yes{else}no{/if}
+        </li>
+        </ul>
+    </li>
+    </ul>
 
     {* --------------------------------------------------------------------- *}
     {* Status Info Buttons                                                   *}
