@@ -38,6 +38,7 @@ $params = readConfigParams(array('parallel_mode',
                                  'replication_mode',
                                  'load_balance_mode',
                                  'use_watchdog',
+                                 'wd_lifecheck_method',
                                  'health_check_period'));
 
 $tpl->assign('params', $params);

@@ -79,7 +79,7 @@ td > img {
     <tr><td>Watchdog</td>
     <td>
     {if $params.use_watchdog == 'on'}
-    <img src="images/check.png"> {$message.strOn|escape}
+    <img src="images/check.png"> {$message.strOn|escape} / {$params.wd_lifecheck_method}
     {else}
     <img src="images/no.png"> {$message.strOff|escape}
     {/if}
