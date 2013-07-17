@@ -46,8 +46,8 @@ $backends_in_conf = $configValue['backend_hostname'];
 
 // Get nodes' status
 $nodeCount = NULL;
-$is_pgpool_active = DoesPgpoolPidExist();
-if ($is_pgpool_active) {
+$is_pgpool_running = DoesPgpoolPidExist();
+if ($is_pgpool_running) {
     $nodeCount = getNodeCount();
 }
 $has_not_loaded_node = FALSE;
@@ -126,7 +126,7 @@ $tpl->assign('parallelMode',  $isParallelMode);
 $tpl->assign('msgStopPgpool', $message['msgStopPgpool']);
 $tpl->assign('nodeCount',     $nodeCount);
 $tpl->assign('has_not_loaded_node', $has_not_loaded_node);
-$tpl->assign('pgpoolIsActive', $is_pgpool_active);
+$tpl->assign('pgpoolIsRunning', $is_pgpool_running);
 
 // Set params
 $configValue = readConfigParams('recovery_1st_stage');

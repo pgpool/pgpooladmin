@@ -2,7 +2,7 @@
 {* Start Options                                                         *}
 {* --------------------------------------------------------------------- *}
 
-{if $pgpoolIsActive == false}
+{if $pgpoolIsRunning == false}
     <h3>{$message.strStartOption|escape}</h3>
 
     <form action="status.php" name="startPgpoolForm" method="post">

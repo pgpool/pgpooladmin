@@ -67,7 +67,7 @@
       {/if}
     {/if}
 
-    {if $pgpoolIsActive == true}
+    {if $pgpoolIsRunning == true}
         <p>
         <input type="button" name="command" onClick="changeView('summary')"
                {if $action == 'summary'}class="command_active"{/if}
@@ -141,7 +141,7 @@
     {/if}
 
     {* ---------------------------------------------------------------------- *}
-    {* Form to add a new backend                                              *}
+    {* Form to add a new backend (Initially invisible)                        *}
     {* ---------------------------------------------------------------------- *}
 
     <div id="addBackendDiv" style="visibility: hidden; position: absolute;">
@@ -175,7 +175,7 @@
     </div>
 
     {* --------------------------------------------------------------------- *}
-    {* Form of options to stop/restart PostgreSQL                            *}
+    {* Form of options to stop/restart PostgreSQL (Initially invisible)      *}
     {* --------------------------------------------------------------------- *}
 
     {include file="elements/status_pgsql_options.tpl"}
@@ -185,7 +185,7 @@
     {* --------------------------------------------------------------------- *}
 
     <h2>{$message.strPgpool|escape}
-    {if !$pgpoolIsActive}[ {$message.strStoppingNow|escape} ]{/if}
+    {if !$pgpoolIsRunning}[ {$message.strStoppingNow|escape} ]{/if}
     </h2>
     {include file="elements/status_options.tpl"}
 

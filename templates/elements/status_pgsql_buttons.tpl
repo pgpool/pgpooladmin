@@ -11,5 +11,5 @@
        value="{$message.strReloadPgsql|escape}">
 |
 <input type="button" onClick="sendCommand('removeBackend', {$node_num}, '{$message.msgRemoveBackend|escape}')"
-       {if $pgpoolIsActive && $nodeInfo.$node_num.is_active}disabled{/if}
+       {if $pgpoolIsRunning && $nodeInfo.$node_num.is_active}disabled{/if}
        value="{$message.strRemoveBackend|escape}">

@@ -39,6 +39,6 @@ if (!isset($_SESSION[SESSION_LOGIN_USER])) {
 $tpl->assign('help', basename( __FILE__, '.php'));
 
 // Display
-$is_pgpool_active = DoesPgpoolPidExist();
-$tpl->assign('pgpoolIsActive', $is_pgpool_active);
+$is_pgpool_running = DoesPgpoolPidExist();
+$tpl->assign('pgpoolIsRunning', $is_pgpool_running);
 $tpl->display('nodeServerStatus.tpl');

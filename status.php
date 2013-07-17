@@ -36,7 +36,7 @@ if (!isset($_SESSION[SESSION_LOGIN_USER])) {
     exit();
 }
 
-$is_pgpool_active = DoesPgpoolPidExist();
+$is_pgpool_running = DoesPgpoolPidExist();
 
 // Do action
 $nodeNumber = (isset($_POST['nodeNumber'])) ? $_POST['nodeNumber'] : -1;
@@ -46,7 +46,7 @@ $viewPHP    = _doAction($action, $nodeNumber);
 // Set vars
 setNodeInfoFromConf();
 $tpl->assign('action',         $action);
-$tpl->assign('pgpoolIsActive', $is_pgpool_active);
+$tpl->assign('pgpoolIsRunning', $is_pgpool_running);
 $tpl->assign('viewPHP',        $viewPHP);
 $tpl->assign('help',           basename( __FILE__, '.php'));
 $tpl->assign('pgpoolConf',     _PGPOOL2_CONFIG_FILE);
@@ -61,7 +61,7 @@ $tpl->assign('login_user',     $_SESSION[SESSION_LOGIN_USER]);
 $tpl->assign('is_superuser',   isSuperUser($_SESSION[SESSION_LOGIN_USER]));
 
 // Set params
-$configValue = readConfigParams('use_watchdog');
+$configValue = readConfigParams();
 $tpl->assign('params', $configValue);
 
 // Set pgpool command option
@@ -199,9 +199,9 @@ function _doAction($action, $nodeNumber)
 function setNodeInfoFromConf()
 {
     global $tpl;
-    global $is_pgpool_active;
+    global $is_pgpool_running;
 
-    if (!$is_pgpool_active) {
+    if (!$is_pgpool_running) {
         $nodeInfo = array();
 
         $configValue = readConfigParams(array('backend_hostname', 'backend_port'));
@@ -401,7 +401,7 @@ function _execPcp($pcp_command, $nodeNumber, $errorCode)
 /** Add a new backend and reload conf */
 function _addNewBackend()
 {
-    global $is_pgpool_active;
+    global $is_pgpool_running;
     global $_POST;
 
     // Check
@@ -437,7 +437,7 @@ function _addNewBackend()
 
     // Reload pgpool
     $result = TRUE;
-    if (isset($_POST['reload_ok']) && $is_pgpool_active) {
+    if (isset($_POST['reload_ok']) && $is_pgpool_running) {
         $result = execPcp('PCP_RELOAD_PGPOOL', NO_ARGS);
     }
 
@@ -447,7 +447,7 @@ function _addNewBackend()
 /** Remove a backend and reload conf */
 function _removeBackend()
 {
-    global $is_pgpool_active;
+    global $is_pgpool_running;
     global $_POST;
 
     if (!isset($_POST['nodeNumber'])) { return FALSE; }
@@ -502,7 +502,7 @@ function _removeBackend()
 
     // Reload pgpool
     $result = TRUE;
-    if ($is_pgpool_active) {
+    if ($is_pgpool_running) {
         $result = execPcp('PCP_RELOAD_PGPOOL', NO_ARGS);
     }
     return $result;

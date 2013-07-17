@@ -5,7 +5,7 @@
       onSubmit="return execStopPgsql()" />
 <table>
 <thead>
-    <tr><th colspan="2">{$message.strCmdM|escape}(-m)</th></tr>
+    <tr><th colspan="2">{$message.strCmdM|escape} (-m)</th></tr>
 </thead>
 <tbody>
     {include file="elements/status_stop_option.tpl"}
@@ -29,7 +29,7 @@
       onSubmit="return execRestartPgsql()" />
 <table>
 <thead>
-    <tr><th colspan="2">{$message.strCmdM|escape}(-m)</th></tr>
+    <tr><th colspan="2">{$message.strCmdM|escape} (-m)</th></tr>
 </thead>
 <tbody>
     {include file="elements/status_stop_option.tpl"}

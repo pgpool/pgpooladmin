@@ -25,7 +25,7 @@
     <td class="input">{$nodeServerStatus.$node_num.hostname|escape}</td>
     <td class="input">{$nodeServerStatus.$node_num.port|escape}</td>
     <td>
-    {if $pgpoolIsActive}
+    {if $pgpoolIsRunning}
         {if $nodeServerStatus.$node_num.status == $smarty.const.NODE_ACTIVE_NO_CONNECT}
           {$message.strNodeStatus1|escape}
         {elseif $nodeServerStatus.$node_num.status == $smarty.const.NODE_ACTIVE_CONNECTED}

@@ -85,7 +85,7 @@ function showDetail(num)
 <div id="help"><a href="help.php?help={$help|escape}"><img src="images/question.gif" alt="help"/>{$message.strHelp|escape}</a></div>
 
 <h2>{$message.strNodeStatus|escape}
-{if $pgpoolIsActive == false}[{$message.strStoppingNow}]{/if}
+{if $pgpoolIsRunning == false}[{$message.strStoppingNow}]{/if}
 </h2>
   <div id="status">{$message.strPleaseWait|escape}</div>
 <p>

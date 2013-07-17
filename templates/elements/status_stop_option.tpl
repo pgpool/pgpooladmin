@@ -1,4 +1,4 @@
-<tr><td>{$message.strCmdM|escape}(-m)</td><td>
+<tr><td>{$message.strCmdM|escape} (-m)</td><td>
   <select name="stop_mode">
   {if $m == 's'}
        <option value="s" selected="selected">smart</option>

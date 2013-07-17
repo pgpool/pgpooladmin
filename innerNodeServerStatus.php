@@ -46,14 +46,14 @@ if (isset($params['backend_hostname'])) {
     $backendHostPort = array();
 }
 
-$is_pgpool_active = DoesPgpoolPidExist();
+$is_pgpool_running = DoesPgpoolPidExist();
 $nodeInfo = array();
 foreach($backendHostName as $num => $hostname) {
     $nodeInfo[$num]['hostname'] = $backendHostName[$num];
     $nodeInfo[$num]['port']     = $backendPort[$num];
     $nodeInfo[$num]['is_active'] = NodeActive($num);
 
-    if ($is_pgpool_active) {
+    if ($is_pgpool_running) {
         $result = getNodeInfo($num);
         $nodeInfo[$num]['status'] = $result['status'];
     }
@@ -63,7 +63,7 @@ foreach($backendHostName as $num => $hostname) {
 $nodeNum = (isset($_GET['num'])) ? $_GET['num'] : NULL;
 
 // Set vars
-$tpl->assign('pgpoolIsActive',   $is_pgpool_active);
+$tpl->assign('pgpoolIsRunning',   $is_pgpool_running);
 $tpl->assign('nodeServerStatus', $nodeInfo);
 $tpl->assign('nodeCount',        count($nodeInfo));
 $tpl->assign('nodeNum',          $nodeNum);
