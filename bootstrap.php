@@ -27,6 +27,12 @@ define('NODE_ACTIVE_CONNECTED',  2);
 define('NODE_DOWN',              3);
 define('NODE_NOT_LOADED',       -1); // only for pgpoolAdmin
 
+// watchdog status in "pcp_watchdog_info" result
+define('WATCHDOG_INIT',    1);
+define('WATCHDOG_STANDBY', 2);
+define('WATCHDOG_ACTIVE',  3);
+define('WATCHDOG_DOWN',    4);
+
 // timeout seconds
 // (The parameter "pcp_timeout" existed till V3.0.)
 define('PCP_TIMEOUT', 10);

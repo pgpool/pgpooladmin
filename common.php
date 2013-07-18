@@ -472,7 +472,7 @@ function readConfigParams($paramList = FALSE)
                 $num = str_replace('other_wd_port', '', $key);
                 $configParam['other_wd_port'][$num] = $value;
 
-            // params about watchdog heartbeat 
+            // params about watchdog heartbeat
             } elseif (preg_match("/^heartbeat_destination_port/", $key)) {
                 $num = str_replace('heartbeat_destination_port', '', $key);
                 $configParam['heartbeat_destination_port'][$num] = $value;

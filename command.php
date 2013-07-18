@@ -150,6 +150,11 @@ function execPcp($command, $num = '')
             $ret = exec($cmd, $output, $return_var);
             break;
 
+        case 'PCP_WATCHDOG_INFO':
+            $cmd = _PGPOOL2_PCP_DIR . '/pcp_watchdog_info' . $args;
+            $ret = exec($cmd, $output, $return_var);
+            break;
+
         default:
             return array($pspStatus[1] => $pspStatus[1]);
     }
@@ -205,6 +210,32 @@ function getNodeInfo($i)
     $rtn['port']     = $arr[1];
     $rtn['status']   = $arr[2];
     $rtn['weight']   = sprintf('%.3f', $arr[3]);
+
+    return $rtn;
+}
+
+/** Get the watchdog information of thet specified other pgpool
+ *  If $i is omitted one's own watchdog information is returned.
+ */
+function getWatchdogInfo($i = '')
+{
+    global $tpl;
+
+
+    $result = execPcp('PCP_WATCHDOG_INFO', $i);
+
+    if (!array_key_exists('SUCCESS', $result)) {
+        $errorCode = 'e1003';
+        $tpl->assign('errorCode', $errorCode);
+        $tpl->display('innerError.tpl');
+        exit();
+    }
+
+    $arr = explode(" ", $result['SUCCESS']);
+    $rtn['hostname']    = $arr[0];
+    $rtn['pgpool_port'] = $arr[1];
+    $rtn['wd_port']     = $arr[2];
+    $rtn['status']      = $arr[3];
 
     return $rtn;
 }

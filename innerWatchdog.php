@@ -24,16 +24,55 @@
  */
 
 require_once('common.php');
+require_once('command.php');
 
 if (!isset($_SESSION[SESSION_LOGIN_USER])) {
     exit();
 }
 
-$params = readConfigParams(array('port', 'wd_hostname', 'wd_port', 'delegate_IP',
-                                 'other_pgpool_hostname', 'other_pgpool_port', 'other_wd_port',
-                                 'wd_interval', 'wd_life_point', 'wd_lifecheck_query'));
+$params = readConfigParams(array('port',
+                                 'wd_hostname',
+                                 'wd_port',
+                                 'trusted_servers',
+                                 'delegate_IP',
+                                 'wd_lifecheck_method',
+                                 'wd_heartbeat_port',
+                                 'wd_heartbeat_keepalive',
+                                 'wd_heartbeat_deadtime',
+                                 'wd_interval',
+                                 'wd_life_point',
+                                 'wd_lifecheck_query',
+                                 'other_pgpool_hostname',
+                                 'other_pgpool_port',
+                                 'other_wd_port'));
+
+
+// get watchdog information
+$watchdogInfo = array();
+for ($i = 0; $i < count($params['other_pgpool_hostname']); $i++) {
+    $watchdogInfo[] = getWatchdogInfo($i);
+}
+$watchdogInfo['local'] = getWatchdogInfo();
+
+foreach ($watchdogInfo as $key => $info) {
+    switch ($info['status']) {
+    case WATCHDOG_INIT:
+        $watchdogInfo[$key]['status_str'] = $message['strWdInit'];
+        break;
+    case WATCHDOG_STANDBY:
+        $watchdogInfo[$key]['status_str'] = $message['strWdStandby'];
+        break;
+    case WATCHDOG_ACTIVE:
+        $watchdogInfo[$key]['status_str'] = $message['strWdActive'];
+        break;
+    default:
+        $watchdogInfo[$key]['status_str'] = $message['strUnknown'];
+        break;
+    }
+}
 
 $tpl->assign('params', $params);
+$tpl->assign('watchdogInfo', $watchdogInfo);
 $tpl->display('innerWatchdog.tpl');
 
 ?>
