@@ -430,7 +430,7 @@ function writeConfigFile($configValue, $pgpoolConfigParam)
             }
         }
 
-        if (!$isWrite) {
+        if (!$isWrite && paramExists($key)) {
             if (strcmp($pgpoolConfigParam[$key]['type'], "C") == 0) {
                 $configFile[] = $key . " = '" . $configValue[$key] . "'\n";
             } else {
