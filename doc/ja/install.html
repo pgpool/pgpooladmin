@@ -39,6 +39,7 @@ pgpool管理ツールをインストールする場合、少なくとも以下�
 
 <ul>
   <li>HTTPサーバ、PHP、pgpoolを適切にセットアップする。</li>
+  <li>pgpoolAdmin のログインユーザと同名の PostgreSQL ユーザをバックエンドのスーパユーザとして作成する。</li>
   <li>ブラウザのクッキーとJavaScriptを有効にする。</li>
 </ul>
   <h3>前提条件</h3>
@@ -94,6 +95,10 @@ pgpool管理ツールをインストールする場合、少なくとも以下�
 <td>/usr/local/bin/pcp_systemdb_info</td>
 </tr>
 <tr>
+<th><label>pcp_watchdog_infoコマンドパス</label></th>
+<td>/usr/local/bin/pcp_watchdog_info</td>
+</tr>
+<tr>
 <th><label>pg_md5コマンドパス</label></th>
 <td>/usr/local/bin/pg_md5</td>
 </tr>
@@ -126,6 +131,7 @@ pgpool管理ツールをインストールする場合、少なくとも以下�
 			<li>pcp_proc_info</li>
 			<li>pcp_stop_pgpool</li>
 			<li>pcp_systemdb_info</li>
+			<li>pcp_watchdog_info</li>
 			<li>pg_md5</li>
 		</ul>
 		<div id="cmd_window"><table>

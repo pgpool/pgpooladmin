@@ -39,6 +39,8 @@ The following software is at least installed in the server that operates pgpool 
 Before starting the install, be sure to have:
 <ul>
   <li>Setup the HTTP, PHP and pgpool properly.</li>
+  <li>pgpoolAdmin のログインユーザと同名のユーザをバックエンドのスーパユーザとして作成する。</li>
+  <li>Create a PostgreSQL user in backends as superuser whose name is same as the pgpoolAdmin login user. </li>
   <li>Turn cookie and JavaScript? support in your browser on.</li>
 </ul>
   <h3>Precondition</h3>
@@ -94,6 +96,10 @@ It explains on the assumption of being set it here as follows.
 <td>/usr/local/bin/pcp_systemdb_info</td>
 </tr>
 <tr>
+<th><label>pcp_watchdog_info command pass</label></th>
+<td>/usr/local/bin/pcp_watchdog_info</td>
+</tr>
+<tr>
 <th><label>pg_md5 command pass</label></th>
 <td>/usr/local/bin/pg_md5</td>
 </tr>
@@ -126,6 +132,7 @@ It explains the installation of the management tool as follows.
 			<li>pcp_proc_info</li>
 			<li>pcp_stop_pgpool</li>
 			<li>pcp_systemdb_info</li>
+			<li>pcp_watchdog_info</li>
 			<li>pg_md5</li>
 		</ul>
 		<div id="cmd_window"><table>
