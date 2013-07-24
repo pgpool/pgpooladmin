@@ -3,6 +3,7 @@
 var refreshTime  = "{$refreshTime|escape}";
 var refreshTimeLog  = "{$refreshTimeLog|escape}";
 var view         = "{$viewPHP|escape}";
+var innerParameter = '';
 var msgStartPgpool   = "{$message.msgStartPgpool|escape}";
 var msgStopPgpool    = "{$message.msgStopPgpool|escape}";
 var msgReloadPgpool    = "{$message.msgReloadPgpool|escape}";
@@ -38,14 +39,14 @@ function load()
             if (content == null) { return; }
 
             content.innerHTML  = ret;
-            if (view != "innerLog.php") {
+            if (view == "innerLog.php") {
                 setTimeout("load()", refreshTimeLog);
             } else if (refreshTime > 0) {
                 setTimeout("load()", refreshTime);
             }
         }
     }
-    xmlhttp.open('GET', view, true);
+    xmlhttp.open('GET', view + innerParameter, true);
     xmlhttp.setRequestHeader("If-Modified-Since", "Thu, 01 Jun 1970 00:00:00 GMT");
     xmlhttp.send("");
 }
@@ -176,6 +177,24 @@ function isFloat(num) { return num.match(/^[0-9]+\.?[0-9]?$/); }
 function execRemoveBackend(node_num)
 {
     execute('removeBackend', msgRemoveBackend, node_num);
+}
+
+/* --------------------------------------------------------------------- */
+/* Log Action                                                            */
+/* --------------------------------------------------------------------- */
+
+function execLogAction(logAction)
+{
+    innerParameter = '?logAction=' + logAction +
+                    '&logOffset=' + document.logForm.logOffset.value +
+                    '&logEnd=' + document.logForm.logEnd.value;
+    return reloadLog();
+}
+
+function reloadLog()
+{
+    load();
+    return false;
 }
 
 /* --------------------------------------------------------------------- */

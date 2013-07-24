@@ -29,38 +29,77 @@ if (!isset($_SESSION[SESSION_LOGIN_USER])) {
     exit();
 }
 
+$logAction = (isset($_GET['logAction']) && $_GET['logAction'] ?
+    $_GET['logAction'] : 'all');
+$logOffset = (isset($_GET['logOffset']) && $_GET['logOffset'] ?
+    $_GET['logOffset'] : 0);
+$logEnd = (isset($_GET['logEnd']) && $_GET['logEnd'] ?
+    $_GET['logEnd'] : 0);
+
 $pgpoolLog = _PGPOOL2_LOG_FILE;
 if ($pgpoolLog == '') {
     $logDir = readLogDir();
     $pgpoolLog = "$logDir/pgpool.log";
 }
 
-$logFile = @file($pgpoolLog);
-if ($logFile == FALSE) {
+$logFileAll = @file($pgpoolLog);
+if ($logFileAll == FALSE) {
     $errorCode = 'e8001';
     $tpl->assign('errorCode', $errorCode);
     $tpl->display('innerError.tpl');
     exit();
 }
+$logTotalLines = count($logFileAll);
 
-$logSplitFile = array();
-for ($i = 0; $i < count($logFile); $i++) {
-    $words = explode(" ", $logFile[$i]);
-    $words = array_merge(array_diff($words, array("")));
-
-    $logFile[$i] = array('timestamp' => $words[0]. ' '. $words[1],
-                         'level'     => $words[2],
-                         'pid'       => $words[3]. ' '. $words[4],
-                         'message'   => ''
-                         );
-
-    for ($j = 5; $j < count($words); $j++) {
-        $logFile[$i]['message'] .= ' '. $words[$j];
-    }
-    $logFile[$i]['message'] = trim($logFile[$i]['message']);
+switch ($logAction) {
+    case 'latest':
+        $logEnd = $logTotalLines;
+        $logOffset = $logTotalLines - EACH_LOG_LINES;
+        break;
+    case 'prev':
+        $logEnd = $logOffset;
+        $logOffset = $logOffset - EACH_LOG_LINES;
+        break;
+    case 'next':
+        $logOffset = $logEnd;
+        $logEnd = $logEnd + EACH_LOG_LINES;
+        break;
+    case 'all':
+    default:
+        $logEnd = $logTotalLines;
+        $logOffset = 0;
+        break;
 }
 
-$tpl->assign('refreshTimeLog', REFRESH_LOG_SECONDS);
+$logOffset = min(max($logOffset, 0), $logTotalLines);
+$logEnd = min(max($logEnd, 0), $logTotalLines);
+if ($logOffset == $logEnd) {
+    $logEnd = $logTotalLines;
+    $logOffset = 0;
+}
+
+$logFile = array();
+for ($i = $logOffset; $i < $logEnd; $i++) {
+    $words = explode(" ", $logFileAll[$i]);
+    $words = array_merge(array_diff($words, array("")));
+    $logLine = array('timestamp' => $words[0]. ' '. $words[1],
+                     'level'     => $words[2],
+                     'pid'       => $words[3]. ' '. $words[4],
+                     'message'   => ''
+                     );
+    for ($j = 5; $j < count($words); $j++) {
+        $logLine['message'] .= ' '. $words[$j];
+    }
+    $logLine['message'] = trim($logLine['message']);
+    $logFile[] = $logLine;
+}
+
 $tpl->assign('logFile', $logFile);
+$tpl->assign('logTotalLines', $logTotalLines);
+$tpl->assign('logAction', $logAction);
+$tpl->assign('logOffset', $logOffset);
+$tpl->assign('logEnd', $logEnd);
+$tpl->assign('refreshTimeLog', REFRESH_LOG_SECONDS);
+$tpl->assign('eachLogLines', EACH_LOG_LINES);
 $tpl->display('innerLog.tpl');
 ?>

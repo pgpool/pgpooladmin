@@ -18,6 +18,51 @@
     <br clear="all">
 {/if}
 
+<div id="div_log">
+    <form action="status.php" name="logForm" method="post" />
+      <input type="hidden" name="action" value="log"/>
+
+      <input type="hidden" name="logAction" />
+      <input type="hidden" name="logOffset" value="{$logOffset}"/>
+      <input type="hidden" name="logEnd" value="{$logEnd}"/>
+
+      <p>
+      <input type="button" onClick="reloadLog()"
+             value="{$message.strLogReload|escape}"/>
+      {if $logAction == 'all'}
+      <input type="button" onClick="execLogAction('latest')"
+             value="{$message.strLogLatest|escape} {$eachLogLines} {$message.strLogShowLines|escape}"/>
+      {else}
+      <input type="button" onClick="execLogAction('all')"
+             value="{$message.strLogShowAll|escape}"/>
+      {/if}
+      </p>
+      <p>
+      <br />
+      {if $logAction != 'all'}
+          <span>
+          {if $logOffset != 0}
+          <a href="javascript:void(0)"
+             onClick="execLogAction('prev')">{$message.strLogPrev|escape}</a>
+          {/if}
+          {if $logEnd < $logTotalLines}
+          <a href="javascript:void(0)"
+             onClick="execLogAction('next')">{$message.strLogNext|escape}</a>
+          {/if}
+          </span>
+      {/if}
+      <span>
+      {if $logAction == 'all'}
+      (Total {$logTotalLines} lines)
+      {else}
+      ({$logOffset + 1} - {$logEnd}
+      of {$logTotalLines} lines)
+      {/if}
+      </span>
+      </p>
+    </form>
+</div>
+
 <table>
   <thead>
   </thead>

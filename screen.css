@@ -67,7 +67,7 @@ td.pgconfig_msg img {
 /* --------------------------------------------------------------------- */
 
 a:link {
-  color: red;
+  color: red; 
   text-decoration: none;
 }
 a:visited {
@@ -80,6 +80,11 @@ a:link:hover, a:visited:hover {
 }
 a img {
   border: none;
+}
+
+#div_log a:link, #div_log a:visited {
+  color: orangered;
+  text-decoration: underline;
 }
 
 /* --------------------------------------------------------------------- */

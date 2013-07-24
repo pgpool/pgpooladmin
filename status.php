@@ -53,7 +53,8 @@ $tpl->assign('pgpoolConf',     _PGPOOL2_CONFIG_FILE);
 $tpl->assign('pcpConf',        _PGPOOL2_PASSWORD_FILE);
 $tpl->assign('refreshTime',    (0 <= _PGPOOL2_STATUS_REFRESH_TIME) ?
                                _PGPOOL2_STATUS_REFRESH_TIME * 1000 : 5000);
-$tpl->assign('refreshTimeLog', REFRESH_LOG_SECONDS);
+$tpl->assign('refreshTimeLog', (0 <= REFRESH_LOG_SECONDS) ?
+                               REFRESH_LOG_SECONDS * 1000 : 5000);
 $tpl->assign('useSyslog',      useSyslog());
 $tpl->assign('pipe',           (isPipe(_PGPOOL2_LOG_FILE)) ? 1 : 0);
 $tpl->assign('msgStopPgpool',  $message['msgStopPgpool']);
@@ -195,7 +196,7 @@ function _doAction($action, $nodeNumber)
     return $viewPHP;
 }
 
-/** Set node info from pgpool.conf when pgpool isn't active */
+/** Set node info from pgpool.conf when pgpool isn't running */
 function setNodeInfoFromConf()
 {
     global $tpl;

@@ -39,4 +39,5 @@ define('PCP_TIMEOUT', 10);
 
 define('PGPOOL_WAIT_SECONDS', 10);
 define('REFRESH_LOG_SECONDS', 2000);
+define('EACH_LOG_LINES', 50);
 define('NO_ARGS', ' ');
