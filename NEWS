@@ -2,6 +2,49 @@
 pgpoolAdmin 3.2
 ===============================================================================
 
+* Version 3.3 2013/07/30
+
+  pgpoolAdmin 3.3 adopts pgpool-II 3.3.
+
+  ** New features
+
+	- Add new parameters for pgpool-II 3.3 (Nozomi Anzai)
+
+	  wd_authkey, wd_escalation_command, clear_memqcache_on_escalation,
+	  wd_lifecheck_method, wd_heartbeat_port, wd_heartbeat_keepalive,
+	  wd_heartbeat_deadtime wd_lifecheck_dbname, wd_lifecheck_user,
+	  wd_lifecheck_password, heartbeat_destination, heartbeat_destination_port,
+	  heartbeat_device
+
+	- Add a watchdog statuse view in status page  (Nozomi Anzai, Yugo Nagata)
+	 
+	  This show watchdog statuses of pgpool-IIs and the virtual IP etc. when
+	  watchdog is enabled.
+
+	- Add functionality to stop/reload/start PostgreSQL from GUI
+	  (Nozomi Anzai)
+
+	  pgpool_pgctl function need to be installed in the backends. This function
+	  is a new feature of pgpool-II 3.3 privided by pgpool_recovery extension.
+	  In addition, a superuser whose name is same as the pgpoolAdmin's login user
+	  also must exists in the backend.
+
+    - Add functionality to add/remove a backend from GUI (Nozomi Anzai)
+
+    - Show the hostname on which pgpoolAdmin is working in status page
+	  (Andrew Bruce, Nozomi Anzai)
+
+    - Add fuctionality to show limited lines in log view  (Yugo Nagata)
+
+  ** Bug fixes
+
+    - Fix to not write deprecated parmeters to when updating pgpool.conf 
+	  (Yugo Nagata)
+
+===============================================================================
+pgpoolAdmin 3.2
+===============================================================================
+
 * Version 3.2.2 2013/2/8
 
     - Fix typo: health_check_pasword -> health_check_password (Anzai)
