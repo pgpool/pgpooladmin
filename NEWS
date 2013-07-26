@@ -21,11 +21,11 @@ pgpoolAdmin 3.2
 	  This show watchdog statuses of pgpool-IIs and the virtual IP etc. when
 	  watchdog is enabled.
 
-	- Add functionality to stop/reload/start PostgreSQL from GUI
+	- Add functionality to stop/reload/restart PostgreSQL from GUI
 	  (Nozomi Anzai)
 
 	  pgpool_pgctl function need to be installed in the backends. This function
-	  is a new feature of pgpool-II 3.3 privided by pgpool_recovery extension.
+	  is a new feature of pgpool-II 3.3 provided by pgpool_recovery extension.
 	  In addition, a superuser whose name is same as the pgpoolAdmin's login user
 	  also must exists in the backend.
 
