@@ -65,6 +65,9 @@ foreach ($watchdogInfo as $key => $info) {
     case WATCHDOG_ACTIVE:
         $watchdogInfo[$key]['status_str'] = $message['strWdActive'];
         break;
+    case WATCHDOG_DOWN:
+        $watchdogInfo[$key]['status_str'] = $message['strWdDown'];
+        break;
     default:
         $watchdogInfo[$key]['status_str'] = $message['strUnknown'];
         break;
