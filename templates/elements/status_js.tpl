@@ -123,7 +123,7 @@ function restartPgsqlHandler(nodeNumber)
 {
     _setVisible('stopPgsqlDiv', false);
     _setVisible('restartPgsqlDiv', true);
-    document.stopPgsqlForm.action.value = 'restartPgsql';
+    document.restartPgsqlForm.action.value = 'restartPgsql';
     document.restartPgsqlForm.nodeNumber.value = nodeNumber;
 }
 
