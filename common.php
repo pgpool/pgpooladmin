@@ -284,7 +284,11 @@ function NodeStandby($num)
 function conStr($num, $mode = NULL)
 {
     // check user info
-    if ($mode == 'stream' && paramExists('sr_check_user')) {
+    if ($mode == 'login') {
+        $user     = $_SESSION[SESSION_LOGIN_USER];
+        $password = $_SESSION[SESSION_LOGIN_USER_PASSWORD];
+
+    } elseif ($mode == 'stream' && paramExists('sr_check_user')) {
         $params = readConfigParams(array('sr_check_user',
                                          'sr_check_password'));
         $user     = $params['sr_check_user'];

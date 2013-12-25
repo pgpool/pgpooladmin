@@ -516,11 +516,17 @@ function _doPgCtl($nodeNumber, $pg_ctl_action)
 
     if (isSuperUser($_SESSION[SESSION_LOGIN_USER]) == FALSE) { return FALSE; }
 
-    $conn = @pg_connect(conStr($nodeNumber));
+    $conn = @pg_connect(conStr($nodeNumber, 'login'));
+    if ($conn == FALSE) {
+        @pg_close($conn);
+        return FALSE;
+    }
     $query = sprintf("SELECT pgpool_pgctl('%s', '%s')",
                      $pg_ctl_action,
                      (isset($_POST['stop_mode'])) ? $_POST['stop_mode'] : NULL);
     $result = execQuery($conn, $query);
+
+    @pg_close($conn);
 
     return $result;
 }
