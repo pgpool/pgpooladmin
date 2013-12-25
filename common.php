@@ -684,9 +684,6 @@ function paramExists($param)
 /* Get if loginUser is super user */
 function isSuperUser($user_name)
 {
-    if (DoesPgpoolPidExist() && isset($_SESSION[SESSION_IS_SUPER_USER])) {
-        return $_SESSION[SESSION_IS_SUPER_USER];
-    }
     $conn = @pg_connect(conStrPgpool());
 
     if ($conn == FALSE) {
@@ -702,12 +699,13 @@ function isSuperUser($user_name)
     }
 
     $rr = pg_fetch_array($result);
-    $rtn = (isset($rr['usesuper']) && $rr['usesuper'] == 't');
+    $rtn = (isset($rr['usesuper']) && $rr['usesuper'] == 't') ? 'yes' : 'no';
 
     @pg_free_result($result);
     @pg_close($conn);
 
-     $_SESSION[SESSION_IS_SUPER_USER] = $rtn;
+    $_SESSION[SESSION_IS_SUPER_USER] = $rtn;
+
     return $rtn;
 }
 

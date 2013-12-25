@@ -33,7 +33,7 @@
         <ul>
         <li>login user: {$login_user}</li>
         <li>superuser: {if $is_superuser == NULL}unknown (Connection error)
-                       {elseif $is_superuser == TRUE}yes{else}no{/if}
+                       {else}{$is_superuser}{/if}
         </li>
         </ul>
     </li>
