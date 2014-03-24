@@ -1,6 +1,32 @@
 ===============================================================================
-pgpoolAdmin 3.2
+pgpoolAdmin 3.3
 ===============================================================================
+
+* Version 3.3.1 2014/03/24
+
+    - Fix a bug that watchdug status is shown as "Unknown" when it's "Down"
+      (Yugo Nagata)
+
+    - Fix a bug that restart of PostgreSQL doesn't work (Yugo Nagata)
+
+    - Fix to get properly if the login user is a super user or not on backend
+      nodes. (Nozomi Anzai)
+
+      This problem could be occured especially when he isn't a super user.
+      Per [pgpool-general: 2340].
+
+    - Fix that pgpool_pgctl can be executed only when the login user is super
+      user in backend nodes.(Nozomi Anzai)
+
+      Previously, any login user was able to try to execute pgpool_pgctl()
+      which could stop/restart/reload a backend node even if he was not a super
+      user. Also pgpool_pgctl() was executed by sr_check_user or health_check_user,
+      but it wasn't reasonable. This update is that buttons of stop/restart/reload
+      are disabled when the login user isn't a super user and that pgpool_pg_ctl()
+      is executed by login user instead of sr_check_user or health_check_user
+      who don't have to be non-superuser. Per [pgpool-general: 2338].
+
+-------------------------------------------------------------------------------
 
 * Version 3.3 2013/07/30
 
@@ -8,38 +34,38 @@ pgpoolAdmin 3.2
 
   ** New features
 
-	- Add new parameters for pgpool-II 3.3 (Nozomi Anzai)
+    - Add new parameters for pgpool-II 3.3 (Nozomi Anzai)
 
-	  wd_authkey, wd_escalation_command, clear_memqcache_on_escalation,
-	  wd_lifecheck_method, wd_heartbeat_port, wd_heartbeat_keepalive,
-	  wd_heartbeat_deadtime wd_lifecheck_dbname, wd_lifecheck_user,
-	  wd_lifecheck_password, heartbeat_destination, heartbeat_destination_port,
-	  heartbeat_device
+      wd_authkey, wd_escalation_command, clear_memqcache_on_escalation,
+      wd_lifecheck_method, wd_heartbeat_port, wd_heartbeat_keepalive,
+      wd_heartbeat_deadtime wd_lifecheck_dbname, wd_lifecheck_user,
+      wd_lifecheck_password, heartbeat_destination, heartbeat_destination_port,
+      heartbeat_device
 
-	- Add a watchdog statuse view in status page  (Nozomi Anzai, Yugo Nagata)
-	 
-	  This show watchdog statuses of pgpool-IIs and the virtual IP etc. when
-	  watchdog is enabled.
+    - Add a watchdog statuse view in status page  (Nozomi Anzai, Yugo Nagata)
+     
+      This show watchdog statuses of pgpool-IIs and the virtual IP etc. when
+      watchdog is enabled.
 
-	- Add functionality to stop/reload/restart PostgreSQL from GUI
-	  (Nozomi Anzai)
+    - Add functionality to stop/reload/restart PostgreSQL from GUI
+      (Nozomi Anzai)
 
-	  pgpool_pgctl function need to be installed in the backends. This function
-	  is a new feature of pgpool-II 3.3 provided by pgpool_recovery extension.
-	  In addition, a superuser whose name is same as the pgpoolAdmin's login user
-	  also must exists in the backend.
+      pgpool_pgctl function need to be installed in the backends. This function
+      is a new feature of pgpool-II 3.3 provided by pgpool_recovery extension.
+      In addition, a superuser whose name is same as the pgpoolAdmin's login user
+      also must exists in the backend.
 
     - Add functionality to add/remove a backend from GUI (Nozomi Anzai)
 
     - Show the hostname on which pgpoolAdmin is working in status page
-	  (Andrew Bruce, Nozomi Anzai)
+      (Andrew Bruce, Nozomi Anzai)
 
     - Add fuctionality to show limited lines in log view  (Yugo Nagata)
 
   ** Bug fixes
 
     - Fix to not write deprecated parmeters to when updating pgpool.conf 
-	  (Yugo Nagata)
+      (Yugo Nagata)
 
 ===============================================================================
 pgpoolAdmin 3.2
