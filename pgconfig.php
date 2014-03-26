@@ -19,7 +19,7 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2013 PgPool Global Development Group
+ * @copyright  2003-2014 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
@@ -746,7 +746,7 @@ function doCheck()
 
             // backend_hostname
             $result = checkString($configValue['backend_hostname'][$i],
-                                  $pgpoolConfigBackendParam['backend_hostname']['regexp']);
+                                  $pgpoolConfigBackendParam['backend_hostname']);
             if (!$result) {
                 $error['backend_hostname'][$i] = TRUE;
             }
@@ -769,7 +769,7 @@ function doCheck()
 
             // backend_data_directory
             $result = checkString($configValue['backend_data_directory'][$i],
-                                  $pgpoolConfigBackendParam['backend_data_directory']['regexp']);
+                                  $pgpoolConfigBackendParam['backend_data_directory']);
             if (!$result) {
                 $error['backend_data_directory'][$i] = TRUE;
             }
@@ -777,7 +777,7 @@ function doCheck()
             // backend_flag
             if (paramExists('backend_flag')) {
                 $result = checkString($configValue['backend_flag'][$i],
-                                      $pgpoolConfigBackendParam['backend_flag']['regexp']);
+                                      $pgpoolConfigBackendParam['backend_flag']);
                 if (!$result) {
                     $error['backend_flag'][$i] = TRUE;
                 }
@@ -799,7 +799,7 @@ function doCheck()
 
             // heartbeat_destination
             $result = checkString($configValue['heartbeat_destination'][$i],
-                                  $pgpoolConfigHbDestinationParam['heartbeat_destination']['regexp']);
+                                  $pgpoolConfigHbDestinationParam['heartbeat_destination']);
             if (!$result) {
                 $error['heartbeat_destination'][$i] = TRUE;
             }
@@ -814,7 +814,7 @@ function doCheck()
 
             // heartbeat_device
             $result = checkString($configValue['heartbeat_device'][$i],
-                                  $pgpoolConfigHbDestinationParam['heartbeat_device']['regexp']);
+                                  $pgpoolConfigHbDestinationParam['heartbeat_device']);
             if (!$result) {
                 $error['heartbeat_device'][$i] = TRUE;
             }
@@ -835,7 +835,7 @@ function doCheck()
 
             // other_pgpool_hostname
             $result = checkString($configValue['other_pgpool_hostname'][$i],
-                                  $pgpoolConfigWdOtherParam['other_pgpool_hostname']['regexp']);
+                                  $pgpoolConfigWdOtherParam['other_pgpool_hostname']);
             if (!$result) {
                 $error['other_pgpool_hostname'][$i] = TRUE;
             }
