@@ -72,8 +72,8 @@ $message = array(
                                       ' giving up and initiating failover',
     'descHealth_check_retry_delay' => 'The amount of time (in seconds) to sleep between failed health check retries',
     'descIfconfig_path' => 'The path of a command to switch the IP address',
-    'descIf_down_cmd' => 'The command to bring up the virtual IP',
-    'descIf_up_cmd' => 'The command to bring down the virtual IP',
+    'descIf_down_cmd' => 'The command to bring down the virtual IP',
+    'descIf_up_cmd' => 'The command to bring up the virtual IP',
     'descIgnore_leading_white_space' => 'If true, ignore leading white spaces of each query while pgpool judges '.
                                         'if the query is a SELECT so that it can be load balanced',
     'descInsert_lock' => ' If you replicate a table having SERIAL data type column, '.
