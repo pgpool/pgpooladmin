@@ -1,5 +1,4 @@
 <?php
-
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
 /**
@@ -68,6 +67,12 @@ $key = 'socket_dir';
 $pgpoolConfigParam[$key]['type'] = 'C';
 $pgpoolConfigParam[$key]['default'] = '/tmp';
 $pgpoolConfigParam[$key]['regexp'] = $dirreg;
+
+$key = 'listen_backlog_multiplier';
+$pgpoolConfigParam[$key]['type'] = 'N';
+$pgpoolConfigParam[$key]['default'] = 2;
+$pgpoolConfigParam[$key]['max'] = NUM_MAX;
+$pgpoolConfigParam[$key]['min'] = 1;
 
 # - pgpool Communication Manager Connection Settings -
 
@@ -336,6 +341,20 @@ $pgpoolConfigParam[$key]['type'] = 'C';
 $pgpoolConfigParam[$key]['default'] = '';
 $pgpoolConfigParam[$key]['regexp'] = $anyelse;
 
+$key = 'database_redirect_preference_list';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = '';
+$pgpoolConfigParam[$key]['regexp'] = $anyelse;
+
+$key = 'app_name_redirect_preference_list';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = '';
+$pgpoolConfigParam[$key]['regexp'] = $anyelse;
+
+$key = 'allow_sql_comments';
+$pgpoolConfigParam[$key]['type'] = 'B';
+$pgpoolConfigParam[$key]['default'] = 'off';
+
 #------------------------------------------------------------------------------
 # MASTER/SLAVE MODE
 #------------------------------------------------------------------------------
@@ -464,6 +483,12 @@ $pgpoolConfigParam[$key]['max'] = NUM_MAX;
 $key = 'health_check_retry_delay';
 $pgpoolConfigParam[$key]['type'] = 'N';
 $pgpoolConfigParam[$key]['default'] = 1;
+$pgpoolConfigParam[$key]['min'] = 0;
+$pgpoolConfigParam[$key]['max'] = NUM_MAX;
+
+$key = 'connect_timeout';
+$pgpoolConfigParam[$key]['type'] = 'N';
+$pgpoolConfigParam[$key]['default'] = 10000;
 $pgpoolConfigParam[$key]['min'] = 0;
 $pgpoolConfigParam[$key]['max'] = NUM_MAX;
 
@@ -706,7 +731,7 @@ $pgpoolConfigWdOtherParam[$key]['min'] = 1024;
 $pgpoolConfigWdOtherParam[$key]['max'] = NUM_MAX;
 
 #------------------------------------------------------------------------------
-# ON MEMORY QUERY CACHE
+# IN MEMORY QUERY CACHE
 #------------------------------------------------------------------------------
 
 $key = 'memory_cache_enabled';
@@ -795,6 +820,10 @@ $pgpoolConfigParam[$key]['min'] = 0;
 $pgpoolConfigParam[$key]['max'] = NUM_MAX;
 
 $key = 'check_temp_table';
+$pgpoolConfigParam[$key]['type'] = 'B';
+$pgpoolConfigParam[$key]['default'] = 'on';
+
+$key = 'check_unlogged_table';
 $pgpoolConfigParam[$key]['type'] = 'B';
 $pgpoolConfigParam[$key]['default'] = 'on';
 

@@ -30,7 +30,7 @@ error_reporting(E_ALL);
 
 function versions()
 {
-    return array('3.3', '3.2', '3.1', '3.0',
+    return array('3.4', '3.3', '3.2', '3.1', '3.0',
                  '2.3', '2.2', '2.1', '2.0');
 }
 
@@ -562,6 +562,16 @@ function paramExists($param)
     switch ($param) {
         /* Add */
 
+        // params added in 3.4
+        case 'listen_backlog_multiplier':
+        case 'connect_timeout':
+        case 'allow_sql_comments':
+        case 'check_unlogged_table':
+        case 'database_redirect_preference_list':
+        case 'app_name_redirect_preference_list':
+            $add_version = 3.4;
+            break;
+
         // params added in 3.3
         case 'clear_memqcache_on_escalation':
         case 'heartbeat_destination':
@@ -697,7 +707,7 @@ function isSuperUser($user_name)
 
     $result = pg_query($conn, "SELECT usesuper FROM pg_user WHERE usename = '{$user_name}'");
 
-   if (!pg_result_status($result) == PGSQL_TUPLES_OK) {
+    if (!pg_result_status($result) == PGSQL_TUPLES_OK) {
         @pg_close($conn);
         return NULL;
     }

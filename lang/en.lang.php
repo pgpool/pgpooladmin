@@ -27,6 +27,8 @@ $message = array(
     'lang' => 'en',
     'strLang' => 'English',
 
+    'descAllow_sql_comments' => 'If on, ignore SQL comments when judging if load balance or query cache is possible',
+    'descApp_name_redirect_preference_list' => '"application name:node id" pairs to specify the node id when the application is used',
     'descArping_path' => 'The path of a command to send an ARP request after the virtual IP is switched',
     'descArping_cmd' => 'The ommand to send an ARP request after the virtual IP is switched',
     'descAuthentication_timeout' => 'Timeout in seconds to complete client authentication',
@@ -39,6 +41,7 @@ $message = array(
     'descDelegate_IP' => 'The virtual IP address (VIP) of pgpool-II ',
     'descBlack_function_list' => 'Comma separated functions which write to database',
     'descBlack_memqcache_table_list' => 'Comma separated list of table names not to be cached',
+    'descCheck_temp_table' => 'If on, enable temporary table check in SELECT statements',
     'descChild_life_time' => 'Life of an idle child process in seconds',
     'descChild_max_connections' => 'If child_max_connections connections were received, child exits',
     'descClear_memqcache_on_escalation' => 'If on, watchdog clears all the query cache in the shared memory when pgpool-II escaltes to active',
@@ -47,7 +50,8 @@ $message = array(
                                            'from a client in on line recovery',
     'descConnection_cache' => 'If true, cache connections to PostgreSQL',
     'descConnection_life_time' => 'Life time for each idle connection in seconds',
-    'descCheck_temp_table' => 'If on, enable temporary table check in SELECT statements',
+    'desCconnect_timeout' => 'Timeout value in milliseconds before giving up connecting to backend using connect() system call',
+    'descDatabase_redirect_preference_list' => '"database name:node id" pairs to specify the node id when connecting to the database',
     'descDelay_threshold' => 'If the standby server delays more than delay_threshold, '.
                              'any query goes to the primary only',
     'descDebug_level' => 'Debug message verbosity level',
@@ -79,6 +83,7 @@ $message = array(
     'descInsert_lock' => ' If you replicate a table having SERIAL data type column, '.
                          'sometimes the serial value does not match between servers',
     'descListen_addresses' => 'Specifies the addresses to listen on for TCP/IP connections',
+    'descListen_backlog_multiplier' => 'The number of preforked pgpool-II server processes',
     'descLoad_balance_mode' => 'Perform load balancing for SELECT',
     'descLobj_lock_table' => 'Specifies table name lock used when rewriting lo_create in replication mode',
     'descLog_destination' => 'Where to log',

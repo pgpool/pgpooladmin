@@ -128,7 +128,7 @@ function delHeartbeatDestination(num){
       <li><a href="#watchdog">Watchdog</a></li>
       {/if}
       {if hasMemqcache()}
-      <li><a href="#memqcache">On Memory Query Cache</a></li>
+      <li><a href="#memqcache">In Memory Query Cache</a></li>
       {/if}
       {if paramExists('relcache_expire')}
       <li><a href="#others">Others</a></li>
@@ -184,6 +184,17 @@ function delHeartbeatDestination(num){
         <td><input type="text" name="socket_dir" value="{$params.socket_dir|escape}"/></td>
         </tr>
 
+        {if paramExists('listen_backlog_multiplier')}
+           <tr>
+           <th{if isset($error.listen_backlog_multiplier)} class="error"{/if}>
+           <label>{$message.descListen_backlog_multiplier|escape}</label>
+           <br />listen_backlog_multiplier (integer) *</th>
+           <td><input type="text" name="listen_backlog_multiplier"
+                value="{$params.listen_backlog_multiplier|escape}"/></td>
+           </tr>
+        {/if}
+
+        <tr>
         {if paramExists('backend_socket_dir')}
             <tr>
             <th{if isset($error.backend_socket_dir)} class="error"{/if}>
@@ -839,7 +850,9 @@ function delHeartbeatDestination(num){
             <br />white_function_list (string)</th>
             <td><input type="text" name="white_function_list" value="{$params.white_function_list|escape}"/></td>
             </tr>
+        {/if}
 
+        {if paramExists('black_function_list')}
             <tr>
             <th{if isset($error.black_function_list)} class="error"{/if}>
             <label>{$message.descBlack_function_list|escape}</label>
@@ -848,6 +861,36 @@ function delHeartbeatDestination(num){
             </tr>
         {/if}
 
+        {if paramExists('database_redirect_preference_list')}
+            <tr>
+            <th{if isset($error.database_redirect_preference_list)} class="error"{/if}>
+            <label>{$message.descDatabase_redirect_preference_list|escape}</label>
+            <br />database_redirect_preference_list(string)</th>
+            <td><input type="text" name="database_redirect_preference_list"
+                 value="{$params.database_redirect_preference_list|escape}"/></td>
+            </tr>
+        {/if}
+
+        {if paramExists('app_name_redirect_preference_list')}
+            <tr>
+            <th{if isset($error.app_name_redirect_preference_list)} class="error"{/if}>
+            <label>{$message.descApp_name_redirect_preference_list|escape}</label>
+            <br />app_name_redirect_preference_list (string)</th>
+            <td><input type="text" name="app_name_redirect_preference_list"
+                 value="{$params.app_name_redirect_preference_list|escape}"/></td>
+            </tr>
+        {/if}
+
+        {if paramExists('allow_sql_comments')}
+            <tr>
+            <th{if isset($error.allow_sql_comments)} class="error"{/if}>
+            <label>{$message.descAllow_sql_comments|escape}</label>
+            <br />allow_sql_comments (bool) *</th>
+            <td><input type="checkbox" name="allow_sql_comments"
+                id="allow_sql_comments" value="true"
+                {if $params.allow_sql_comments == 'on'}checked="checked"{/if} /></td>
+            </tr>
+        {/if}
       </tbody>
     </table>
 
@@ -1103,7 +1146,9 @@ function delHeartbeatDestination(num){
             <br />health_check_max_retries (integer)</th>
             <td><input type="text" name="health_check_max_retries" value="{$params.health_check_max_retries|escape}"/></td>
             </tr>
+        {/if}
 
+        {if paramExists('health_check_retry_delay')}
             <tr>
             <th{if isset($error.health_check_retry_delay)} class="error"{/if}>
             <label>{$message.descHealth_check_retry_delay|escape}</label>
@@ -1111,6 +1156,16 @@ function delHeartbeatDestination(num){
             <td><input type="text" name="health_check_retry_delay" value="{$params.health_check_retry_delay|escape}"/></td>
             </tr>
         {/if}
+
+        {if paramExists('connect_timeout')}
+            <tr>
+            <th{if isset($error.connect_timeout)} class="error"{/if}>
+            <label>{$message.desCconnect_timeout|escape}</label>
+            <br />connect_timeout (integer)</th>
+            <td><input type="text" name="connect_timeout" value="{$params.connect_timeout|escape}"/></td>
+            </tr>
+        {/if}
+      </tbody>
       </tbody>
     </table>
 
@@ -1590,9 +1645,9 @@ function delHeartbeatDestination(num){
 
     {if hasMemqcache()}
     {* --------------------------------------------------------------------- *
-     * On Memory Query Cache                                                 *
+     * In Memory Query Cache                                                 *
      * --------------------------------------------------------------------- *}
-    <h3><a name="memqcache" id="memqcache">On Memory Query Cache</a></h3>
+    <h3><a name="memqcache" id="memqcache">In Memory Query Cache</a></h3>
 
     <table>
       <thead>

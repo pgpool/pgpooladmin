@@ -127,7 +127,7 @@ $tpl->assign('msgStopPgpool', $message['msgStopPgpool']);
 $tpl->assign('nodeCount',     $nodeCount);
 $tpl->assign('has_not_loaded_node', $has_not_loaded_node);
 $tpl->assign('pgpoolIsRunning', $is_pgpool_running);
-$tpl->assign('is_superuser',   isSuperUser($_SESSION[SESSION_LOGIN_USER]))
+$tpl->assign('is_superuser',   isSuperUser($_SESSION[SESSION_LOGIN_USER]));
 
 // Set params
 $configValue = readConfigParams('recovery_1st_stage');
