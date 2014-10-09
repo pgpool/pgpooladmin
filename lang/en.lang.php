@@ -48,6 +48,7 @@ $message = array(
     'descClient_idle_limit' => 'Timeout in seconds while waiting for a query from a client',
     'descClient_idle_limit_in_recovery' => 'Timeout in seconds while waiting for a query '.
                                            'from a client in on line recovery',
+    'descClient_min_messages' => 'Which minimum message levels are sent to the client',
     'descConnection_cache' => 'If true, cache connections to PostgreSQL',
     'descConnection_life_time' => 'Life time for each idle connection in seconds',
     'desCconnect_timeout' => 'Timeout value in milliseconds before giving up connecting to backend using connect() system call',
@@ -86,8 +87,11 @@ $message = array(
     'descListen_backlog_multiplier' => 'The number of preforked pgpool-II server processes',
     'descLoad_balance_mode' => 'Perform load balancing for SELECT',
     'descLobj_lock_table' => 'Specifies table name lock used when rewriting lo_create in replication mode',
-    'descLog_destination' => 'Where to log',
     'descLog_connections' => 'If true, incoming connections will be printed to the log',
+    'descLog_destination' => 'Where to log',
+    'descLog_error_verbosity' => 'The amount of detail emitted for each message that is logged',
+    'descLog_line_prefix' => 'printf-style string that is output at the beginning of each log line',
+    'descLog_min_messages' => 'Which minimum message levels are emitted to log',
     'descLog_standby_delay' => 'Frequency to log the standby delay',
     'descLog_hostname' => 'If true, client\'s hostname will be shown in ps status and in a connection log '.
                           'if log_connections is true',

@@ -559,16 +559,21 @@ function hasPcpPromote()
 function paramExists($param)
 {
     $add_version = $del_version = 0;
+
+    /* Add */
     switch ($param) {
-        /* Add */
 
         // params added in 3.4
         case 'listen_backlog_multiplier':
-        case 'connect_timeout':
-        case 'allow_sql_comments':
-        case 'check_unlogged_table':
-        case 'database_redirect_preference_list':
         case 'app_name_redirect_preference_list':
+        case 'database_redirect_preference_list':
+        case 'allow_sql_comments':
+        case 'log_error_verbosity':
+        case 'client_min_messages':
+        case 'log_min_messages':
+        case 'log_line_prefix':
+        case 'connect_timeout':
+        case 'check_unlogged_table':
             $add_version = 3.4;
             break;
 
@@ -668,8 +673,21 @@ function paramExists($param)
         case 'client_idle_limit_in_recovery':
             $add_version = 2.2;
             break;
+    }
 
-        /* Delete */
+    /* Delete */
+    switch ($param) {
+        // params deleted in 3.4
+        case 'print_timestamp':
+        case 'parallel_mode':
+        case 'system_db_hostname':
+        case 'system_db_port':
+        case 'system_db_dbname':
+        case 'system_db_schema':
+        case 'system_db_user':
+        case 'system_db_password':
+            $del_version = 3.4;
+            break;
 
         // params deleted in 3.2
         case 'enable_query_cache':

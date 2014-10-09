@@ -216,6 +216,11 @@ $pgpoolConfigParam[$key]['regexp'] = selectreg(array('stderr', 'syslog'));
 
 # - What to log -
 
+$key = 'log_line_prefix';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = '';
+$pgpoolConfigParam[$key]['regexp'] = $anyelse;
+
 $key = 'print_timestamp';
 $pgpoolConfigParam[$key]['type'] = 'B';
 $pgpoolConfigParam[$key]['default'] = 'on';
@@ -260,6 +265,23 @@ $pgpoolConfigParam[$key]['type'] = 'N';
 $pgpoolConfigParam[$key]['default'] = '0';
 $pgpoolConfigParam[$key]['min'] = 0;
 $pgpoolConfigParam[$key]['max'] = NUM_MAX;
+
+$key = 'log_error_verbosity';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = 'DEFAULT';
+$pgpoolConfigParam[$key]['regexp'] = selectreg(array('TERSE', 'DEFAULT', 'VERBOSE'));
+
+$key = 'client_min_messages';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = 'notice';
+$pgpoolConfigParam[$key]['regexp'] = selectreg(array('debug5', 'debug4', 'debug3', 'debug2', 'debug1',
+                                                     'log', 'notice', 'warning', 'error'));
+
+$key = 'log_min_messages';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = 'warning';
+$pgpoolConfigParam[$key]['regexp'] = selectreg(array('debug5', 'debug4', 'debug3', 'debug2', 'debug1',
+                                                     'info', 'notice', 'warning', 'error', 'log', 'fatal', 'panic'));
 
 #------------------------------------------------------------------------------
 # FILE LOCATIONS

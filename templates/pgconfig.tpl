@@ -119,8 +119,10 @@ function delHeartbeatDestination(num){
       <li><a href="#replication_mode">Replication Mode</a></li>
       <li><a href="#load_balancing_mode">Load Balancing Mode</a></li>
       <li><a href="#master_slave_mode">Mater/Slave Mode</a></li>
+      {if paramExists('parallel_mode')}
       <li><a href="#parallel_mode">{if hasMemqcache()}Parallel Mode
       {else}Parallel Mode and Query Cache{/if}</a></li>
+      {/if}
       <li><a href="#health-check">Health Check</a></li>
       <li><a href="#failover">Failover and Failback</a></li>
       <li><a href="#recovery">Online Recovery</a></li>
@@ -537,16 +539,27 @@ function delHeartbeatDestination(num){
 
         <tr><th class="category" colspan="2">What to log</th></tr>
 
-        <tr>
-        <th{if isset($error.print_timestamp)} class="error"{/if}>
-        <label>{$message.descPrint_timestamp|escape}</label>
-        <br />print_timestamp (bool) *</th>
-        {if $params.print_timestamp == 'on'}
-        <td><input type="checkbox" name="print_timestamp"
-             id="print_timestamp" value="true"
-             {if $params.print_timestamp == 'on'}checked="checked"{/if} /></td>
+        {if paramExists('log_line_prefix')}
+            <tr>
+            {if isset($error.log_line_prefix)}<th class="error">{else}<th>{/if}
+            <label>{$message.descLog_line_prefix|escape}</label>
+            <br />log_line_prefix (string)</th>
+            <td><input type="text" name="log_line_prefix" value="{$params.log_line_prefix|escape}"/></td>
+            </tr>
         {/if}
-        </tr>
+
+        {if paramExists('print_timestamp')}
+            <tr>
+            <th{if isset($error.print_timestamp)} class="error"{/if}>
+            <label>{$message.descPrint_timestamp|escape}</label>
+            <br />print_timestamp (bool) *</th>
+            {if $params.print_timestamp == 'on'}
+            <td><input type="checkbox" name="print_timestamp"
+                 id="print_timestamp" value="true"
+                 {if $params.print_timestamp == 'on'}checked="checked"{/if} /></td>
+            {/if}
+            </tr>
+        {/if}
 
         <tr>
         <th{if isset($error.log_connections)} class="error"{/if}>
@@ -623,14 +636,68 @@ function delHeartbeatDestination(num){
 
         {* --------------------------------------------------------------------- *}
 
-        {if paramExists('debug_level')}
-            <tr><th class="category" colspan="2">Debug</th></tr>
+        <tr><th class="category" colspan="2">Debug</th></tr>
 
+        {if paramExists('debug_level')}
             <tr>
             <th{if isset($error.debug_level)} class="error"{/if}>
             <label>{$message.descDebug_level|escape}</label>
             <br />debug_level (integer)</th>
             <td><input type="text" name="debug_level" value="{$params.debug_level|escape}"/></td>
+            </tr>
+        {/if}
+
+        {if paramExists('log_error_verbosity')}
+            <tr>
+            <th{if isset($error.log_error_verbosity)} class="error"{/if}>
+            <label>{$message.descLog_error_verbosity|escape}</label>
+            <br />log_error_verbosity (string)</th>
+            <td><select name="log_error_verbosity" id="log_error_verbosity">
+                <option value="TERSE" {if $params.log_error_verbosity == 'TERSE'}selected{/if}>TERSE</option>
+                <option value="DEFAULT" {if $params.log_error_verbosity == 'DEFAULT'}selected{/if}>DEFAULT</option>
+                <option value="VERBOSE" {if $params.log_error_verbosity == 'VERBOSE'}selected{/if}>VERBOSE</option>
+                </select></td>
+            </tr>
+        {/if}
+
+        {if paramExists('client_min_messages')}
+            <tr>
+            <th{if isset($error.client_min_messages)} class="error"{/if}>
+            <label>{$message.descClient_min_messages|escape}</label>
+            <br />client_min_messages (string)</th>
+            <td><select name="client_min_messages" id="client_min_messages">
+                <option value="debug5" {if $params.client_min_messages == 'debug5'}selected{/if}>debug5</option>
+                <option value="debug4" {if $params.client_min_messages == 'debug4'}selected{/if}>debug4</option>
+                <option value="debug3" {if $params.client_min_messages == 'debug3'}selected{/if}>debug3</option>
+                <option value="debug2" {if $params.client_min_messages == 'debug2'}selected{/if}>debug2</option>
+                <option value="debug1" {if $params.client_min_messages == 'debug1'}selected{/if}>debug1</option>
+                <option value="log" {if $params.client_min_messages == 'log'}selected{/if}>log</option>
+                <option value="notice" {if $params.client_min_messages == 'notice'}selected{/if}>notice</option>
+                <option value="warning" {if $params.client_min_messages == 'warning'}selected{/if}>warning</option>
+                <option value="error" {if $params.client_min_messages == 'error'}selected{/if}>error</option>
+                </select></td>
+            </tr>
+        {/if}
+
+        {if paramExists('log_min_messages')}
+            <tr>
+            <th{if isset($error.log_min_messages)} class="error"{/if}>
+            <label>{$message.descLog_min_messages|escape}</label>
+            <br />log_min_messages (string)</th>
+            <td><select name="log_min_messages" id="log_min_messages">
+                <option value="debug5" {if $params.log_min_messages == 'debug5'}selected{/if}>debug5</option>
+                <option value="debug4" {if $params.log_min_messages == 'debug4'}selected{/if}>debug4</option>
+                <option value="debug3" {if $params.log_min_messages == 'debug3'}selected{/if}>debug3</option>
+                <option value="debug2" {if $params.log_min_messages == 'debug2'}selected{/if}>debug2</option>
+                <option value="debug1" {if $params.log_min_messages == 'debug1'}selected{/if}>debug1</option>
+                <option value="info" {if $params.log_min_messages == 'info'}selected{/if}>info</option>
+                <option value="notice" {if $params.log_min_messages == 'notice'}selected{/if}>notice</option>
+                <option value="warning" {if $params.log_min_messages == 'warning'}selected{/if}>warning</option>
+                <option value="error" {if $params.log_min_messages == 'error'}selected{/if}>error</option>
+                <option value="log" {if $params.log_min_messages == 'log'}selected{/if}>log</option>
+                <option value="fatal" {if $params.log_min_messages == 'fatal'}selected{/if}>fatal</option>
+                <option value="panic" {if $params.log_min_messages == 'panic'}selected{/if}>panic</option>
+                </select></td>
             </tr>
         {/if}
 
@@ -994,6 +1061,7 @@ function delHeartbeatDestination(num){
     {* --------------------------------------------------------------------- *
      * Parallel Mode                                                        *
      * --------------------------------------------------------------------- *}
+    {if paramExists('parallel_mode')}
     <h3><a name="parallel_mode" id="parallel_mode">{if hasMemqcache()}Parallel Mode{else}Parallel Mode and Query Cache{/if}</a></h3>
 
     <table>
@@ -1089,6 +1157,7 @@ function delHeartbeatDestination(num){
 
       </tbody>
     </table>
+    {/if}
 
     {* --------------------------------------------------------------------- *
      * Health Check                                                          *
