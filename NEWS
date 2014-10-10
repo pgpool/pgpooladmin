@@ -1,4 +1,27 @@
 ===============================================================================
+pgpoolAdmin 3.4
+===============================================================================
+
+* Version 3.4 2014/10/xx
+
+  pgpoolAdmin 3.4 adopts pgpool-II 3.4.
+
+  ** New features
+
+    - Add new parameters for pgpool-II 3.4 (Nozomi Anzai)
+
+      - new:
+        listen_backlog_multiplier, connect_timeout, allow_sql_comments,
+        check_unlogged_table, database_redirect_preference_list,
+        app_name_redirect_preference_list, log_line_prefix, log_error_verbosity,
+        client_min_messages, log_min_messages
+
+      - deleted:
+        parallel_mode, system_db_hostname, system_db_port,
+        system_db_dbname, system_db_schema, system_db_user,
+        system_db_password, print_timestamp
+
+===============================================================================
 pgpoolAdmin 3.3
 ===============================================================================
 
@@ -43,7 +66,7 @@ pgpoolAdmin 3.3
       heartbeat_device
 
     - Add a watchdog statuse view in status page  (Nozomi Anzai, Yugo Nagata)
-     
+
       This show watchdog statuses of pgpool-IIs and the virtual IP etc. when
       watchdog is enabled.
 
@@ -64,7 +87,7 @@ pgpoolAdmin 3.3
 
   ** Bug fixes
 
-    - Fix to not write deprecated parmeters to when updating pgpool.conf 
+    - Fix to not write deprecated parmeters to when updating pgpool.conf
       (Yugo Nagata)
 
 ===============================================================================
