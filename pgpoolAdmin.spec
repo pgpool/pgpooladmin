@@ -1,3 +1,11 @@
+# How to build RPM:
+#   rpmbuild -ba pgpoolAdmin.spec --define="dist .pgdg"
+#
+# expecting RPM name are:
+#   pgpoolAdmin-{version}.pgdg.noarch.rpm
+#   pgpoolAdmin-{version}.pgdg.src.rpm
+
+rpmbuild -ba pgpoolAdmin.spec --define="dist .pgdg"
 Summary:     PgpoolAdmin - web-based pgpool administration
 Name:        pgpoolAdmin
 Version:     3.4beta2
