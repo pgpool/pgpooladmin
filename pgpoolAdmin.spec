@@ -8,7 +8,7 @@
 rpmbuild -ba pgpoolAdmin.spec --define="dist .pgdg"
 Summary:     PgpoolAdmin - web-based pgpool administration
 Name:        pgpoolAdmin
-Version:     3.4beta2
+Version:     3.4rc1
 Release:     1%{?dist}
 License:     BSD
 Group:       Applications/Databases
