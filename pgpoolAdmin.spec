@@ -1,12 +1,12 @@
 # How to build RPM:
-#   rpmbuild -ba pgpoolAdmin.spec --define="dist .pgdg"
+#   rpmbuild -ba pgpoolAdmin.spec --define="dist .pgdg" --define="pgpooladmin_version 3.4rc1"
 #
 # expecting RPM name are:
 #   pgpoolAdmin-{version}.pgdg.noarch.rpm
 #   pgpoolAdmin-{version}.pgdg.src.rpm
 Summary:     PgpoolAdmin - web-based pgpool administration
 Name:        pgpoolAdmin
-Version:     3.4rc1
+Version:     %{pgpooladmin_version}
 Release:     1%{?dist}
 License:     BSD
 Group:       Applications/Databases
