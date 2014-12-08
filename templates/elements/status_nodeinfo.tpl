@@ -158,5 +158,5 @@
 <p>
 [ healthcheck ]
 every {$params.health_check_period} seconds /
-retry upto {$params.health_check_max_retries} counts
+retry up to {$params.health_check_max_retries} counts
 </p>

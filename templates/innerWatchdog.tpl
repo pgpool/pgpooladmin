@@ -60,7 +60,7 @@
     every {$params.wd_interval} seconds /
     {if $params.wd_lifecheck_method == 'query'}
     by query "{$params.wd_lifecheck_query}" /
-    retry upto {$params.wd_life_point} counts
+    retry up to {$params.wd_life_point} counts
     {else}
     by heartbeat /
     keepalive {$params.wd_heartbeat_keepalive} seconds /
