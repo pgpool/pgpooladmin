@@ -23,6 +23,7 @@ Buildarch:   noarch
 %define      _pgpoolAdmindir    /var/www/html/%{name}
 
 #Patch1:       pgmgt.conf.php.patch
+Patch2:      pgpoolAdmin.patch
 
 %description
 The pgpool Administration Tool is management tool of pgpool-II. It is
@@ -31,6 +32,7 @@ possible to monitor, start, stop pgpool and change settings of pgpool-II.
 %prep
 %setup -q -n %{name}-%{version}
 #%patch1 -p1
+%patch2 -p1
 %build
 
 %install
@@ -85,6 +87,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Jan 27 2015 Nozomi Anzai <anzai@sraoss.co.jp> 3.4.1-1
+- Add pgpoolAdmin.patch as patch2
+
 * Wed Mar 13 2013 Nozomi Anzai <anzai@sraoss.co.jp> 3.2.2-1
 - Update to 3.2.2
 - Change directory to install: /usr/share -> /var/www/html
