@@ -41,6 +41,13 @@ if (isset($_POST['action'])) {
     $action = $_POST['action'];
 }
 
+// check version
+if (isset($_POST['version']) && $_POST['version']) {
+    $version = $_POST['version'];
+} else {
+    $version = NULL;
+}
+
 // check pgpool.conf
 if (isset($_POST['pgpool2_config_file']) && $_POST['pgpool2_config_file']) {
     $pgpool2_config_file = $_POST['pgpool2_config_file'];
@@ -279,7 +286,8 @@ if (!$error && $action == 'next') {
     <td><select name="version" />
         <?php
         foreach (versions() as $v) {
-            echo '<option value="'. $v. '">'. $v. '</optgroup>';
+            printf('<option value="%s"%s>%s</optgroup>',
+                   $v, ($v == $version) ? ' selected' : NULL, $v);
         }
         ?>
         </select>
