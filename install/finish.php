@@ -47,7 +47,9 @@ $installDir = dirname(__FILE__);
   <h2>Welcome to pgpool-II Administration Tool</h2>
   <h3><?php echo $message['msgCongratulations'] ?></h3>
   <?php echo $installDir . $message['msgDeleteInstallDir'] ?>
-  <p><a href='../index.php'><?php echo $message['msgToTop'] ?></a></p>
+  <p>
+    <input type="submit" onclick="window.location.href='../index.php'" value="<?php echo $message['msgToTop'] ?>" />
+  </p>
 </div>
     <div id="footer">
       <address>Version <?php echo $version;?><br />

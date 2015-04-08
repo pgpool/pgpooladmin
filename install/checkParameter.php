@@ -195,6 +195,12 @@ if (isset($_POST['pcp_refreshTime']) && $_POST['pcp_refreshTime']) {
     $pcp_refreshTime =  _PGPOOL2_STATUS_REFRESH_TIME;
 }
 
+$msgPhpPgsql= '';
+if (!extension_loaded('pgsql')){
+    $msgPhpPgsql = 'not installed';
+    $error = TRUE;
+}
+
 /* --------------------------------------------------------------------- */
 /* Write pgmt.conf.php                                                   */
 /* --------------------------------------------------------------------- */
@@ -292,6 +298,21 @@ if (!$error && $action == 'next') {
         ?>
         </select>
     <?php showResult($msgCmdM); ?>
+    </td>
+  </tr>
+  </table>
+
+<?php
+/* --------------------------------------------------------------------- */
+/* Dependencies                                                          */
+/* --------------------------------------------------------------------- */
+?>
+  <h3><?php echo $message['strDependencies'] ?></h3>
+  <table>
+  <tr>
+    <th><label><?php echo $message['strPgPhp'] ?></label></th>
+    <td>
+    <?php showResult($msgPhpPgsql); ?>
     </td>
   </tr>
   </table>
