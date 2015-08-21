@@ -1466,7 +1466,7 @@ function delHeartbeatDestination(num){
         </tr>
 
         {* --------------------------------------------------------------------- *}
-        <tr><th class="category" colspan="4">Behaivor on escalation Setting</th></tr>
+        <tr><th class="category" colspan="4">Behavior on escalation Setting</th></tr>
 
         <tr>
         <th{if isset($error.clear_memqcache_on_escalation)} class="error"{/if} colspan="2">

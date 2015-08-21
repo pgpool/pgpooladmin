@@ -643,7 +643,7 @@ $pgpoolConfigParam[$key]['type'] = 'C';
 $pgpoolConfigParam[$key]['default'] = '';
 $pgpoolConfigParam[$key]['regexp'] = $anyelse;
 
-# Behaivor on escalation
+# Behavior on escalation
 
 $key = 'clear_memqcache_on_escalation';
 $pgpoolConfigParam[$key]['type'] = 'B';
