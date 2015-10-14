@@ -221,11 +221,10 @@ function getWatchdogInfo($i = '')
 {
     global $tpl;
 
-
     $result = execPcp('PCP_WATCHDOG_INFO', $i);
 
     if (!array_key_exists('SUCCESS', $result)) {
-        $errorCode = 'e1003';
+        $errorCode = 'e1013';
         $tpl->assign('errorCode', $errorCode);
         $tpl->display('innerError.tpl');
         exit();

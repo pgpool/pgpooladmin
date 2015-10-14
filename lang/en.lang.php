@@ -388,6 +388,7 @@ $message = array(
     'e1010' => 'pcp_attach_node command error occurred.',
     'e1011' => 'Log file not found.',
     'e1012' => 'pcp_recovery_node command error occurred.',
+    'e1013' => 'pcp_watchdog_info command error occurred.',
     'e2001' => 'Database connection error occurred.',
     'e2002' => 'The error occurred when SELECT was executed',
     'e2003' => 'pgpool.conf not found.',
