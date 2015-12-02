@@ -19,7 +19,7 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2013 PgPool Global Development Group
+ * @copyright  2003-2015 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
@@ -42,6 +42,7 @@ $message = array(
     'descBlack_function_list' => 'Comma separated functions which write to database',
     'descBlack_memqcache_table_list' => 'Comma separated list of table names not to be cached',
     'descCheck_temp_table' => 'If on, enable temporary table check in SELECT statements',
+    'descCheck_unlogged_table' => 'If on, enable unlogged table check in SELECT statements.',
     'descChild_life_time' => 'Life of an idle child process in seconds',
     'descChild_max_connections' => 'If child_max_connections connections were received, child exits',
     'descClear_memqcache_on_escalation' => 'If on, watchdog clears all the query cache in the shared memory when pgpool-II escaltes to active',
@@ -51,7 +52,7 @@ $message = array(
     'descClient_min_messages' => 'Which minimum message levels are sent to the client',
     'descConnection_cache' => 'If true, cache connections to PostgreSQL',
     'descConnection_life_time' => 'Life time for each idle connection in seconds',
-    'desCconnect_timeout' => 'Timeout value in milliseconds before giving up connecting to backend using connect() system call',
+    'descConnect_timeout' => 'Timeout value in milliseconds before giving up connecting to backend using connect() system call',
     'descDatabase_redirect_preference_list' => '"database name:node id" pairs to specify the node id when connecting to the database',
     'descDelay_threshold' => 'If the standby server delays more than delay_threshold, '.
                              'any query goes to the primary only',
@@ -67,6 +68,7 @@ $message = array(
     'descHeartbeat_destination' => 'The destination of heartbeat signals. Specify by hostname or IP address.',
     'descHeartbeat_destination_port' => 'The port number of the destination of heartbeat signals.',
     'descHeartbeat_device' => 'The network device name for sending heartbeat signals',
+    'descHealth_check_database' => 'The database name to perform health check',
     'descHealth_check_period' => 'Specifies the interval for next health checking. 0 means no health checking, '.
                                  '-1 means no wait',
     'descHealth_check_timeout' => 'Pgpool does "health check" periodically to detect PostgreSQL servers down, '.
@@ -123,6 +125,7 @@ $message = array(
     'descPcp_port' => 'The port number where pcp is running on',
     'descPcp_socket_dir' => 'The socket directory pcp could connect',
     'descPcp_timeout' => 'When there is no response in this time from client, it disconnects and stop',
+    'descPcp_listen_addresses' => 'the hostname or IP address, on which pcp process will accept TCP/IP connections.',
     'descPgpool2_hostname' => 'Pgpool2 server name where running on',
     'descPool_passwd' => 'File name of pool_passwd for md5 authentication',
     'descPort' => 'The port number where pgpool is running on',
@@ -139,13 +142,18 @@ $message = array(
     'descReplicate_select' => 'If true, replicate SELECT queries. If false, send only to master',
     'descReplication_timeout' => 'In non strict replication mode, there will be a risk of deadlock. '.
                                  'Timeout in second for monitoring the deadlock',
+    'descSearch_primary_node_timeout' => 'the maximum amount of time in seconds to search'.
+                                         'for a primary node when a failover scenario occurs.',
+    'descSerialize_accept' => 'Whether to serialize accept() call for incoming client connections.',
     'descReset_query_list' => 'Semicolon separated SQL commands to be issued at the end of session',
+    'descSerialize_accept' => 'Whether to serialize accept() call for incoming client connections',
     'descSsl' => 'The frontend connection',
     'descSsl_ca_cert' => 'Path to the SSL private key file',
     'descSsl_ca_cert_dir' => 'Path to the SSL public certificate file',
     'descSsl_cert' => 'Path to the SSL private key file',
     'descSsl_key' => 'Path to the SSL private key file',
     'descSocket_dir' => 'The socket directory pgpool could connect',
+    'descSr_check_database' => 'The database to perform streaming replication delay check',
     'descSr_check_period' => 'Interval between the streaming replication delay checks in seconds.',
     'descSr_check_user' => 'User name to perform streaming replication check',
     'descSr_check_password' => 'Password of the user to perform streaming replication check',
@@ -160,12 +168,19 @@ $message = array(
     'descTrusted_servers' => 'The list of trusted servers to check the up stream connections',
     'descUse_watchdog' => 'Enable watchdog',
     'descWd_authkey' => 'The authentication key used in watchdog communication',
-    'descWd_escalation_command' => 'The command which will be executed on the new active when pgpool-II escaltes to active',
-    'descWd_heartbeat_deadtime' => 'If there are no heartbeat signal for the period specified by this option, watchdog regards it as failure of the remote pgpool-II.',
+    'descWd_de_escalation_command' => 'Watchdog executes this command on the master pgpool-II watchdog node '.
+                                      'when that node resigns from the master node responsibilities.',
+    'descWd_escalation_command' => 'The command which will be executed on the new active '.
+                                   'when pgpool-II escaltes to active',
+    'descWd_heartbeat_deadtime' => 'If there are no heartbeat signal for the period '.
+                                   'specified by this option, watchdog regards it '.
+                                   'as failure of the remote pgpool-II.',
     'descWd_heartbeat_keepalive' => 'The interval time of sending heartbeat signals in seconds',
     'descWd_heartbeat_port' => 'The port number to receive heartbeat signals',
     'descWd_hostname' => 'The hostname or IP address in which pgpool-II works',
     'descWd_interval' => 'The interval between life checks of pgpool-II in second',
+    'descWd_ipc_socket_dir' => 'The directory where the UNIX domain socket '.
+                               'accepting pgpool-II watchdog IPC connections will be created.',
     'descWd_life_point' => 'The times to retry a failed life check of pgpool-II',
     'descWd_lifecheck_dbname' => 'The database name connected for checking pgpool-II',
     'descWd_lifecheck_method' => 'The method of life check',
@@ -173,6 +188,8 @@ $message = array(
     'descWd_lifecheck_password' => 'The user name to check pgpool-II',
     'descWd_lifecheck_user' => 'The password of the user to check pgpool-II',
     'descWd_port' => 'The port number on which pgpool-II works',
+    'descWd_priority' => 'Elevate the local watchdog node priority in the elections '.
+                         'to select master watchdog node',
     'descWhite_function_list' => 'Comma separated functions those do not write to Database',
     'descWhite_memqcache_table_list' => 'Comma separated list of table names to be cached',
 

@@ -19,7 +19,7 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2013 PgPool Global Development Group
+ * @copyright  2003-2015 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
@@ -42,25 +42,30 @@ if ($pgCatalog == '') {
     return;
 }
 
-// Set Parameters
-$params = readConfigParams(array('backend_hostname', 'backend_port'));
-
 // Get Data From Database
-$conn = @pg_connect(conStr($nodeNum));
-$sql = 'SHOW pool_status';
+$params = readConfigParams(array(
+    'backend_hostname', 'backend_port', 'backend_weight',
+    'health_check_user', 'health_check_password'
+));
+$conn = openDBConnection(array(
+    'host'     => $params['backend_hostname'][$nodeNum],
+    'port'     => $params['backend_port'][$nodeNum],
+    'dbname'   => 'template1',
+    'user'     => $params['health_check_user'],
+    'password' => $params['health_check_password'],
+));
 
-$rs = execQuery($conn, $sql);
+$rs = execQuery($conn, 'SHOW pool_status');
 
-if (!pg_result_status($rs) == PGSQL_TUPLES_OK) {
-    $sql = "SELECT * FROM $pgCatalog";
-    $rs = execQuery($conn, $sql);
+if (! pg_result_status($rs) == PGSQL_TUPLES_OK) {
+    $rs = execQuery($conn, "SELECT * FROM $pgCatalog");
     $tpl->assign('catalog', $pgCatalog);
 
 } else {
     $tpl->assign('catalog', 'pool_status');
 }
 
-if (!pg_result_status($rs) == PGSQL_TUPLES_OK) {
+if (! pg_result_status($rs) == PGSQL_TUPLES_OK) {
     $errorCode = 'e8001';
     $tpl->assign('errorCode', $errorCode);
     $tpl->display('innerError.tpl');

@@ -19,20 +19,16 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2013 PgPool Global Development Group
+ * @copyright  2003-2015 PgPool Global Development Group
  * @version    SVN: $Id$
  */
 
 require_once('version.php');
 require_once('libs/Smarty.class.php');
+require_once('conf/pgmgt.conf.php');
 require_once('bootstrap.php');
+require_once('definePgpoolConfParam.php');
 error_reporting(E_ALL);
-
-function versions()
-{
-    return array('3.4', '3.3', '3.2', '3.1', '3.0',
-                 '2.3', '2.2', '2.1', '2.0');
-}
 
 session_start();
 
@@ -40,17 +36,15 @@ session_start();
  * Initialize Smartry
  */
 $tpl = new Smarty();
-//$tpl->error_reporting = E_ALL & ~E_NOTICE;
+$tpl->error_reporting = E_ALL & ~E_NOTICE;
 $tpl->assign('version', $version);
 
-if (!file_exists('conf/pgmgt.conf.php')) {
+if (! file_exists('conf/pgmgt.conf.php')) {
     include('lang/en.lang.php');
     $tpl->assign('message', $message);
     $tpl->display('pgmgtNotFound.tpl');
     exit();
 }
-
-require_once('conf/pgmgt.conf.php');
 
 /**
  * Check login
@@ -60,7 +54,7 @@ $tpl->assign('isHelp', FALSE);
 
 // If old pgmgt.conf is used, _PGPOOL2_VERSION doen't exist.
 // This defined var exists from pgpoolAdmin 3.2.
-if (!defined('_PGPOOL2_VERSION')) {
+if (! defined('_PGPOOL2_VERSION')) {
     $versions = versions();
     define('_PGPOOL2_VERSION', $versions[0]);
 }
@@ -69,21 +63,17 @@ if (!defined('_PGPOOL2_VERSION')) {
  * Check pgmgt.conf.php Parameter
  */
 $errors = array();
-if (!defined('_PGPOOL2_LANG') ||
-    !defined('_PGPOOL2_VERSION') ||
-    !defined('_PGPOOL2_CONFIG_FILE') ||
-    !defined('_PGPOOL2_PASSWORD_FILE') ||
-    !defined('_PGPOOL2_COMMAND') ||
-    !defined('_PGPOOL2_PCP_DIR') ||
-    !defined('_PGPOOL2_PCP_HOSTNAME') ||
-    !defined('_PGPOOL2_STATUS_REFRESH_TIME'))
+if (! defined('_PGPOOL2_LANG') ||
+    ! defined('_PGPOOL2_VERSION') ||
+    ! defined('_PGPOOL2_CONFIG_FILE') ||
+    ! defined('_PGPOOL2_PASSWORD_FILE') ||
+    ! defined('_PGPOOL2_COMMAND') ||
+    ! defined('_PGPOOL2_PCP_DIR') ||
+    ! defined('_PGPOOL2_PCP_HOSTNAME') ||
+    ! defined('_PGPOOL2_STATUS_REFRESH_TIME'))
 {
     include('lang/en.lang.php');
-    $tpl->assign('message', $message);
-    $errorCode = 'e7';
-    $tpl->assign('errorCode', $errorCode);
-    $tpl->display('error.tpl');
-    exit();
+    errorPage('e7');
 }
 
 /**
@@ -99,10 +89,7 @@ while ($file_name = readdir( $res_dir )) {
             $messageList[$message['lang']] = $message['strLang'];
 
         } else {
-            $errorCode = 'e2';
-            $tpl->assign('errorCode', $errorCode);
-            $tpl->display('error.tpl');
-            exit();
+            errorPage('e2');
         }
     }
 }
@@ -117,34 +104,22 @@ include('lang/' . $lang . '.lang.php');
 $tpl->assign('message', $message);
 $_SESSION[SESSION_MESSAGE] = $message;
 
+/* --------------------------------------------------------------------- */
+/* function (DB)                                                         */
+/* --------------------------------------------------------------------- */
+
 /**
  * Open databse connection
- *
- * @param  array $param
- * @return resource
  */
-function openDBConnection($param)
+function openDBConnection($arr)
 {
-    $host     = $param['hostname'];
-    $port     = $param['port'];
-    $dbname   = $param['dbname'];
-    $user     = $param['user'];
-    $password = $param['password'];
-
-    if ($host != '') {
-        $conStr = "host=$host port=$port dbname=$dbname user=$user password=$password" ;
-    } else {
-        $conStr = "port=$port dbname=$dbname user=$user password=$password" ;
-    }
-
-    $con = @pg_connect($conStr);
-    return $con;
+    $conStr = generateConstr($arr);
+    $conn = @pg_connect($conStr);
+    return $conn;
 }
 
 /**
  * Close database connection
- *
- * @param bool
  */
 function closeDBConnection($connection)
 {
@@ -153,10 +128,6 @@ function closeDBConnection($connection)
 
 /**
  * Execute query
- *
- * @param resource $conn
- * @param string $sql
- * @return resource
  */
 function execQuery($conn, $sql)
 {
@@ -169,9 +140,295 @@ function execQuery($conn, $sql)
 }
 
 /**
+ * Confirmation whether node is active or is not.
+ */
+function NodeActive($nodeNum)
+{
+    $params = readConfigParams(array(
+        'backend_hostname', 'backend_port', 'backend_weight',
+        'health_check_user', 'health_check_password'
+    ));
+
+    $conn = openDBConnection(array(
+        'host'     => $params['backend_hostname'][$nodeNum],
+        'port'     => $params['backend_port'][$nodeNum],
+        'dbname'   => 'template1',
+        'user'     => $params['health_check_user'],
+        'password' => $params['health_check_password'],
+    ));
+
+    if ($conn == FALSE) {
+        return FALSE;
+    } else {
+        closeDBConnection($conn);
+        return TRUE;
+    }
+}
+
+/**
+ * Confirmation whether node is act as a standby server
+ */
+function NodeStandby($nodeNum)
+{
+    if (isMasterSlaveMode() == FALSE || useStreaming() == FALSE) {
+        return -1;
+    }
+
+    $params = readConfigParams(array(
+        'backend_hostname', 'backend_port',
+        'sr_check_user','sr_check_password'
+    ));
+
+    $conn = openDBConnection(array(
+        'host'     => $params['backend_hostname'][$nodeNum],
+        'port'     => $params['backend_port'][$nodeNum],
+        'dbname'   => 'template1',
+        'user'     => $params['sr_check_user'],
+        'password' => $params['sr_check_password'],
+    ));
+
+    if ($conn == FALSE) {
+        return -1;
+    }
+
+    $result = pg_query($conn, 'SELECT pg_is_in_recovery()');
+    if (! pg_result_status($result) == PGSQL_TUPLES_OK) {
+        closeDBConnection($conn);
+        return -1;
+    }
+
+    $rr = pg_fetch_array($result);
+    if ($rr[0][0] == 't') {
+        $r = 1;
+    } else {
+        $r = 0;
+    }
+
+    @pg_free_result($result);
+    closeDBConnection($conn);
+    return $r;
+}
+
+/**
+ * Get if loginUser is super user
+ */
+function isSuperUser($user_name)
+{
+    $params = readConfigParams(array('port'));
+    $conn = openDBConnection(array(
+        'port'     => $params['port'],
+        'dbname'   => 'template1',
+        'user'     => $_SESSION[SESSION_LOGIN_USER],
+        'password' => $_SESSION[SESSION_LOGIN_USER_PASSWORD],
+    ));
+
+    if ($conn == FALSE) {
+        return NULL;
+    }
+
+    $result = pg_query($conn, "SELECT usesuper FROM pg_user WHERE usename = '{$user_name}'");
+    if (! pg_result_status($result) == PGSQL_TUPLES_OK) {
+        closeDBConnection($conn);
+        return NULL;
+    }
+
+    $rr = pg_fetch_array($result);
+    $rtn = (isset($rr['usesuper']) && $rr['usesuper'] == 't') ? 'yes' : 'no';
+
+    @pg_free_result($result);
+    closeDBConnection($conn);
+
+    $_SESSION[SESSION_IS_SUPER_USER] = $rtn;
+
+    return $rtn;
+}
+
+/**
+ * Create connection str for pg_connect()
+ */
+
+function generateConstr($params)
+{
+    $arr = array();
+    foreach ($params as $param => $value) {
+        if ($value == '') { continue; }
+        switch ($param) {
+        case 'host':
+        case 'port':
+        case 'dbname':
+        case 'user':
+        case 'password':
+            $arr[] = "{$param}='{$value}'";
+        }
+    }
+    $conStr = implode(' ', $arr);
+
+    return $conStr;
+}
+
+/* --------------------------------------------------------------------- */
+/* function (pgpool)                                                     */
+/* --------------------------------------------------------------------- */
+
+/**
+ * Check if pgpool.pid exists
+ */
+function DoesPgpoolPidExist()
+{
+    $params = readConfigParams(array('pid_file_name'));
+    $pidFile = $params['pid_file_name'];
+    if (file_exists($pidFile) ) {
+        return TRUE;
+    }
+    return FALSE;
+}
+
+/* --------------------------------------------------------------------- */
+/* function (parameters)                                                 */
+/* --------------------------------------------------------------------- */
+
+/**
+ * Get the value of "logdir"
+ */
+function readLogDir()
+{
+    $params = readConfigParams(array('logdir'));
+    return $params['logdir'];
+}
+
+/**
+ * Read parameters specified in $paramList from pgpool.conf.
+ * If $paramList is not specified, all item is read from pgpool.conf.
+ */
+function readConfigParams($paramList = array())
+{
+    $rtn = array();
+    global $pgpoolConfigParam, $pgpoolConfigBackendParam ,
+           $pgpoolConfigWdOtherParam, $pgpoolConfigHbDestinationParam;
+
+    // Try to read pgpool.conf
+    $configFile = @file(_PGPOOL2_CONFIG_FILE);
+    if ($configFile == FALSE) {
+        $errTpl = new Smarty();
+        $errTpl->assign('message', $_SESSION[SESSION_MESSAGE]);
+        errorPage('e4');
+    }
+
+    // Defined array in definePgpoolConfParam.php
+    $defines_arr = $pgpoolConfigParam + $pgpoolConfigBackendParam +
+                   $pgpoolConfigWdOtherParam + $pgpoolConfigHbDestinationParam;
+
+    $arr = array();
+    // Convert lines in files to array
+    foreach ($configFile as $line_num => $line) {
+        $line = trim($line);
+        if (substr($line, 0, 1) == '#' || strpos($line, '=') === FALSE) {
+            continue;
+        }
+
+        list($key, $value) = explode('=', $line);
+        $key = trim($key);
+
+        $num = preg_replace('/[^0-9]/', NULL, $key);
+        $key_wo_num = str_replace($num, NULL, $key);
+
+        // Ignore params not specified to read
+        if ($paramList && is_array($paramList) && ! in_array($key_wo_num, $paramList)) {
+            continue;
+        }
+
+        // Remove quotes and comments
+        $value = trimValue($value);
+
+        if (! isset($defines_arr[$key_wo_num])) {
+            continue;
+
+        // Params with multiple values
+        // (backend_*, other_pgpool_*, heartbeat_destination_*, heartbeat_device*)
+        } elseif (isset($defines_arr[$key_wo_num]['multiple']) &&
+                  $defines_arr[$key_wo_num]['multiple'] == TRUE)
+        {
+            $rtn[$key_wo_num][$num] = $value;
+
+        } else {
+            // Ignore param not defined definePgpoolConfParam.php
+            $rtn[$key_wo_num] = $value;
+        }
+    }
+
+    // Set default value if there is no line about the param
+    if ($paramList && is_array($paramList)) {
+        foreach ($paramList as $key) {
+            if (! isset($rtn[$key]) || $rtn[$key] == NULL) {
+                $default_value = $defines_arr[$key]['default'];
+
+                if (isset($defines_arr[$key]['multiple']) &&
+                    $defines_arr[$key]['multiple'])
+                {
+                    $rtn[$key][0] = $default_value;
+                } else {
+                    $rtn[$key] = $default_value;
+                }
+            }
+        }
+
+    } elseif ($defines_arr) {
+        foreach ($defines_arr as $key => $param_info) {
+            if (! isset($rtn[$key])) {
+                $default_value = (isset($defines_arr[$key]['default'])) ?
+                    $defines_arr[$key]['default'] : NULL;
+
+                if (isset($defines_arr[$key]['multiple']) &&
+                    $defines_arr[$key]['multiple'])
+                {
+                    $rtn[$key][0] = $default_value;
+                } else {
+                    $rtn[$key] = $default_value;
+                }
+            }
+        }
+    }
+
+    return $rtn;
+}
+
+function trimValue($text)
+{
+    // Remove spaces
+    $text = trim($text);
+
+    $rtn = '';
+    $in_quotes = FALSE;
+    for ($i = 0; $i < strlen($text); $i++) {
+        $c = substr($text, $i, 1);
+
+        switch ($c) {
+        // Ignore "'"
+        case  "'":
+            if ($in_quotes) {
+                break 2;
+            } else {
+                $in_quotes = TRUE;
+            }
+            break;
+
+        // Ignore "#" comment
+        case '#':
+            if (! $in_quotes) {
+                break;
+            }
+        break;
+        }
+
+        $rtn .= $c;
+    }
+
+    $rtn = trim($rtn, "'");
+    return $rtn;
+}
+
+/**
  * Select language registred in conf directory
- *
- * @return  string
  */
 function selectLanguage($selectLang, $messageList)
 {
@@ -208,360 +465,26 @@ function selectLanguage($selectLang, $messageList)
 }
 
 /**
- * Whether pgpool is operating in the parallel mode or not?
- *
- * @return bool
+ * Check if the parameter is used in the specified version
  */
-function isParallelMode()
-{
-    $params = readConfigParams(array('parallel_mode'));
-
-    if (isTrue($params['parallel_mode'])) {
-        return TRUE;
-    } else {
-        return FALSE;
-    }
-}
-
-/**
- * Confirmation whether node is active or is not.
- *
- * @return  bool
- */
-function NodeActive($num)
-{
-    $conn = @pg_connect(conStr($num));
-
-    if ($conn == FALSE) {
-        @pg_close($conn);
-        return FALSE;
-    } else {
-        @pg_close($conn);
-        return TRUE;
-    }
-}
-
-/**
- * Confirmation whether node is act as a standby server
- *
- * @return  integer
- */
-function NodeStandby($num)
-{
-    if (isMasterSlaveMode() == FALSE || useStreaming() == FALSE) {
-        return -1;
-    }
-
-    $conn = @pg_connect(conStr($num, 'stream'));
-
-    if ($conn == FALSE) {
-        @pg_close($conn);
-        return -1;
-    }
-
-    $result = pg_query($conn, 'SELECT pg_is_in_recovery()');
-    if (!pg_result_status($result) == PGSQL_TUPLES_OK) {
-        @pg_close($conn);
-        return -1;
-    }
-
-    $rr = pg_fetch_array($result);
-
-    if ($rr[0][0] == 't') {
-        $r = 1;
-    } else {
-        $r = 0;
-    }
-
-    @pg_free_result($result);
-    @pg_close($conn);
-    return $r;
-}
-
-/**
- * Create connection str for pg_connect()
- */
-function conStr($num, $mode = NULL)
-{
-    // check user info
-    if ($mode == 'login') {
-        $user     = $_SESSION[SESSION_LOGIN_USER];
-        $password = $_SESSION[SESSION_LOGIN_USER_PASSWORD];
-
-    } elseif ($mode == 'stream' && paramExists('sr_check_user')) {
-        $params = readConfigParams(array('sr_check_user',
-                                         'sr_check_password'));
-        $user     = $params['sr_check_user'];
-        $password = $params['sr_check_password'];
-
-    } else {
-        $params = readConfigParams(array('health_check_user',
-                                         'health_check_password'));
-        $user     = $params['health_check_user'];
-        $password = (isset($params['health_check_user'])) ?
-                    $params['health_check_password'] : NULL;
-    }
-
-    // backend info
-    $params = readConfigParams(array('backend_hostname',
-                                     'backend_port',
-                                     'backend_weight'));
-    $conStr = array();
-    if ($params['backend_hostname'][$num] != '') {
-        $conStr[] = "host='{$params['backend_hostname'][$num]}'";
-    }
-    $conStr[] = "port='{$params['backend_port'][$num]}'";
-    $conStr[] = "dbname='template1'";
-    $conStr[] = "user='{$user}'";
-    $conStr[] = "password='{$password}'";
-
-    $conStr = implode($conStr, ' ');
-    return $conStr;
-}
-
-/**
- * Existence confirmation of pgpool.pid
- *
- * @return  bool
- */
-function DoesPgpoolPidExist()
-{
-    $params = readConfigParams(array('pid_file_name'));
-    $pidFile = $params['pid_file_name'];
-    if (file_exists($pidFile) ) {
-        return TRUE;
-    }
-    return FALSE;
-}
-
-/**
- * Existence confirmation of pgpool.pid
- *
- * @return  bool
- */
-function readLogDir()
-{
-
-    $params = readConfigParams(array('logdir'));
-    return $params['logdir'];
-}
-
-/**
- * Whether pgpool is operating in the replication mode or not?
- *
- * @return bool
- */
-function isReplicationMode()
-{
-    $params = readConfigParams(array('replication_mode'));
-
-    if (isTrue($params['replication_mode'])) {
-        return TRUE;
-    } else {
-        return FALSE;
-    }
-}
-
-/**
- * Whether pgpool is operating in the master slave mode or not?
- *
- * @return bool
- */
-function isMasterSlaveMode()
-{
-    $params = readConfigParams(array('master_slave_mode'));
-
-    if (isTrue($params['master_slave_mode'])) {
-        return TRUE;
-    } else {
-        return FALSE;
-    }
-}
-
-/**
- * Whether pgpool is using stream sub mode in master slave mode or not?
- *
- * @return bool
- */
-function useStreaming()
-{
-    $params = readConfigParams(array('master_slave_sub_mode'));
-
-    if (isMasterSlaveMode() && $params['master_slave_sub_mode'] == 'stream') {
-        return TRUE;
-    } else {
-        return FALSE;
-    }
-}
-
-/**
- * Whether pgpool uses syslog or not?
- *
- * @return bool
- */
-function useSyslog()
-{
-    if (!paramExists('log_destination')) { return FALSE; }
-
-    $params = readConfigParams(array('log_destination'));
-
-    if ($params['log_destination'] == 'syslog') {
-        return TRUE;
-    } else {
-        return FALSE;
-    }
-}
-
-/**
- * Read parameters specified in $paramList from pgpool.conf.
- * If $paramList is not specified, all item is read from pgpool.conf.
- *
- * @param array $paramList
- * @return array
- */
-function readConfigParams($paramList = FALSE)
-{
-    $results = array();
-    $configParam = array();
-
-    $configFile = @file(_PGPOOL2_CONFIG_FILE);
-    if ($configFile == FALSE) {
-        $errTpl = new Smarty();
-        $errTpl->assign('message', $_SESSION[SESSION_MESSAGE]);
-        $errorCode = 'e4';
-        $errTpl->assign('errorCode', $errorCode);
-        $errTpl->display('error.tpl');
-        exit();
-    }
-
-    foreach ($configFile as $line_num => $line) {
-        $line = trim($line);
-        if (preg_match("/^\w/", $line)) {
-            list($key, $value) = explode("=", $line);
-
-            $key = trim($key);
-            $value = trim($value);
-
-            // params about backend nodes
-            if (preg_match("/^backend_hostname/", $key)) {
-                $num = str_replace('backend_hostname', '', $key);
-                $configParam['backend_hostname'][$num] = str_replace("'", "", $value);
-
-            } elseif (preg_match("/^backend_port/", $key)) {
-                $num = str_replace('backend_port', '', $key);
-                $configParam['backend_port'][$num] = $value;
-
-            } elseif (preg_match("/^backend_weight/", $key)) {
-                $num = str_replace('backend_weight', '', $key);
-                $configParam['backend_weight'][$num] = $value;
-
-            } elseif (preg_match("/^backend_data_directory/", $key)) {
-                $num = str_replace('backend_data_directory', '', $key);
-                $configParam['backend_data_directory'][$num] =str_replace("'", "", $value);
-
-            } elseif (preg_match("/^backend_flag/", $key)) {
-                $num = str_replace('backend_flag', '', $key);
-                $configParam['backend_flag'][$num] =str_replace("'", "", $value);
-
-            // params about watchdog monitoring
-            } elseif (preg_match("/^other_pgpool_hostname/", $key)) {
-                $num = str_replace('other_pgpool_hostname', '', $key);
-                $configParam['other_pgpool_hostname'][$num] = str_replace("'", "", $value);
-
-            } elseif (preg_match("/^other_pgpool_port/", $key)) {
-                $num = str_replace('other_pgpool_port', '', $key);
-                $configParam['other_pgpool_port'][$num] = $value;
-
-            } elseif (preg_match("/^other_wd_port/", $key)) {
-                $num = str_replace('other_wd_port', '', $key);
-                $configParam['other_wd_port'][$num] = $value;
-
-            // params about watchdog heartbeat
-            } elseif (preg_match("/^heartbeat_destination_port/", $key)) {
-                $num = str_replace('heartbeat_destination_port', '', $key);
-                $configParam['heartbeat_destination_port'][$num] = $value;
-
-            } elseif (preg_match("/^heartbeat_destination/", $key)) {
-                $num = str_replace('heartbeat_destination', '', $key);
-                $configParam['heartbeat_destination'][$num] = str_replace("'", "", $value);
-
-            } elseif (preg_match("/^heartbeat_device/", $key)) {
-                $num = str_replace('heartbeat_device', '', $key);
-                $configParam['heartbeat_device'][$num] = str_replace("'", "", $value);
-
-            } else {
-                $configParam[$key] = str_replace("'", "", $value);
-            }
-        }
-    }
-
-    if (is_array($paramList)) {
-        foreach ($paramList as $key) {
-            if (isset($configParam[$key])) {
-                $results[$key] = $configParam[$key];
-            } else {
-                require_once('definePgpoolConfParam.php');
-                if(!preg_match("/^backend_hostname/",           $key) &&
-                   !preg_match("/^backend_port/",               $key) &&
-                   !preg_match("/^backend_weight/",             $key) &&
-                   !preg_match("/^backend_data_directory/",     $key) &&
-                   !preg_match("/^backend_flag/",               $key) &&
-                   !preg_match("/^other_pgpool_hostname/",      $key) &&
-                   !preg_match("/^other_pgpool_port/",          $key) &&
-                   !preg_match("/^other_wd_port/",              $key) &&
-                   !preg_match("/^heartbeat_destination/",      $key) &&
-                   !preg_match("/^heartbeat_destination_port/", $key) &&
-                   !preg_match("/^heartbeat_device/",           $key)
-                   )
-                {
-                    if (isset($configParam[$key])) {
-                        $results[$key] = $configParam[$key]['default'];
-                    }
-                }
-            }
-        }
-
-    } else {
-        $results = $configParam;
-    }
-
-    return $results;
-
-}
-
-function isPipe($str)
-
-{
-    return (strpos($str, '|') !== FALSE);
-}
-
-function isTrue($value)
-{
-    return in_array($value, array('on', 'true'));
-}
-
-/* check version */
-function hasWatchdog()
-{
-    return (3.2 <= _PGPOOL2_VERSION);
-}
-
-function hasMemqcache()
-{
-    return (3.2 <= _PGPOOL2_VERSION);
-}
-// pgpool has pcp_promote_node ?
-function hasPcpPromote()
-{
-    return (3.1 <= _PGPOOL2_VERSION);
-}
-
 function paramExists($param)
 {
     $add_version = $del_version = 0;
 
     /* Add */
     switch ($param) {
+        // params added in 3.5
+        case 'if_cmd_path':
+        case 'health_check_database':
+        case 'pcp_listen_addresses':
+        case 'search_primary_node_timeout':
+        case 'serialize_accept':
+        case 'sr_check_database':
+        case 'wd_de_escalation_command':
+        case 'wd_ipc_socket_dir':
+        case 'wd_priority':
+            $add_version = 3.5;
+            break;
 
         // params added in 3.4
         case 'listen_backlog_multiplier':
@@ -677,6 +600,11 @@ function paramExists($param)
 
     /* Delete */
     switch ($param) {
+        // params deleted in 3.5
+        case 'ifconfig_path':
+            $del_version = 3.5;
+            break;
+
         // params deleted in 3.4
         case 'print_timestamp':
         case 'parallel_mode':
@@ -705,55 +633,165 @@ function paramExists($param)
             break;
     }
 
-    if ($add_version && $add_version <= _PGPOOL2_VERSION) {
-        return TRUE;
-    } elseif ($del_version && _PGPOOL2_VERSION < $del_version) {
-        return TRUE;
+    $rtn = TRUE;
+    if ($add_version && _PGPOOL2_VERSION < $add_version) {
+        $rtn = FALSE;
     }
-    return FALSE;
+    if ($del_version && $del_version <= _PGPOOL2_VERSION) {
+        $rtn = FALSE;
+    }
+    return $rtn;
 }
 
-/* Get if loginUser is super user */
-function isSuperUser($user_name)
+/* --------------------------------------------------------------------- */
+/* function (mode)                                                       */
+/* --------------------------------------------------------------------- */
+
+function versions()
 {
-    $conn = @pg_connect(conStrPgpool());
+    return array('3.5', '3.4', '3.3', '3.2', '3.1', '3.0',
+                 '2.3', '2.2', '2.1', '2.0');
+}
 
-    if ($conn == FALSE) {
-        @pg_close($conn);
-        return NULL;
+/**
+ * Whether pgpool is operating in the replication mode or not?
+ */
+function isReplicationMode()
+{
+    $params = readConfigParams(array('replication_mode'));
+
+    if (isTrue($params['replication_mode'])) {
+        return TRUE;
+    } else {
+        return FALSE;
+    }
+}
+
+/**
+ * Whether pgpool is operating in the master slave mode or not?
+ */
+function isMasterSlaveMode()
+{
+    $params = readConfigParams(array('master_slave_mode'));
+
+    if (isTrue($params['master_slave_mode'])) {
+        return TRUE;
+    } else {
+        return FALSE;
+    }
+}
+
+/**
+ * Whether pgpool is operating in the parallel mode or not?
+ */
+function isParallelMode()
+{
+    $params = readConfigParams(array('parallel_mode'));
+
+    if (isTrue($params['parallel_mode'])) {
+        return TRUE;
+    } else {
+        return FALSE;
+    }
+}
+
+/**
+ * Whether pgpool is using stream sub mode in master slave mode or not?
+ */
+function useStreaming()
+{
+    $params = readConfigParams(array('master_slave_sub_mode'));
+
+    if (isMasterSlaveMode() && $params['master_slave_sub_mode'] == 'stream') {
+        return TRUE;
+    } else {
+        return FALSE;
+    }
+}
+
+/**
+ * Whether pgpool uses syslog or not?
+ */
+function useSyslog()
+{
+    if (!paramExists('log_destination')) { return FALSE; }
+
+    $params = readConfigParams(array('log_destination'));
+
+    if ($params['log_destination'] == 'syslog') {
+        return TRUE;
+    } else {
+        return FALSE;
+    }
+}
+
+/**
+ * Return if pgpool has watchdog feature
+ */
+function hasWatchdog()
+{
+    return (3.2 <= _PGPOOL2_VERSION);
+}
+
+/**
+ * Return if pgpool has memqcache
+ */
+function hasMemqcache()
+{
+    return (3.2 <= _PGPOOL2_VERSION);
+}
+
+/**
+ * Return if pgpool has pcp_promote_node ?
+ */
+function hasPcpPromote()
+{
+    return (3.1 <= _PGPOOL2_VERSION);
+}
+
+/*
+ * Return the list of parameters in a group
+ */
+function getMultiParams()
+{
+    $rtn = array();
+
+    $rtn['backend'] = array('backend_hostname', 'backend_port', 'backend_weight', 'backend_data_directory');
+    if (paramExists('backend_flag')) {
+        $rtn['backend'][] = 'backend_flag';
     }
 
-    $result = pg_query($conn, "SELECT usesuper FROM pg_user WHERE usename = '{$user_name}'");
+    $rtn['other_pgpool'] = array('other_pgpool_hostname', 'other_pgpool_port', 'other_wd_port');
 
-    if (!pg_result_status($result) == PGSQL_TUPLES_OK) {
-        @pg_close($conn);
-        return NULL;
-    }
-
-    $rr = pg_fetch_array($result);
-    $rtn = (isset($rr['usesuper']) && $rr['usesuper'] == 't') ? 'yes' : 'no';
-
-    @pg_free_result($result);
-    @pg_close($conn);
-
-    $_SESSION[SESSION_IS_SUPER_USER] = $rtn;
+    $rtn['heartbeat'] = array('heartbeat_destination', 'heartbeat_destination_port', 'heartbeat_device');
 
     return $rtn;
 }
 
-function conStrPgpool()
-{
-    $params = readConfigParams(array('port'));
-    $conStr[] = "port='{$params['port']}'";
-    $conStr[] = "dbname='template1'";
-    $conStr[] = "user='{$_SESSION[SESSION_LOGIN_USER]}'";
-    $conStr[] = "password='{$_SESSION[SESSION_LOGIN_USER_PASSWORD]}'";
+/* --------------------------------------------------------------------- */
+/* function (other)                                                      */
+/* --------------------------------------------------------------------- */
 
-    $conStr = implode($conStr, ' ');
-    return $conStr;
+function isPipe($str)
+
+{
+    return (strpos($str, '|') !== FALSE);
 }
 
-/* for debug */
+function isTrue($value)
+{
+    return in_array($value, array('on', 'true'));
+}
+
+function errorPage($errorCode)
+{
+    global $tpl;
+
+    $tpl->assign('errorCode', $errorCode);
+    $tpl->display('error.tpl');
+    exit();
+}
+
 function pr($array)
 {
     echo '<pre>';

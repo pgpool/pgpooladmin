@@ -19,12 +19,11 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2014 PgPool Global Development Group
+ * @copyright  2003-2015 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
 require_once('common.php');
-require('definePgpoolConfParam.php');
 $tpl->assign('help', basename( __FILE__, '.php'));
 
 if (!isset($_SESSION[SESSION_LOGIN_USER])) {
@@ -40,6 +39,27 @@ if (isset($_POST['action'])) {
 } else {
     $action = FALSE;
 }
+
+/* --------------------------------------------------------------------- */
+/* Set parameters' info and current vales                                */
+/* --------------------------------------------------------------------- */
+
+// Get parameters' info
+$pgpoolConfigParamAll = $pgpoolConfigParam + $pgpoolConfigBackendParam +
+                        $pgpoolConfigWdOtherParam + $pgpoolConfigHbDestinationParam;
+$tpl->assign('pgpoolConfigParamAll', $pgpoolConfigParamAll);
+
+$configValue = readConfigParams();
+foreach ($pgpoolConfigParam as $key => $value) {
+    if (!isset($configValue[$key]) ) {
+        $configValue[$key] = (isset($value['default'])) ?
+            $value['default'] : NULL;
+    }
+}
+
+// Get current values
+$params = $configValue;
+$tpl->assign('params', $params);
 
 /* --------------------------------------------------------------------- */
 /* Add or Cancel                                                         */
@@ -82,12 +102,6 @@ switch ($action) {
 /**
  * check $configFile
  */
-$configValue = readConfigParams();
-foreach ($pgpoolConfigParam as $key => $value) {
-    if (!isset($configValue[$key]) ) {
-        $configValue[$key] = $value['default'];
-    }
-}
 
 switch ($action) {
     case 'update':
@@ -96,8 +110,7 @@ switch ($action) {
 
         if (! $error) {
             if (is_writable(_PGPOOL2_CONFIG_FILE)) {
-                writeConfigFile($configValue, $pgpoolConfigParam);
-                $configValue = readConfigParams();
+                writeConfigFile($configValue, $pgpoolConfigParamAll);
                 $tpl->assign('status', 'success');
 
             } else {
@@ -128,7 +141,7 @@ switch ($action) {
         }
 
         if (is_writable(_PGPOOL2_CONFIG_FILE)) {
-            writeConfigFile($configValue, $pgpoolConfigParam);
+            writeConfigFile($configValue, $pgpoolConfigParamAll);
             $configValue = readConfigParams();
 
         } else {
@@ -165,7 +178,6 @@ if (!isset($configValue['other_pgpool_hostname'])) {
     $configValue['other_wd_port'][0]         = NULL;
 }
 
-$tpl->assign('params', $configValue);
 $tpl->assign('error', $error);
 
 $tpl->display('pgconfig.tpl');
@@ -182,42 +194,51 @@ $tpl->display('pgconfig.tpl');
  * @param array $configParam
  * @param string $error
  */
-function check($key, $value, &$configParam ,&$error)
+function check($key, $define, &$configParam ,&$error)
 {
-    //if (!isset($configParam[$key])) { continue; }
-    if (!isset($configParam[$key])) { return; }
+    if (! paramExists($key) || ! isset($configParam[$key])) { return; }
 
-    $type = $value['type'];
-    $result = FALSE;
-    switch ($type) {
+    if (isset($define['parent'])) {
+        $ignore_ok = FALSE;
+        foreach ($define['parent'] as $_param => $_expected_value) {
+            if (! isset($configParam[$_param]) ||
+                $configParam[$_param] != $_expected_value)
+            {
+                $ignore_ok = TRUE;
+            }
+            if ($ignore_ok) { return; }
+        }
+    }
+
+    $is_ok = FALSE;
+    switch ($define['type']) {
         case 'B':
-            $result = checkBoolean($configParam[$key]);
+            $is_ok = checkBoolean($configParam[$key]);
 
             // allow true/false and on/off as input format,
             // but write with only on/off format.
-            if ($result) {
-                if ($configParam[$key] == 'true') {
-                    $configParam[$key] = 'on';
-                } elseif ($configParam[$key] == 'false') {
-                    $configParam[$key] = 'off';
-                }
+            if ($configParam[$key] == 'true') {
+                $configParam[$key] = 'on';
+            } elseif ($configParam[$key] == 'false') {
+                $configParam[$key] = 'off';
             }
 
             break;
 
         case 'C':
-            $result = checkString($configParam[$key], $value);
+            $is_ok = checkString($configParam[$key], $define);
             break;
 
         case 'F':
-            $result = checkFloat($configParam[$key], $value['min'], $value['max']);
+            $is_ok = checkFloat($configParam[$key], $define['min'], $define['max']);
             break;
 
         case 'N':
-            $result = checkInteger($configParam[$key], $value['min'], $value['max']);
+            $is_ok = checkInteger($configParam[$key], $define['min'], $define['max']);
             break;
     }
-    if (!$result) {
+
+    if ($is_ok === FALSE) {
         $error[$key] = TRUE;
     }
 }
@@ -315,7 +336,7 @@ function checkLogical($configValue)
     }
 
     // syslog
-    if ($configValue['log_destination']) {
+    if ($configValue['log_destination'] && $configValue['log_destination'] == 'syslog') {
         if (empty($configValue['syslog_facility'])) { $errors['syslog_facility'] = TRUE; }
         if (empty($configValue['syslog_ident'])) { $errors['syslog_ident'] = TRUE; }
     }
@@ -379,93 +400,53 @@ function checkLogical($configValue)
  * @param array $configValue
  * @param array $pgpoolConfigParam
  */
-function writeConfigFile($configValue, $pgpoolConfigParam)
+function writeConfigFile($configValue, $pgpoolConfigParamAll)
 {
-    $configFile = @file(_PGPOOL2_CONFIG_FILE);
+    $configFile = array();
 
-    $tmpConfigFile = array();
-    for ($i = 0; $i < count($configFile); $i++) {
-        $line = $configFile[$i];
-
+    $originalConfigFile = @file(_PGPOOL2_CONFIG_FILE);
+    foreach ($originalConfigFile as $line) {
+        // Not-empty lines
         if (preg_match("/^\w/", $line)) {
             list($key, $value) = explode("=", $line);
             $key = trim($key);
 
-            if (!preg_match("/^backend_hostname/",       $key) &&
-                !preg_match("/^backend_port/",           $key) &&
-                !preg_match("/^backend_weight/",         $key) &&
-                !preg_match("/^backend_data_directory/", $key) &&
-                !preg_match("/^backend_flag/",           $key) &&
-                !preg_match("/^other_pgpool_hostname/",  $key) &&
-                !preg_match("/^other_pgpool_port/",      $key) &&
-                !preg_match("/^other_wd_port/",          $key) &&
-                !preg_match("/^heartbeat_device/",       $key) &&
-                !preg_match("/^heartbeat_destination_port/", $key) &&
-                !preg_match("/^heartbeat_destination/",  $key)
-                )
-            {
-                $tmpConfigFile[] =  $line;
-            }
+            $num = preg_replace('/[^0-9]/', NULL, $key);
+            $key_wo_num = str_replace($num, NULL, $key);
 
-        } else {
-            $tmpConfigFile[] =  $line;
-        }
-    }
-    $configFile = $tmpConfigFile;
+            // Modify the parameter' value if posted.
+            // (Ignore the params like "backend_hostname_0" which will be arranged in below)
+            if (! isset($pgpoolConfigParamAll[$key_wo_num]['multiple'])) {
+                if (isset($configValue[$key_wo_num])) {
+                    $value = $configValue[$key];
+                    if (strcmp($pgpoolConfigParamAll[$key_wo_num]['type'], "C") == 0) {
+                        $value = "'{$value}'";
+                    }
+                    $configFile[] = "{$key_wo_num} = {$value}\n";
 
-    foreach ($pgpoolConfigParam as $key => $value) {
-        $isWrite = FALSE;
-        for ($j = 0; $j < count($configFile); $j++) {
-            $line = $configFile[$j];
-            $line = trim($line);
-
-            if (preg_match("/^$key/", $line)) {
-                if (strcmp($pgpoolConfigParam[$key]['type'], "C") == 0) {
-                    $configFile[$j] = $key . " = '" . $configValue[$key] . "'\n";
                 } else {
-                    $configFile[$j] = $key . " = " . $configValue[$key]."\n";
+                    $configFile[] =  $line;
                 }
-                $isWrite = TRUE;
-                break;
             }
-        }
 
-        if (!$isWrite && paramExists($key)) {
-            if (strcmp($pgpoolConfigParam[$key]['type'], "C") == 0) {
-                $configFile[] = $key . " = '" . $configValue[$key] . "'\n";
-            } else {
-                $configFile[] = $key . " = " . $configValue[$key]."\n";
-            }
+        // comment or empty lines
+        } else {
+            $configFile[] =  $line;
         }
     }
 
-    if (isset($configValue['backend_hostname'])) {
-        for ($i = 0; $i < count($configValue['backend_hostname']); $i++) {
+    $param_names = getMultiParams();
+    foreach ($param_names as $group => $key_arr) {
+        for ($i = 0; $i < count($configValue[$key_arr[0]]); $i++) {
+            foreach ($key_arr as $key) {
+                $value = (isset($configValue[$key][$i])) ? $configValue[$key][$i] : NULL;
 
-            $configFile[] = "backend_hostname$i = '" . $configValue['backend_hostname'][$i] . "'\n";
-            $configFile[] = "backend_port$i = " . $configValue['backend_port'][$i] . "\n";
-            $configFile[] = "backend_weight$i = " . $configValue['backend_weight'][$i] . "\n";
-            $configFile[] = "backend_data_directory$i = '" . $configValue['backend_data_directory'][$i] . "'\n";
+                if (strcmp($pgpoolConfigParamAll[$key]['type'], "C") == 0) {
+                    $value = "'{$value}'";
+                }
 
-            if (paramExists('backend_flag')) {
-                $configFile[] = "backend_flag$i= '" . $configValue['backend_flag'][$i] . "'\n";
+                $configFile[] = "{$key}{$i} = {$value}\n";
             }
-        }
-    }
-
-    if (isset($configValue['other_pgpool_hostname'])) {
-        for ($i = 0; $i < count($configValue['other_pgpool_hostname']); $i++) {
-            $configFile[] = "other_pgpool_hostname$i = '" . $configValue['other_pgpool_hostname'][$i] . "'\n";
-            $configFile[] = "other_pgpool_port$i = " . $configValue['other_pgpool_port'][$i] . "\n";
-            $configFile[] = "other_wd_port$i = " . $configValue['other_wd_port'][$i] . "\n";
-        }
-    }
-
-    if (isset($configValue['heartbeat_destination'])) {
-        for ($i = 0; $i < count($configValue['heartbeat_destination']); $i++) {
-            $configFile[] = "heartbeat_destination$i = '" . $configValue['heartbeat_destination'][$i] . "'\n";
-            $configFile[] = "heartbeat_destination_port$i = " . $configValue['heartbeat_destination_port'][$i] . "\n";
-            $configFile[] = "heartbeat_device$i = '" . $configValue['heartbeat_device'][$i] . "'\n";
         }
     }
 
@@ -548,10 +529,7 @@ function arrangePostData()
 
     $configValue = array();
     foreach ($pgpoolConfigParam as $key => $value) {
-        if ($pgpoolConfigParam[$key]['type'] == 'B') {
-            $configValue[$key] = (isset($_POST[$key])) ? 'on' : 'off';
-
-        } elseif (isset($_POST[$key])) {
+        if (isset($_POST[$key])) {
             $configValue[$key] = trim($_POST[$key]);
         }
     }
@@ -588,7 +566,7 @@ function doAdd($configValue)
     if (isset($_POST['backend_data_directory'])) {
         $configValue['backend_data_directory'] = $_POST['backend_data_directory'];
     } else {
-         $configValue['backend_data_directory'][0] = NULL;
+        $configValue['backend_data_directory'][0] = NULL;
     }
 
     if (paramExists('backend_flag')) {
@@ -747,7 +725,7 @@ function doCheck()
             // backend_hostname
             $result = checkString($configValue['backend_hostname'][$i],
                                   $pgpoolConfigBackendParam['backend_hostname']);
-            if (!$result) {
+            if (! $result) {
                 $error['backend_hostname'][$i] = TRUE;
             }
 
@@ -755,7 +733,7 @@ function doCheck()
             $result = checkInteger($configValue['backend_port'][$i],
                                    $pgpoolConfigBackendParam['backend_port']['min'],
                                    $pgpoolConfigBackendParam['backend_port']['max']);
-            if (!$result) {
+            if (! $result) {
                 $error['backend_port'][$i] = TRUE;
             }
 
@@ -763,14 +741,14 @@ function doCheck()
             $result = checkFloat($configValue['backend_weight'][$i],
                                  $pgpoolConfigBackendParam['backend_weight']['min'],
                                  $pgpoolConfigBackendParam['backend_weight']['max']);
-            if (!$result) {
+            if (! $result) {
                 $error['backend_weight'][$i] = TRUE;
             }
 
             // backend_data_directory
             $result = checkString($configValue['backend_data_directory'][$i],
                                   $pgpoolConfigBackendParam['backend_data_directory']);
-            if (!$result) {
+            if (! $result) {
                 $error['backend_data_directory'][$i] = TRUE;
             }
 
@@ -778,7 +756,7 @@ function doCheck()
             if (paramExists('backend_flag')) {
                 $result = checkString($configValue['backend_flag'][$i],
                                       $pgpoolConfigBackendParam['backend_flag']);
-                if (!$result) {
+                if (! $result) {
                     $error['backend_flag'][$i] = TRUE;
                 }
             }
@@ -800,7 +778,7 @@ function doCheck()
             // heartbeat_destination
             $result = checkString($configValue['heartbeat_destination'][$i],
                                   $pgpoolConfigHbDestinationParam['heartbeat_destination']);
-            if (!$result) {
+            if (! $result) {
                 $error['heartbeat_destination'][$i] = TRUE;
             }
 
@@ -808,14 +786,14 @@ function doCheck()
             $result = checkInteger($configValue['heartbeat_destination_port'][$i],
                                    $pgpoolConfigHbDestinationParam['heartbeat_destination_port']['min'],
                                    $pgpoolConfigHbDestinationParam['heartbeat_destination_port']['max']);
-            if (!$result) {
+            if (! $result) {
                 $error['heartbeat_destination_port'][$i] = TRUE;
             }
 
             // heartbeat_device
             $result = checkString($configValue['heartbeat_device'][$i],
                                   $pgpoolConfigHbDestinationParam['heartbeat_device']);
-            if (!$result) {
+            if (! $result) {
                 $error['heartbeat_device'][$i] = TRUE;
             }
         }
@@ -836,7 +814,7 @@ function doCheck()
             // other_pgpool_hostname
             $result = checkString($configValue['other_pgpool_hostname'][$i],
                                   $pgpoolConfigWdOtherParam['other_pgpool_hostname']);
-            if (!$result) {
+            if (! $result) {
                 $error['other_pgpool_hostname'][$i] = TRUE;
             }
 
@@ -844,7 +822,7 @@ function doCheck()
             $result = checkInteger($configValue['other_pgpool_port'][$i],
                                    $pgpoolConfigWdOtherParam['other_pgpool_port']['min'],
                                    $pgpoolConfigWdOtherParam['other_pgpool_port']['max']);
-            if (!$result) {
+            if (! $result) {
                 $error['other_pgpool_port'][$i] = TRUE;
             }
 
@@ -852,7 +830,7 @@ function doCheck()
             $result = checkInteger($configValue['other_wd_port'][$i],
                                    $pgpoolConfigWdOtherParam['other_wd_port']['min'],
                                    $pgpoolConfigWdOtherParam['other_wd_port']['max']);
-            if (!$result) {
+            if (! $result) {
                 $error['other_wd_port'][$i] = TRUE;
             }
         }

@@ -19,7 +19,7 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2014 PgPool Global Development Group
+ * @copyright  2003-2015 PgPool Global Development Group
  * @version    SVN: $Id$
  */
 
@@ -202,7 +202,7 @@ function setNodeInfoFromConf()
     global $tpl;
     global $is_pgpool_running;
 
-    if (!$is_pgpool_running) {
+    if (! $is_pgpool_running) {
         $nodeInfo = array();
 
         $configValue = readConfigParams(array('backend_hostname', 'backend_port'));
@@ -216,7 +216,7 @@ function setNodeInfoFromConf()
         $tpl->assign('nodeInfo', $nodeInfo);
     }
 
-    $configValue = readConfigParams('backend_hostname');
+    $configValue = readConfigParams(array('backend_hostname'));
     $tpl->assign('next_node_num', (isset($configValue['backend_hostname'])) ?
                                   max(array_keys($configValue['backend_hostname'])) + 1 : 0);
 }
@@ -413,7 +413,7 @@ function _addNewBackend()
     }
 
     // Get next nodeNumber
-    $configValue = readConfigParams('backend_hostname');
+    $configValue = readConfigParams(array('backend_hostname'));
     $i = (isset($configValue['backend_hostname'])) ?
          max(array_keys($configValue['backend_hostname'])) + 1 : 0;
 
@@ -428,7 +428,7 @@ function _addNewBackend()
 
     // Write pgpool.conf
     $outfp = fopen(_PGPOOL2_CONFIG_FILE, 'a');
-    if (!$outfp) { return FALSE; }
+    if (! $outfp) { return FALSE; }
     foreach ($lines as $line) {
         if (fputs($outfp, $line) === FALSE) {
             return FALSE;
@@ -457,8 +457,8 @@ function _removeBackend()
     // Read execept backend info of node $nodeNumber
     $lines_to_write = array();
     $fd = fopen(_PGPOOL2_CONFIG_FILE, 'r');
-    if (!$fd) { return FALSE; }
-    while (!feof($fd)) {
+    if (! $fd) { return FALSE; }
+    while (! feof($fd)) {
         $line = fgets($fd);
 
         if (strpos($line, "backend_hostname") !== FALSE ||
@@ -493,7 +493,7 @@ function _removeBackend()
 
     // Write editted lines
     $fd = fopen(_PGPOOL2_CONFIG_FILE, 'w');
-    if (!$fd) { return FALSE; }
+    if (! $fd) { return FALSE; }
     foreach ($lines_to_write as $line) {
         if (fputs($fd, $line) === FALSE) {
             return FALSE;
@@ -516,9 +516,19 @@ function _doPgCtl($nodeNumber, $pg_ctl_action)
 
     if (isSuperUser($_SESSION[SESSION_LOGIN_USER]) == FALSE) { return FALSE; }
 
-    $conn = @pg_connect(conStr($nodeNumber, 'login'));
+    $params = readConfigParams(array(
+        'backend_hostname', 'backend_port', 'backend_weight',
+    ));
+    $conn = openDBConnection(array(
+        'host'     => $params['backend_hostname'][$nodeNum],
+        'port'     => $params['backend_port'][$nodeNum],
+        'dbname'   => 'template1',
+        'user'     => $_SESSION[SESSION_LOGIN_USER],
+        'password' => $_SESSION[SESSION_LOGIN_USER_PASSWORD],
+    ));
+
     if ($conn == FALSE) {
-        @pg_close($conn);
+        closeDBConnection($conn);
         return FALSE;
     }
     $query = sprintf("SELECT pgpool_pgctl('%s', '%s')",
@@ -526,7 +536,7 @@ function _doPgCtl($nodeNumber, $pg_ctl_action)
                      (isset($_POST['stop_mode'])) ? $_POST['stop_mode'] : NULL);
     $result = execQuery($conn, $query);
 
-    @pg_close($conn);
+    closeDBConnection($conn);
 
     return $result;
 }

@@ -70,12 +70,7 @@ $sysDbParam['password'] = $sysDbParam['system_db_password'];
 $sysDbSchema = $sysDbParam['system_db_schema'];
 
 $conn = openDBConnection($sysDbParam);
-if ($conn == FALSE) {
-    $errorCode = 'e2001';
-    $tpl->assign('errorCode', $errorCode);
-    $tpl->display('error.tpl');
-    exit();
-}
+if ($conn == FALSE) { errorPage('e2001'); }
 
 $deleteRow = NULL;
 if ($action == 'delete') {
@@ -91,7 +86,7 @@ if ($action == 'delete') {
             $escaped = pg_escape_string($hashArray[$i]);
             $sql .= "hash = '$escaped' OR ";
         }
-        $sql .= "hash = '$hashArray[$i]'";
+        $sql .= "hash = '{$hashArray[$i]}'";
         $rs = execQuery($conn, $sql);
         $deleteRow = pg_affected_rows($rs);
     }
@@ -163,12 +158,7 @@ if ($sort == "descending") {
 }
 
 $rs = execQuery($conn, $sql);
-if ($rs == FALSE) {
-    $errorCode = 'e2002';
-    $tpl->assign('errorCode', $errorCode);
-    $tpl->display('error.tpl');
-    exit();
-}
+if ($rs == FALSE) { errorPage('e2002'); }
 
 
 $result = pg_fetch_all($rs);

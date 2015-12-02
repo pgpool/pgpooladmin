@@ -38,177 +38,71 @@
       </tfoot>
       <tbody>
         <tr>
-          <th><label>{$message.strLanguage|escape}</label>
-            (string)</th>
-          <td class="input"><select name="lang">
-              <option value="auto">auto</option>
-              {foreach key=key item=str from=$messageList}
-              {if $params.lang == $key}
-              <option value="{$key|escape}" selected="selected">{$str|escape}</option>
-              {else}
-              <option value="{$key|escape}">{$str|escape}</option>
-              {/if}
-              {/foreach}
-            </select>
-          </td>
-        </tr>
-          <th><label>{$message.strVersion|escape}</label>
-            (float)</th>
-          <td class="input"><select name="version">
-              {foreach key=key item=str from=versions()}
-              {if $params.version == $str}
-              <option value="{$str|escape}" selected="selected">{$str|escape}</option>
-              {else}
-              <option value="{$str|escape}">{$str|escape}</option>
-              {/if}
-              {/foreach}
-            </select>
+          <th><label>{$message.strLanguage|escape}</label> (string)</th>
+          <td>{custom_select param='lang' echo=true}
           </td>
         </tr>
         <tr>
-          {if isset($errors.pgpool_config_file)}<th class="error">{else}<th>{/if}
-            <label>{$message.strPgConfFile|escape}</label>
-            (string)</th>
-          <td><input type="text" name="pgpool_config_file" size="50" value="{$params.pgpool_config_file|escape}" />
-          {if isset($errors.pgpool_config_file)}
-          <br />{$errors.pgpool_config_file|escape}
-          {/if}
-          </td></tr>
+          <th><label>{$message.strVersion|escape}</label> (float)</th>
+          <td>{custom_select param='version' echo=true}</td>
+        </tr>
         <tr>
-          {if isset($errors.password_file)}<th class="error">{else}<th>{/if}
-            <label>{$message.strPasswordFile|escape}</label>
-            (string)</th>
-          <td><input type="text" name="password_file" size="50" value="{$params.password_file|escape}" />
-          {if isset($errors.password_file)}
-          <br />{$errors.password_file|escape}
-          {/if}
-          </td></tr>
+          <th><label>{$message.strPgConfFile|escape}</label> (string)</th>
+          <td>{custom_input param='pgpool_config_file' echo=true}</td>
+        </tr>
         <tr>
-          {if isset($errors.pgpool_command)}<th class="error">{else}<th>{/if}
-          <label>{$message.strPgpoolCommand|escape}</label>
-            (string)</th>
-          <td><input type="text" name="pgpool_command" size="50" value="{$params.pgpool_command|escape}" />
-          {if isset($errors.pgpool_command)}
-          <br />{$errors.pgpool_command|escape}
-          {/if}
-          </td></tr>
+          <th><label>{$message.strPasswordFile|escape}</label> (string)</th>
+          <td>{custom_input param='password_file' echo=true}</td>
+        </tr>
+        <tr>
+          <th><label>{$message.strPgpoolCommand|escape}</label> (string)</th>
+          <td>{custom_input param='pgpool_command' echo=true}</td>
+        </tr>
+
+        <tr><th colspan="2"><label>{$message.strPgpoolCommandOption|escape}</label></th></tr>
 
         {if hasMemqCache() == false}
-        <tr>
-          <th colspan="2"><label>{$message.strPgpoolCommandOption|escape}</label>
-            (string)</th></tr>
-        <tr><td>{$message.strCmdC|escape}(-c)</td>
-          <td>
-          {if $params.c == 1}
-          <input type="checkbox" name="c" checked="checked" />
-          {else}
-          <input type="checkbox" name="c" />
-          {/if}
-          {if isset($errors.c)}
-          <br />{$errors.c|escape}
-          {/if}
-          </td></tr>
+        <tr><td class="command_option">{$message.strCmdC|escape} (-c)</td>
+            <td>{custom_radio_bool param='c' echo=true}</td>
+        </tr>
         {/if}
 
-        <tr><td>{$message.strCmdLargeD|escape}(-D)</td>
-          <td>
-          {if $params.D == 1}
-          <input type="checkbox" name="D" checked="checked" />
-          {else}
-          <input type="checkbox" name="D" />
-          {/if}
-          {if isset($errors.D)}
-          <br />{$errors.D|escape}
-          {/if}
-          </td></tr>
-        <tr><td>{$message.strCmdN|escape}(-n)</td>
-          <td>
-          {if $params.n == 1}
-          <input type="checkbox" name="n" checked="checked" />
-          {else}
-          <input type="checkbox" name="n" />
-          {/if}
-          {if isset($errors.n)}
-          <br />{$errors.n|escape}
-          {/if}
-          </td></tr>
-        <tr><td>{$message.strCmdLargeC|escape}(-C)</td>
-          <td>
-          {if $params.C == 1}
-          <input type="checkbox" name="C" checked="checked" />
-          {else}
-          <input type="checkbox" name="C" />
-          {/if}
-          {if isset($errors.C)}
-          <br />{$errors.n|escape}
-          {/if}
-          </td></tr>
-        <tr><td>{$message.strCmdD|escape}(-d)</td>
-          <td>
-          {if $params.d == 1}
-          <input type="checkbox" name="d" checked="checked" />
-          {else}
-          <input type="checkbox" name="d" />
-          {/if}
-          {if isset($errors.d)}
-          <br />{$errors.d|escape}
-          {/if}
-          </td></tr>
-        <tr><td>{$message.strCmdM|escape}(-m)</td><td><select name="m">
-          {if $params.m == 's'}
-               <option value="s" selected="selected">smart</option>
-               <option value="f">fast</option>
-               <option value="i">immediate</option>
-          {elseif $params.m == 'f'}
-               <option value="s">smart</option>
-               <option value="f" selected="selected">fast</option>
-               <option value="i">immediate</option>
-          {elseif $params.m == 'i'}
-               <option value="s">smart</option>
-               <option value="f">fast</option>
-               <option value="i" selected="selected">immediate</option>
-          {else}
-               <option value="s">smart</option>
-               <option value="f">fast</option>
-               <option value="i">immediate</option>
-          {/if}
-          </td></tr>
+        <tr><td class="command_option">{$message.strCmdLargeD|escape} (-D)</td>
+            <td>{custom_radio_bool param='D' param_in_form='large_d' echo=true}</td>
+        </tr>
+        <tr><td class="command_option">{$message.strCmdN|escape} (-n)</td>
+            <td>{custom_radio_bool param='n' echo=true}</td>
+        </tr>
+
+        {if hasMemqCache()}
+        <tr><td class="command_option">{$message.strCmdLargeC|escape} (-C)</td>
+            <td>{custom_radio_bool param='C' param_in_form='large_c'}</td>
+        </tr>
+        {/if}
+
+        <tr><td class="command_option">{$message.strCmdD|escape} (-d)</td>
+            <td>{custom_radio_bool param='d' echo=true}</td>
+        </tr>
+        <tr><td class="command_option">{$message.strCmdM|escape} (-m)</td>
+            <td>{custom_select param='m' echo=true}</td>
+            </td>
+        </tr>
         <tr>
-          {if isset($errors.pgpool_logfile)}<th class="error">{else}<th>{/if}
-            <label>{$message.strPgpoolLogFile|escape}</label>
-            (string)</th>
-          <td><input type="text" name="pgpool_logfile" size="50" value="{$params.pgpool_logfile|escape}" />
-          {if isset($errors.pgpool_logfile)}
-          <br />{$errors.pgpool_logfile|escape}
-          {/if}
-          </td></tr>
+          <th><label>{$message.strPgpoolLogFile|escape}</label> (string)</th>
+          <td>{custom_input param='pgpool_logfile' echo=true}</td>
+        </tr>
         <tr>
-          {if isset($errors.pcp_client_dir)}<th class="error">{else}<th>{/if}
-            <label>{$message.strPcpDir|escape}</label>
-            (string)</th>
-          <td><input type="text" name="pcp_client_dir" size="50" value="{$params.pcp_client_dir|escape}" />
-          {if isset($errors.pcp_client_dir)}
-          <br />{$errors.pcp_client_dir|escape}
-          {/if}
-          </td></tr>
+          <th><label>{$message.strPcpDir|escape}</label> (string)</th>
+          <td>{custom_input param='pcp_client_dir' echo=true}</td>
+        </tr>
         <tr>
-          {if isset($errors.pcp_hostname)}<th class="error">{else}<th>{/if}
-            <label>{$message.strPcpHostName|escape}</label>
-            (string)</th>
-          <td><input type="text" name="pcp_hostname" size="50" value="{$params.pcp_hostname|escape}" />
-          {if isset($errors.pcp_hostname)}
-          <br />{$errors.pcp_hostname|escape}
-          {/if}
-          </td></tr>
+          <th><label>{$message.strPcpHostName|escape}</label> (string)</th>
+          <td>{custom_input param='pcp_hostname' echo=true}</td>
+        </tr>
         <tr>
-          {if isset($errors.pcp_refresh_time)}<th class="error">{else}<th>{/if}
-            <label>{$message.strPcpRefreshTime|escape}</label>
-            (integer)
-          </th><td><input type="text" name="pcp_refresh_time" size="50" value="{$params.pcp_refresh_time|escape}" />
-          {if isset($errors.pcp_refresh_time)}
-          <br />{$errors.pcp_refresh_time|escape}
-          {/if}
-          </td></tr>
+          <th><label>{$message.strPcpRefreshTime|escape}</label> (string)</th>
+          <td>{custom_input param='pcp_refresh_time' echo=true}</td>
+        </tr>
       </tbody>
     </table>
   </form>

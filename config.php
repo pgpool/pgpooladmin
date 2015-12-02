@@ -19,7 +19,7 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2012 PgPool Global Development Group
+ * @copyright  2003-2015 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
@@ -51,6 +51,21 @@ $params = array();
 
 global $errors;
 $errors = array();
+
+/* --------------------------------------------------------------------- */
+/* define                                                                */
+/* --------------------------------------------------------------------- */
+
+$select_options = array(
+    'lang' => array('auto' => 'auto') + $messageList,
+    'version' => array_combine(versions(), versions()),
+    'm' => array('s' => 'smart', 'f' => 'fast', 'i' => 'immediate'),
+);
+$tpl->assign('select_options', $select_options);
+
+/* --------------------------------------------------------------------- */
+/* main                                                                  */
+/* --------------------------------------------------------------------- */
 
 /*
  * Read current parameter
@@ -89,7 +104,6 @@ $params['pcp_refresh_time']   = (defined('_PGPOOL2_STATUS_REFRESH_TIME')) ?
 $tpl->assign('status', NULL);
 switch ( $action ) {
     case 'update':
-
         setValue('lang');
         setValue('version');
         setValue('pgpool_config_file');
@@ -108,13 +122,11 @@ switch ( $action ) {
         setBool('C');
 
         setValue('pgpool_logfile');
-        // pipe
         if ($params['pgpool_logfile'] != '' && isPipe($params['pgpool_logfile'])) {
             $tmp_str = trim($params['pgpool_logfile']);
             if ($tmp_str[0] != '|' || $tmp_str[strlen($tmp_str) - 1] == '|') {
                 $errors['pgpool_logfile'] = $message['errIllegalPipe'];
             }
-        // file
         } elseif ($params['pgpool_logfile'] != '' && !is_writable(dirname($params['pgpool_logfile']))) {
             $errors['pgpool_logfile'] = $message['errFileNotWritable'];
         }
@@ -141,20 +153,10 @@ switch ( $action ) {
         if (count($errors) == 0 ) {
             $pgmgtConfigFile = dirname(__FILE__) . '/conf/pgmgt.conf.php';
 
-            if (!is_writable($pgmgtConfigFile)) {
-                $errorCode = 'e5003';
-                $tpl->assign('errorCode', $errorCode);
-                $tpl->display('error.tpl');
-                exit();
-            }
+            if (! is_writable($pgmgtConfigFile)) { errorPage('e5003'); }
 
             $result = writePgmtConf($pgmgtConfigFile);
-            if (!$result) {
-                $errorCode = 'e5001';
-                $tpl->assign('errorCode', $errorCode);
-                $tpl->display('error.tpl');
-                exit();
-            }
+            if (!$result) { errorPage('e5001'); }
 
             $tpl->assign('status', 'success');
 
@@ -205,8 +207,17 @@ function setBool($key)
     global $g_post;
     global $params;
 
-    if (isset($g_post[$key])) {
-        $params[$key] = 1;
+    switch ($key) {
+    case 'C':
+        $key_in_form = 'large_c'; break;
+    case 'D':
+        $key_in_form = 'large_d'; break;
+    default:
+        $key_in_form = $key; break;
+    }
+
+    if (isset($g_post[$key_in_form])) {
+        $params[$key] = $g_post[$key_in_form];
     } else {
         $params[$key] = 0;
     }
