@@ -19,7 +19,7 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2011 PgPool Global Development Group
+ * @copyright  2003-2015 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
@@ -31,7 +31,9 @@ if (!isset($_SESSION[SESSION_LOGIN_USER])) {
 
 $ret = execPcp('PCP_PROC_COUNT');
 if (!array_key_exists('SUCCESS', $ret)) {
-    $errorCode = 'e1004';
+    if (! isset($ret['errorCode'])) {
+        $errorCode = 'e1004';
+    }
     $tpl->assign('errorCode', $errorCode);
     $tpl->display('innerError.tpl');
     exit();
@@ -42,10 +44,12 @@ if (!array_key_exists('SUCCESS', $ret)) {
 
 for ($i = 0; $i < count($procPids); $i++) {
     $procPid = $procPids[$i];
-    $ret = execPcp('PCP_PROC_INFO', $procPid);
+    $ret = execPcp('PCP_PROC_INFO', array('P' => $procPid));
 
     if (!array_key_exists('SUCCESS', $ret)) {
-        $errorCode = 'e1005';
+        if (! isset($ret['errorCode'])) {
+            $errorCode = 'e1005';
+        }
         $tpl->assign('errorCode', $errorCode);
         $tpl->display('innerError.tpl');
         exit();

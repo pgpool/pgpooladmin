@@ -50,6 +50,11 @@ tbody th.category {
   color: #709CD1;
   font-size: small;
 }
+tbody th.category_2 span {
+  font-weight: bold;
+  color: #7CC9E2;
+  font-size: small;
+}
 
 table#complete_msg
 {
@@ -67,7 +72,7 @@ td.pgconfig_msg img {
 /* --------------------------------------------------------------------- */
 
 a:link {
-  color: red; 
+  color: red;
   text-decoration: none;
 }
 a:visited {
@@ -95,64 +100,78 @@ input {
   font: x-small Verdana, Arial, Helvetica, sans-serif;
 }
 input[type=button], input[type=submit] {
-  border-radius: 3px;
-  padding: 2px 5px;
+  background: #cfcfcf;
 
+  padding: 5px 7px;
   vertical-align: middle;
 
-  border-top: 1px solid #aaa;
-  border-right: 1px solid #666;
-  border-bottom: 1px solid #666;
-  border-left: 1px solid #aaa;
-
+  border-width: 0px;
   -webkit-border-radius: 3px;
   -moz-border-radius:    3px;
   border-radius:         3px;
-
-  background: #ffffff;
-  background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#eeeeee));
-  background: -moz-linear-gradient(top, #ffffff, #eeeeee);
 }
-
 input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover {
-  border-top: 1px solid #666;
-  border-right: 1px solid #aaa;
-  border-bottom: 1px solid #aaa;
-  border-left: 1px solid #666;
-
-  background: #f3f3f3;
-  background: -webkit-gradient(linear, left top, left bottom, from(#eeeeee), to(#ffffff));
-  background: -moz-linear-gradient(top, #eeeeee, #ffffff);
+  background: #dddddd;
   color: #5f5f5f;
 }
 input[type=button]:active, input[type=submit]:active, input[type=reset]:active {
-  border-top: 1px solid #666;
-  border-right: 1px solid #aaa;
-  border-bottom: 1px solid #aaa;
-  border-left: 1px solid #666;
-
-  background: #cccccc;
+  background: #bbbbbb;
   color: #000000;
 }
 input[type=button].command_active {
   background: yellow;
-  background: -webkit-gradient(linear, left top, left bottom, from(yellow), to(#FCE114));
-  background: -moz-linear-gradient(top, yellow, #FCE114);
   border-color: #BC4B00;
 }
 
 input[type=button][disabled], input[type=button][disabled]:hover {
-  border-top: 1px solid #aaa;
-  border-right: 1px solid #666;
-  border-bottom: 1px solid #666;
-  border-left: 1px solid #aaa;
-
-  background: #dedede;
+  background: #cfcfcf;
   color: #777777;
   text-shadow: #eeeeee 0 1px 0;
 }
-input[type=button][disabled]:hover {
-  background: #f0f0f0;
+
+/* --------------------------------------------------------------------- */
+/* radio                                                                 */
+/* --------------------------------------------------------------------- */
+
+div.radio_bool {
+    margin-bottom: 20px;
+    padding: 0px;
+}
+div.radio_bool input{
+    display: none;
+}
+div.radio_bool label{
+    background: #bdc3c7;
+    border-right: 1px solid #abb2b7;
+    color: #555e64;
+    cursor: pointer;
+    display: block;
+    float: left;
+    line-height: 1;
+    margin: 0;
+    padding: 5px 12px;
+    text-align: center;
+    transition: .2s;
+}
+div.radio_bool label:first-of-type{
+    border-radius: 3px 0 0 3px;
+}
+div.radio_bool label:last-of-type{
+    border-right: 0px;
+    border-radius: 0 3px 3px 0;
+}
+div.radio_bool input[type="radio"]:checked + label {
+    background-color: #a1b91d;
+    color: #fff;
+    font-weight: bold;
+}
+div.radio_bool input[type="radio"]:disabled:checked + label {
+    background-color: #e1e1e1;
+    color: #999999;
+}
+div.radio_bool input[type="radio"]:disabled + label {
+    background-color: #cfcfcf;
+    color: #aaaaaa;
 }
 
 /* --------------------------------------------------------------------- */
@@ -185,7 +204,6 @@ ul {
 
 /* menu */
 #menu {
-  padding-bottom: 40px;
   border-top: 1px solid lightsteelblue;
   border-right: 1px solid lightsteelblue;
   float: left;
@@ -220,27 +238,21 @@ ul {
   background: white url("images/background.gif") repeat-y left;
 }
 
-/* submenu */
+/* submenu in pgconfig */
 #submenu {
-  border: 1px solid lightsteelblue;
-  float: right;
+  padding: 0px 30px 30px 10px;
   background: ghostwhite;
   font-size: x-small;
+  border-bottom: 1px solid lightsteelblue;
 }
 #submenu h3 {
-  margin: 0px;
-  padding: 4px 8px;
-  border: 0px solid black;
-  border-bottom: 4px solid white;
-  color: white;
-  background: steelblue;
-  text-align: center;
+  border: 0px;
 }
-#submenu ul {
-  margin: 0px;
-  padding: 8px;
-  border-top: 1px solid lightsteelblue;
-  list-style: square inside;
+#submenu ul li {
+  border: 0px;
+}
+#submenu ul li a:link {
+  padding: 3px;
 }
 
 /* footer */
@@ -314,6 +326,23 @@ ul {
     border-radius: 3px;
     color: white;
 }
+p.check_error {
+    color: red;
+    font-weight: bold;
+}
+p.check_error span.error {
+    background: red;
+    color: white;
+    font-weight: bold;
+    padding: 1px 5px;
+
+    -webkit-border-radius: 3px;
+    -moz-border-radius:    3px;
+    border-radius:         3px;
+}
+td.command_option {
+    padding-left: 30px;
+}
 
 /* --------------------------------------------------------------------- */
 /* Refresh info                                                          */
@@ -331,4 +360,18 @@ div.auto_reloading span {
   padding: 2px 5px;
   margin: 5px;
   color: #2D1D00;
+}
+
+
+form.pgconfig table {
+    width: 800px;
+}
+form.pgconfig table tr:hover {
+    background: #f6f6f6;
+}
+form.pgconfig th.colname {
+    width: 500px;
+}
+form.pgconfig tr.group th {
+    padding-left: 30px;
 }

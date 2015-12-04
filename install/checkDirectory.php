@@ -19,7 +19,7 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2013 PgPool Global Development Group
+ * @copyright  2003-2015 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
@@ -37,6 +37,7 @@ if (isset($_POST['action'])) {
     $action = $_POST['action'];
 }
 
+// Check templates_c
 $templates_c = dirname(dirname(__FILE__) . '/') . '/templates_c';
 if (!is_writable($templates_c)) {
     $templates_c = $templates_c . '  write denied';
@@ -44,6 +45,8 @@ if (!is_writable($templates_c)) {
 } else {
     unset($templates_c);
 }
+
+// Chech pgmgt.conf
 $conf = dirname(dirname(__FILE__) . '/') . '/conf/pgmgt.conf.php';
 if (!is_writable($conf)) {
     $conf = $conf . '  write denied';
@@ -70,7 +73,7 @@ if (!$error && $action == 'next') {
     </div>
       <div id="content">
   <h2>Welcome to pgpool-II Administration Tool</h2>
-  <h3><? echo $message['strDirectoryCheck'] ?></h3>
+  <h3><?php echo $message['strDirectoryCheck'] ?></h3>
   <form action="checkDirectory.php" method="post" name="CheckPath" id="CheckPath">
     <?php
     if($error) {

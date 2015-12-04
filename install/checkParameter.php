@@ -19,7 +19,7 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2013 PgPool Global Development Group
+ * @copyright  2003-2015 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
@@ -56,7 +56,7 @@ if (isset($_POST['pgpool2_config_file']) && $_POST['pgpool2_config_file']) {
 }
 
 $msgPgpoolConfigFile = '';
-if (!@is_file($pgpool2_config_file)) {
+if (! @is_file($pgpool2_config_file)) {
     $msgPgpoolConfigFile = 'File not found';
     $error = TRUE;
 } else {
@@ -78,7 +78,7 @@ if (isset($_POST['password_file']) && $_POST['password_file']) {
 }
 
 $msgPasswordFile = '';
-if (!@is_file($password_file)) {
+if (! @is_file($password_file)) {
     $msgPasswordFile = 'File not found';
     $error = TRUE;
 } else {
@@ -100,7 +100,7 @@ if (isset($_POST['pgpool_command']) && $_POST['pgpool_command']) {
 }
 
 $msgPgpoolCommand = '';
-if (!@is_file($pgpool_command)) {
+if (! @is_file($pgpool_command)) {
     $msgPgpoolCommand = 'pgpool command not found';
     $error = TRUE;
 } elseif (!is_executable($pgpool_command)) {
@@ -108,7 +108,7 @@ if (!@is_file($pgpool_command)) {
     $error = TRUE;
 }
 
-// check args of pgpool comand
+// check args of pgpool command
 $msgCmdC = '';
 $msgCmdLargeD = '';
 $msgCmdD = '';
@@ -164,7 +164,7 @@ if (!is_dir($pcp_client_dir)) {
                      'pcp_systemdb_info');
 
     for ($i = 0; $i < count($command); $i++) {
-        if (!@is_file($pcp_client_dir . "/" . $command[$i])) {
+        if (! @is_file($pcp_client_dir . "/" . $command[$i])) {
             $msgPcpClientDir = $command[$i] . ' command not found';
             $error = TRUE;
         } elseif (!is_executable($pcp_client_dir . "/" . $command[$i] )) {
@@ -179,6 +179,19 @@ if (isset($_POST['pcp_hostname']) && $_POST['pcp_hostname']) {
     $pcp_hostname = $_POST['pcp_hostname'];
 } else {
     $pcp_hostname =  _PGPOOL2_PCP_HOSTNAME;
+}
+
+if (3.5 <= $version) {
+    $msgPcpPassFile = '';
+    $proc_user_info = posix_getpwuid(posix_geteuid());
+    $pcppass_file = "{$proc_user_info['dir']}/.pcppass";
+    if (! is_file($pcppass_file)) {
+        $msgPcpPassFile = 'File not found';
+    } elseif (fileowner($pcppass_file) != $proc_user_info['uid']) {
+        $msgPcpPassFile = 'Invalid owner';
+    } elseif (substr(sprintf('%o', fileperms($pcppass_file)), -4) != '0600') {
+        $msgPcpPassFile = 'Invalid permission';
+    }
 }
 
 $msgPcpTimeout = '';
@@ -354,37 +367,37 @@ if (!$error && $action == 'next') {
 
   <table>
   <tr>
-    <th><label><?php echo $message['strCmdC'] ?></label></th>
+    <th><label><?php echo $message['strCmdC'] ?> (-c)</label></th>
     <td><input type="checkbox" name="c" />
     <?php showResult($msgCmdC); ?>
     </td>
   </tr>
   <tr>
-    <th><label><?php echo $message['strCmdLargeD'] ?></label></th>
+    <th><label><?php echo $message['strCmdLargeD'] ?> (-D)</label></th>
     <td><input type="checkbox" name="D" />
     <?php showResult($msgCmdLargeD); ?>
     </td>
   </tr>
   <tr>
-    <th><label><?php echo $message['strCmdN'] ?></label></th>
+    <th><label><?php echo $message['strCmdN'] ?> (-n)</label></th>
     <td><input type="checkbox" name="n" />
     <?php showResult($msgCmdN); ?>
     </td>
   </tr>
   <tr>
-    <th><label><?php echo $message['strCmdLargeC'] ?></label></th>
+    <th><label><?php echo $message['strCmdLargeC'] ?> (-C)</label></th>
     <td><input type="checkbox" name="D" />
     <?php showResult($msgCmdLargeC); ?>
     </td>
   </tr>
   <tr>
-    <th><label><?php echo $message['strCmdD'] ?></label></th>
+    <th><label><?php echo $message['strCmdD'] ?> (-d)</label></th>
     <td><input type="checkbox" name="d" />
     <?php showResult($msgCmdD); ?>
     </td>
   </tr>
   <tr>
-    <th><label><?php echo $message['strCmdM'] ?></label></th>
+    <th><label><?php echo $message['strCmdM'] ?> (-m)</label></th>
     <td><select  name="m" />
           <option value="s" selected="selected">smart</optgroup>
           <option value="f">fast</optgroup>
@@ -412,6 +425,10 @@ if (!$error && $action == 'next') {
     <?php showResult($msgPcpHostname); ?>
     </td>
   </tr>
+  <tr id="tr_pcppass">
+    <th><label>.pcppass [V3.5 - ]</label></th>
+    <td><?php echo $pcppass_file; ?>
+    <?php showResult($msgPcpPassFile); ?>
   <tr>
     <th><label><?php echo $message['strPcpTimeout'] ?></label></th>
     <td><input name="pcp_timeout" type="text" value="<?php echo $pcp_timeout?>" size="50" />
@@ -453,7 +470,7 @@ else {
 
 function versions()
 {
-    return array('3.4', '3.3', '3.2', '3.1', '3.0',
+    return array('3.5', '3.4', '3.3', '3.2', '3.1', '3.0',
                  '2.3', '2.2', '2.1', '2.0');
 }
 

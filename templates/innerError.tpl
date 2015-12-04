@@ -13,7 +13,7 @@
     </tr>
     <tr>
       <th><label>{$message.strErrorMessage|escape}</label></th>
-      <td>{$message.$errorCode|escape}</td>
+      <td>{$message.$errorCode|escape}<br>{$detail|escape}</td>
     </tr>
     </td>
     </tr>

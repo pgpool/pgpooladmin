@@ -184,6 +184,8 @@ $message = array(
     'errIllegalHostname' => '不正なホスト名です',
     'errIllegalPipe' => 'パイプの指定が不正です',
     'errInputEverything' => 'すべてを入力してください',
+    'errInvalidOwner' => '所有者が正しくありません',
+    'errInvalidPermission' => 'パーミッションが正しくありません',
     'errNoDefined' => 'パラメータが設定されていません',
     'errNotSameLength' => '列名リストと列データ型リストの配列の長さが一致しません。'.
                           '同じ要素数である必要があります。',
@@ -393,6 +395,7 @@ $message = array(
     'e1011' => 'ログファイルが見つかりません',
     'e1012' => 'pcp_recovery_nodeコマンドでエラーが発生しました',
     'e1013' => 'pcp_watchdog_infoコマンドでエラーが発生しました',
+    'e1014' => '.pcppass ファイルの読み込みに失敗しました',
     'e2001' => 'データベースに接続できません',
     'e2002' => 'レコード取得時にエラーが発生しました',
     'e2003' => 'pgpool.confが見つかりません',

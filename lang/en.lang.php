@@ -200,6 +200,8 @@ $message = array(
     'errIllegalHostname' => 'Illegal hostname',
     'errIllegalPipe' => 'Pipe destination is invalid',
     'errInputEverything' => 'Please input all items',
+    'errInvalidOwner' => 'Invalid owner',
+    'errInvalidPermission' => 'Invalid permission',
     'errNoDefined' => 'No defined parameter',
     'errNotSameLength' => 'The array length of col_list is not corresponding to that of type_list. '.
                           'It should be the same number of elements.',
@@ -406,6 +408,7 @@ $message = array(
     'e1011' => 'Log file not found.',
     'e1012' => 'pcp_recovery_node command error occurred.',
     'e1013' => 'pcp_watchdog_info command error occurred.',
+    'e1014' => 'Could not read .pcppass file'
     'e2001' => 'Database connection error occurred.',
     'e2002' => 'The error occurred when SELECT was executed',
     'e2003' => 'pgpool.conf not found.',

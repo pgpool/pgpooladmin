@@ -13,7 +13,7 @@ function smarty_function_custom_select($args)
     foreach ($select_options[$param] as $key => $val) {
         $rtn .= sprintf(
             '<option value="%s" %s>%s</option>',
-            $key, ($val == $user_val) ? 'selected' : NULL, $val
+            $key, ($key === $user_val || $val === $user_val) ? 'selected' : NULL, $val
         );
     }
     $rtn .= '</select>';

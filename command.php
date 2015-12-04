@@ -19,7 +19,7 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2013 PgPool Global Development Group
+ * @copyright  2003-2015 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
@@ -32,7 +32,7 @@ require_once('common.php');
  * @param srgs $num
  * @return array
  */
-function execPcp($command, $num = '')
+function execPcp($command, $extra_args)
 {
     $pcpStatus = array (
         '0'   => 'SUCCESS',
@@ -55,12 +55,27 @@ function execPcp($command, $num = '')
     $param = readPcpInfo();
     $param['hostname'] = _PGPOOL2_PCP_HOSTNAME;
 
-    $args = " " . PCP_TIMEOUT.
-            " " . $param['hostname'] .
-            " " . $param['pcp_port'] .
-            " ". $_SESSION[SESSION_LOGIN_USER] .
-            " '" . $_SESSION[SESSION_LOGIN_USER_PASSWORD] . "' " .
-            $num;
+    if (3.5 <= _PGPOOL2_VERSION) {
+        // Check /home/apache/.pcppass (If error, exit here)
+        checkPcppass();
+
+        $args = sprintf(' -w -h %s -p %d -U %s',
+            $param['hostname'], $param['pcp_port'],
+            $_SESSION[SESSION_LOGIN_USER]
+        );
+
+        foreach ($extra_args as $arg_name => $val) {
+            $args .= " -{$arg_name} {$val}";
+        }
+
+    } else {
+        $args = " " . PCP_TIMEOUT.
+                " " . $param['hostname'] .
+                " " . $param['pcp_port'] .
+                " ". $_SESSION[SESSION_LOGIN_USER] .
+                " '" . $_SESSION[SESSION_LOGIN_USER_PASSWORD] . "' " .
+                implode($extra_args, ' ');
+    }
 
     switch ($command) {
         case 'PCP_NODE_COUNT':
@@ -158,6 +173,7 @@ function execPcp($command, $num = '')
         default:
             return array($pspStatus[1] => $pspStatus[1]);
     }
+
     return array($pcpStatus[$return_var] => $ret);
 }
 
@@ -195,12 +211,11 @@ function getNodeInfo($i)
     global $tpl;
 
     // execute "pcp_node_info" command
-    // ex) host1 5432 1 1073741823.500000
-    $result = execPcp('PCP_NODE_INFO', $i);
+    $result = execPcp('PCP_NODE_INFO', array('n' => $i));
 
     if (!array_key_exists('SUCCESS', $result)) {
-        $errorCode = 'e1003';
-        $tpl->assign('errorCode', $errorCode);
+        $tpl->assign('errorCode', 'e1003');
+        $tpl->assign('result', $result);
         $tpl->display('innerError.tpl');
         exit();
     }
@@ -237,5 +252,29 @@ function getWatchdogInfo($i = '')
     $rtn['status']      = $arr[3];
 
     return $rtn;
+}
+
+function checkPcppass()
+{
+    global $message, $tpl;
+
+    $proc_user_info = posix_getpwuid(posix_geteuid());
+    $pcppass_file = "{$proc_user_info['dir']}/.pcppass";
+
+    $detail = NULL;
+    if (! is_file($pcppass_file)) {
+        $detail = $message['errFileNotFound'];
+    } elseif (fileowner($pcppass_file) != $proc_user_info['uid']) {
+        $detail = $message['errInvalidOwner'];
+    } elseif (substr(sprintf('%o', fileperms($pcppass_file)), -4) != '0600') {
+        $detail = $message['errInvalidPermission'];
+    }
+
+    if ($detail) {
+        $tpl->assign('errorCode', 'e1014');
+        $tpl->assign('detail', $detail);
+        $tpl->display('innerError.tpl');
+        exit();
+    }
 }
 ?>
