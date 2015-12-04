@@ -60,6 +60,9 @@
 <tr><th class="right_border"><label>e1009</label></th><td  class="right_border">指定したpcp.confが見つかりません</td><td>pcp.confが設定メニューで指定した場所にあるか確認してください。またpcp.confに適切なアクセス権があるか確認してください。</td></tr>
 <tr><th class="right_border"><label>e1010</label></th><td  class="right_border">pcp_attach_nodeコマンドでエラーが発生しました</td><td>pcp_attach_nodeの実行エラーです。pcp_detach_nodeが正常に実行できるか確認してください。</td></tr>
 <tr><th class="right_border"><label>e1011</label></th><td  class="right_border">ログファイルが見つかりません</td><td>pgpoolログファイルが設定メニューで指定した場所にあるか確認してください。また指定したログファイルに適切なアクセス権があるか確認してください。指定しない場合には、pgpool.confのlogdirで指定したディレクトリにpgpool.logというファイル名で作成されます。</td></tr>
+<tr><th class="right_border"><label>e1012</label></th><td  class="right_border">pcp_recovery_nodeコマンドでエラーが発生しました</td><td>pcp_recovery_nodeの実行エラーです。pcp_recovery_nodeが正常に実行できるか確認してください。</td></tr>
+<tr><th class="right_border"><label>e1013</label></th><td  class="right_border">pcp_watchdog_infoコマンドでエラーが発生しました</td><td>pcp_watchdog_infoの実行エラーです。pcp_watchdog_infoが正常に実行できるか確認してください。</td></tr>
+<tr><th class="right_border"><label>e1014</label></th><td  class="right_border">.pcppass ファイルの読み込みに失敗しました</td><td>（V3.5 以降） PCP コマンドを実行するのに、.pcppass ファイルを読み込むのに失敗したときのエラーです。Apache 起動ユーザのホームディレクトリにある .pcppass を参照します（/home/apache/.pcppass など）。ファイルが無い、所有者が apache でない、パーミッションが 600 でない、のいずれかの原因によります。</td></tr>
 </tbody>
 <tfoot><tr><td colspan="3"></td></tr></tfoot>
 </table>
