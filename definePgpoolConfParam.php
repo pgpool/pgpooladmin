@@ -899,7 +899,7 @@ $pgpoolConfigWdOtherParam[$key]['type'] = 'C';
 $pgpoolConfigWdOtherParam[$key]['default'] = '';
 $pgpoolConfigWdOtherParam[$key]['regexp'] = $hostreg;
 $pgpoolConfigWdOtherParam[$key]['multiple'] = TRUE;
-$pgpoolConfigParam[$key]['parent'] = array('use_watchdog' => 'on');
+$pgpoolConfigWdOtherParam[$key]['parent'] = array('use_watchdog' => 'on');
 
 $key = 'other_pgpool_port';
 $pgpoolConfigWdOtherParam[$key]['type'] = 'N';
@@ -907,7 +907,7 @@ $pgpoolConfigWdOtherParam[$key]['default'] = 9999;
 $pgpoolConfigWdOtherParam[$key]['min'] = 1024;
 $pgpoolConfigWdOtherParam[$key]['max'] = NUM_MAX;
 $pgpoolConfigWdOtherParam[$key]['multiple'] = TRUE;
-$pgpoolConfigParam[$key]['parent'] = array('use_watchdog' => 'on');
+$pgpoolConfigWdOtherParam[$key]['parent'] = array('use_watchdog' => 'on');
 
 $key = 'other_wd_port';
 $pgpoolConfigWdOtherParam[$key]['type'] = 'N';
@@ -915,7 +915,7 @@ $pgpoolConfigWdOtherParam[$key]['default'] = 9000;
 $pgpoolConfigWdOtherParam[$key]['min'] = 1024;
 $pgpoolConfigWdOtherParam[$key]['max'] = NUM_MAX;
 $pgpoolConfigWdOtherParam[$key]['multiple'] = TRUE;
-$pgpoolConfigParam[$key]['parent'] = array('use_watchdog' => 'on');
+$pgpoolConfigWdOtherParam[$key]['parent'] = array('use_watchdog' => 'on');
 
 #------------------------------------------------------------------------------
 # IN MEMORY QUERY CACHE
