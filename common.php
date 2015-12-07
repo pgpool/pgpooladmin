@@ -216,6 +216,8 @@ function NodeStandby($nodeNum)
 function isSuperUser($user_name)
 {
     $params = readConfigParams(array('port'));
+
+    // Try to connect the backend by login user
     $conn = openDBConnection(array(
         'port'     => $params['port'],
         'dbname'   => 'template1',
@@ -223,9 +225,17 @@ function isSuperUser($user_name)
         'password' => $_SESSION[SESSION_LOGIN_USER_PASSWORD],
     ));
 
-    if ($conn == FALSE) {
-        return NULL;
+    // Try to connect health check user
+    if ($conn === FALSE) {
+        $params = readConfigParams(array('port', 'health_check_user', 'health_check_password'));
+        $conn = openDBConnection(array(
+            'port'     => $params['port'],
+            'dbname'   => 'template1',
+            'user'     => $params['health_check_user'],
+            'password' => $params['health_check_password']
+        ));
     }
+    if ($conn === FALSE) { return NULL; }
 
     $result = pg_query($conn, "SELECT usesuper FROM pg_user WHERE usename = '{$user_name}'");
     if (! pg_result_status($result) == PGSQL_TUPLES_OK) {

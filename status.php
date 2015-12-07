@@ -224,33 +224,40 @@ function setNodeInfoFromConf()
 /** Modify start options */
 function _setStartArgs()
 {
-    $args = ' ';
+    $args = array();
 
-    if (isset($_POST['c'])) {
-        $args = $args . "-c ";
-    }
-    if (isset($_POST['D'])) {
-        $args = $args . "-D ";
-    }
-    if (isset($_POST['d'])) {
-        $args = $args . "-d ";
-    }
-    if (isset($_POST['n'])) {
-        $pgpoolLog = _PGPOOL2_LOG_FILE;
-        if ($pgpoolLog == '') {
-            $logDir = readLogDir();
-            $pgpoolLog = "$logDir/pgpool.log";
+    $args[] = "-f ". _PGPOOL2_CONFIG_FILE;
+    $args[] = "-F ".  _PGPOOL2_PASSWORD_FILE;
+
+    foreach ($_POST as $key => $value) {
+        switch ($key) {
+        case 'c':
+        case 'D':
+        case 'd':
+        case 'C':
+        case 'n':
+            if ($value == 'on') {
+                $args[] = "-{$key}";
+            }
+
+            if ($key == 'n') {
+                $pgpoolLog = _PGPOOL2_LOG_FILE;
+                if ($pgpoolLog == '') {
+                    $logDir = readLogDir();
+                    $pgpoolLog = "$logDir/pgpool.log";
+                }
+                if (isPipe($pgpoolLog)) {
+                    $args[] = "2>&1 > $pgpoolLog &";
+                } else {
+                    $args[] = "> $pgpoolLog &";
+                }
+            }
+            break;
         }
-        if (isPipe($pgpoolLog)) {
-            $args = "$args -n 2>&1 $pgpoolLog ";
-        } else {
-            $args = "$args -n > $pgpoolLog ";
-        }
-    }
-    if (isset($_POST['C'])) {
-        $args = $args . "-C ";
     }
 
+
+    $args = ' ' . implode(' ', $args);
     return $args;
 }
 
@@ -286,9 +293,8 @@ function _startPgpool()
     global $tpl;
     $rtn = FALSE;
 
-    $args = _setStartArgs();
-    $result = execPcp('PCP_START_PGPOOL', $args);
-    if (!array_key_exists('SUCCESS', $result)) {
+    $result = execPcp('PCP_START_PGPOOL');
+    if (! array_key_exists('SUCCESS', $result)) {
         $pgpoolStatus = 'pgpool start failed.';
         $pgpoolMessage = $result;
 

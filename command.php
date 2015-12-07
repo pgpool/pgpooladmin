@@ -32,7 +32,7 @@ require_once('common.php');
  * @param srgs $num
  * @return array
  */
-function execPcp($command, $extra_args)
+function execPcp($command, $extra_args = array())
 {
     $pcpStatus = array (
         '0'   => 'SUCCESS',
@@ -68,7 +68,7 @@ function execPcp($command, $extra_args)
             $args .= " -{$arg_name} {$val}";
         }
 
-    } else {
+    } elseif ($param) {
         $args = " " . PCP_TIMEOUT.
                 " " . $param['hostname'] .
                 " " . $param['pcp_port'] .
@@ -110,22 +110,9 @@ function execPcp($command, $extra_args)
             break;
 
         case 'PCP_START_PGPOOL':
-            $configOption = ' -f ' . _PGPOOL2_CONFIG_FILE .
-                            ' -F ' . _PGPOOL2_PASSWORD_FILE;
-
-            if(isPipe($num)) {
-                $cmdOption = $configOption . $num . ' > /dev/null &';
-            } else {
-                $cmdOption = $configOption . $num . ' 2>&1 &';
-            }
-
-            /* we should not check pid file here.
-             * let pgpool handle bogus pid file
-             * if(DoesPgpoolPidExist()) {
-             *   return array('FAIL'=> '');
-             * }
-             */
-            $cmd = _PGPOOL2_COMMAND . $cmdOption;
+            $args = _setStartArgs();
+            $cmd = _PGPOOL2_COMMAND . $args;
+            pr($cmd);
             $ret = exec($cmd, $output, $return_var);
             if ($return_var == 0) {
                 return array($pcpStatus[$return_var] => $output);
@@ -135,11 +122,8 @@ function execPcp($command, $extra_args)
             break;
 
         case 'PCP_RELOAD_PGPOOL':
-            $cmdOption = $num;
-            $cmdOption = $cmdOption .
-                         ' -f ' . _PGPOOL2_CONFIG_FILE .
-                         ' -F ' . _PGPOOL2_PASSWORD_FILE . ' reload';
-            $cmd = _PGPOOL2_COMMAND . $cmdOption . ' 2>&1 &';
+            $args = _setStartArgs();
+            $cmd = _PGPOOL2_COMMAND . $args. ' reload 2>&1 &';
             $ret = exec($cmd, $output, $return_var);
             if ($return_var == 0) {
                 return array($pcpStatus[$return_var] => $output);
@@ -149,6 +133,7 @@ function execPcp($command, $extra_args)
             break;
 
         case 'PCP_STOP_PGPOOL':
+            $args .= " {$_POST['stop_mode']}";
             $cmd = _PGPOOL2_PCP_DIR . '/pcp_stop_pgpool' . $args;
             $ret = exec($cmd, $output, $return_var);
             break;
