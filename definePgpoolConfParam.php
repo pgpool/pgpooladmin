@@ -633,6 +633,7 @@ $key = 'search_primary_node_timeout';
 $pgpoolConfigParam[$key]['type'] = 'N';
 $pgpoolConfigParam[$key]['default'] = 10;
 $pgpoolConfigParam[$key]['min'] = 0;
+$pgpoolConfigParam[$key]['max'] = NUM_MAX;
 
 #------------------------------------------------------------------------------
 # ONLINE RECOVERY
