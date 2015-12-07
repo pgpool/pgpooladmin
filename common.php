@@ -146,13 +146,14 @@ function NodeActive($nodeNum)
 {
     $params = readConfigParams(array(
         'backend_hostname', 'backend_port', 'backend_weight',
-        'health_check_user', 'health_check_password'
+        'health_check_user', 'health_check_password', 'health_check_database'
     ));
 
     $conn = openDBConnection(array(
         'host'     => $params['backend_hostname'][$nodeNum],
         'port'     => $params['backend_port'][$nodeNum],
-        'dbname'   => 'template1',
+        'dbname'   => (paramExists('health_check_database')) ?
+                       $params['health_check_database'] : 'template1',
         'user'     => $params['health_check_user'],
         'password' => $params['health_check_password'],
     ));
