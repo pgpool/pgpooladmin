@@ -210,6 +210,7 @@ $message = array(
     'errShouldBeInteger' => 'This should be an integer',
     'errShouldBeZeroOrMore' => 'This should be 0 or more',
     'errSingleQuotation' => 'Please enclose the array element with a single quotation.',
+    'errWrongVersion' => 'pgpool command shows another version',
 
     'msgAddBackend' => 'Do you really add this node as a new backend?',
     'msgAddBackendNg' => 'Invalid.',

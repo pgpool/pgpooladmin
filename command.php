@@ -112,7 +112,6 @@ function execPcp($command, $extra_args = array())
         case 'PCP_START_PGPOOL':
             $args = _setStartArgs();
             $cmd = _PGPOOL2_COMMAND . $args;
-            pr($cmd);
             $ret = exec($cmd, $output, $return_var);
             if ($return_var == 0) {
                 return array($pcpStatus[$return_var] => $output);

@@ -39,8 +39,7 @@
       <tbody>
         <tr>
           <th><label>{$message.strLanguage|escape}</label> (string)</th>
-          <td>{custom_select param='lang' echo=true}
-          </td>
+          <td>{custom_select param='lang' echo=true}</td>
         </tr>
         <tr>
           <th><label>{$message.strVersion|escape}</label> (float)</th>

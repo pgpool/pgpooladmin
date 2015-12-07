@@ -19,7 +19,9 @@ function smarty_function_custom_select($args)
     $rtn .= '</select>';
 
     if ($errors[$param]) {
-        $rtn .='<br>'. $errors[$param];
+        $rtn .= '<p class="check_error">'.
+                '<span class="error">Error</span> '. $errors[$param].
+                '</p>';
     }
 
     echo $rtn;

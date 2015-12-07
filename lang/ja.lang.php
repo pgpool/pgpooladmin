@@ -194,6 +194,7 @@ $message = array(
     'errShouldBeInteger' => '0以上の整数を入力してください',
     'errShouldBeZeroOrMore' => '0以上である必要があります',
     'errSingleQuotation' => '配列要素をシングルクォーテーションで囲んでください。',
+    'errWrongVersion' => 'pgpool コマンドと一致していません。',
 
     'msgAddBackend' => 'バックエンドノードとして追加してよろしいですか？',
     'msgAddBackendNg' => 'バックエンドノード情報に不備があります。',

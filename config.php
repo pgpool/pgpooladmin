@@ -148,9 +148,22 @@ switch ( $action ) {
         }
 
         /*
+         * Confirm pgpool_version corresponds with pgpool_command's output in stderr
+         * like "pgpool-II version 3.5alpha1 (ekieboshi)"
+         */
+        $cmd = "{$params['pgpool_command']} --version 2>&1";
+        $ret = exec($cmd, $output, $return_var);
+        if ($return_var == 0) {
+            $output_arr = explode(" ", $output[0]);
+            if (strpos($output_arr[2], $params['version']) !== 0) {
+                $errors['version'] = $message['errWrongVersion'];
+            }
+        }
+
+        /*
          * If no error, write conf/pgmgt.conf.php.
          */
-        if (count($errors) == 0 ) {
+        if (count($errors) == 0) {
             $pgmgtConfigFile = dirname(__FILE__) . '/conf/pgmgt.conf.php';
 
             if (! is_writable($pgmgtConfigFile)) { errorPage('e5003'); }
