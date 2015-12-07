@@ -842,7 +842,7 @@ $pgpoolConfigHbDestinationParam[$key]['type'] = 'C';
 $pgpoolConfigHbDestinationParam[$key]['default'] = '';
 $pgpoolConfigHbDestinationParam[$key]['regexp'] = $hostreg;
 $pgpoolConfigHbDestinationParam[$key]['multiple'] = TRUE;
-$pgpoolConfigParam[$key]['parent'] = array('use_watchdog' => 'on', 'wd_lifecheck_method' => 'heartbeat');
+$pgpoolConfigHbDestinationParam[$key]['parent'] = array('use_watchdog' => 'on', 'wd_lifecheck_method' => 'heartbeat');
 
 $key = 'heartbeat_destination_port';
 $pgpoolConfigHbDestinationParam[$key]['type'] = 'N';
@@ -850,14 +850,14 @@ $pgpoolConfigHbDestinationParam[$key]['default'] = 9694;
 $pgpoolConfigHbDestinationParam[$key]['min'] = 1024;
 $pgpoolConfigHbDestinationParam[$key]['max'] = NUM_MAX;
 $pgpoolConfigHbDestinationParam[$key]['multiple'] = TRUE;
-$pgpoolConfigParam[$key]['parent'] = array('use_watchdog' => 'on', 'wd_lifecheck_method' => 'heartbeat');
+$pgpoolConfigHbDestinationParam[$key]['parent'] = array('use_watchdog' => 'on', 'wd_lifecheck_method' => 'heartbeat');
 
 $key = 'heartbeat_device';
 $pgpoolConfigHbDestinationParam[$key]['type'] = 'C';
 $pgpoolConfigHbDestinationParam[$key]['default'] = 'eth0';
 $pgpoolConfigHbDestinationParam[$key]['regexp'] = $anyelse;
 $pgpoolConfigHbDestinationParam[$key]['multiple'] = TRUE;
-$pgpoolConfigParam[$key]['parent'] = array('use_watchdog' => 'on', 'wd_lifecheck_method' => 'heartbeat');
+$pgpoolConfigHbDestinationParam[$key]['parent'] = array('use_watchdog' => 'on', 'wd_lifecheck_method' => 'heartbeat');
 
 # (Configuration of query mode)
 
