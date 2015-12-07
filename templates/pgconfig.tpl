@@ -162,6 +162,8 @@
           {foreach from=$params.backend_hostname key=node_num item=v}
               <tr><th colspan="2">
                   <span class="param_group">Backend node {$node_num}</span>
+                  <input type="button" name="delete" value="{$message.strDelete|escape}"
+                  onclick="sendForm('delete', {$node_num})" />
               </th></tr>
               {custom_tr_pgconfig param='backend_hostname' num=$node_num}
               {custom_tr_pgconfig param='backend_port' num=$node_num}
@@ -533,13 +535,13 @@
 
             {custom_tr_pgconfig param='wd_hostname'}
             {custom_tr_pgconfig param='wd_port'}
-			{if paramExists('wd_priority')}
-				{custom_tr_pgconfig param='wd_priority'}
-			{/if}
+            {if paramExists('wd_priority')}
+                {custom_tr_pgconfig param='wd_priority'}
+            {/if}
             {custom_tr_pgconfig param='wd_authkey'}
-			{if paramExists('wd_ipc_socket_dir')}
-				{custom_tr_pgconfig param='wd_ipc_socket_dir'}
-			{/if}
+            {if paramExists('wd_ipc_socket_dir')}
+                {custom_tr_pgconfig param='wd_ipc_socket_dir'}
+            {/if}
           </tbody>
 
           <tbody id="tb_watchdog_use_watchdog_on_vip">
@@ -549,11 +551,11 @@
 
             {custom_tr_pgconfig param='delegate_IP'}
             {if paramExists('ifconfig_path')}
-				{custom_tr_pgconfig param='ifconfig_path'}
-			{/if}
+                {custom_tr_pgconfig param='ifconfig_path'}
+            {/if}
             {if paramExists('if_cmd_path')}
-				{custom_tr_pgconfig param='if_cmd_path'}
-			{/if}
+                {custom_tr_pgconfig param='if_cmd_path'}
+            {/if}
             {custom_tr_pgconfig param='if_up_cmd'}
             {custom_tr_pgconfig param='if_down_cmd'}
             {custom_tr_pgconfig param='arping_path'}
