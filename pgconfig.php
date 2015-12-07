@@ -57,9 +57,7 @@ foreach ($pgpoolConfigParam as $key => $value) {
     }
 }
 
-// Get current values
-$params = $configValue;
-$tpl->assign('params', $params);
+$params = $configValue; // referenced by smarty_function_custom_tr_pgconfig()
 
 /* --------------------------------------------------------------------- */
 /* Add or Cancel                                                         */
@@ -113,6 +111,9 @@ switch ($action) {
                 writeConfigFile($configValue, $pgpoolConfigParamAll);
                 $tpl->assign('status', 'success');
 
+                // Read all params again
+                $configValue = readConfigParams();
+
             } else {
                 $errorCode = 'e4003';
                 $tpl->assign('errorCode', $errorCode);
@@ -142,6 +143,8 @@ switch ($action) {
 
         if (is_writable(_PGPOOL2_CONFIG_FILE)) {
             writeConfigFile($configValue, $pgpoolConfigParamAll);
+
+            // Read all params again
             $configValue = readConfigParams();
 
         } else {
@@ -158,7 +161,7 @@ switch ($action) {
 }
 
 /* Set each empty object if null */
-if (!isset($configValue['backend_hostname'])) {
+if (! isset($configValue['backend_hostname'])) {
     $configValue['backend_hostname'][0] = NULL;
     $configValue['backend_port'][0]     = NULL;
     $configValue['backend_weight'][0]   = NULL;
@@ -166,19 +169,21 @@ if (!isset($configValue['backend_hostname'])) {
     $configValue['backend_flag'][0]     = NULL;
 }
 
-if (!isset($configValue['heartbeat_destination'])) {
+if (! isset($configValue['heartbeat_destination'])) {
     $configValue['heartbeat_destination'][0] = NULL;
     $configValue['heartbeat_destination_port'][0] = NULL;
     $configValue['heartbeat_device'][0]      = NULL;
 }
 
-if (!isset($configValue['other_pgpool_hostname'])) {
+if (! isset($configValue['other_pgpool_hostname'])) {
     $configValue['other_pgpool_hostname'][0] = NULL;
     $configValue['other_pgpool_port'][0]     = NULL;
     $configValue['other_wd_port'][0]         = NULL;
 }
 
 $tpl->assign('error', $error);
+$tpl->assign('params', $configValue);
+$params = $configValue; // referenced by smarty_function_custom_tr_pgconfig()
 
 $tpl->display('pgconfig.tpl');
 
