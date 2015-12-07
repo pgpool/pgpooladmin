@@ -122,19 +122,19 @@ function _doAction($action, $nodeNumber)
         /* --------------------------------------------------------------------- */
 
         case 'return':
-            if (_execPcp('PCP_ATTACH_NODE', $nodeNumber, 'e1010') === FALSE) { exit(); }
+            if (_execPcp('PCP_ATTACH_NODE', array('n' => $nodeNumber), 'e1010') === FALSE) { exit(); }
             break;
 
         case 'recovery':
-            if (_execPcp('PCP_RECOVERY_NODE', $nodeNumber, 'e1012') === FALSE) { exit(); }
+            if (_execPcp('PCP_RECOVERY_NODE', array('n' => $nodeNumber), 'e1012') === FALSE) { exit(); }
             break;
 
         case 'detach':
-            if (_execPcp('PCP_DETACH_NODE', $nodeNumber, 'e1007') === FALSE) { exit(); }
+            if (_execPcp('PCP_DETACH_NODE', array('n' => $nodeNumber), 'e1007') === FALSE) { exit(); }
             break;
 
         case 'promote':
-            if (_execPcp('PCP_PROMOTE_NODE', $nodeNumber, 'e1007') === FALSE) { exit(); }
+            if (_execPcp('PCP_PROMOTE_NODE', array('n' => $nodeNumber), 'e1007') === FALSE) { exit(); }
             break;
 
         /* --------------------------------------------------------------------- */
