@@ -7,7 +7,7 @@
 Summary:     PgpoolAdmin - web-based pgpool administration
 Name:        pgpoolAdmin
 Version:     %{pgpooladmin_version}
-Release:     2pgdg%{?dist}
+Release:     1pgdg%{?dist}
 License:     BSD
 Group:       Applications/Databases
 URL:         http://pgpool.net/
