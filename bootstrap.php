@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright  2003-2013 PgPool Global Development Group
+ * @copyright  2003-2016 PgPool Global Development Group
  */
 
 // Session
@@ -27,11 +27,23 @@ define('NODE_ACTIVE_CONNECTED',  2);
 define('NODE_DOWN',              3);
 define('NODE_NOT_LOADED',       -1); // only for pgpoolAdmin
 
-// watchdog status in "pcp_watchdog_info" result
-define('WATCHDOG_INIT',    1);
-define('WATCHDOG_STANDBY', 2);
-define('WATCHDOG_ACTIVE',  3);
-define('WATCHDOG_DOWN',    4);
+// watchdog status in "pcp_watchdog_info" result (- 3.4)
+// (defined in $src/inclucde/watchdog/watchdog.h
+$g_watchdog_status_str_arr = array();
+if (_PGPOOL2_VERSION < 3.5) {
+    define('WATCHDOG_END',     0);
+    define('WATCHDOG_INIT',    1);
+    define('WATCHDOG_NORMAL',  2);
+    define('WATCHDOG_MASTER',  3);
+    define('WATCHDOG_DOWN',    4);
+    $g_watchdog_status_str_arr = array(
+        WATCHDOG_END    => 'END',
+        WATCHDOG_INIT   => 'INIT',
+        WATCHDOG_NORMAL => 'NORMAL',
+        WATCHDOG_MASTER => 'MASTER',
+        WATCHDOG_DOWN   => 'DOWN',
+    );
+}
 
 // timeout seconds
 // (The parameter "pcp_timeout" existed till V3.0.)

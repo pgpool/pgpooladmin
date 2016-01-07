@@ -19,7 +19,7 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2015 PgPool Global Development Group
+ * @copyright  2003-2016 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
@@ -152,6 +152,9 @@ function execPcp($command, $extra_args = array())
         case 'PCP_WATCHDOG_INFO':
             $cmd = _PGPOOL2_PCP_DIR . '/pcp_watchdog_info' . $args;
             $ret = exec($cmd, $output, $return_var);
+            if (3.5 <= _PGPOOL2_VERSION) {
+                $ret = $output[2];
+            }
             break;
 
         default:
@@ -218,23 +221,37 @@ function getNodeInfo($i)
  */
 function getWatchdogInfo($i = '')
 {
-    global $tpl;
+    global $tpl, $g_watchdog_status_str_arr;
 
-    $result = execPcp('PCP_WATCHDOG_INFO', $i);
+    $result = execPcp('PCP_WATCHDOG_INFO',
+        (3.5 <= _PGPOOL2_VERSION) ? array('n' => $i) : array($i)
+    );
 
-    if (!array_key_exists('SUCCESS', $result)) {
+    if (! array_key_exists('SUCCESS', $result)) {
         $errorCode = 'e1013';
         $tpl->assign('errorCode', $errorCode);
         $tpl->display('innerError.tpl');
         exit();
     }
 
-    $arr = explode(" ", $result['SUCCESS']);
-    $rtn['hostname']    = $arr[0];
-    $rtn['pgpool_port'] = $arr[1];
-    $rtn['wd_port']     = $arr[2];
-    $rtn['status']      = $arr[3];
+    $arr = explode(' ', $result['SUCCESS']);
 
+    if (3.5 <= _PGPOOL2_VERSION) {
+        // ex.) Linux_dhcp-177-180_9999 133.137.177.180 9999 9000 4 MASTER
+        $rtn['hostname']    = $arr[1];
+        $rtn['pgpool_port'] = $arr[2];
+        $rtn['wd_port']     = $arr[3];
+        $rtn['status']      = $arr[4];
+        $rtn['status_str']  = $arr[5];
+
+    } else {
+        // ex.) 133.137.177.180 9999 9000 3
+        $rtn['hostname']    = $arr[0];
+        $rtn['pgpool_port'] = $arr[1];
+        $rtn['wd_port']     = $arr[2];
+        $rtn['status']      = $arr[3];
+        $rtn['status_str']  = $g_watchdog_status_str_arr[$rtn['status']];
+    }
     return $rtn;
 }
 
@@ -261,4 +278,3 @@ function checkPcppass()
         exit();
     }
 }
-?>

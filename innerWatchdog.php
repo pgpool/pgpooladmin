@@ -19,7 +19,7 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2013 PgPool Global Development Group
+ * @copyright  2003-2016 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
@@ -49,33 +49,19 @@ $params = readConfigParams(array('port',
 
 // get watchdog information
 $watchdogInfo = array();
-for ($i = 0; $i < count($params['other_pgpool_hostname']); $i++) {
-    $watchdogInfo[] = getWatchdogInfo($i);
-}
-$watchdogInfo['local'] = getWatchdogInfo();
+if (3.5 <= _PGPOOL2_VERSION) {
+    $watchdogInfo['local'] = getWatchdogInfo(0);
+    for ($i = 0; $i < count($params['other_pgpool_hostname']); $i++) {
+        $watchdogInfo[] = getWatchdogInfo($i + 1);
+    }
 
-foreach ($watchdogInfo as $key => $info) {
-    switch ($info['status']) {
-    case WATCHDOG_INIT:
-        $watchdogInfo[$key]['status_str'] = $message['strWdInit'];
-        break;
-    case WATCHDOG_STANDBY:
-        $watchdogInfo[$key]['status_str'] = $message['strWdStandby'];
-        break;
-    case WATCHDOG_ACTIVE:
-        $watchdogInfo[$key]['status_str'] = $message['strWdActive'];
-        break;
-    case WATCHDOG_DOWN:
-        $watchdogInfo[$key]['status_str'] = $message['strWdDown'];
-        break;
-    default:
-        $watchdogInfo[$key]['status_str'] = $message['strUnknown'];
-        break;
+} else {
+    $watchdogInfo['local'] = getWatchdogInfo();
+    for ($i = 0; $i < count($params['other_pgpool_hostname']); $i++) {
+        $watchdogInfo[] = getWatchdogInfo($i);
     }
 }
 
 $tpl->assign('params', $params);
 $tpl->assign('watchdogInfo', $watchdogInfo);
 $tpl->display('innerWatchdog.tpl');
-
-?>
