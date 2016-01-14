@@ -1,4 +1,43 @@
 ===============================================================================
+pgpoolAdmin 3.5
+===============================================================================
+
+* Version 3.5.0 2016/xx/xx
+
+  pgpoolAdmin 3.5 adopts pgpool-II 3.5.
+
+  ** New features
+
+    - Add new parameters for pgpool-II 3.5 (Nozomi Anzai)
+
+        if_cmd_path, health_check_database, pcp_listen_addresses, search_primary_node_timeout,
+        serialize_accept, sr_check_database, wd_de_escalation_command, wd_ipc_socket_dir,
+        wd_priority
+
+    - Adopt to new pcp command usage (Nozomi Anzai)
+
+    - Add Chinese message catalogs (pengbo)
+
+    - Adopt pcp_watchdog_info in ver3.5 (Nozomi Anzai)
+
+  ** Bug fixes
+
+    - Add selected attribute to <select> of "pgpool-II version" (Nozomi Anzai)
+
+    - Adopt Spanish translation (Nozomi Anzai)
+
+      Patch contributed by Rodrigo Ramirez Norambuena
+
+    - Modified installer to check if pgsql extension is loaded (Nozomi Anzai)
+
+      Patch contributed by Rodrigo Ramirez Norambuena
+
+    - Define a new error code "e1013" and fix to return it if pcp_watchdog_info failed
+      (Nozomi Anzai)
+
+      http://www.pgpool.net/mantisbt/view.php?id=149
+
+===============================================================================
 pgpoolAdmin 3.4
 ===============================================================================
 
