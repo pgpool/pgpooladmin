@@ -19,7 +19,7 @@
  * is" without express or implied warranty.
  *
  * @author     Bambo Huang <bambo.huang@gmail.com>
- * @copyright  2003-2009 PgPool Global Development Group
+ * @copyright  2003-2016 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
