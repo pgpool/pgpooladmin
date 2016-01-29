@@ -172,6 +172,7 @@ $message = array(
     'descWd_lifecheck_query' => '死活監視で実行するクエリ',
     'descWd_lifecheck_password' => '死活監視を行なうユーザのパスワード',
     'descWd_lifecheck_user' => '死活監視を行なうユーザ',
+    'descWd_monitoring_interfaces_list' => 'ネットワークリンクの状態を監視するネットワークデバイス名のリスト',
     'descWd_port' => 'watchdog プロセスが相互監視を受信するためのポート番号',
     'descWd_priority' => '自身の watchdog ノードがリーダに選ばれる優先度',
     'descWhite_function_list' => 'データベースに書き込みを行なわないカンマ区切りの関数のリスト',

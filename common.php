@@ -493,6 +493,7 @@ function paramExists($param)
         case 'sr_check_database':
         case 'wd_de_escalation_command':
         case 'wd_ipc_socket_dir':
+        case 'wd_monitoring_interfaces_list':
         case 'wd_priority':
             $add_version = 3.5;
             break;

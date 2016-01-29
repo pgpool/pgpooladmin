@@ -187,6 +187,7 @@ $message = array(
     'descWd_lifecheck_query' => 'Actual query to check pgpool-II',
     'descWd_lifecheck_password' => 'The user name to check pgpool-II',
     'descWd_lifecheck_user' => 'The password of the user to check pgpool-II',
+    'descWd_monitoring_interfaces_list' => 'The list of network device names whose network link state watchdog process monitors',
     'descWd_port' => 'The port number on which pgpool-II works',
     'descWd_priority' => 'Elevate the local watchdog node priority in the elections '.
                          'to select master watchdog node',

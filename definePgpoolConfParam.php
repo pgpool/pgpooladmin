@@ -796,6 +796,12 @@ $pgpoolConfigParam[$key]['default'] = '';
 $pgpoolConfigParam[$key]['regexp'] = $anyelse;
 $pgpoolConfigParam[$key]['parent'] = array('use_watchdog' => 'on');
 
+$key = 'wd_monitoring_interfaces_list';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = '';
+$pgpoolConfigParam[$key]['regexp'] = $anyelse;
+$pgpoolConfigParam[$key]['parent'] = array('use_watchdog' => 'on');
+
 # Life checking pgpool-II
 
 # (Common)

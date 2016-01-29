@@ -573,6 +573,9 @@
             {if paramExists('wd_de_escalation_command')}
                 {custom_tr_pgconfig param='wd_de_escalation_command'}
             {/if}
+            {if paramExists('wd_monitoring_interfaces_list')}
+                {custom_tr_pgconfig param='wd_monitoring_interfaces_list'}
+            {/if}
           </tbody>
 
           <tbody id="tb_watchdog_use_watchdog_on_lifecheck_common">
