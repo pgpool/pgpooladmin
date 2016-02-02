@@ -19,7 +19,7 @@
  * is" without express or implied warranty.
  *
  * @author     Bambo Huang <bambo.huang@gmail.com>
- * @copyright  2003-2009 PgPool Global Development Group
+ * @copyright  2003-2016 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
@@ -171,6 +171,7 @@ $message = array(
     'descWd_lifecheck_query' => '存活检测用的查询语句',
     'descWd_lifecheck_password' => '存活检测用使用的用户密码',
     'descWd_lifecheck_user' => '活检测用使用的用户名',
+    'descWd_monitoring_interfaces_list' => '监控网络连接状态的用逗号分隔的网络设备名列表',
     'descWd_port' => '相监控的看门狗进的程通信端口',
     'descWd_priority' => '己的看门狗被选为主机的优先度',
     'descWhite_function_list' => '用逗号分隔的不会对数据库有写操作的函数',
