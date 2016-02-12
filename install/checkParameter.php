@@ -19,7 +19,7 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2015 PgPool Global Development Group
+ * @copyright  2003-2016 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
@@ -27,7 +27,7 @@ require_once('../version.php');
 
 session_start();
 
-require("defaultParameter.php");
+require_once("defaultParameter.php");
 require_once('setLang.php');
 
 /* --------------------------------------------------------------------- */
@@ -154,21 +154,17 @@ if (!is_dir($pcp_client_dir)) {
     $error = TRUE;
 
 } else {
-    $command = array('pcp_attach_node',
-                     'pcp_detach_node',
-                     'pcp_node_count',
-                     'pcp_node_info',
-                     'pcp_proc_count',
-                     'pcp_proc_info',
-                     'pcp_stop_pgpool',
-                     'pcp_systemdb_info');
+    $commands = getPcpCommands();
 
-    for ($i = 0; $i < count($command); $i++) {
-        if (! @is_file($pcp_client_dir . "/" . $command[$i])) {
-            $msgPcpClientDir = $command[$i] . ' command not found';
+    foreach ($commands as $command) {
+        $command_fullpath = "{$pcp_client_dir}/{$command}";
+
+        if (! @is_file($command_fullpath)) {
+            $msgPcpClientDir = $command . ' command not found';
             $error = TRUE;
-        } elseif (!is_executable($pcp_client_dir . "/" . $command[$i] )) {
-            $msgPcpClientDir = $command[$i] . ' not executable';
+
+        } elseif (!is_executable($command_fullpath)) {
+            $msgPcpClientDir = $command . ' not executable';
             $error = TRUE;
         }
     }
@@ -488,3 +484,38 @@ function showResult($msg)
         echo '</td><td><img src="images/ok.gif" alt="ok" />';
     }
 }
+
+/**
+ * Get pcp commands in specified version
+ */
+function getPcpCommands()
+{
+    $commands = array();
+    $commands[] = 'pcp_attach_node';
+    $commands[] = 'pcp_node_count';
+    $commands[] = 'pcp_proc_info';
+    $commands[] = 'pcp_recovery_node';
+    $commands[] = 'pcp_detach_node';
+    $commands[] = 'pcp_node_info';
+    $commands[] = 'pcp_proc_count';
+    $commands[] = 'pcp_stop_pgpool';
+
+    // 3.3 -
+    if (3.3 <= _PGPOOL2_VERSION) {
+        $commands[] = 'pcp_watchdog_info';
+    }
+
+    // 3.1 -
+    if (3.1 <= _PGPOOL2_VERSION) {
+        $commands[] = 'pcp_pool_status';
+        $commands[] = 'pcp_promote_node';
+    }
+
+    // - 3.4
+    if (_PGPOOL2_VERSION <= 3.4) {
+        $commands[] = 'pcp_systemdb_info';
+    }
+
+    return $commands;
+}
+
