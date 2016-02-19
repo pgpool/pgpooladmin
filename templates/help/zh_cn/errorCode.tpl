@@ -130,7 +130,7 @@
   </tr>
 </thead>
 <tbody>
-<tr><th class="right_border"><label>e4001</label></th><td  class="right_border">pgpool.conf 未找到</td><td>请确认在设置菜单中指定的路径里是否存在pcp.conf文件。并且，是否有pcp.conf文件的访问权限。</td></tr>
+<tr><th class="right_border"><label>e4001</label></th><td  class="right_border">pgpool.conf 未找到</td><td>请确认在设置菜单中指定的路径里是否存在pgpool.conf文件。并且，是否有pgpool.conf文件的访问权限。</td></tr>
 <tr><th class="right_border"><label>e4002</label></th><td  class="right_border">无法读取 pgpool.conf</td><td>请确认是否拥有pgpool.conf文件的读取权。</td></tr>
 <tr><th class="right_border"><label>e4003</label></th><td  class="right_border">无法写入 pgpool.conf</td><td>请确认是否拥有pgpool.conf文件的写入权。</td></tr>
 <tr><th class="right_border"><label>e4004</label></th><td  class="right_border">pgpool.conf 没找到配置项</td><td>请确认是否在pgpool.conf文件里有设置所有配置项。</td></tr>

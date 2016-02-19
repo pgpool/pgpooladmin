@@ -51,7 +51,7 @@
 <tbody>
 <tr><th class="right_border"><label>e1001</label></th><td  class="right_border">pcpコマンドエラーが発生しました</td><td>pcpコマンドの呼び出しに失敗した場合に表示されます。Pcpコマンドが設定メニューで指定した場所にあるか確認してください。</td></tr>
 <tr><th class="right_border"><label>e1002</label></th><td  class="right_border">pcp_node_countコマンドでエラーが発生しました</td><td>pcp_node_countの実行エラーです。pcp_node_countが正常に実行できるか確認してください。</td></tr>
-<tr><th class="right_border"><label>e1003</label></th><td  class="right_border">pcp_node_infoコマンドでエラーが発生しました</td><td>pcp_node_infoの実行エラーです。pcp_node_infotが正常に実行できるか確認してください。</td></tr>
+<tr><th class="right_border"><label>e1003</label></th><td  class="right_border">pcp_node_infoコマンドでエラーが発生しました</td><td>pcp_node_infoの実行エラーです。pcp_node_infoが正常に実行できるか確認してください。</td></tr>
 <tr><th class="right_border"><label>e1004</label></th><td  class="right_border">pcp_proc_countコマンドでエラーが発生しました</td><td>pcp_proc_countの実行エラーです。pcp_proc_countが正常に実行できるか確認してください。</td></tr>
 <tr><th class="right_border"><label>e1005</label></th><td  class="right_border">pcp_proc_infoコマンドでエラーが発生しました</td><td>pcp_proc_infoの実行エラーです。pcp_proc_infoが正常に実行できるか確認してください。</td></tr>
 <tr><th class="right_border"><label>e1006</label></th><td  class="right_border">pcp_stop_pgpoolコマンドでエラーが発生しました</td><td>pcp_stop_pgpoolの実行エラーです。pcp_stop_pgpoolが正常に実行できるか確認してください。</td></tr>
@@ -129,7 +129,7 @@
   </tr>
 </thead>
 <tbody>
-<tr><th class="right_border"><label>e4001</label></th><td  class="right_border">pgpool.confが見つかりません</td><td>pcp.confが設定メニューで指定した場所にあるか確認してください。またpcp.confに適切なアクセス権があるか確認してください。</td></tr>
+<tr><th class="right_border"><label>e4001</label></th><td  class="right_border">pgpool.confが見つかりません</td><td>pgpool.confが設定メニューで指定した場所にあるか確認してください。またpgpool.confに適切なアクセス権があるか確認してください。</td></tr>
 <tr><th class="right_border"><label>e4002</label></th><td  class="right_border">pgpool.confから読み込みができません</td><td>pgpool.confに読み込みアクセス権があるか確認してください。</td></tr>
 <tr><th class="right_border"><label>e4003</label></th><td  class="right_border">pgpool.confに書き込みができません</td><td>pgpool.confに書き込みアクセス権があるか確認してください。</td></tr>
 <tr><th class="right_border"><label>e4004</label></th><td  class="right_border">pgpool.confに必要なパラメータがありません</td><td>pgpool.confにパラメータがすべてあるか確認してください。</td></tr>

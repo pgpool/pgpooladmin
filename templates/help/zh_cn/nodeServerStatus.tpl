@@ -40,7 +40,7 @@
   <tr>
     <th class="right_border"><label>詳細信息</label></th>
     <td>仅在Postmaster处于运行状态时显示此信息。<br />
-    在PostgreSQL的情况下，将取得pg_settings的信息，在pgpool的情况下，将取得pool_status的信息。
+    在 PostgreSQL 的情况下，获取 pg_settings 的信息，pgpool 的情况下，获取 pool_status 的信息。
     </td>
   </tr>
 </table>
