@@ -62,7 +62,7 @@
           <td>pgpoolの起動時に指定するpgpool.confです。pgpool.confのパスは「{$message.strPgConfFile|escape}」で指定した値になります。</td>
           </tr>
           <tr><td>{$message.strCmdPcpFile|escape}(-F)</td>
-          <td>pgpoolの起動時に指定するpcp.confです。pgpool.confのパスは「{$message.strPasswordFile|escape}」で指定した値になります。</td>
+          <td>pgpoolの起動時に指定するpcp.confです。pcp.confのパスは「{$message.strPasswordFile|escape}」で指定した値になります。</td>
           </tr>
         <tr>
           <th><label>{$message.strPgpoolLogFile|escape}</label>
