@@ -526,8 +526,8 @@ function _doPgCtl($nodeNumber, $pg_ctl_action)
         'backend_hostname', 'backend_port', 'backend_weight',
     ));
     $conn = openDBConnection(array(
-        'host'     => $params['backend_hostname'][$nodeNum],
-        'port'     => $params['backend_port'][$nodeNum],
+        'host'     => $params['backend_hostname'][$nodeNumber],
+        'port'     => $params['backend_port'][$nodeNumber],
         'dbname'   => 'template1',
         'user'     => $_SESSION[SESSION_LOGIN_USER],
         'password' => $_SESSION[SESSION_LOGIN_USER_PASSWORD],
