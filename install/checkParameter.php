@@ -490,6 +490,8 @@ function showResult($msg)
  */
 function getPcpCommands()
 {
+    global $version;
+
     $commands = array();
     $commands[] = 'pcp_attach_node';
     $commands[] = 'pcp_node_count';
@@ -501,18 +503,18 @@ function getPcpCommands()
     $commands[] = 'pcp_stop_pgpool';
 
     // 3.3 -
-    if (3.3 <= _PGPOOL2_VERSION) {
+    if (3.3 <= $version) {
         $commands[] = 'pcp_watchdog_info';
     }
 
     // 3.1 -
-    if (3.1 <= _PGPOOL2_VERSION) {
+    if (3.1 <= $version) {
         $commands[] = 'pcp_pool_status';
         $commands[] = 'pcp_promote_node';
     }
 
     // - 3.4
-    if (_PGPOOL2_VERSION <= 3.4) {
+    if ($version <= 3.4) {
         $commands[] = 'pcp_systemdb_info';
     }
 
