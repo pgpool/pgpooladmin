@@ -19,7 +19,7 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2015 PgPool Global Development Group
+ * @copyright  2003-2016 PgPool Global Development Group
  * @version    SVN: $Id$
  */
 
@@ -340,8 +340,17 @@ function readConfigParams($paramList = array())
         list($key, $value) = explode('=', $line);
         $key = trim($key);
 
-        $num = preg_replace('/[^0-9]/', NULL, $key);
-        $key_wo_num = str_replace($num, NULL, $key);
+        switch ($key) {
+        case 'recovery_1st_stage_command':
+        case 'recovery_2nd_stage_command':
+            $key_wo_num = $key;
+            break;
+
+        default:
+            $num = preg_replace('/[^0-9]/', NULL, $key);
+            $key_wo_num = str_replace($num, NULL, $key);
+            break;
+        }
 
         // Ignore params not specified to read
         if ($paramList && is_array($paramList) && ! in_array($key_wo_num, $paramList)) {
