@@ -236,7 +236,14 @@ function getWatchdogInfo($i = '')
 
     $arr = explode(' ', $result['SUCCESS']);
 
-    if (3.5 <= _PGPOOL2_VERSION) {
+    if (3.6 <= _PGPOOL2_VERSION) {
+        $rtn['hostname']    = $arr[1];
+        $rtn['pgpool_port'] = $arr[2];
+        $rtn['wd_port']     = $arr[3];
+        $rtn['status']      = $arr[6];
+        $rtn['status_str']  = $arr[7];
+
+    } elseif (3.5 <= _PGPOOL2_VERSION) {
         // ex.) Linux_dhcp-177-180_9999 133.137.177.180 9999 9000 4 MASTER
         $rtn['hostname']    = $arr[1];
         $rtn['pgpool_port'] = $arr[2];
