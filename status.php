@@ -249,7 +249,7 @@ function _setStartArgs()
                 if (isPipe($pgpoolLog)) {
                     $args[] = "2>&1 > $pgpoolLog &";
                 } else {
-                    $args[] = "> $pgpoolLog &";
+                    $args[] = "> $pgpoolLog 2>&1 &";
                 }
             }
             break;
