@@ -219,6 +219,7 @@ function isSuperUser($user_name)
 
     // Try to connect the backend by login user
     $conn = openDBConnection(array(
+        'host'     => 'localhost',
         'port'     => $params['port'],
         'dbname'   => 'template1',
         'user'     => $_SESSION[SESSION_LOGIN_USER],
