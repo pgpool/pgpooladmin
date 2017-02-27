@@ -1,6 +1,32 @@
+
 ===============================================================================
-pgpoolAdmin 3.5
+pgpoolAdmin 3.6
 ===============================================================================
+
+* Version 3.6.0 2017/02/28
+
+   - Fix incorrect display of watchdog status when using Pgpool-II 3.6.x. (Bo Peng)
+
+   - Redirect stdout, stderr to log file while starting Pgpool-II without
+     running in daemon mode. (Bo Peng)
+
+   - Fix superuser: unknown (Connection error) in pgpoolAdmin. (Bo Peng)
+
+     per bug276.
+
+===============================================================================
+pgpoolAdmin 3.6
+===============================================================================
+
+* Version 3.5.3 2016/04/26
+
+   - Fix readConfigParams() to treat the varliables with numbers. (Nozomi Anzai)
+
+     per bug187.
+
+* Version 3.5.2 2016/04/26
+
+   - Fix to check "PCP Directory". (Nozomi Anzai)
 
 * Version 3.5.1 2016/04/04
 
