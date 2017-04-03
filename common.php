@@ -671,7 +671,7 @@ function paramExists($param)
 
 function versions()
 {
-    return array('3.5', '3.4', '3.3', '3.2', '3.1', '3.0',
+    return array('3.6', '3.5', '3.4', '3.3', '3.2', '3.1', '3.0',
                  '2.3', '2.2', '2.1', '2.0');
 }
 
