@@ -1,7 +1,12 @@
-
 ===============================================================================
 pgpoolAdmin 3.6
 ===============================================================================
+
+* Version 3.6.1 2017/04/28
+
+   - Add selection of version 3.6 in pgpoolAdmin install. (Bo Peng)
+
+   - Add selection of version 3.6 in pgpoolAdmin setting. (Bo Peng)
 
 * Version 3.6.0 2017/02/28
 
@@ -15,10 +20,10 @@ pgpoolAdmin 3.6
      per bug276.
 
 ===============================================================================
-pgpoolAdmin 3.6
+pgpoolAdmin 3.5
 ===============================================================================
 
-* Version 3.5.3 2016/04/26
+* Version 3.5.3 2016/06/17
 
    - Fix readConfigParams() to treat the varliables with numbers. (Nozomi Anzai)
 
