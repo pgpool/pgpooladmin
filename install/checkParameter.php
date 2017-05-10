@@ -179,8 +179,8 @@ if (isset($_POST['pcp_hostname']) && $_POST['pcp_hostname']) {
 
 $proc_user_info = posix_getpwuid(posix_geteuid());
 $pcppass_file = "{$proc_user_info['dir']}/.pcppass";
+$msgPcpPassFile = '';
 if (3.5 <= $version) {
-    $msgPcpPassFile = '';
     if (! is_file($pcppass_file)) {
         $msgPcpPassFile = 'File not found';
     } elseif (fileowner($pcppass_file) != $proc_user_info['uid']) {
