@@ -79,6 +79,7 @@ rm -rf %{buildroot}
 %{_pgpoolAdmindir}/doc
 %{_pgpoolAdmindir}/images
 %{_pgpoolAdmindir}/install
+%{_pgpoolAdmindir}/js
 %{_pgpoolAdmindir}/lang
 %{_pgpoolAdmindir}/libs
 %{_pgpoolAdmindir}/templates
