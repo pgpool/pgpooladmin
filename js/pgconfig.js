@@ -15,6 +15,9 @@ function toggleTbody(item)
 
     if (tagname == 'INPUT' && $(item).attr('type') == 'radio') {
         val = $(item).filter(':checked').val();
+        if (val === undefined) {
+            return;
+        }
 
     } else if (tagname == 'SELECT') {
         val = $(item).children('option').filter(':selected').val();
