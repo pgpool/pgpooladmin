@@ -93,6 +93,8 @@
         {* --------------------------------------------------------------------- *}
 
         {custom_tr_pgconfig param='enable_pool_hba'}
+      </tbody>
+      <tbody id="tb_enable_pool_hba_on">
         {if paramExists('pool_passwd')}
             {custom_tr_pgconfig param='pool_passwd'}
         {/if}
@@ -108,7 +110,7 @@
             {custom_tr_pgconfig param='ssl'}
           </tbody>
 
-          <tbody id="tb_ssl_1">
+          <tbody id="tb_ssl_on">
             {custom_tr_pgconfig param='ssl_key'}
             {custom_tr_pgconfig param='ssl_cert'}
             {custom_tr_pgconfig param='ssl_ca_cert'}

@@ -442,6 +442,9 @@ function writeConfigFile($configValue, $pgpoolConfigParamAll)
 
     $param_names = getMultiParams();
     foreach ($param_names as $group => $key_arr) {
+        if (! isset($configValue[$key_arr[0]])) {
+            continue;
+        }
         for ($i = 0; $i < count($configValue[$key_arr[0]]); $i++) {
             foreach ($key_arr as $key) {
                 $value = (isset($configValue[$key][$i])) ? $configValue[$key][$i] : NULL;
