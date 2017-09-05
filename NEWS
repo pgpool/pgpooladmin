@@ -2,6 +2,20 @@
 pgpoolAdmin 3.6
 ===============================================================================
 
+* Version 3.6.2 2017/09/05
+
+   - Fix some notices in "pgpool.conf Setting". (Bo Peng)
+
+   - Fix bugs in js/pgconfig.js used for setting pgpool.conf. (Bo Peng)
+
+     [pgpool-general: 5660]
+
+   - Change pgpoolAdmin.spec to include missed js directory in pgpoolAdmin RPM. (Bo Peng)
+
+   - Fix PHP Notice: Undefined variable while installing pgpoolAdmin. (Bo Peng)
+
+     per bug219.
+
 * Version 3.6.1 2017/04/28
 
    - Add selection of version 3.6 in pgpoolAdmin install. (Bo Peng)

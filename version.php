@@ -19,10 +19,10 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2015 PgPool Global Development Group
+ * @copyright  2003-2017 PgPool Global Development Group
  * @version    SVN: $Id$
  */
 
-$version = '3.6.1';
+$version = '3.6.2';
 
 ?>
