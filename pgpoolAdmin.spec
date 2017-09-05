@@ -41,7 +41,7 @@ install -d %{buildroot}%{_pgpoolAdmindir}
 install -d %{buildroot}%{_pgpoolAdmindir}/conf
 install -d %{buildroot}%{_sysconfdir}/%{name}
 install -m 644 *.php %{buildroot}%{_pgpoolAdmindir}
-cp -a  doc/ images/ install/ lang/ libs/ templates/ templates_c/ screen.css %{buildroot}%{_pgpoolAdmindir}
+cp -a  doc/ images/ install/ js/ lang/ libs/ templates/ templates_c/ screen.css %{buildroot}%{_pgpoolAdmindir}
 install -m 755 conf/* %{buildroot}%{_sysconfdir}/%{name}/
 mv %{buildroot}%{_sysconfdir}/%{name}/pgmgt.conf.php %{buildroot}%{_pgpoolAdmindir}/conf/pgmgt.conf.php
 
