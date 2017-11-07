@@ -74,6 +74,7 @@ switch ($action) {
         $tpl->assign('isAdd',   ($action == 'add'));
         $tpl->assign('isAddWd', ($action == 'add_wd'));
         $tpl->assign('isAddHeartbeatDestination', ($action == 'add_heartbeat_destination'));
+        $tpl->assign('isAddHealthcheckPerNode', ($action == 'add_healthcheck_per_node'));
         $tpl->display('pgconfig.tpl');
 
         return;
@@ -104,9 +105,11 @@ switch ($action) {
 switch ($action) {
     case 'update':
         $configValue = arrangePostData();
+
         $error = doCheck();
 
         if (! $error) {
+
             if (is_writable(_PGPOOL2_CONFIG_FILE)) {
                 writeConfigFile($configValue, $pgpoolConfigParamAll);
                 $tpl->assign('status', 'success');
@@ -130,6 +133,7 @@ switch ($action) {
     case 'delete':
     case 'delete_wd':
     case 'delete_heartbeat_destination':
+    case 'delete_healthcheck_per_node':
         $num = $_POST['num'];
 
         switch ($action) {
@@ -139,19 +143,8 @@ switch ($action) {
                 deleteWdOther($num, $configValue); break;
             case 'delete_heartbeat_destination':
                 deleteHeartbeatDestination($num, $configValue); break;
-        }
-
-        if (is_writable(_PGPOOL2_CONFIG_FILE)) {
-            writeConfigFile($configValue, $pgpoolConfigParamAll);
-
-            // Read all params again
-            $configValue = readConfigParams();
-
-        } else {
-            $errorCode = 'e4003';
-            $tpl->assign('errorCode', $errorCode);
-            $tpl->display('error.tpl');
-            exit();
+            case 'delete_healthcheck_per_node':
+                deleteHealthcheckPerNode($num, $configValue); break;
         }
 
         break;
@@ -177,6 +170,12 @@ if (! isset($configValue['heartbeat_destination'])) {
 
 if (! isset($configValue['other_pgpool_hostname'])) {
     $configValue['other_pgpool_hostname'][0] = NULL;
+    $configValue['other_pgpool_port'][0]     = NULL;
+    $configValue['other_wd_port'][0]         = NULL;
+}
+
+if (! isset($configValue['health_check_period'])) {
+    $configValue['health_check_period0'][0] = NULL;
     $configValue['other_pgpool_port'][0]     = NULL;
     $configValue['other_wd_port'][0]         = NULL;
 }
@@ -408,7 +407,7 @@ function checkLogical($configValue)
 function writeConfigFile($configValue, $pgpoolConfigParamAll)
 {
     $configFile = array();
-
+    
     $originalConfigFile = @file(_PGPOOL2_CONFIG_FILE);
     foreach ($originalConfigFile as $line) {
         // Not-empty lines
@@ -416,14 +415,14 @@ function writeConfigFile($configValue, $pgpoolConfigParamAll)
             list($key, $value) = explode("=", $line);
             $key = trim($key);
 
-            $num = preg_replace('/[^0-9]/', NULL, $key);
-            $key_wo_num = str_replace($num, NULL, $key);
+            $key_wo_num = preg_replace('/\d*$/', '', $key);
 
             // Modify the parameter' value if posted.
-            // (Ignore the params like "backend_hostname_0" which will be arranged in below)
-            if (! isset($pgpoolConfigParamAll[$key_wo_num]['multiple'])) {
+            // (Ignore the params like "backend_hostname_0" and "health_check_*" which will be arranged in below)
+            if (! isset($pgpoolConfigParamAll[$key_wo_num]['multiple']) && 
+                ! isset($pgpoolConfigParamAll[$key_wo_num]['healthcheck'])) {
                 if (isset($configValue[$key_wo_num])) {
-                    $value = $configValue[$key];
+                    $value = $configValue[$key_wo_num];
                     if (strcmp($pgpoolConfigParamAll[$key_wo_num]['type'], "C") == 0) {
                         $value = "'{$value}'";
                     }
@@ -440,7 +439,47 @@ function writeConfigFile($configValue, $pgpoolConfigParamAll)
         }
     }
 
+    /*
+     * global health check parameters
+     */
+    $health_check_params = getPerNodeHealthCheckParams();
+    if (isset($configValue['health_check_period'])) {
+        foreach ($health_check_params as $key) {
+            $value = (isset($configValue[$key])) ? $configValue[$key] : NULL;
+
+            if (strcmp($pgpoolConfigParamAll[$key]['type'], "C") == 0) {
+                $value = "'{$value}'";
+            }
+
+            $configFile[] = "{$key} = {$value}\n";
+        }
+    }
+
+    /*
+     * per node health check parameters
+     */
+    $i = 0;
+
+    foreach ($configValue as $k => $v) {
+        if (preg_match("/^health_check_period\d+$/", $k)) {
+            $num = preg_replace("/[^0-9]/", '', $k);
+            foreach ($health_check_params as $key) {
+                $value = (isset($configValue[$key . $num])) ? $configValue[$key . $num] : NULL;
+
+                if (strcmp($pgpoolConfigParamAll[$key]['type'], "C") == 0) {
+                    $value = "'{$value}'";
+                }
+                $configFile[] = "{$key}{$num} = {$value}\n";
+            }
+        }
+
+    }
+
+    /*
+     * multiple parameters
+     */
     $param_names = getMultiParams();
+
     foreach ($param_names as $group => $key_arr) {
         if (! isset($configValue[$key_arr[0]])) {
             continue;
@@ -514,6 +553,23 @@ function deleteWdOther($num, &$configValue)
  * Delete an heartbeat device
  */
 function deleteHeartbeatDestination($num, &$configValue)
+{
+    if (!isset($configValue['heartbeat_destination'])) { return; }
+
+    unset($configValue['heartbeat_destination'][$num]);
+    $configValue['heartbeat_destination'] = array_values($configValue['heartbeat_destination']);
+
+    unset($configValue['heartbeat_destination_port'][$num]);
+    $configValue['heartbeat_destination_port'] = array_values($configValue['heartbeat_destination_port']);
+
+    unset($configValue['heartbeat_device'][$num]);
+    $configValue['heartbeat_device'] = array_values($configValue['heartbeat_device']);
+}
+
+/**
+ * Delete an heartbeat device
+ */
+function deleteHealthcheckPerNode($num, &$configValue)
 {
     if (!isset($configValue['heartbeat_destination'])) { return; }
 
@@ -703,6 +759,7 @@ function doCheck()
     global $pgpoolConfigBackendParam;
     global $pgpoolConfigHbDestinationParam;
     global $pgpoolConfigWdOtherParam;
+    global $pgpoolConfigHealthCheckParam;
     global $_POST;
 
     $error = array();
@@ -715,10 +772,38 @@ function doCheck()
     }
 
     /*
+     * Delete empty backend node
+     */
+    foreach ($_POST['backend_hostname'] as $no => $str) {
+        if ($str == '') {
+            foreach ($pgpoolConfigBackendParam as $key => $value) {
+                unset($_POST[$key][$no]);
+            }
+        }
+    }
+
+    /*
      * copy backend value from POST data to $configValue
      */
     foreach ($pgpoolConfigBackendParam as $key => $value) {
-        if (isset($_POST[$key])) {
+        if (isset($_POST[$key]) && $_POST[$key] != '') {
+
+            /*
+             * set per node health check params
+             */
+            if ($key == 'backend_hostname') {
+
+                foreach ($_POST[$key] as $no => $str) {
+                    if (isset($_POST['health_check_period' . $no]) && 
+                        $_POST['health_check_period' . $no] != '') {
+                        $health_check_params = getPerNodeHealthCheckParams();
+                        foreach ($health_check_params as $param) {
+                            $configValue[$param . $no] = trim($_POST[$param . $no]);
+                        }
+                    }
+                }
+            }
+
             $configValue[$key] = $_POST[$key];
         }
     }

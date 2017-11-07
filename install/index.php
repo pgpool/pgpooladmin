@@ -28,7 +28,7 @@ require_once('../version.php');
 $messageList = array();
 $res_dir = opendir('lang/');
 while ($file_name = readdir( $res_dir )) {
-    if (ereg('^[^\.]', $file_name)) {
+    if (preg_match('/^[^\.]/', $file_name)) {
         include('lang/' . $file_name);
         $messageList[$message['lang']] = $message['strLang'];
     }

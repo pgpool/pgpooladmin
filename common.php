@@ -315,7 +315,7 @@ function readLogDir()
 function readConfigParams($paramList = array())
 {
     $rtn = array();
-    global $pgpoolConfigParam, $pgpoolConfigBackendParam ,
+    global $pgpoolConfigParam, $pgpoolConfigBackendParam,
            $pgpoolConfigWdOtherParam, $pgpoolConfigHbDestinationParam;
 
     // Try to read pgpool.conf
@@ -339,6 +339,8 @@ function readConfigParams($paramList = array())
         }
 
         list($key, $value) = explode('=', $line);
+
+        // 設定ファイルのパラメータのキー
         $key = trim($key);
 
         switch ($key) {
@@ -348,6 +350,7 @@ function readConfigParams($paramList = array())
             break;
 
         default:
+            // In case of "health_check_*0", the number is left.
             $num = preg_replace('/[^0-9]/', NULL, $key);
             $key_wo_num = str_replace($num, NULL, $key);
             break;
@@ -361,6 +364,13 @@ function readConfigParams($paramList = array())
         // Remove quotes and comments
         $value = trimValue($value);
 
+        // Change true/false to on/off
+        if ($value == 'true') {
+            $value = 'on';
+        } elseif ($value == 'false') {
+            $value = 'off';
+        }
+
         if (! isset($defines_arr[$key_wo_num])) {
             continue;
 
@@ -373,7 +383,12 @@ function readConfigParams($paramList = array())
 
         } else {
             // Ignore param not defined definePgpoolConfParam.php
-            $rtn[$key_wo_num] = $value;
+            if (preg_match('/^(health_check|connect_time).*[0-9]$/', $key)) {
+                // In case of "health_check_*0", the number is left.
+                $rtn[$key] = $value;
+            } else {
+                $rtn[$key_wo_num] = $value;
+            }
         }
     }
 
@@ -494,6 +509,21 @@ function paramExists($param)
 
     /* Add */
     switch ($param) {
+        // params added in 3.7
+        case 'failover_when_quorum_exists':
+        case 'failover_require_consensus':
+        case 'enable_multiple_failover_requests_from_node':
+        case 'health_check_period0':
+        case 'health_check_timeout0':
+        case 'health_check_user0':
+        case 'health_check_password0':
+        case 'health_check_database0':
+        case 'health_check_max_retries0':
+        case 'health_check_retry_delay0':
+        case 'connect_timeout0':
+            $add_version = 3.7;
+            break;
+
         // params added in 3.5
         case 'if_cmd_path':
         case 'health_check_database':
@@ -622,6 +652,11 @@ function paramExists($param)
 
     /* Delete */
     switch ($param) {
+        // params deleted in 3.7
+        case 'debug_level':
+            $del_version = 3.7;
+            break;
+
         // params deleted in 3.5
         case 'ifconfig_path':
             $del_version = 3.5;
@@ -671,7 +706,7 @@ function paramExists($param)
 
 function versions()
 {
-    return array('3.6', '3.5', '3.4', '3.3', '3.2', '3.1', '3.0',
+    return array('3.7', '3.6', '3.5', '3.4', '3.3', '3.2', '3.1', '3.0',
                  '2.3', '2.2', '2.1', '2.0');
 }
 
@@ -790,6 +825,24 @@ function getMultiParams()
     return $rtn;
 }
 
+/*
+ * Return per node health check parameters
+ */
+function getPerNodeHealthCheckParams()
+{
+    $rtn = array();
+    $rtn = array('health_check_period', 
+                 'health_check_timeout', 
+                 'health_check_user', 
+                 'health_check_password', 
+                 'health_check_database', 
+                 'health_check_max_retries', 
+                 'health_check_retry_delay', 
+                 'connect_timeout');
+
+    return $rtn;
+}
+
 /* --------------------------------------------------------------------- */
 /* function (other)                                                      */
 /* --------------------------------------------------------------------- */
@@ -803,6 +856,12 @@ function isPipe($str)
 function isTrue($value)
 {
     return in_array($value, array('on', 'true'));
+}
+
+function definedHealthCheckParam($params, $param_name, $backend_num)
+{
+    return isset($params[$param_name . $backend_num]) ? 
+            $param_name . $backend_num : null;
 }
 
 function errorPage($errorCode)

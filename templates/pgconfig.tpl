@@ -151,21 +151,20 @@
     <h3 id="backends">Backends</h3>
     {* ===================================================================== *}
 
-    <table>
-       {custom_table_pgconfig}
+    <table id="t_backends">
+        {custom_table_pgconfig}
 
-      <tbody id="tb_backends_node">
         {* --------------------------------------------------------------------- *}
         <tr><th class="category" colspan="2">Backend node
-        <input type="button" name="add" value="{$message.strAdd|escape}" onclick="sendForm('add')" />
+        <input id="add_backends_node" type="button" name="add" value="{$message.strAdd|escape}" />
         </th></tr>
         {* --------------------------------------------------------------------- *}
 
-          {foreach from=$params.backend_hostname key=node_num item=v}
-              <tr><th colspan="2">
+        {foreach from=$params.backend_hostname key=node_num item=v}
+            <tbody id="tb_backends_node_{$node_num}">
+              <tr id="tr_ba_node_num_{$node_num}" name="tr_ba_node_num"><th colspan="2">
                   <span class="param_group">Backend node {$node_num}</span>
-                  <input type="button" name="delete" value="{$message.strDelete|escape}"
-                  onclick="sendForm('delete', {$node_num})" />
+                  <input id="delete_backends_node_{$node_num}" type="button" name="delete" value="{$message.strDelete|escape}" />
               </th></tr>
               {custom_tr_pgconfig param='backend_hostname' num=$node_num}
               {custom_tr_pgconfig param='backend_port' num=$node_num}
@@ -174,23 +173,9 @@
               {if paramExists('backend_flag')}
                   {custom_tr_pgconfig param='backend_flag' num=$node_num}
               {/if}
-          {/foreach}
+            </tbody>
+        {/foreach}
 
-          {if isset($isAdd) && $isAdd == true}
-              <tr><th class="category" colspan="2">
-                  <span class="param_group">Backend node {$node_num + 1}</span>
-                  <input type="button" name="delete" value="{$message.strDelete|escape}"
-                  onclick="sendForm('delete', {$node_num})" />
-              </th></tr>
-              {custom_tr_pgconfig param='backend_hostname' num=$node_num+1}
-              {custom_tr_pgconfig param='backend_port' num=$node_num+1}
-              {custom_tr_pgconfig param='backend_weight' num=$node_num+1}
-              {custom_tr_pgconfig param='backend_data_directory' num=$node_num+1}
-              {if paramExists('backend_flag')}
-                  {custom_tr_pgconfig param='backend_flag' num=$node_num+1}
-              {/if}
-          {/if}
-      </tbody>
     </table>
 
     {* ===================================================================== *}
@@ -443,13 +428,14 @@
     {/if}
 
     {* ===================================================================== *}
-    <h3 id="health-check">Health Check</h3>
+    <h3 id="health-check">Health Check GLOBAL PARAMETERS</h3>
     {* ===================================================================== *}
 
-    <table>
+    <table id="t_healthcheck">
       {custom_table_pgconfig}
 
-      <tbody id="tb_healthcheck">
+      <tbody id="tb_global_healthcheck">
+
         {custom_tr_pgconfig param='health_check_period'}
         {custom_tr_pgconfig param='health_check_timeout'}
         {custom_tr_pgconfig param='health_check_user'}
@@ -468,7 +454,44 @@
         {if paramExists('connect_timeout')}
             {custom_tr_pgconfig param='connect_timeout'}
         {/if}
+
       </tbody>
+
+      <tr><th class="category" colspan="2">Per Node Parameters</th></tr>
+
+      {foreach from=$params.backend_hostname key=node_num item=v}
+        <tbody id="tb_per_node_healthcheck_{$node_num}">
+          <tr id="tr_hc_node_num_{$node_num}"><th colspan="2">
+            <span class="param_group">Backend node {$node_num}</span>
+            {if definedHealthCheckParam($params, 'health_check_period', $node_num)}
+              <input id="delete_per_node_health_check_{$node_num}" type="button" name="delete" value="{$message.strDelete|escape}" />
+            {/if}
+            {if ! definedHealthCheckParam($params, 'health_check_period', $node_num)}
+              <input id="add_per_node_health_check_{$node_num}" type="button" name="add" value="{$message.strAdd|escape}" />
+            {/if}
+          </tr>
+
+          {custom_tr_pgconfig param='health_check_period' num=$node_num}
+          {custom_tr_pgconfig param='health_check_timeout' num=$node_num}
+          {custom_tr_pgconfig param='health_check_user' num=$node_num}
+          {if paramExists('health_check_password')}
+            {custom_tr_pgconfig param='health_check_password' num=$node_num}
+          {/if}
+          {if paramExists('health_check_database')}
+            {custom_tr_pgconfig param='health_check_database' num=$node_num}
+          {/if}
+          {if paramExists('health_check_max_retries')}
+            {custom_tr_pgconfig param='health_check_max_retries' num=$node_num}
+          {/if}
+          {if paramExists('health_check_retry_delay')}
+            {custom_tr_pgconfig param='health_check_retry_delay' num=$node_num}
+          {/if}
+          {if paramExists('connect_timeout')}
+            {custom_tr_pgconfig param='connect_timeout' num=$node_num}
+          {/if}
+
+        </tbody>
+      {/foreach}
     </table>
 
     {* ===================================================================== *}
@@ -578,6 +601,17 @@
             {if paramExists('wd_monitoring_interfaces_list')}
                 {custom_tr_pgconfig param='wd_monitoring_interfaces_list'}
             {/if}
+          </tbody>
+
+          <tbody id="tb_watchdog_use_watchdog_on_failover">
+
+            {* --------------------------------------------------------------------- *}
+            <tr><th class="category" colspan="4">Quorum failover behavior Setting</th></tr>
+            {* --------------------------------------------------------------------- *}
+
+            {custom_tr_pgconfig param='failover_when_quorum_exists'}
+            {custom_tr_pgconfig param='failover_require_consensus'}
+            {custom_tr_pgconfig param='allow_multiple_failover_requests_from_node'}
           </tbody>
 
           <tbody id="tb_watchdog_use_watchdog_on_lifecheck_common">

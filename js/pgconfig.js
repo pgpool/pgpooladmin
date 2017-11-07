@@ -1,3 +1,66 @@
+$(window).load(function()
+{
+    $('input[type="radio"], select').each(function()
+    {
+        toggleTbody($(this));
+    });
+    $('input[type="radio"], select').change(function()
+    {
+        toggleTbody($(this));
+    });
+
+    /* ========================================================================= */ 
+    /* If no health check config of this node,                                   */ 
+    /* don't show the per node health check form.                                */
+    /* ========================================================================= */ 
+
+    $('[id^=tr_hc_node_num_]').each(function()
+    {
+        var tt = null;
+        tt = $(this).nextAll('tr').find('input[value!=""]').val();
+        if ( tt === undefined) {
+            $(this).nextAll('tr').css('display', 'none');
+        }
+    });
+
+    /* ========================================================================= */ 
+    /* In per node health check form,                                            */
+    /* input "name" is like "health_check_period0", "health_check_period1"       */
+    /* ========================================================================= */ 
+    $('[id^=tb_per_node_healthcheck_]').find('input[name^=health_check], input[name=connect_timeout]').each(function()
+    {
+        var node_num = $(this).parents('tbody').attr('id').split('_')[4];
+        var name = $(this).attr('name');
+        $(this).attr('name', name + node_num)
+    }); 
+
+    /* ========================================================================= */ 
+    /* Click "add" button                                                        */
+    /* ========================================================================= */ 
+
+    /* Click "add" button to add backends form and add per node health_check row */
+    $('#add_backends_node').click(function()
+    {
+        var next_node_num = $('[id^=tb_backends_node_]').length;
+        addBackendForm(next_node_num);
+        addPerNodeHealthCheck(next_node_num);
+    });
+
+    /* Click "add" button to add per node health_check. */
+    $('[id^=add_per_node_health_check_]').on({'click': addPerNodeHealthCheckForm});
+
+    /* ========================================================================= */ 
+    /* Click "delete" button                                                     */
+    /* ========================================================================= */ 
+
+    /* Delete backends form */
+    $('[id^=delete_backends_node_]').on({'click': deleteBackendForm});
+
+    /* Delete per node health_check form. */
+    $('[id^=delete_per_node_health_check_]').on({'click': deletePerNodeHealthCheckForm});
+
+});
+
 function sendForm(action, num)
 {
     $('#pgconfig_action').val(action);
@@ -42,14 +105,86 @@ function toggleTbody(item)
     });
 }
 
-$(window).load(function()
+/*
+ * Add backends form by using "add" button
+ */
+function addBackendForm(next_node_num)
 {
-    $('input[type="radio"], select').each(function()
+
+    var html = '<tbody id="tb_backends_node_' + next_node_num + '">' + 
+               '<tr id="tr_ba_node_num_' + next_node_num + 
+               '" name="tr_ba_node_num"><th colspan="2">' +
+               '<span class="param_group">Backend node ' + next_node_num + '</span>' +
+               '</th></tr>';
+
+    $('tr[name="tr_ba_node_num"]').last().nextAll('tr').each(function()
     {
-        toggleTbody($(this));
+        html += '<tr>' + $(this).html() + '</tr>';
     });
-    $('input[type="radio"], select').change(function()
+    html += '</tbody>';
+
+    $('#t_backends').append(html);
+    $('#tr_ba_node_num_' + next_node_num).nextAll('tr').find('input').val('');
+
+}
+
+/*
+ * clicking backends "add" button to add per node health_check row.
+ */
+function addPerNodeHealthCheck(next_node_num)
+{
+    var html = '<tbody id="tb_per_node_healthcheck_' + next_node_num + '">' +
+               '<tr id="tr_hc_node_num_' + next_node_num + 
+               '" name="tr_hc_node_num"><th colspan="2">' +
+               '<span class="param_group">Backend node ' + next_node_num + '</span>' +
+               '<input id="add_per_node_health_check_' + next_node_num + 
+               '" type="button" name="add" value="Add" onclick="addPerNodeHealthCheckForm($(this))" />' +
+               '</th></tr>';
+
+    $('#tb_global_healthcheck').find('tr').each(function()
     {
-        toggleTbody($(this));
+        html += '<tr style="display: none">' + $(this).html() + '</tr>';
     });
-});
+
+    html += '</tbody>';
+
+    $('#t_healthcheck').append(html);
+    $('#tr_hc_node_num_' + next_node_num).nextAll('tr').find('input').val('');
+
+    $('#tb_per_node_healthcheck_' + next_node_num).find('input[name^=health_check], input[name=connect_timeout]').each(function()
+    {
+        var name = $(this).attr('name');
+        $(this).attr('name', name + next_node_num)
+    }); 
+}
+
+/*
+ * Add per node health check form by using "add" button of health check table.
+ */
+var addPerNodeHealthCheckForm = function()
+{
+    var node_num = $(this).parents('tbody').attr('id').split('_')[4];
+
+    $(this).parents('tbody').find('tr').show();
+    $('#tr_hc_node_num_' + node_num).nextAll('tr').find('input').val('');
+}
+
+/*
+ * Delete backend node form
+ */
+var deleteBackendForm = function()
+{
+    var deleted_node_num = $(this).attr('id').split('_')[3];
+    $('#tb_backends_node_' + deleted_node_num).remove();
+}
+
+/*
+ * Delete per node health check form
+ */
+var deletePerNodeHealthCheckForm = function()
+{
+    var node_num = $(this).parents('tbody').attr('id').split('_')[4];
+
+    $('#tr_hc_node_num_' + node_num).nextAll('tr').find('input').val('');
+    $(this).parents('tr').nextAll('tr').css('display', 'none');
+}

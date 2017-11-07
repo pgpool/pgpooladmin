@@ -62,7 +62,13 @@ function input($param, $param_in_form, $num)
 
     $val_arr = $select_options[$param];
 
-    $user_val = $params[$param];
+    // in case of per node health_check parameters,
+    // key is "health_check_period0"
+    if (preg_match('/^(health_check|connect_time).*[a-z]$/', $param)) {
+        $user_val = $params[$param . $num];
+    } else {
+        $user_val = $params[$param];
+    }
     if (is_array($user_val)) {
        $user_val = ($num !== NULL) ? $user_val[$num] : NULL;
     }
@@ -85,7 +91,14 @@ function select($param, $param_in_form, $num)
 {
     global $params, $errors, $pgpoolConfigParamAll;
 
-    $user_val = $params[$param];
+    // in case of per node health_check parameters,
+    // key is "health_check_period0"
+    if (preg_match('/^(health_check|connect_time).*[a-z]$/', $param)) {
+        $user_val = $params[$param . $num];
+    } else {
+        $user_val = $params[$param];
+    }
+
     if ($user_val == '') {
         $user_val = $param_info['default'];
     }

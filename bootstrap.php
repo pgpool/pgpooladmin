@@ -30,7 +30,7 @@ define('NODE_NOT_LOADED',       -1); // only for pgpoolAdmin
 // watchdog status in "pcp_watchdog_info" result (- 3.4)
 // (defined in $src/inclucde/watchdog/watchdog.h
 $g_watchdog_status_str_arr = array();
-if (_PGPOOL2_VERSION < 3.5) {
+if (defined('_PGPOOL2_VERSION') && _PGPOOL2_VERSION < 3.5) {
     define('WATCHDOG_END',     0);
     define('WATCHDOG_INIT',    1);
     define('WATCHDOG_NORMAL',  2);

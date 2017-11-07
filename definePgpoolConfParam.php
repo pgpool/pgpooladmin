@@ -26,6 +26,7 @@ $pgpoolConfigParam = array();
 $pgpoolConfigBackendParam = array();
 $pgpoolConfigWdOtherParam = array();
 $pgpoolConfigHbDestinationParam = array();
+$pgpoolConfigHealthCheckParam = array();
 
 define('NUM_MAX', 65535);
 
@@ -133,7 +134,7 @@ $pgpoolConfigBackendParam[$key]['multiple'] = TRUE;
 $key = 'backend_flag';
 $pgpoolConfigBackendParam[$key]['type'] = 'C';
 $pgpoolConfigBackendParam[$key]['default'] = 'ALLOW_TO_FAILOVER';
-$pgpoolConfigBackendParam[$key]['select'] = array('ALLOW_TO_FAILOVER', 'DISALLOW_TO_FAILOVER');
+$pgpoolConfigBackendParam[$key]['select'] = array('ALLOW_TO_FAILOVER', 'DISALLOW_TO_FAILOVER', 'ALWAYS_MASTER');
 $pgpoolConfigBackendParam[$key]['regexp'] = selectreg($pgpoolConfigBackendParam[$key]['select']);
 $pgpoolConfigBackendParam[$key]['multiple'] = TRUE;
 
@@ -297,12 +298,6 @@ $pgpoolConfigParam[$key]['parent'] = array('log_destination' => 'syslog');
 
 # - Debug -
 
-$key = 'debug_level';
-$pgpoolConfigParam[$key]['type'] = 'N';
-$pgpoolConfigParam[$key]['default'] = '0';
-$pgpoolConfigParam[$key]['min'] = 0;
-$pgpoolConfigParam[$key]['max'] = NUM_MAX;
-
 $key = 'log_error_verbosity';
 $pgpoolConfigParam[$key]['type'] = 'C';
 $pgpoolConfigParam[$key]['default'] = 'DEFAULT';
@@ -448,8 +443,8 @@ $pgpoolConfigParam[$key]['restart'] = TRUE;
 
 $key = 'master_slave_sub_mode';
 $pgpoolConfigParam[$key]['type'] = 'C';
-$pgpoolConfigParam[$key]['default'] = 'slony';
-$pgpoolConfigParam[$key]['select'] = array('slony', 'stream');
+$pgpoolConfigParam[$key]['default'] = 'stream';
+$pgpoolConfigParam[$key]['select'] = array('stream', 'slony');
 $pgpoolConfigParam[$key]['regexp'] = selectreg($pgpoolConfigParam[$key]['select']);
 $pgpoolConfigParam[$key]['restart'] = TRUE;
 $pgpoolConfigParam[$key]['parent'] = array('master_slave_mode' => 'on');
@@ -563,7 +558,7 @@ $pgpoolConfigParam[$key]['restart'] = TRUE;
 $pgpoolConfigParam[$key]['parent'] = array('parallel_mode' => 'on');
 
 #------------------------------------------------------------------------------
-# HEALTH CHECK
+# HEALTH CHECK GLOBAL PARAMETERS
 #------------------------------------------------------------------------------
 
 $key = 'health_check_period';
@@ -571,45 +566,53 @@ $pgpoolConfigParam[$key]['type'] = 'N';
 $pgpoolConfigParam[$key]['default'] =0;
 $pgpoolConfigParam[$key]['min'] = 0;
 $pgpoolConfigParam[$key]['max'] = NUM_MAX;
+$pgpoolConfigParam[$key]['healthcheck'] = TRUE;
 
 $key = 'health_check_timeout';
 $pgpoolConfigParam[$key]['type'] = 'N';
 $pgpoolConfigParam[$key]['default'] =20;
 $pgpoolConfigParam[$key]['min'] = 0;
 $pgpoolConfigParam[$key]['max'] = NUM_MAX;
+$pgpoolConfigParam[$key]['healthcheck'] = TRUE;
 
 $key = 'health_check_user';
 $pgpoolConfigParam[$key]['type'] = 'C';
-$pgpoolConfigParam[$key]['default'] = 'nodoby';
+$pgpoolConfigParam[$key]['default'] = 'noboby';
 $pgpoolConfigParam[$key]['regexp'] = $userreg;
+$pgpoolConfigParam[$key]['healthcheck'] = TRUE;
 
 $key = 'health_check_password';
 $pgpoolConfigParam[$key]['type'] = 'C';
 $pgpoolConfigParam[$key]['default'] = '';
 $pgpoolConfigParam[$key]['regexp'] = $anyelse;
+$pgpoolConfigParam[$key]['healthcheck'] = TRUE;
 
 $key = 'health_check_database';
 $pgpoolConfigParam[$key]['type'] = 'C';
 $pgpoolConfigParam[$key]['default'] = '';
 $pgpoolConfigParam[$key]['regexp'] = $anyelse;
+$pgpoolConfigParam[$key]['healthcheck'] = TRUE;
 
 $key = 'health_check_max_retries';
 $pgpoolConfigParam[$key]['type'] = 'N';
 $pgpoolConfigParam[$key]['default'] = 0;
 $pgpoolConfigParam[$key]['min'] = 0;
 $pgpoolConfigParam[$key]['max'] = NUM_MAX;
+$pgpoolConfigParam[$key]['healthcheck'] = TRUE;
 
 $key = 'health_check_retry_delay';
 $pgpoolConfigParam[$key]['type'] = 'N';
 $pgpoolConfigParam[$key]['default'] = 1;
 $pgpoolConfigParam[$key]['min'] = 0;
 $pgpoolConfigParam[$key]['max'] = NUM_MAX;
+$pgpoolConfigParam[$key]['healthcheck'] = TRUE;
 
 $key = 'connect_timeout';
 $pgpoolConfigParam[$key]['type'] = 'N';
 $pgpoolConfigParam[$key]['default'] = 10000;
 $pgpoolConfigParam[$key]['min'] = 0;
 $pgpoolConfigParam[$key]['max'] = NUM_MAX;
+$pgpoolConfigParam[$key]['healthcheck'] = TRUE;
 
 #------------------------------------------------------------------------------
 # FAILOVER AND FAILBACK
@@ -631,7 +634,7 @@ $pgpoolConfigParam[$key]['default'] = 'on';
 
 $key = 'search_primary_node_timeout';
 $pgpoolConfigParam[$key]['type'] = 'N';
-$pgpoolConfigParam[$key]['default'] = 10;
+$pgpoolConfigParam[$key]['default'] = 300;
 $pgpoolConfigParam[$key]['min'] = 0;
 $pgpoolConfigParam[$key]['max'] = NUM_MAX;
 
@@ -796,15 +799,32 @@ $pgpoolConfigParam[$key]['default'] = '';
 $pgpoolConfigParam[$key]['regexp'] = $anyelse;
 $pgpoolConfigParam[$key]['parent'] = array('use_watchdog' => 'on');
 
-$key = 'wd_monitoring_interfaces_list';
-$pgpoolConfigParam[$key]['type'] = 'C';
-$pgpoolConfigParam[$key]['default'] = '';
-$pgpoolConfigParam[$key]['regexp'] = $anyelse;
+# Controlling the Failover behavior
+
+$key = 'failover_when_quorum_exists';
+$pgpoolConfigParam[$key]['type'] = 'B';
+$pgpoolConfigParam[$key]['default'] = 'on';
+$pgpoolConfigParam[$key]['parent'] = array('use_watchdog' => 'on');
+
+$key = 'failover_require_consensus';
+$pgpoolConfigParam[$key]['type'] = 'B';
+$pgpoolConfigParam[$key]['default'] = 'on';
+$pgpoolConfigParam[$key]['parent'] = array('use_watchdog' => 'on');
+
+$key = 'allow_multiple_failover_requests_from_node';
+$pgpoolConfigParam[$key]['type'] = 'B';
+$pgpoolConfigParam[$key]['default'] = 'off';
 $pgpoolConfigParam[$key]['parent'] = array('use_watchdog' => 'on');
 
 # Life checking pgpool-II
 
 # (Common)
+
+$key = 'wd_monitoring_interfaces_list';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = '';
+$pgpoolConfigParam[$key]['regexp'] = $anyelse;
+$pgpoolConfigParam[$key]['parent'] = array('use_watchdog' => 'on');
 
 $key = 'wd_lifecheck_method';
 $pgpoolConfigParam[$key]['type'] = 'C';
