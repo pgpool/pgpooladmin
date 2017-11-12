@@ -59,7 +59,8 @@ $tpl->assign('useSyslog',      useSyslog());
 $tpl->assign('pipe',           (isPipe(_PGPOOL2_LOG_FILE)) ? 1 : 0);
 $tpl->assign('msgStopPgpool',  $message['msgStopPgpool']);
 $tpl->assign('login_user',     $_SESSION[SESSION_LOGIN_USER]);
-$tpl->assign('is_superuser',   isSuperUser($_SESSION[SESSION_LOGIN_USER]));
+$tpl->assign('is_superuser',   (isset($_SESSION[SESSION_IS_SUPER_USER])) ? 
+    $_SESSION[SESSION_IS_SUPER_USER] : isSuperUser($_SESSION[SESSION_LOGIN_USER]));
 
 // Set params
 $configValue = readConfigParams();
