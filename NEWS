@@ -1,4 +1,34 @@
 ===============================================================================
+pgpoolAdmin 3.7
+===============================================================================
+
+* Version 3.7.0 2017/xx/xx
+
+  ** New features
+
+   - Add support for Pgpool-II 3.7. (Bo Peng)
+    
+        Added parameters are:
+         - failover_when_quorum_exists
+         - failover_require_consensus
+         - enable_multiple_failover_requests_from_node
+         - health_check_period0
+         - health_check_timeout0
+         - health_check_user0
+         - health_check_password0
+         - health_check_database0
+         - health_check_max_retries0
+         - health_check_retry_delay0
+         - connect_timeout0
+    
+        Deleted parameters are:
+         - debug_level
+
+   - Improve pgpool.conf config form. (Bo Peng)
+
+   - Add support for PHP7. (Bo Peng)
+
+===============================================================================
 pgpoolAdmin 3.6
 ===============================================================================
 
