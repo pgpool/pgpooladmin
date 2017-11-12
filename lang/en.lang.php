@@ -27,6 +27,7 @@ $message = array(
     'lang' => 'en',
     'strLang' => 'English',
 
+    'descAllow_multiple_failover_requests_from_node' => 'If on, a single Pgpool-II node can cast multiple votes for the failover',
     'descAllow_sql_comments' => 'If on, ignore SQL comments when judging if load balance or query cache is possible',
     'descApp_name_redirect_preference_list' => '"application name:node id" pairs to specify the node id when the application is used',
     'descArping_path' => 'The path of a command to send an ARP request after the virtual IP is switched',
@@ -63,6 +64,8 @@ $message = array(
     'descFailback_command' => 'Command to execute when attaching a node',
     'descFailover_if_affected_tuples_mismatch' => 'Fail over due to disagreement with the number of affected tuples '.
                                                   'in UPDATE/DELETE',
+    'descFailover_require_consensus' => 'If on, Pgpool-II will perform the degenerate/failover on a backend node if the watchdog quorum exists',
+    'descFailover_when_quorum_exists' => 'If on, Pgpool-II will perform the degenerate/failover on backend node if the quorum exists',
     'descFail_over_on_backend_error' => 'Fail over when socket communication error to backend occurs',
     'descFollow_master_command' => 'Command to run only after a master failover',
     'descHeartbeat_destination' => 'The destination of heartbeat signals. Specify by hostname or IP address.',

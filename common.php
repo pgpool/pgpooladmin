@@ -512,7 +512,7 @@ function paramExists($param)
         // params added in 3.7
         case 'failover_when_quorum_exists':
         case 'failover_require_consensus':
-        case 'enable_multiple_failover_requests_from_node':
+        case 'allow_multiple_failover_requests_from_node':
         case 'health_check_period0':
         case 'health_check_timeout0':
         case 'health_check_user0':
@@ -823,6 +823,14 @@ function getMultiParams()
     $rtn['heartbeat'] = array('heartbeat_destination', 'heartbeat_destination_port', 'heartbeat_device');
 
     return $rtn;
+}
+
+/**
+ * Return if show per node health check parameters
+ */
+function showPerNodeHC()
+{
+    return (3.7 <= _PGPOOL2_VERSION);
 }
 
 /*

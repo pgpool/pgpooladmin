@@ -42,12 +42,21 @@ $(window).load(function()
     $('#add_backends_node').click(function()
     {
         var next_node_num = $('[id^=tb_backends_node_]').length;
+        var pgpool_ver = $('#pgpool_ver').val();
+
         addBackendForm(next_node_num);
-        addPerNodeHealthCheck(next_node_num);
+
+        /* Only show per node health check form when pgpool version >= 3.7.*/
+        if (pgpool_ver >= 3.7) {
+            addPerNodeHealthCheck(next_node_num);
+        }
     });
 
     /* Click "add" button to add per node health_check. */
-    $('[id^=add_per_node_health_check_]').on({'click': addPerNodeHealthCheckForm});
+    $('[id^=add_per_node_health_check_]').click(function()
+    {
+        addPerNodeHealthCheckForm($(this));
+    });
 
     /* ========================================================================= */ 
     /* Click "delete" button                                                     */
@@ -161,11 +170,11 @@ function addPerNodeHealthCheck(next_node_num)
 /*
  * Add per node health check form by using "add" button of health check table.
  */
-var addPerNodeHealthCheckForm = function()
+function addPerNodeHealthCheckForm(obj)
 {
-    var node_num = $(this).parents('tbody').attr('id').split('_')[4];
+    var node_num = obj.parents('tbody').attr('id').split('_')[4];
 
-    $(this).parents('tbody').find('tr').show();
+    obj.parents('tbody').find('tr').show();
     $('#tr_hc_node_num_' + node_num).nextAll('tr').find('input').val('');
 }
 

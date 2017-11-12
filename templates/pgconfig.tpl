@@ -51,6 +51,7 @@
   <form id="form_pgconfig" name="pgconfig" method="post" action="pgconfig.php" class="pgconfig">
     <input type="hidden" id="pgconfig_action" name="action" value="" />
     <input type="hidden" id="pgconfig_num" name="num" value="" />
+    <input type="hidden" id="pgpool_ver" name="pgpool_ver" value="{$smarty.const._PGPOOL2_VERSION}" />
 
     {* ===================================================================== *}
     <h3 id="connections">Connections</h3>
@@ -457,6 +458,11 @@
 
       </tbody>
 
+    {* ===================================================================== *}
+    {* If version <= 3.6, don't show per node health check parameters form.  *}
+    {* ===================================================================== *}
+
+    {if showPerNodeHC(_PGPOOL2_VERSION)}
       <tr><th class="category" colspan="2">Per Node Parameters</th></tr>
 
       {foreach from=$params.backend_hostname key=node_num item=v}
@@ -492,6 +498,7 @@
 
         </tbody>
       {/foreach}
+    {/if}
     </table>
 
     {* ===================================================================== *}
@@ -603,16 +610,18 @@
             {/if}
           </tbody>
 
-          <tbody id="tb_watchdog_use_watchdog_on_failover">
+          {if paramExists('failover_when_quorum_exists')}
+            <tbody id="tb_watchdog_use_watchdog_on_failover">
 
-            {* --------------------------------------------------------------------- *}
-            <tr><th class="category" colspan="4">Quorum failover behavior Setting</th></tr>
-            {* --------------------------------------------------------------------- *}
+              {* --------------------------------------------------------------------- *}
+              <tr><th class="category" colspan="4">Quorum failover behavior Setting</th></tr>
+              {* --------------------------------------------------------------------- *}
 
-            {custom_tr_pgconfig param='failover_when_quorum_exists'}
-            {custom_tr_pgconfig param='failover_require_consensus'}
-            {custom_tr_pgconfig param='allow_multiple_failover_requests_from_node'}
-          </tbody>
+              {custom_tr_pgconfig param='failover_when_quorum_exists'}
+              {custom_tr_pgconfig param='failover_require_consensus'}
+              {custom_tr_pgconfig param='allow_multiple_failover_requests_from_node'}
+            </tbody>
+          {/if}
 
           <tbody id="tb_watchdog_use_watchdog_on_lifecheck_common">
             {* --------------------------------------------------------------------- *}

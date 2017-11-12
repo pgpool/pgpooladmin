@@ -27,6 +27,7 @@ $message = array(
     'lang' => 'zh_cn',
     'strLang' => '简体中文',
 
+    'descAllow_multiple_failover_requests_from_node' => '一个 Pgpool-II 节点是否能够投多个票',
     'descAllow_sql_comments' => '在判断能否负载均衡和查询缓存时，是否忽略SQL注释',
     'descApp_name_redirect_preference_list' => '对于想使用负载均衡功能的节点，用"数据库名:节点号"的形式指定',
     'descArping_path' => '该命令的路径来发送所述 IP 地址切换后的ARP请求',
@@ -60,6 +61,8 @@ $message = array(
     'descFailover_command' => '断开一个节点时执行的命令',
     'descFailback_command' => '连接到一个节点时执行的命令',
     'descFailover_if_affected_tuples_mismatch' => '由于不认可 UPDATE/DELETE 生效的行数不同而进行故障切换',
+    'descFailover_require_consensus' => '是否使用 quorum 投票来进行故障切换',
+    'descFailover_when_quorum_exists' => '是否使用 quorum 机制来进行故障切换',
     'descFail_over_on_backend_error' => '与服务器发生套接字错误时进行故障切换',
     'descFollow_master_command' => '在主节点发送故障切换后运行的命令',
     'descHeartbeat_destination' => '心跳信号发送目标的 IP 地址或主机名',

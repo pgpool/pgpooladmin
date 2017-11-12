@@ -134,7 +134,11 @@ $pgpoolConfigBackendParam[$key]['multiple'] = TRUE;
 $key = 'backend_flag';
 $pgpoolConfigBackendParam[$key]['type'] = 'C';
 $pgpoolConfigBackendParam[$key]['default'] = 'ALLOW_TO_FAILOVER';
-$pgpoolConfigBackendParam[$key]['select'] = array('ALLOW_TO_FAILOVER', 'DISALLOW_TO_FAILOVER', 'ALWAYS_MASTER');
+if (_PGPOOL2_VERSION >= 3.7) {
+    $pgpoolConfigBackendParam[$key]['select'] = array('ALLOW_TO_FAILOVER', 'DISALLOW_TO_FAILOVER', 'ALWAYS_MASTER');
+} else {
+    $pgpoolConfigBackendParam[$key]['select'] = array('ALLOW_TO_FAILOVER', 'DISALLOW_TO_FAILOVER');
+}
 $pgpoolConfigBackendParam[$key]['regexp'] = selectreg($pgpoolConfigBackendParam[$key]['select']);
 $pgpoolConfigBackendParam[$key]['multiple'] = TRUE;
 
@@ -297,6 +301,12 @@ $pgpoolConfigParam[$key]['regexp'] = $strreg;
 $pgpoolConfigParam[$key]['parent'] = array('log_destination' => 'syslog');
 
 # - Debug -
+
+$key = 'debug_level';
+$pgpoolConfigParam[$key]['type'] = 'N';
+$pgpoolConfigParam[$key]['default'] = '0';
+$pgpoolConfigParam[$key]['min'] = 0;
+$pgpoolConfigParam[$key]['max'] = NUM_MAX;
 
 $key = 'log_error_verbosity';
 $pgpoolConfigParam[$key]['type'] = 'C';
