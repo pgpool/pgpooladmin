@@ -2,7 +2,7 @@
 pgpoolAdmin 3.7
 ===============================================================================
 
-* Version 3.7.0 2017/xx/xx
+* Version 3.7.0 2017/11/22
 
   ** New features
 
@@ -27,6 +27,10 @@ pgpoolAdmin 3.7
    - Improve pgpool.conf config form. (Bo Peng)
 
    - Add support for PHP7. (Bo Peng)
+
+  ** Bug fixes
+
+    - Fix bug that detach node button doesn't work. (Bug 361) (Bo Peng)
 
 ===============================================================================
 pgpoolAdmin 3.6
