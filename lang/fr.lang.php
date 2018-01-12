@@ -207,6 +207,7 @@ $message = array(
     'strPcpDir' => 'Répertoire de PCP',
     'strPcpHostName' => 'Nom d\'hôte de PCP',
     'strPcpRefreshTime' => 'Temps de rafraîchissement',
+    'strPgConnectTimeout' => 'Délai de PostgreSQL',
     'strPcpTimeout' => 'Délai de PCP',
     'strPgConfFile' => 'Fichier pgpool.conf',
     'strPgConfSetting' => 'Configuration de pgpool.conf',

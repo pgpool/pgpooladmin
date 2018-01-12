@@ -50,6 +50,7 @@ $message = array(
     'strPgpoolLogFile' => 'Archivo de logs para pgpool',
     'strPcpDir' => 'Directorio PCP ',
     'strPcpTimeout' => 'PCP Timeout',
+    'strPgConnectTimeout' => 'Postgreql connect Timeout',
     'strPcpHostName' => 'Nombre del host PCP',
     'strPcpRefreshTime' => 'Tiempo de actualización',
     'msgCongratulations' => '¡Felicitaciones, herramienta de administración está instalada!',

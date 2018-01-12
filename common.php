@@ -76,6 +76,11 @@ if (! defined('_PGPOOL2_LANG') ||
     errorPage('e7');
 }
 
+// PostgreSQL connect timeout, default is 10
+if (! defined('_PGPOOL2_CONNECT_TIMEOUT')) {
+    define('_PGPOOL2_CONNECT_TIMEOUT', 10);
+}
+
 /**
  * Create message catalog list
  */
@@ -156,6 +161,7 @@ function NodeActive($nodeNum)
                        $params['health_check_database'] : 'template1',
         'user'     => $params['health_check_user'],
         'password' => $params['health_check_password'],
+        'connect_timeout' => _PGPOOL2_CONNECT_TIMEOUT
     ));
 
     if ($conn == FALSE) {
@@ -186,6 +192,7 @@ function NodeStandby($nodeNum)
         'dbname'   => 'template1',
         'user'     => $params['sr_check_user'],
         'password' => $params['sr_check_password'],
+        'connect_timeout' => _PGPOOL2_CONNECT_TIMEOUT,
     ));
 
     if ($conn == FALSE) {
@@ -224,6 +231,7 @@ function isSuperUser($user_name)
         'dbname'   => 'template1',
         'user'     => $_SESSION[SESSION_LOGIN_USER],
         'password' => $_SESSION[SESSION_LOGIN_USER_PASSWORD],
+        'connect_timeout' => _PGPOOL2_CONNECT_TIMEOUT,
     ));
 
     // Try to connect health check user
@@ -233,7 +241,8 @@ function isSuperUser($user_name)
             'port'     => $params['port'],
             'dbname'   => 'template1',
             'user'     => $params['health_check_user'],
-            'password' => $params['health_check_password']
+            'password' => $params['health_check_password'],
+            'connect_timeout' => _PGPOOL2_CONNECT_TIMEOUT
         ));
     }
     if ($conn === FALSE) { return NULL; }
@@ -270,6 +279,7 @@ function generateConstr($params)
         case 'dbname':
         case 'user':
         case 'password':
+        case 'connect_timeout':
             $arr[] = "{$param}='{$value}'";
         }
     }

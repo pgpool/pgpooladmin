@@ -296,6 +296,7 @@ $message = array(
     'strPcpDir' => 'PCP Directorio',
     'strPcpHostName' => 'PCP Nombre del Host',
     'strPcpRefreshTime' => 'Tiempo de actualización',
+    'strPgConnectTimeout' => 'Postgresql Espera',
     'strPcpTimeout' => 'PCP Espera',
     'strPgConfFile' => 'Archivo pgpool.conf',
     'strPgConfSetting' => 'Configuración pgpool.conf',

@@ -48,6 +48,7 @@ $message = array(
     'strPgpoolLogFile' => 'pgpool 日志文件',
     'strPcpDir' => 'PCP 目录',
     'strPcpTimeout' => 'PCP 超时',
+    'strPgConnectTimeout' => 'Postgresql 超时',
     'strPcpHostName' => 'PCP 主机名',
     'strPcpRefreshTime' => '刷新时间',
     'msgCongratulations' => '恭喜，pgpool 管理工具安装完成。',

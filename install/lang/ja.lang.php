@@ -50,6 +50,7 @@ $message = array(
     'strPgpoolLogFile' => 'pgpoolログファイル',
     'strPcpDir' => 'PCPディレクトリ',
     'strPcpTimeout' => 'PCPタイムアウト',
+    'strPgConnectTimeout' => 'Postgreslタイムアウト',
     'strPcpHostName' => 'PCPホスト名',
     'strPcpRefreshTime' => '更新間隔(0で自動更新しない)',
     'strDependencies' => '依存 PHP モジュール',

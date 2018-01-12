@@ -77,8 +77,13 @@
         <tr>
           <th><label for="PcpRefreshTime">{$message.strPcpRefreshTime|escape}</label>
             (integer)
-            </td>
+            </th>
           <td>The update interval of status is specified every second. When 0 is specified, it doesn't update it automatically. </td></tr>
+        <tr>
+          <th><label for="ConnectTimeout">{$message.strPgConnectTimeout|escape}</label>
+            (integer)
+            </th>
+          <td>The connect timeout for postgresql connections when checking if backend is alive or not. </td></tr>
       </tbody>
     </table>
   <p>Finally, The update button is renewed pushing.</p>

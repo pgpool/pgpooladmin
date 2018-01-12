@@ -304,6 +304,7 @@ $message = array(
     'strPcpDir' => 'PCPディレクトリ',
     'strPcpHostName' => 'PCPホスト名',
     'strPcpRefreshTime' => '更新間隔(0で自動更新しない)',
+    'strPgConnectTimeout' => 'PostgreSQL接続タイムアウト',
     'strPcpTimeout' => 'PCPタイムアウト',
     'strPgConfFile' => 'pgpool.confファイル',
     'strPgConfSetting' => 'pgpool.conf設定',

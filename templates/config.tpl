@@ -102,6 +102,10 @@
           <th><label>{$message.strPcpRefreshTime|escape}</label> (string)</th>
           <td>{custom_input param='pcp_refresh_time' echo=true}</td>
         </tr>
+        <tr>
+          <th><label>{$message.strPgConnectTimeout|escape}</label> (string)</th>
+          <td>{custom_input param='pg_connect_timeout' echo=true}</td>
+        </tr>
       </tbody>
     </table>
   </form>

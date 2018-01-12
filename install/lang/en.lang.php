@@ -50,6 +50,7 @@ $message = array(
     'strPgpoolLogFile' => 'pgpool Logfile',
     'strPcpDir' => 'PCP directory',
     'strPcpTimeout' => 'PCP Timeout',
+    'strPgConnectTimeout' => 'Postgresql Connect Timeout',
     'strPcpHostName' => 'PCP Hostname',
     'strPcpRefreshTime' => 'Refresh Time',
     'strDependencies' => 'Dependencies',

@@ -320,6 +320,7 @@ $message = array(
     'strPcpDir' => 'PCP Directory',
     'strPcpHostName' => 'PCP Hostname',
     'strPcpRefreshTime' => 'Refresh Time',
+    'strPgConnectTimeout' => 'PostgreSQL Connect Timeout',
     'strPcpTimeout' => 'PCP Timeout',
     'strPgConfFile' => 'pgpool.conf File',
     'strPgConfSetting' => 'pgpool.conf Setting',

@@ -66,6 +66,7 @@ $sysDbParam['port']     = $sysDbParam['system_db_port'];
 $sysDbParam['dbname']   = $sysDbParam['system_db_dbname'];
 $sysDbParam['user']     = $sysDbParam['system_db_user'];
 $sysDbParam['password'] = $sysDbParam['system_db_password'];
+$sysDbParam['connect_timeout'] = _PGPOOL2_CONNECT_TIMEOUT;
 
 $sysDbSchema = $sysDbParam['system_db_schema'];
 

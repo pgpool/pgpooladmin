@@ -47,6 +47,7 @@ $message = array(
     'strPgpoolLogFile' => 'Journal Pgpool',
     'strPcpDir' => 'Répertoire PCP',
     'strPcpTimeout' => 'Délai d\'attente PCP',
+    'strPgConnectTimeout' => 'Délai d\'attente Postgresql',
     'strPcpHostName' => 'Nom d\'hôte PCP',
     'strPcpRefreshTime' => 'Temps de rafraichissement',
     'msgCongratulations' => 'Félicitations. L\'outil d\'administration de Pgpool a été installé&nbsp;!',

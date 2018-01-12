@@ -302,6 +302,7 @@ $message = array(
     'strPcpDir' => 'PCP 目录',
     'strPcpHostName' => 'PCP 主机名',
     'strPcpRefreshTime' => '刷新时间',
+    'strPgConnectTimeout' => 'PostgreSQL连接超时',
     'strPcpTimeout' => 'PCP 超时',
     'strPgConfFile' => 'pgpool.conf 文件',
     'strPgConfSetting' => 'pgpool.conf 设置',

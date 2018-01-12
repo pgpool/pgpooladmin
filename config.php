@@ -101,6 +101,11 @@ $params['pcp_hostname']       = (defined('_PGPOOL2_PCP_HOSTNAME')) ?
 $params['pcp_refresh_time']   = (defined('_PGPOOL2_STATUS_REFRESH_TIME')) ?
                                 _PGPOOL2_STATUS_REFRESH_TIME : $message['errNoDefined'];
 
+// PostgreSQL connect timeout. Default is 10.
+// This is also defined in common.php.
+$params['pg_connect_timeout']   = (defined('_PGPOOL2_CONNECT_TIMEOUT')) ?
+    _PGPOOL2_CONNECT_TIMEOUT : 10;
+
 $tpl->assign('status', NULL);
 switch ( $action ) {
     case 'update':
@@ -144,6 +149,15 @@ switch ( $action ) {
         } else {
             if ($params['pcp_refresh_time'] < 0) {
                 $errors['pcp_refresh_time'] = $message['errShouldBeZeroOrMore'];
+            }
+        }
+
+        setValue('pg_connect_timeout');
+        if (!is_numeric($params['pg_connect_timeout'] )) {
+            $errors['pg_connect_timeout'] = $message['errShouldBeInteger'];
+        } else {
+            if ($params['pg_connect_timeout'] < 0) {
+                $errors['pg_connect_timeout'] = $message['errShouldBeZeroOrMore'];
             }
         }
 
@@ -277,6 +291,7 @@ function writePgmtConf($pgmgtConfigFile)
     write($fp, '_PGPOOL2_PCP_DIR',             $params['pcp_client_dir']);
     write($fp, '_PGPOOL2_PCP_HOSTNAME',        $params['pcp_hostname']);
     write($fp, '_PGPOOL2_STATUS_REFRESH_TIME', $params['pcp_refresh_time']);
+    write($fp, '_PGPOOL2_CONNECT_TIMEOUT', $params['pg_connect_timeout']);
 
     $str = "?>\n";
     fputs($fp, $str);

@@ -204,6 +204,13 @@ if (isset($_POST['pcp_refreshTime']) && $_POST['pcp_refreshTime']) {
     $pcp_refreshTime =  _PGPOOL2_STATUS_REFRESH_TIME;
 }
 
+$msgPgConnectTimeout = '';
+if (isset($_POST['pg_connect_timeout']) && $_POST['pg_connect_timeout']) {
+    $pg_connect_timeout = $_POST['pg_connect_timeout'];
+} else {
+    $pg_connect_timeout =  _PGPOOL2_CONNECT_TIMEOUT;
+}
+
 $msgPhpPgsql= '';
 if (!extension_loaded('pgsql')){
     $msgPhpPgsql = 'not installed';
@@ -224,6 +231,7 @@ if ($error || (isset($_POST['submitBack']) && $_POST['submitBack'] != NULL)) {
     $params['pcp_client_dir']      = $pcp_client_dir;
     $params['pcp_hostname']        = $pcp_hostname;
     $params['pcp_refreshTime']     = $pcp_refreshTime;
+    $params['pg_connect_timeout']  = $pg_connect_timeout;
 
     $_SESSION['params'] = $params;
 }
@@ -252,6 +260,7 @@ if (!$error && $action == 'next') {
     write($fp, '_PGPOOL2_PCP_HOSTNAME',        $_POST['pcp_hostname']);
     write($fp, '_PGPOOL2_PCP_TIMEOUT',         $_POST['pcp_timeout']);
     write($fp, '_PGPOOL2_STATUS_REFRESH_TIME', $_POST['pcp_refreshTime']);
+    write($fp, '_PGPOOL2_CONNECT_TIMEOUT', $_POST['pg_connect_timeout']);
 
     fputs($fp, "?>"."\n");
 
@@ -436,6 +445,12 @@ if (!$error && $action == 'next') {
     <td><input name="pcp_refreshTime" type="text" value="<?php echo $pcp_refreshTime ?>" size="50" />
     <?php showResult($msgPcpRefreshTime); ?>
     </td>
+  </tr>
+  <tr>
+	  <th><label><?php echo $message['strPgConnectTimeout'] ?></label></th>
+	  <td><input name="pg_connect_timeout" type="text" value="<?php echo $pg_connect_timeout ?>" size="50" />
+		  <?php showResult($msgPgConnectTimeout); ?>
+	  </td>
   </tr>
 </table>
 

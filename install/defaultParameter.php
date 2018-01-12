@@ -37,5 +37,6 @@ define("_PGPOOL2_PCP_DIR", "/usr/local/bin");
 define("_PGPOOL2_PCP_HOSTNAME", "localhost");
 define("_PGPOOL2_PCP_TIMEOUT", "10");
 define("_PGPOOL2_STATUS_REFRESH_TIME", "0");
+define("_PGPOOL2_CONNECT_TIMEOUT", "10");
 
 ?>
