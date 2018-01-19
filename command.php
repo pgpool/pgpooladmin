@@ -132,7 +132,6 @@ function execPcp($command, $extra_args = array())
             break;
 
         case 'PCP_STOP_PGPOOL':
-            $args .= " {$_POST['stop_mode']}";
             $cmd = _PGPOOL2_PCP_DIR . '/pcp_stop_pgpool' . $args;
             $ret = exec($cmd, $output, $return_var);
             break;

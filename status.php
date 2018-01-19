@@ -59,7 +59,7 @@ $tpl->assign('useSyslog',      useSyslog());
 $tpl->assign('pipe',           (isPipe(_PGPOOL2_LOG_FILE)) ? 1 : 0);
 $tpl->assign('msgStopPgpool',  $message['msgStopPgpool']);
 $tpl->assign('login_user',     $_SESSION[SESSION_LOGIN_USER]);
-$tpl->assign('is_superuser',   (isset($_SESSION[SESSION_IS_SUPER_USER])) ? 
+$tpl->assign('is_superuser',   (isset($_SESSION[SESSION_IS_SUPER_USER])) ?
     $_SESSION[SESSION_IS_SUPER_USER] : isSuperUser($_SESSION[SESSION_LOGIN_USER]));
 
 // Set params
@@ -324,7 +324,7 @@ function _stopPgpool()
 
     $m = $_POST['stop_mode'];
 
-    $result = execPcp('PCP_STOP_PGPOOL', $m);
+    $result = execPcp('PCP_STOP_PGPOOL', array('m' => $m));
     if (!array_key_exists('SUCCESS', $result)) {
         $errorCode = 'e1006';
         $tpl->assign('errorCode', $errorCode);
@@ -354,7 +354,7 @@ function _restartPgpool()
     // Stop pgpool
     $m = $_POST['stop_mode'];
 
-    $result = execPcp('PCP_STOP_PGPOOL', $m);
+    $result = execPcp('PCP_STOP_PGPOOL', array('m' => $m));
     if (!array_key_exists('SUCCESS', $result)) {
         $errorCode = 'e1006';
         $tpl->assign('errorCode', $errorCode);
