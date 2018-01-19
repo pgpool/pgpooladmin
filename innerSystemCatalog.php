@@ -53,7 +53,7 @@ $conn = openDBConnection(array(
     'dbname'   => 'template1',
     'user'     => $params['health_check_user'],
     'password' => $params['health_check_password'],
-    'connect_timeout' => _PGPOOL2_CONNECT_TIMEOUT,
+    'connect_timeout' => _PGPOOL2_PG_CONNECT_TIMEOUT,
 ));
 
 $rs = execQuery($conn, 'SHOW pool_status');

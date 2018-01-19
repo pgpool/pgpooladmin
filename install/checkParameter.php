@@ -208,7 +208,7 @@ $msgPgConnectTimeout = '';
 if (isset($_POST['pg_connect_timeout']) && $_POST['pg_connect_timeout']) {
     $pg_connect_timeout = $_POST['pg_connect_timeout'];
 } else {
-    $pg_connect_timeout =  _PGPOOL2_CONNECT_TIMEOUT;
+    $pg_connect_timeout =  _PGPOOL2_PG_CONNECT_TIMEOUT;
 }
 
 $msgPhpPgsql= '';
@@ -260,7 +260,7 @@ if (!$error && $action == 'next') {
     write($fp, '_PGPOOL2_PCP_HOSTNAME',        $_POST['pcp_hostname']);
     write($fp, '_PGPOOL2_PCP_TIMEOUT',         $_POST['pcp_timeout']);
     write($fp, '_PGPOOL2_STATUS_REFRESH_TIME', $_POST['pcp_refreshTime']);
-    write($fp, '_PGPOOL2_CONNECT_TIMEOUT', $_POST['pg_connect_timeout']);
+    write($fp, '_PGPOOL2_PG_CONNECT_TIMEOUT', $_POST['pg_connect_timeout']);
 
     fputs($fp, "?>"."\n");
 

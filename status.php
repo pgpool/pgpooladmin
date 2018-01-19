@@ -532,7 +532,7 @@ function _doPgCtl($nodeNumber, $pg_ctl_action)
         'dbname'   => 'template1',
         'user'     => $_SESSION[SESSION_LOGIN_USER],
         'password' => $_SESSION[SESSION_LOGIN_USER_PASSWORD],
-        'connect_timeout' => _PGPOOL2_CONNECT_TIMEOUT,
+        'connect_timeout' => _PGPOOL2_PG_CONNECT_TIMEOUT,
     ));
 
     if ($conn == FALSE) {

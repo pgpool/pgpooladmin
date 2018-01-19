@@ -14,5 +14,5 @@ define('_PGPOOL2_LOG_FILE', '/tmp/pgpool.log');
 define('_PGPOOL2_PCP_DIR', '/usr/bin');
 define('_PGPOOL2_PCP_HOSTNAME', 'localhost');
 define('_PGPOOL2_STATUS_REFRESH_TIME', '0');
-define('_PGPOOL2_CONNECT_TIMEOUT', '10');
+define('_PGPOOL2_PG_CONNECT_TIMEOUT', '10');
 ?>
