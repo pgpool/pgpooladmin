@@ -2,6 +2,22 @@
 pgpoolAdmin 3.7
 ===============================================================================
 
+* Version 3.7.1 2018/02/05
+
+  ** New features
+
+	- Add new PostgreSQL connect timeout parameter. (Bo Peng)
+    
+		Sometimes no response from backend due to network reasons,
+    	pgpoolAdmin will wait for long time. In this commit, we add
+    	new PostgreSQL connection timeout parameter.
+    
+    	Patch is provide by Tuukka Kivilahti, and improved by me.
+
+  ** Bug fixes
+
+	- Fix pgpool stop mode doesn't work correctly. (Bo Peng)
+
 * Version 3.7.0 2017/11/22
 
   ** New features
