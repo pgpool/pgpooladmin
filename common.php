@@ -226,7 +226,7 @@ function isSuperUser($user_name)
 
     // Try to connect the backend by login user
     $conn = openDBConnection(array(
-        'host'     => 'localhost',
+        'host'     => PGPOOLADMIN_HOST,
         'port'     => $params['port'],
         'dbname'   => 'template1',
         'user'     => $_SESSION[SESSION_LOGIN_USER],
@@ -238,6 +238,7 @@ function isSuperUser($user_name)
     if ($conn === FALSE) {
         $params = readConfigParams(array('port', 'health_check_user', 'health_check_password'));
         $conn = openDBConnection(array(
+            'host'     => PGPOOLADMIN_HOST,
             'port'     => $params['port'],
             'dbname'   => 'template1',
             'user'     => $params['health_check_user'],
