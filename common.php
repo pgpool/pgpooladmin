@@ -520,6 +520,16 @@ function paramExists($param)
 
     /* Add */
     switch ($param) {
+        // params added in 4.0
+        case 'allow_clear_text_frontend_auth':
+        case 'log_client_messages':
+        case 'black_query_pattern_list':
+        case 'disable_load_balance_on_write':
+        case 'failover_on_backend_error':
+        case 'detach_false_primary':
+            $add_version = 4.0;
+            break;
+
         // params added in 3.7
         case 'failover_when_quorum_exists':
         case 'failover_require_consensus':
@@ -663,6 +673,11 @@ function paramExists($param)
 
     /* Delete */
     switch ($param) {
+        // params deleted in 4.0
+        case 'fail_over_on_backend_error':
+            $del_version = 4.0;
+            break;
+
         // params deleted in 3.7
         case 'debug_level':
             $del_version = 3.7;
@@ -717,7 +732,7 @@ function paramExists($param)
 
 function versions()
 {
-    return array('3.7', '3.6', '3.5', '3.4', '3.3', '3.2', '3.1', '3.0',
+    return array('4.0', '3.7', '3.6', '3.5', '3.4', '3.3', '3.2', '3.1', '3.0',
                  '2.3', '2.2', '2.1', '2.0');
 }
 

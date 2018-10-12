@@ -159,6 +159,10 @@ $pgpoolConfigParam[$key]['default'] = 60;
 $pgpoolConfigParam[$key]['min'] = 0;
 $pgpoolConfigParam[$key]['max'] = 10000;
 
+$key = 'allow_clear_text_frontend_auth';
+$pgpoolConfigParam[$key]['type'] = 'B';
+$pgpoolConfigParam[$key]['default'] = 'off';
+
 # - SSL Connections -
 
 $key = 'ssl';
@@ -277,6 +281,10 @@ $pgpoolConfigParam[$key]['type'] = 'B';
 $pgpoolConfigParam[$key]['default'] = 'off';
 
 $key = 'log_per_node_statement';
+$pgpoolConfigParam[$key]['type'] = 'B';
+$pgpoolConfigParam[$key]['default'] = 'off';
+
+$key = 'log_client_messages';
 $pgpoolConfigParam[$key]['type'] = 'B';
 $pgpoolConfigParam[$key]['default'] = 'off';
 
@@ -425,6 +433,12 @@ $pgpoolConfigParam[$key]['default'] = '';
 $pgpoolConfigParam[$key]['regexp'] = $anyelse;
 $pgpoolConfigParam[$key]['parent'] = array('load_balance_mode' => 'on');
 
+$key = 'black_query_pattern_list';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = '';
+$pgpoolConfigParam[$key]['regexp'] = $anyelse;
+$pgpoolConfigParam[$key]['parent'] = array('load_balance_mode' => 'on');
+
 $key = 'database_redirect_preference_list';
 $pgpoolConfigParam[$key]['type'] = 'C';
 $pgpoolConfigParam[$key]['default'] = '';
@@ -440,6 +454,13 @@ $pgpoolConfigParam[$key]['parent'] = array('load_balance_mode' => 'on');
 $key = 'allow_sql_comments';
 $pgpoolConfigParam[$key]['type'] = 'B';
 $pgpoolConfigParam[$key]['default'] = 'off';
+$pgpoolConfigParam[$key]['parent'] = array('load_balance_mode' => 'on');
+
+$key = 'disable_load_balance_on_write';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = 'transaction';
+$pgpoolConfigParam[$key]['select'] = array('transaction', 'off', 'trans_transaction', 'always');
+$pgpoolConfigParam[$key]['regexp'] = selectreg($pgpoolConfigParam[$key]['select']);
 $pgpoolConfigParam[$key]['parent'] = array('load_balance_mode' => 'on');
 
 #------------------------------------------------------------------------------
@@ -641,6 +662,14 @@ $pgpoolConfigParam[$key]['regexp'] = $anyelse;
 $key = 'fail_over_on_backend_error';
 $pgpoolConfigParam[$key]['type'] = 'B';
 $pgpoolConfigParam[$key]['default'] = 'on';
+
+$key = 'failover_on_backend_error';
+$pgpoolConfigParam[$key]['type'] = 'B';
+$pgpoolConfigParam[$key]['default'] = 'on';
+
+$key = 'detach_false_primary';
+$pgpoolConfigParam[$key]['type'] = 'B';
+$pgpoolConfigParam[$key]['default'] = 'off';
 
 $key = 'search_primary_node_timeout';
 $pgpoolConfigParam[$key]['type'] = 'N';

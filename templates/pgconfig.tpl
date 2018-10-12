@@ -101,6 +101,9 @@
         {/if}
         {custom_tr_pgconfig param='authentication_timeout'}
       </tbody>
+        {if paramExists('pool_passwd')}
+            {custom_tr_pgconfig param='allow_clear_text_frontend_auth'}
+        {/if}
 
         {if paramExists('ssl')}
           <tbody id="tb_connection_ssl">
@@ -211,6 +214,9 @@
             {custom_tr_pgconfig param='log_statement'}
             {if paramExists('log_per_node_statement')}
                 {custom_tr_pgconfig param='log_per_node_statement'}
+            {/if}
+            {if paramExists('log_client_messages')}
+                {custom_tr_pgconfig param='log_client_messages'}
             {/if}
             {if paramExists('log_standby_delay')}
                 {custom_tr_pgconfig param='log_standby_delay'}
@@ -330,6 +336,9 @@
         {if paramExists('black_function_list')}
             {custom_tr_pgconfig param='black_function_list'}
         {/if}
+        {if paramExists('black_query_pattern_list')}
+            {custom_tr_pgconfig param='black_query_pattern_list'}
+        {/if}
         {if paramExists('database_redirect_preference_list')}
             {custom_tr_pgconfig param='database_redirect_preference_list'}
         {/if}
@@ -338,6 +347,9 @@
         {/if}
         {if paramExists('allow_sql_comments')}
             {custom_tr_pgconfig param='allow_sql_comments'}
+        {/if}
+        {if paramExists('disable_load_balance_on_write')}
+            {custom_tr_pgconfig param='disable_load_balance_on_write'}
         {/if}
       </tbody>
     </table>
@@ -513,6 +525,12 @@
         {custom_tr_pgconfig param='failback_command'}
         {if paramExists('fail_over_on_backend_error')}
             {custom_tr_pgconfig param='fail_over_on_backend_error'}
+        {/if}
+        {if paramExists('failover_on_backend_error')}
+            {custom_tr_pgconfig param='failover_on_backend_error'}
+        {/if}
+        {if paramExists('detach_false_primary')}
+            {custom_tr_pgconfig param='detach_false_primary'}
         {/if}
         {if paramExists('search_primary_node_timeout')}
             {custom_tr_pgconfig param='search_primary_node_timeout'}
