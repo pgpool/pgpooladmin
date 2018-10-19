@@ -1,4 +1,25 @@
 ===============================================================================
+pgpoolAdmin 4.0
+===============================================================================
+
+* Version 4.0.0 2018/10/19
+
+  ** New features
+
+   - Add support for Pgpool-II 4.0. (Bo Peng)
+    
+        Added parameters are:
+		 - allow_clear_text_frontend_auth
+		 - log_client_messages
+		 - black_query_pattern_list
+		 - disable_load_balance_on_write
+		 - failover_on_backend_error
+		 - detach_false_primary
+    
+        Deleted parameters are:
+         - fail_over_on_backend_error
+
+===============================================================================
 pgpoolAdmin 3.7
 ===============================================================================
 
