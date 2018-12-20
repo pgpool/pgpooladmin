@@ -2,6 +2,19 @@
 pgpoolAdmin 4.0
 ===============================================================================
 
+* Version 4.0.1 2018/12/20
+
+  ** Bug fixes
+
+   - PgpoolAdmin has a vulnerability to allow an attacker to
+     login without properly checking the authorization. 
+     Once getting into PgpoolAdmin, the attacker can control 
+     Pgpool-II. Also it may be possible to obtain the superuser 
+     role of a PostgreSQL database. 
+     PgPool Global Development Group would like to thank Fotios Rogkotis
+     of DarkMatter for finding the security issue and giving us the
+     detailed studies on it. (CVE-2018-16203)
+
 * Version 4.0.0 2018/10/19
 
   ** New features
