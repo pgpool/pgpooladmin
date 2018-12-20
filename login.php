@@ -19,7 +19,7 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2013 PgPool Global Development Group
+ * @copyright  2003-2018 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
@@ -38,17 +38,21 @@ if (isset($_SESSION[SESSION_LOGIN_USER])) {
 
 // Do login
 if ($success == FALSE) {
-    if (isset($_POST['username'])) {
-        $username = $_POST['username'];
+    if (isset($_POST['username']) && $_POST['username'] != '') {
+        $username = trim($_POST['username']);
     } else {
         $tpl->display('login.tpl');
         exit();
     }
 
-    if (isset($_POST['password'])) {
-        $password = $_POST['password'];
+    if (isset($_POST['password']) && $_POST['password'] != '') {
+        $password = trim($_POST['password']);
+    } else {
+        $tpl->display('login.tpl');
+        exit();
     }
 
+    $md5username = md5($username);
     $md5password = md5($password);
 
     if (!file_exists(_PGPOOL2_PASSWORD_FILE)) {
@@ -60,15 +64,29 @@ if ($success == FALSE) {
 
     // Check each rows in pcp.conf to search
     $fp = fopen(_PGPOOL2_PASSWORD_FILE, 'r');
-    $regexp = "^{$username}:{$md5password}";
+    $input = "{$md5username}:{$md5password}";
 
     if ($fp != NULL) {
-        while (!feof($fp) ) {
-            $line = fgets($fp);
-            if (preg_match("/$regexp/", $line) ) {
+        while (!feof($fp)) {
+            
+            $line = trim(fgets($fp));
+            $line_arr = explode(':', $line);
+
+            // Ignore empty lines and comment lines
+            if (count($line_arr) != 2 || $line_arr[0] == '' || $line_arr[1] == '' || 
+                strpos($line, '#') === 0) {
+                continue;
+            }
+
+            $expected_username = md5($line_arr[0]);
+            $expected_password = $line_arr[1];
+            $expected = "{$expected_username}:{$expected_password}";
+
+            if (hash_equals($expected, $input)) {
                 $_SESSION[SESSION_LOGIN_USER]          = $username;
                 $_SESSION[SESSION_LOGIN_USER_PASSWORD] = $password;
                 $success = TRUE;
+                break;
             }
         }
     }
