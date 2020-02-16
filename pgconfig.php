@@ -937,7 +937,6 @@ function doCheck()
         $isError = TRUE;
         $error += $logical_errors;
     }
-var_dump($error);
 
     /**
      * return params which has errors

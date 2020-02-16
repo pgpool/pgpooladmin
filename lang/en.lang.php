@@ -29,7 +29,7 @@ $message = array(
 
     'descAllow_clear_text_frontend_auth' => 'If on, allow the Pgpool-II to use clear-text-password authentication with frontend clients',
     'descAllow_multiple_failover_requests_from_node' => 'If on, a single Pgpool-II node can cast multiple votes for the failover',
-    'descEnable_consensus_with_half_votes' => 'Apply majority rule for consensus and quorum computation at 50% of votes' .
+    'descEnable_consensus_with_half_votes' => 'Apply majority rule for consensus and quorum computation at 50% of votes ' .
                                               'in a cluster with even number of nodes',
     'descAllow_sql_comments' => 'If on, ignore SQL comments when judging if load balance or query cache is possible',
     'descApp_name_redirect_preference_list' => '"application name:node id" pairs to specify the node id when the application is used',
