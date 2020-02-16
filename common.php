@@ -19,7 +19,7 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2016 PgPool Global Development Group
+ * @copyright  2003-2020 PgPool Global Development Group
  * @version    SVN: $Id$
  */
 
@@ -520,6 +520,20 @@ function paramExists($param)
 
     /* Add */
     switch ($param) {
+        // params added in 4.1
+        case 'reserved_connections':
+        case 'backend_application_name':
+        case 'ssl_ecdh_curve':
+        case 'ssl_dh_params_file':
+        case 'statement_level_load_balance':
+        case 'auto_failback':
+        case 'auto_failback_interval':
+        case 'enable_consensus_with_half_votes':
+        case 'enable_shared_relcache':
+        case 'relcache_query_target':
+            $add_version = 4.1;
+            break;
+
         // params added in 4.0
         case 'allow_clear_text_frontend_auth':
         case 'log_client_messages':
@@ -527,6 +541,8 @@ function paramExists($param)
         case 'disable_load_balance_on_write':
         case 'failover_on_backend_error':
         case 'detach_false_primary':
+        case 'ssl_ciphers':
+        case 'ssl_prefer_server_ciphers':
             $add_version = 4.0;
             break;
 
@@ -732,7 +748,7 @@ function paramExists($param)
 
 function versions()
 {
-    return array('4.0', '3.7', '3.6', '3.5', '3.4', '3.3', '3.2', '3.1', '3.0',
+    return array('4.1', '4.0', '3.7', '3.6', '3.5', '3.4', '3.3', '3.2', '3.1', '3.0',
                  '2.3', '2.2', '2.1', '2.0');
 }
 

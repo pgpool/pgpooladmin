@@ -19,7 +19,7 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2016 PgPool Global Development Group
+ * @copyright  2003-2020 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
@@ -481,7 +481,7 @@ else {
 
 function versions()
 {
-    return array('4.0', '3.7', '3.6', '3.5', '3.4', '3.3', '3.2', '3.1', '3.0',
+    return array('4.1', '4.0', '3.7', '3.6', '3.5', '3.4', '3.3', '3.2', '3.1', '3.0',
                  '2.3', '2.2', '2.1', '2.0');
 }
 

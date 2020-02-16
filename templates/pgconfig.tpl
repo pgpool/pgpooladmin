@@ -76,6 +76,9 @@
         {if paramExists('backend_socket_dir')}
             {custom_tr_pgconfig param='backend_socket_dir'}
         {/if}
+        {if paramExists('reserved_connections')}
+            {custom_tr_pgconfig param='reserved_connections'}
+        {/if}
       </tbody>
 
       <tbody id="tb_connection_pcp">
@@ -119,6 +122,18 @@
             {custom_tr_pgconfig param='ssl_cert'}
             {custom_tr_pgconfig param='ssl_ca_cert'}
             {custom_tr_pgconfig param='ssl_ca_cert_dir'}
+            {if paramExists('ssl_ciphers')}
+                {custom_tr_pgconfig param='ssl_ciphers'}
+            {/if}
+            {if paramExists('ssl_prefer_server_ciphers')}
+                {custom_tr_pgconfig param='ssl_prefer_server_ciphers'}
+            {/if}
+            {if paramExists('ssl_ecdh_curve')}
+                {custom_tr_pgconfig param='ssl_ecdh_curve'}
+            {/if}
+            {if paramExists('ssl_dh_params_file')}
+                {custom_tr_pgconfig param='ssl_dh_params_file'}
+            {/if}
           </tbody>
         {/if}
     </table>
@@ -176,6 +191,9 @@
               {custom_tr_pgconfig param='backend_data_directory' num=$node_num}
               {if paramExists('backend_flag')}
                   {custom_tr_pgconfig param='backend_flag' num=$node_num}
+              {/if}
+              {if paramExists('backend_application_name')}
+                  {custom_tr_pgconfig param='backend_application_name' num=$node_num}
               {/if}
             </tbody>
         {/foreach}
@@ -350,6 +368,9 @@
         {/if}
         {if paramExists('disable_load_balance_on_write')}
             {custom_tr_pgconfig param='disable_load_balance_on_write'}
+        {/if}
+        {if paramExists('statement_level_load_balance')}
+            {custom_tr_pgconfig param='statement_level_load_balance'}
         {/if}
       </tbody>
     </table>
@@ -535,6 +556,12 @@
         {if paramExists('search_primary_node_timeout')}
             {custom_tr_pgconfig param='search_primary_node_timeout'}
         {/if}
+        {if paramExists('auto_failback')}
+            {custom_tr_pgconfig param='auto_failback'}
+        {/if}
+        {if paramExists('auto_failback_interval')}
+            {custom_tr_pgconfig param='auto_failback_interval'}
+        {/if}
       </tbody>
     </table>
 
@@ -625,6 +652,9 @@
             {/if}
             {if paramExists('wd_monitoring_interfaces_list')}
                 {custom_tr_pgconfig param='wd_monitoring_interfaces_list'}
+            {/if}
+            {if paramExists('enable_consensus_with_half_votes')}
+                {custom_tr_pgconfig param='enable_consensus_with_half_votes'}
             {/if}
           </tbody>
 
@@ -805,6 +835,12 @@
             {/if}
             {if paramExists('check_unlogged_table')}
                 {custom_tr_pgconfig param='check_unlogged_table'}
+            {/if}
+            {if paramExists('enable_shared_relcache')}
+                {custom_tr_pgconfig param='enable_shared_relcache'}
+            {/if}
+            {if paramExists('relcache_query_target')}
+                {custom_tr_pgconfig param='relcache_query_target'}
             {/if}
           </tbody>
         </table>

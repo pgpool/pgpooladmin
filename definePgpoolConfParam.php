@@ -18,7 +18,7 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2015 PgPool Global Development Group
+ * @copyright  2003-2020 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
@@ -82,6 +82,12 @@ $key = 'serialize_accept';
 $pgpoolConfigParam[$key]['type'] = 'B';
 $pgpoolConfigParam[$key]['default'] = 'off';
 
+$key = 'reserved_connections';
+$pgpoolConfigParam[$key]['type'] = 'N';
+$pgpoolConfigParam[$key]['default'] = '0';
+$pgpoolConfigParam[$key]['max'] = NUM_MAX;
+$pgpoolConfigParam[$key]['restart'] = TRUE;
+
 # - pgpool Communication Manager Connection Settings -
 
 $key = 'pcp_listen_addresses';
@@ -142,6 +148,12 @@ if (_PGPOOL2_VERSION >= 3.7) {
 $pgpoolConfigBackendParam[$key]['regexp'] = selectreg($pgpoolConfigBackendParam[$key]['select']);
 $pgpoolConfigBackendParam[$key]['multiple'] = TRUE;
 
+$key = 'backend_application_name';
+$pgpoolConfigBackendParam[$key]['type'] = 'C';
+$pgpoolConfigBackendParam[$key]['default'] = '';
+$pgpoolConfigBackendParam[$key]['regexp'] = $anyelse;
+$pgpoolConfigBackendParam[$key]['multiple'] = TRUE;
+
 # - Authentication -
 
 $key = 'enable_pool_hba';
@@ -195,6 +207,30 @@ $key = 'ssl_ca_cert_dir';
 $pgpoolConfigParam[$key]['type'] = 'C';
 $pgpoolConfigParam[$key]['default'] = '';
 $pgpoolConfigParam[$key]['regexp'] = $sslreg;
+$pgpoolConfigParam[$key]['restart'] = TRUE;
+$pgpoolConfigParam[$key]['parent'] = array('ssl' => 'on');
+
+$key = 'ssl_ciphers';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = 'HIGH:MEDIUM:+3DES:!aNULL';
+$pgpoolConfigParam[$key]['restart'] = TRUE;
+$pgpoolConfigParam[$key]['parent'] = array('ssl' => 'on');
+
+$key = 'ssl_prefer_server_ciphers';
+$pgpoolConfigParam[$key]['type'] = 'B';
+$pgpoolConfigParam[$key]['default'] = 'off';
+$pgpoolConfigParam[$key]['restart'] = TRUE;
+$pgpoolConfigParam[$key]['parent'] = array('ssl' => 'on');
+
+$key = 'ssl_ecdh_curve';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = 'prime256v1';
+$pgpoolConfigParam[$key]['restart'] = TRUE;
+$pgpoolConfigParam[$key]['parent'] = array('ssl' => 'on');
+
+$key = 'ssl_dh_params_file';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = '';
 $pgpoolConfigParam[$key]['restart'] = TRUE;
 $pgpoolConfigParam[$key]['parent'] = array('ssl' => 'on');
 
@@ -463,6 +499,11 @@ $pgpoolConfigParam[$key]['select'] = array('transaction', 'off', 'trans_transact
 $pgpoolConfigParam[$key]['regexp'] = selectreg($pgpoolConfigParam[$key]['select']);
 $pgpoolConfigParam[$key]['parent'] = array('load_balance_mode' => 'on');
 
+$key = 'statement_level_load_balance';
+$pgpoolConfigParam[$key]['type'] = 'B';
+$pgpoolConfigParam[$key]['default'] = 'off';
+$pgpoolConfigParam[$key]['parent'] = array('load_balance_mode' => 'on');
+
 #------------------------------------------------------------------------------
 # MASTER/SLAVE MODE
 #------------------------------------------------------------------------------
@@ -677,6 +718,16 @@ $pgpoolConfigParam[$key]['default'] = 300;
 $pgpoolConfigParam[$key]['min'] = 0;
 $pgpoolConfigParam[$key]['max'] = NUM_MAX;
 
+$key = 'auto_failback';
+$pgpoolConfigParam[$key]['type'] = 'B';
+$pgpoolConfigParam[$key]['default'] = 'off';
+
+$key = 'auto_failback_interval';
+$pgpoolConfigParam[$key]['type'] = 'N';
+$pgpoolConfigParam[$key]['default'] = 60;
+$pgpoolConfigParam[$key]['min'] = 0;
+$pgpoolConfigParam[$key]['max'] = NUM_MAX;
+
 #------------------------------------------------------------------------------
 # ONLINE RECOVERY
 #------------------------------------------------------------------------------
@@ -797,13 +848,21 @@ $pgpoolConfigParam[$key]['parent'] = array('use_watchdog' => 'on');
 
 $key = 'if_up_cmd';
 $pgpoolConfigParam[$key]['type'] = 'C';
-$pgpoolConfigParam[$key]['default'] = 'ip addr add $_IP_$/24 dev eth0 label eth0:0';
+if (_PGPOOL2_VERSION >= 4.1) {
+    $pgpoolConfigParam[$key]['default'] = '/usr/bin/sudo /sbin/ip addr add $_IP_$/24 dev eth0 label eth0:0';
+} else {
+    $pgpoolConfigParam[$key]['default'] = 'ip addr add $_IP_$/24 dev eth0 label eth0:0';
+}
 $pgpoolConfigParam[$key]['regexp'] = $anyelse;
 $pgpoolConfigParam[$key]['parent'] = array('use_watchdog' => 'on');
 
 $key = 'if_down_cmd';
 $pgpoolConfigParam[$key]['type'] = 'C';
-$pgpoolConfigParam[$key]['default'] = 'ip addr del $_IP_$/24 dev eth0';
+if (_PGPOOL2_VERSION >= 4.1) {
+    $pgpoolConfigParam[$key]['default'] = '/usr/bin/sudo /sbin/ip addr del $_IP_$/24 dev eth0';
+} else {
+    $pgpoolConfigParam[$key]['default'] = 'ip addr del $_IP_$/24 dev eth0';
+}
 $pgpoolConfigParam[$key]['regexp'] = $anyelse;
 $pgpoolConfigParam[$key]['parent'] = array('use_watchdog' => 'on');
 
@@ -815,7 +874,11 @@ $pgpoolConfigParam[$key]['parent'] = array('use_watchdog' => 'on');
 
 $key = 'arping_cmd';
 $pgpoolConfigParam[$key]['type'] = 'C';
-$pgpoolConfigParam[$key]['default'] = 'arping -U $_IP_$ -w 1';
+if (_PGPOOL2_VERSION >= 4.1) {
+    $pgpoolConfigParam[$key]['default'] = '/usr/bin/sudo /usr/sbin/arping -U $_IP_$ -w 1 -I eth0';
+} else {
+    $pgpoolConfigParam[$key]['default'] = 'arping -U $_IP_$ -w 1 -I eth0';
+}
 $pgpoolConfigParam[$key]['regexp'] = $anyelse;
 $pgpoolConfigParam[$key]['parent'] = array('use_watchdog' => 'on');
 
@@ -851,6 +914,11 @@ $pgpoolConfigParam[$key]['default'] = 'on';
 $pgpoolConfigParam[$key]['parent'] = array('use_watchdog' => 'on');
 
 $key = 'allow_multiple_failover_requests_from_node';
+$pgpoolConfigParam[$key]['type'] = 'B';
+$pgpoolConfigParam[$key]['default'] = 'off';
+$pgpoolConfigParam[$key]['parent'] = array('use_watchdog' => 'on');
+
+$key = 'enable_consensus_with_half_votes';
 $pgpoolConfigParam[$key]['type'] = 'B';
 $pgpoolConfigParam[$key]['default'] = 'off';
 $pgpoolConfigParam[$key]['parent'] = array('use_watchdog' => 'on');
@@ -1085,12 +1153,26 @@ $pgpoolConfigParam[$key]['min'] = 0;
 $pgpoolConfigParam[$key]['max'] = NUM_MAX;
 
 $key = 'check_temp_table';
-$pgpoolConfigParam[$key]['type'] = 'B';
-$pgpoolConfigParam[$key]['default'] = 'on';
+if (_PGPOOL2_VERSION >= 4.1) {
+    $pgpoolConfigParam[$key]['type'] = 'C';
+    $pgpoolConfigParam[$key]['default'] = 'catalog';
+} else {
+    $pgpoolConfigParam[$key]['type'] = 'B';
+    $pgpoolConfigParam[$key]['default'] = 'on';
+}
 
 $key = 'check_unlogged_table';
 $pgpoolConfigParam[$key]['type'] = 'B';
 $pgpoolConfigParam[$key]['default'] = 'on';
+
+$key = 'enable_shared_relcache';
+$pgpoolConfigParam[$key]['type'] = 'B';
+$pgpoolConfigParam[$key]['default'] = 'on';
+
+$key = 'relcache_query_target';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = 'master';
+$pgpoolConfigParam[$key]['regexp'] = $anyelse;
 
 #------------------------------------------------------------------------------
 # Deleted

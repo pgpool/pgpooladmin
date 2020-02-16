@@ -19,7 +19,7 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2015 PgPool Global Development Group
+ * @copyright  2003-2020 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
@@ -29,12 +29,15 @@ $message = array(
 
     'descAllow_clear_text_frontend_auth' => 'If on, allow the Pgpool-II to use clear-text-password authentication with frontend clients',
     'descAllow_multiple_failover_requests_from_node' => 'If on, a single Pgpool-II node can cast multiple votes for the failover',
+    'descEnable_consensus_with_half_votes' => 'Apply majority rule for consensus and quorum computation at 50% of votes' .
+                                              'in a cluster with even number of nodes',
     'descAllow_sql_comments' => 'If on, ignore SQL comments when judging if load balance or query cache is possible',
     'descApp_name_redirect_preference_list' => '"application name:node id" pairs to specify the node id when the application is used',
     'descArping_path' => 'The path of a command to send an ARP request after the virtual IP is switched',
     'descArping_cmd' => 'The ommand to send an ARP request after the virtual IP is switched',
     'descAuthentication_timeout' => 'Timeout in seconds to complete client authentication',
     'descBackend_flag' => 'Allow failover and detach or not',
+    'descBackend_application_name' => 'walsender\'s application_name, used for "show pool_nodes" command',
     'descBackend_hostname' => 'The real PostgreSQL server name pgpool could connect',
     'descBackend_port' => 'The port number where real PostgreSQL server is running on',
     'descBackend_socket_dir' => 'The socket directory PostgreSQL could connect',
@@ -45,6 +48,8 @@ $message = array(
     'descBlack_query_pattern_list' => 'Semicolon separated list of SQL patterns not to be load balanced',
     'descCheck_temp_table' => 'If on, enable temporary table check in SELECT statements',
     'descCheck_unlogged_table' => 'If on, enable unlogged table check in SELECT statements.',
+    'descEnable_shared_relcache' => 'If on, relation cache stored in memory cache, the cache is shared among child process',
+    'descRelcache_query_target' => 'Target node to send relcache queries',
     'descChild_life_time' => 'Life of an idle child process in seconds',
     'descChild_max_connections' => 'If child_max_connections connections were received, child exits',
     'descClear_memqcache_on_escalation' => 'If on, watchdog clears all the query cache in the shared memory when pgpool-II escaltes to active',
@@ -62,6 +67,7 @@ $message = array(
     'descDelegate_IP' => 'The virtual IP address (VIP) of pgpool-II ',
     'descDetach_false_primary' => 'If on, detach false primary node',
     'descDisable_load_balance_on_write' => 'Specify load balance behavior when write query is issued',
+    'descStatement_level_load_balance' => 'Enables statement level load balancing',
     'descEnable_pool_hba' => 'Use host-based authentication',
     'descEnable_query_cache' => 'Perform query cache',
     'descFailover_command' => 'Command to execute when detaching a node',
@@ -153,14 +159,21 @@ $message = array(
                                  'Timeout in second for monitoring the deadlock',
     'descSearch_primary_node_timeout' => 'the maximum amount of time in seconds to search'.
                                          'for a primary node when a failover scenario occurs.',
+    'descAuto_failback' => 'Reattach dettached backend node automatically if replication_state is \'streaming\'',
+    'descAuto_failback_interval' => 'Interval of executing auto_failback in seconds',
     'descSerialize_accept' => 'Whether to serialize accept() call for incoming client connections.',
     'descReset_query_list' => 'Semicolon separated SQL commands to be issued at the end of session',
     'descSerialize_accept' => 'Whether to serialize accept() call for incoming client connections',
+    'descReserved_connections' => 'Number of reserved connections',
     'descSsl' => 'The frontend connection',
     'descSsl_ca_cert' => 'Path to the SSL private key file',
     'descSsl_ca_cert_dir' => 'Path to the SSL public certificate file',
     'descSsl_cert' => 'Path to the SSL private key file',
     'descSsl_key' => 'Path to the SSL private key file',
+    'descSsl_ciphers' => 'Allowed SSL ciphers',
+    'descSsl_prefer_server_ciphers' => 'Use server\'s SSL cipher preferences, rather than the client\'s',
+    'descSsl_ecdh_curve' => 'Name of the curve to use in ECDH key exchange',
+    'descSsl_dh_params_file' => 'Name of the file containing Diffie-Hellman parameters',
     'descSocket_dir' => 'The socket directory pgpool could connect',
     'descSr_check_database' => 'The database to perform streaming replication delay check',
     'descSr_check_period' => 'Interval between the streaming replication delay checks in seconds.',

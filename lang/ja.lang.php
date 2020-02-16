@@ -19,7 +19,7 @@
  * is" without express or implied warranty.
  *
  * @author     Ryuma Ando <ando@ecomas.co.jp>
- * @copyright  2003-2013 PgPool Global Development Group
+ * @copyright  2003-2020 PgPool Global Development Group
  * @version    CVS: $Id$
  */
 
@@ -29,12 +29,14 @@ $message = array(
 
     'descAllow_clear_text_frontend_auth' => 'Pgpool-IIがフロントエンドクライアントとクリアテキストパスワード認証を許可',
     'descAllow_multiple_failover_requests_from_node' => '単一のPgpool-IIノードが複数のフェイルオーバ投票ができるどうか',
+    'descEnable_consensus_with_half_votes' => 'クォーラムとフェイルオーバにおける合意を解決する際に、どのように多数決ルールにおける計算を行うかを設定',
     'descAllow_sql_comments' => '負荷分散やクエリキャッシュができるかどうかの判定の際に、SQLコメントを無視するかどうか',
     'descApp_name_redirect_preference_list' => 'アプリケーション名によって負荷分散をしたいノード番号を、"アプリケーション名:ノード番号"で指定',
     'descArping_path' => 'IP アドレス切り替え後に ARP リクエストを送信するコマンドのパス',
     'descArping_cmd' => 'IP アドレス切り替え後に ARP リクエストを送信するコマンド',
     'descAuthentication_timeout' => 'クライアント認証のタイムアウト時間(秒)',
     'descBackend_flag' => 'フェイルオーバやデタッチの可否',
+    'descBackend_application_name' => 'walsenderのために使用するapplication_nameを設定',
     'descBackend_hostname' => 'pgpoolが接続するPostgreSQLサーバ(postmaster)が動いているホスト名',
     'descBackend_port' => 'PostgreSQLサーバのポート番号',
     'descBackend_socket_dir' => 'PostgreSQLサーバのUnix domain socketのディレクトリ',
@@ -45,6 +47,8 @@ $message = array(
     'descBlack_query_pattern_list' => '負荷分散を行わないセミコロン区切りのSQLパターンリスト',
     'descCheck_temp_table' => '一時テーブルかどうかをチェック',
     'descCheck_unlogged_table' => 'unloggedテーブルかどうかをチェック',
+    'descEnable_shared_relcache' => 'クエリキャッシュを利用して子プロセス間でリレーションキャッシュを共有するかどうか',
+    'descRelcache_query_target' => 'リレーションキャッシュを作成するためのクエリを送る先のノード',
     'descChild_life_time' => 'pgpoolの子プロセスの寿命',
     'descChild_max_connections' => '各pgpool子プロセスが終了するまでの接続回数',
     'descClear_memqcache_on_escalation' => 'アクティブ昇格時に共有メモリ上のクエリキャッシュを削除するかどうか',
@@ -60,6 +64,7 @@ $message = array(
     'descDelegate_IP' => '仮想 IP アドレス',
     'descDetach_false_primary' => '不正なプライマリを切り離すかどうか',
     'descDisable_load_balance_on_write' => '更新クエリが発行された時の負荷分散の振る舞いを指定',
+    'descStatement_level_load_balance' => '参照クエリごとに負荷分散先を決めるかどうか',
     'descEnable_pool_hba' => 'クライアント認証機能の有無',
     'descEnable_query_cache' => 'クエリキャッシュ機能の有無',
     'descFailover_command' => 'ノード切り離し時に起動するコマンド',
@@ -145,13 +150,20 @@ $message = array(
                                  '厳密でないレプリケーションモードでは、デッドロックが発生しやすくなります。',
     'descReset_query_list' => 'セッションが終了するときにコネクションを初期化するためのSQLコマンド',
     'descSearch_primary_node_timeout' => 'フェイルオーバーが起きた時にプライマリノードを検索する際のタイムアウト時間(秒)',
+    'descAuto_failback' => 'ダウンしたスタンバイノードを自動で復帰させるかどうか',
+    'descAuto_failback_interval' => '自動フェイルバックの実行間隔の最小時間(秒)',
     'descSerialize_accept' => 'クライアントからの接続受け付け時、accept() をシリアライズする',
+    'descReserved_connections' => '(num_init_children - reserved_connections)以上のクライアントからの接続要求を拒否するかどうか',
     'descSocket_dir' => 'pgpoolがコネクションを受け付けるUnix domain socketディレクトリ',
     'descSsl' => 'pgpool-IIとバックエンドの間のSSL接続',
     'descSsl_ca_cert' => 'opensslの-CAFileに指定するパス',
     'descSsl_ca_cert_dir' => 'opensslの-CApathに指定するディレクトリパス',
     'descSsl_cert' => 'フロントエンドとの接続に使用する公開x509証明書のフルパス',
     'descSsl_key' => 'フロントエンドとの接続に使用するプライベートキーファイルのフルパス',
+    'descSsl_ciphers' => 'セキュアな接続で使用できるSSL暗号スイートのリストを指定する',
+    'descSsl_prefer_server_ciphers' => 'クライアントではなく、サーバ指定のSSL暗号を選択するかどうか',
+    'descSsl_ecdh_curve' => 'ECDHキー交換で使われる曲線の名前を指定する',
+    'descSsl_dh_params_file' => '短命DH系SSL暗号で使用するディフィー・ヘルマンパラメータを格納するファイル名を指定する',
     'descSr_check_database' => 'ストリーミングレプリケーションの遅延チェックを行なう対象のデータベース名',
     'descSr_check_period' => 'ストリーミングレプリケーションの遅延チェックの間隔(秒)',
     'descSr_check_user' => 'ストリーミングレプリケーションの遅延チェックを行うユーザ',
