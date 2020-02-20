@@ -1,4 +1,26 @@
 ===============================================================================
+pgpoolAdmin 4.1
+===============================================================================
+
+* Version 4.1.0 2020/02/20
+
+  ** New features
+
+   - Add support for Pgpool-II 4.1. (Bo Peng)
+    
+        Added parameters are:
+        - reserved_connections
+        - backend_application_name
+        - ssl_ecdh_curve
+        - ssl_dh_params_file
+        - statement_level_load_balance
+        - auto_failback
+        - auto_failback_interval
+        - enable_consensus_with_half_votes
+        - enable_shared_relcache
+        - relcache_query_target
+
+===============================================================================
 pgpoolAdmin 4.0
 ===============================================================================
 
