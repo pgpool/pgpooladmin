@@ -44,8 +44,6 @@ if (isset($_POST['action'])) {
 // check version
 if (isset($_POST['version']) && $_POST['version']) {
     $version = $_POST['version'];
-} else {
-    $version = NULL;
 }
 
 // check pgpool.conf
