@@ -1,6 +1,6 @@
 <?php
 define('_PGPOOL2_LANG', 'en');
-define('_PGPOOL2_VERSION', '4.1');
+define('_PGPOOL2_VERSION', '4.2');
 define('_PGPOOL2_CONFIG_FILE', '/etc/pgpool-II/pgpool.conf');
 define('_PGPOOL2_PASSWORD_FILE', '/etc/pgpool-II/pcp.conf');
 define('_PGPOOL2_COMMAND', '/usr/bin/pgpool');

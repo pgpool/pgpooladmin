@@ -40,12 +40,28 @@ $addressreg = '^([0-9a-zA-Z\._\-]+|[\*]{1})$';
 $listreg    = '^[0-9a-zA-Z_,]*$';
 $queryreg   = '^[0-9a-zA-Z; ]+$';
 $userreg    = "^[0-9a-zA-Z_\.\-]+$";
+$permissionreg = '^(0[0-7]{3}|[rwx\-]{9})$';
 $anyelse    = '.*';
 
 function selectreg($lists)
 {
     return '^['. implode('|', $lists). ']+$';
 }
+
+#------------------------------------------------------------------------------
+# BACKEND CLUSTERING MODE
+#------------------------------------------------------------------------------
+
+$key = 'backend_clustering_mode';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = '';
+$pgpoolConfigParam[$key]['select'] = array('streaming_replication',
+                                           'logical_replication',
+                                           'slony',
+                                           'native_replication',
+                                           'snapshot_isolation',
+                                           'raw');
+$pgpoolConfigParam[$key]['regexp'] = selectreg($pgpoolConfigParam[$key]['select']);
 
 #------------------------------------------------------------------------------
 # CONNECTIONS
@@ -140,7 +156,9 @@ $pgpoolConfigBackendParam[$key]['multiple'] = TRUE;
 $key = 'backend_flag';
 $pgpoolConfigBackendParam[$key]['type'] = 'C';
 $pgpoolConfigBackendParam[$key]['default'] = 'ALLOW_TO_FAILOVER';
-if (_PGPOOL2_VERSION >= 3.7) {
+if (_PGPOOL2_VERSION >= 4.2) {
+    $pgpoolConfigBackendParam[$key]['select'] = array('ALLOW_TO_FAILOVER', 'DISALLOW_TO_FAILOVER', 'ALWAYS_PRIMARY');
+} elseif (_PGPOOL2_VERSION >= 3.7) {
     $pgpoolConfigBackendParam[$key]['select'] = array('ALLOW_TO_FAILOVER', 'DISALLOW_TO_FAILOVER', 'ALWAYS_MASTER');
 } else {
     $pgpoolConfigBackendParam[$key]['select'] = array('ALLOW_TO_FAILOVER', 'DISALLOW_TO_FAILOVER');
@@ -210,9 +228,17 @@ $pgpoolConfigParam[$key]['regexp'] = $sslreg;
 $pgpoolConfigParam[$key]['restart'] = TRUE;
 $pgpoolConfigParam[$key]['parent'] = array('ssl' => 'on');
 
+$key = 'ssl_crl_file';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = '';
+$pgpoolConfigParam[$key]['regexp'] = $sslreg;
+$pgpoolConfigParam[$key]['restart'] = TRUE;
+$pgpoolConfigParam[$key]['parent'] = array('ssl' => 'on');
+
 $key = 'ssl_ciphers';
 $pgpoolConfigParam[$key]['type'] = 'C';
 $pgpoolConfigParam[$key]['default'] = 'HIGH:MEDIUM:+3DES:!aNULL';
+$pgpoolConfigParam[$key]['regexp'] = $anyelse;
 $pgpoolConfigParam[$key]['restart'] = TRUE;
 $pgpoolConfigParam[$key]['parent'] = array('ssl' => 'on');
 
@@ -225,12 +251,21 @@ $pgpoolConfigParam[$key]['parent'] = array('ssl' => 'on');
 $key = 'ssl_ecdh_curve';
 $pgpoolConfigParam[$key]['type'] = 'C';
 $pgpoolConfigParam[$key]['default'] = 'prime256v1';
+$pgpoolConfigParam[$key]['regexp'] = $anyelse;
 $pgpoolConfigParam[$key]['restart'] = TRUE;
 $pgpoolConfigParam[$key]['parent'] = array('ssl' => 'on');
 
 $key = 'ssl_dh_params_file';
 $pgpoolConfigParam[$key]['type'] = 'C';
 $pgpoolConfigParam[$key]['default'] = '';
+$pgpoolConfigParam[$key]['regexp'] = $sslreg;
+$pgpoolConfigParam[$key]['restart'] = TRUE;
+$pgpoolConfigParam[$key]['parent'] = array('ssl' => 'on');
+
+$key = 'ssl_passphrase_command';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = '';
+$pgpoolConfigParam[$key]['regexp'] = $anyelse;
 $pgpoolConfigParam[$key]['restart'] = TRUE;
 $pgpoolConfigParam[$key]['parent'] = array('ssl' => 'on');
 
@@ -292,6 +327,54 @@ $pgpoolConfigParam[$key]['default'] = 'stderr';
 $pgpoolConfigParam[$key]['select'] = array('stderr', 'syslog');
 $pgpoolConfigParam[$key]['regexp'] = selectreg($pgpoolConfigParam[$key]['select']);
 
+$key = 'logging_collector';
+$pgpoolConfigParam[$key]['type'] = 'B';
+$pgpoolConfigParam[$key]['default'] = 'off';
+$pgpoolConfigParam[$key]['restart'] = TRUE;
+
+$key = 'log_directory';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = '/tmp/pgpool_logs';
+$pgpoolConfigParam[$key]['regexp'] = $dirreg;
+$pgpoolConfigParam[$key]['restart'] = TRUE;
+$pgpoolConfigParam[$key]['parent'] = array('logging_collector' => 'on');
+
+$key = 'log_filename';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = 'pgpool-%Y-%m-%d_%H%M%S.log';
+$pgpoolConfigParam[$key]['regexp'] = $anyelse;
+$pgpoolConfigParam[$key]['restart'] = TRUE;
+$pgpoolConfigParam[$key]['parent'] = array('logging_collector' => 'on');
+
+$key = 'log_file_mode';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = '0600';
+$pgpoolConfigParam[$key]['regexp'] = $permissionreg;
+$pgpoolConfigParam[$key]['restart'] = TRUE;
+$pgpoolConfigParam[$key]['parent'] = array('logging_collector' => 'on');
+
+$key = 'log_rotation_age';
+$pgpoolConfigParam[$key]['type'] = 'N';
+$pgpoolConfigParam[$key]['default'] = 1440;
+$pgpoolConfigParam[$key]['min'] = 0;
+$pgpoolConfigParam[$key]['max'] = NUM_MAX;
+$pgpoolConfigParam[$key]['restart'] = TRUE;
+$pgpoolConfigParam[$key]['parent'] = array('logging_collector' => 'on');
+
+$key = 'log_rotation_size';
+$pgpoolConfigParam[$key]['type'] = 'N';
+$pgpoolConfigParam[$key]['default'] = 0;
+$pgpoolConfigParam[$key]['min'] = 0;
+$pgpoolConfigParam[$key]['max'] = NUM_MAX;
+$pgpoolConfigParam[$key]['restart'] = TRUE;
+$pgpoolConfigParam[$key]['parent'] = array('logging_collector' => 'on');
+
+$key = 'log_truncate_on_rotation';
+$pgpoolConfigParam[$key]['type'] = 'B';
+$pgpoolConfigParam[$key]['default'] = 'off';
+$pgpoolConfigParam[$key]['restart'] = TRUE;
+$pgpoolConfigParam[$key]['parent'] = array('logging_collector' => 'on');
+
 # - What to log -
 
 $key = 'log_line_prefix';
@@ -305,6 +388,10 @@ $pgpoolConfigParam[$key]['default'] = 'on';
 $pgpoolConfigParam[$key]['restart'] = TRUE;
 
 $key = 'log_connections';
+$pgpoolConfigParam[$key]['type'] = 'B';
+$pgpoolConfigParam[$key]['default'] = 'off';
+
+$key = 'log_disconnections';
 $pgpoolConfigParam[$key]['type'] = 'B';
 $pgpoolConfigParam[$key]['default'] = 'off';
 
@@ -418,30 +505,50 @@ $pgpoolConfigParam[$key]['restart'] = TRUE;
 $key = 'replicate_select';
 $pgpoolConfigParam[$key]['type'] = 'B';
 $pgpoolConfigParam[$key]['default'] = 'off';
-$pgpoolConfigParam[$key]['parent'] = array('replication_mode' => 'on');
+if (hasBackendClusteringMode()) {
+    $pgpoolConfigParam[$key]['parent'] = array('backend_clustering_mode' => 'native_replication');
+} else {
+    $pgpoolConfigParam[$key]['parent'] = array('replication_mode' => 'on');
+}
 
 $key = 'insert_lock';
 $pgpoolConfigParam[$key]['type'] = 'B';
 $pgpoolConfigParam[$key]['default'] = 'off';
-$pgpoolConfigParam[$key]['parent'] = array('replication_mode' => 'on');
+if (hasBackendClusteringMode()) {
+    $pgpoolConfigParam[$key]['parent'] = array('backend_clustering_mode' => 'native_replication');
+} else {
+    $pgpoolConfigParam[$key]['parent'] = array('replication_mode' => 'on');
+}
 
 $key = 'lobj_lock_table';
 $pgpoolConfigParam[$key]['type'] = 'C';
 $pgpoolConfigParam[$key]['default'] = '';
 $pgpoolConfigParam[$key]['regexp'] = $anyelse;
-$pgpoolConfigParam[$key]['parent'] = array('replication_mode' => 'on');
+if (hasBackendClusteringMode()) {
+    $pgpoolConfigParam[$key]['parent'] = array('backend_clustering_mode' => 'native_replication');
+} else {
+    $pgpoolConfigParam[$key]['parent'] = array('replication_mode' => 'on');
+}
 
 # - Degenerate handling -
 
 $key = 'replication_stop_on_mismatch';
 $pgpoolConfigParam[$key]['type'] = 'B';
 $pgpoolConfigParam[$key]['default'] = 'off';
-$pgpoolConfigParam[$key]['parent'] = array('replication_mode' => 'on');
+if (hasBackendClusteringMode()) {
+    $pgpoolConfigParam[$key]['parent'] = array('backend_clustering_mode' => 'native_replication');
+} else {
+    $pgpoolConfigParam[$key]['parent'] = array('replication_mode' => 'on');
+}
 
 $key = 'failover_if_affected_tuples_mismatch';
 $pgpoolConfigParam[$key]['type'] = 'B';
 $pgpoolConfigParam[$key]['default'] = 'off';
-$pgpoolConfigParam[$key]['parent'] = array('replication_mode' => 'on');
+if (hasBackendClusteringMode()) {
+    $pgpoolConfigParam[$key]['parent'] = array('backend_clustering_mode' => 'native_replication');
+} else {
+    $pgpoolConfigParam[$key]['parent'] = array('replication_mode' => 'on');
+}
 
 #------------------------------------------------------------------------------
 # LOAD BALANCING MODE
@@ -463,13 +570,31 @@ $pgpoolConfigParam[$key]['default'] = '';
 $pgpoolConfigParam[$key]['regexp'] = $anyelse;
 $pgpoolConfigParam[$key]['parent'] = array('load_balance_mode' => 'on');
 
+$key = 'read_only_function_list';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = '';
+$pgpoolConfigParam[$key]['regexp'] = $anyelse;
+$pgpoolConfigParam[$key]['parent'] = array('load_balance_mode' => 'on');
+
 $key = 'black_function_list';
 $pgpoolConfigParam[$key]['type'] = 'C';
 $pgpoolConfigParam[$key]['default'] = '';
 $pgpoolConfigParam[$key]['regexp'] = $anyelse;
 $pgpoolConfigParam[$key]['parent'] = array('load_balance_mode' => 'on');
 
+$key = 'write_function_list';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = '';
+$pgpoolConfigParam[$key]['regexp'] = $anyelse;
+$pgpoolConfigParam[$key]['parent'] = array('load_balance_mode' => 'on');
+
 $key = 'black_query_pattern_list';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = '';
+$pgpoolConfigParam[$key]['regexp'] = $anyelse;
+$pgpoolConfigParam[$key]['parent'] = array('load_balance_mode' => 'on');
+
+$key = 'primary_routing_query_pattern_list';
 $pgpoolConfigParam[$key]['type'] = 'C';
 $pgpoolConfigParam[$key]['default'] = '';
 $pgpoolConfigParam[$key]['regexp'] = $anyelse;
@@ -495,7 +620,11 @@ $pgpoolConfigParam[$key]['parent'] = array('load_balance_mode' => 'on');
 $key = 'disable_load_balance_on_write';
 $pgpoolConfigParam[$key]['type'] = 'C';
 $pgpoolConfigParam[$key]['default'] = 'transaction';
-$pgpoolConfigParam[$key]['select'] = array('transaction', 'off', 'trans_transaction', 'always');
+if (_PGPOOL2_VERSION >= 4.2) {
+    $pgpoolConfigParam[$key]['select'] = array('transaction', 'off', 'trans_transaction', 'always', 'dml_adaptive');
+} else {
+    $pgpoolConfigParam[$key]['select'] = array('transaction', 'off', 'trans_transaction', 'always');
+}
 $pgpoolConfigParam[$key]['regexp'] = selectreg($pgpoolConfigParam[$key]['select']);
 $pgpoolConfigParam[$key]['parent'] = array('load_balance_mode' => 'on');
 
@@ -528,32 +657,52 @@ $pgpoolConfigParam[$key]['type'] = 'N';
 $pgpoolConfigParam[$key]['default'] = 0;
 $pgpoolConfigParam[$key]['min'] = 0;
 $pgpoolConfigParam[$key]['max'] = NUM_MAX;
-$pgpoolConfigParam[$key]['parent'] = array('master_slave_mode' => 'on', 'master_slave_sub_mode' => 'stream');
+if (hasBackendClusteringMode()) {
+    $pgpoolConfigParam[$key]['parent'] = array('backend_clustering_mode' => 'streaming_replication');
+} else {
+    $pgpoolConfigParam[$key]['parent'] = array('master_slave_mode' => 'on', 'master_slave_sub_mode' => 'stream');
+}
 
 $key = 'sr_check_user';
 $pgpoolConfigParam[$key]['type'] = 'C';
 $pgpoolConfigParam[$key]['default'] = '';
 $pgpoolConfigParam[$key]['regexp'] = $listreg;
-$pgpoolConfigParam[$key]['parent'] = array('master_slave_mode' => 'on', 'master_slave_sub_mode' => 'stream');
+if (hasBackendClusteringMode()) {
+    $pgpoolConfigParam[$key]['parent'] = array('backend_clustering_mode' => 'streaming_replication');
+} else {
+    $pgpoolConfigParam[$key]['parent'] = array('master_slave_mode' => 'on', 'master_slave_sub_mode' => 'stream');
+}
 
 $key = 'sr_check_password';
 $pgpoolConfigParam[$key]['type'] = 'C';
 $pgpoolConfigParam[$key]['default'] = '';
 $pgpoolConfigParam[$key]['regexp'] = $listreg;
-$pgpoolConfigParam[$key]['parent'] = array('master_slave_mode' => 'on', 'master_slave_sub_mode' => 'stream');
+if (hasBackendClusteringMode()) {
+    $pgpoolConfigParam[$key]['parent'] = array('backend_clustering_mode' => 'streaming_replication');
+} else {
+    $pgpoolConfigParam[$key]['parent'] = array('master_slave_mode' => 'on', 'master_slave_sub_mode' => 'stream');
+}
 
 $key = 'sr_check_database';
 $pgpoolConfigParam[$key]['type'] = 'C';
 $pgpoolConfigParam[$key]['default'] = '';
 $pgpoolConfigParam[$key]['regexp'] = $listreg;
-$pgpoolConfigParam[$key]['parent'] = array('master_slave_mode' => 'on', 'master_slave_sub_mode' => 'stream');
+if (hasBackendClusteringMode()) {
+    $pgpoolConfigParam[$key]['parent'] = array('backend_clustering_mode' => 'streaming_replication');
+} else {
+    $pgpoolConfigParam[$key]['parent'] = array('master_slave_mode' => 'on', 'master_slave_sub_mode' => 'stream');
+}
 
 $key = 'delay_threshold';
 $pgpoolConfigParam[$key]['type'] = 'N';
 $pgpoolConfigParam[$key]['default'] = 0;
 $pgpoolConfigParam[$key]['min'] = 0;
 $pgpoolConfigParam[$key]['max'] = NUM_MAX;
-$pgpoolConfigParam[$key]['parent'] = array('master_slave_mode' => 'on', 'master_slave_sub_mode' => 'stream');
+if (hasBackendClusteringMode()) {
+    $pgpoolConfigParam[$key]['parent'] = array('backend_clustering_mode' => 'streaming_replication');
+} else {
+    $pgpoolConfigParam[$key]['parent'] = array('master_slave_mode' => 'on', 'master_slave_sub_mode' => 'stream');
+}
 
 # - Special commands -
 $key = 'follow_master_command';
@@ -561,6 +710,12 @@ $pgpoolConfigParam[$key]['type'] = 'C';
 $pgpoolConfigParam[$key]['default'] = '';
 $pgpoolConfigParam[$key]['regexp'] = $anyelse;
 $pgpoolConfigParam[$key]['parent'] = array('master_slave_mode' => 'on');
+
+$key = 'follow_primary_command';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = '';
+$pgpoolConfigParam[$key]['regexp'] = $anyelse;
+$pgpoolConfigParam[$key]['parent'] = array('backend_clustering_mode' => 'streaming_replication');
 
 #------------------------------------------------------------------------------
 # PARALLEL MODE AND QUERY CACHE
@@ -783,12 +938,36 @@ $pgpoolConfigParam[$key]['regexp'] = $hostreg;
 $pgpoolConfigParam[$key]['null_ok'] = TRUE;
 $pgpoolConfigParam[$key]['parent'] = array('use_watchdog' => 'on');
 
+$key = 'hostname';
+$pgpoolConfigWdNodeParam[$key]['type'] = 'C';
+$pgpoolConfigWdNodeParam[$key]['default'] = '';
+$pgpoolConfigWdNodeParam[$key]['regexp'] = $hostreg;
+$pgpoolConfigWdNodeParam[$key]['multiple'] = TRUE;
+$pgpoolConfigWdNodeParam[$key]['parent'] = array('use_watchdog' => 'on');
+
 $key = 'wd_port';
-$pgpoolConfigParam[$key]['type'] = 'N';
-$pgpoolConfigParam[$key]['default'] = 9000;
-$pgpoolConfigParam[$key]['max'] = NUM_MAX;
-$pgpoolConfigParam[$key]['min'] = 1024;
-$pgpoolConfigParam[$key]['parent'] = array('use_watchdog' => 'on');
+if (_PGPOOL2_VERSION >= 4.2) {
+    $pgpoolConfigWdNodeParam[$key]['type'] = 'N';
+    $pgpoolConfigWdNodeParam[$key]['default'] = 9000;
+    $pgpoolConfigWdNodeParam[$key]['max'] = NUM_MAX;
+    $pgpoolConfigWdNodeParam[$key]['min'] = 1024;
+    $pgpoolConfigWdNodeParam[$key]['multiple'] = TRUE;
+    $pgpoolConfigWdNodeParam[$key]['parent'] = array('use_watchdog' => 'on');
+} else {
+    $pgpoolConfigParam[$key]['type'] = 'N';
+    $pgpoolConfigParam[$key]['default'] = 9000;
+    $pgpoolConfigParam[$key]['max'] = NUM_MAX;
+    $pgpoolConfigParam[$key]['min'] = 1024;
+    $pgpoolConfigParam[$key]['parent'] = array('use_watchdog' => 'on');
+}
+
+$key = 'pgpool_port';
+$pgpoolConfigWdNodeParam[$key]['type'] = 'N';
+$pgpoolConfigWdNodeParam[$key]['default'] = 9999;
+$pgpoolConfigWdNodeParam[$key]['max'] = NUM_MAX;
+$pgpoolConfigWdNodeParam[$key]['min'] = 1024;
+$pgpoolConfigWdNodeParam[$key]['multiple'] = TRUE;
+$pgpoolConfigWdNodeParam[$key]['parent'] = array('use_watchdog' => 'on');
 
 $key = 'wd_priority';
 $pgpoolConfigParam[$key]['type'] = 'N';
@@ -977,6 +1156,13 @@ $pgpoolConfigHbDestinationParam[$key]['regexp'] = $hostreg;
 $pgpoolConfigHbDestinationParam[$key]['multiple'] = TRUE;
 $pgpoolConfigHbDestinationParam[$key]['parent'] = array('use_watchdog' => 'on', 'wd_lifecheck_method' => 'heartbeat');
 
+$key = 'heartbeat_hostname';
+$pgpoolConfigWdHbNodeParam[$key]['type'] = 'C';
+$pgpoolConfigWdHbNodeParam[$key]['default'] = '';
+$pgpoolConfigWdHbNodeParam[$key]['regexp'] = $hostreg;
+$pgpoolConfigWdHbNodeParam[$key]['multiple'] = TRUE;
+$pgpoolConfigWdHbNodeParam[$key]['parent'] = array('use_watchdog' => 'on', 'wd_lifecheck_method' => 'heartbeat');
+
 $key = 'heartbeat_destination_port';
 $pgpoolConfigHbDestinationParam[$key]['type'] = 'N';
 $pgpoolConfigHbDestinationParam[$key]['default'] = 9694;
@@ -985,12 +1171,28 @@ $pgpoolConfigHbDestinationParam[$key]['max'] = NUM_MAX;
 $pgpoolConfigHbDestinationParam[$key]['multiple'] = TRUE;
 $pgpoolConfigHbDestinationParam[$key]['parent'] = array('use_watchdog' => 'on', 'wd_lifecheck_method' => 'heartbeat');
 
+$key = 'heartbeat_port';
+$pgpoolConfigWdHbNodeParam[$key]['type'] = 'N';
+$pgpoolConfigWdHbNodeParam[$key]['default'] = 9694;
+$pgpoolConfigWdHbNodeParam[$key]['min'] = 1024;
+$pgpoolConfigWdHbNodeParam[$key]['max'] = NUM_MAX;
+$pgpoolConfigWdHbNodeParam[$key]['multiple'] = TRUE;
+$pgpoolConfigWdHbNodeParam[$key]['parent'] = array('use_watchdog' => 'on', 'wd_lifecheck_method' => 'heartbeat');
+
 $key = 'heartbeat_device';
-$pgpoolConfigHbDestinationParam[$key]['type'] = 'C';
-$pgpoolConfigHbDestinationParam[$key]['default'] = 'eth0';
-$pgpoolConfigHbDestinationParam[$key]['regexp'] = $anyelse;
-$pgpoolConfigHbDestinationParam[$key]['multiple'] = TRUE;
-$pgpoolConfigHbDestinationParam[$key]['parent'] = array('use_watchdog' => 'on', 'wd_lifecheck_method' => 'heartbeat');
+if(_PGPOOL2_VERSION >= 4.2) {
+    $pgpoolConfigWdHbNodeParam[$key]['type'] = 'C';
+    $pgpoolConfigWdHbNodeParam[$key]['default'] = '';
+    $pgpoolConfigWdHbNodeParam[$key]['regexp'] = $anyelse;
+    $pgpoolConfigWdHbNodeParam[$key]['multiple'] = TRUE;
+    $pgpoolConfigWdHbNodeParam[$key]['parent'] = array('use_watchdog' => 'on', 'wd_lifecheck_method' => 'heartbeat');
+} else {
+    $pgpoolConfigHbDestinationParam[$key]['type'] = 'C';
+    $pgpoolConfigHbDestinationParam[$key]['default'] = 'eth0';
+    $pgpoolConfigHbDestinationParam[$key]['regexp'] = $anyelse;
+    $pgpoolConfigHbDestinationParam[$key]['multiple'] = TRUE;
+    $pgpoolConfigHbDestinationParam[$key]['parent'] = array('use_watchdog' => 'on', 'wd_lifecheck_method' => 'heartbeat');
+}
 
 # (Configuration of query mode)
 
@@ -1136,6 +1338,18 @@ $pgpoolConfigParam[$key]['default'] = '';
 $pgpoolConfigParam[$key]['regexp'] = $anyelse;
 $pgpoolConfigParam[$key]['parent'] = array('memory_cache_enabled' => 'on');
 
+$key = 'cache_safe_memqcache_table_list';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = '';
+$pgpoolConfigParam[$key]['regexp'] = $anyelse;
+$pgpoolConfigParam[$key]['parent'] = array('memory_cache_enabled' => 'on');
+
+$key = 'cache_unsafe_memqcache_table_list';
+$pgpoolConfigParam[$key]['type'] = 'C';
+$pgpoolConfigParam[$key]['default'] = '';
+$pgpoolConfigParam[$key]['regexp'] = $anyelse;
+$pgpoolConfigParam[$key]['parent'] = array('memory_cache_enabled' => 'on');
+
 #------------------------------------------------------------------------------
 # OTHERS
 #------------------------------------------------------------------------------
@@ -1171,7 +1385,11 @@ $pgpoolConfigParam[$key]['default'] = 'on';
 
 $key = 'relcache_query_target';
 $pgpoolConfigParam[$key]['type'] = 'C';
-$pgpoolConfigParam[$key]['default'] = 'master';
+if (_PGPOOL2_VERSION >= 4.2) {
+    $pgpoolConfigParam[$key]['default'] = 'primary';
+} else {
+    $pgpoolConfigParam[$key]['default'] = 'master';
+}
 $pgpoolConfigParam[$key]['regexp'] = $anyelse;
 
 #------------------------------------------------------------------------------

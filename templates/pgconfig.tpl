@@ -122,6 +122,9 @@
             {custom_tr_pgconfig param='ssl_cert'}
             {custom_tr_pgconfig param='ssl_ca_cert'}
             {custom_tr_pgconfig param='ssl_ca_cert_dir'}
+            {if paramExists('ssl_crl_file')}
+                {custom_tr_pgconfig param='ssl_crl_file'}
+            {/if}
             {if paramExists('ssl_ciphers')}
                 {custom_tr_pgconfig param='ssl_ciphers'}
             {/if}
@@ -133,6 +136,9 @@
             {/if}
             {if paramExists('ssl_dh_params_file')}
                 {custom_tr_pgconfig param='ssl_dh_params_file'}
+            {/if}
+            {if paramExists('ssl_passphrase_command')}
+                {custom_tr_pgconfig param='ssl_passphrase_command'}
             {/if}
           </tbody>
         {/if}
@@ -215,6 +221,32 @@
 
             {custom_tr_pgconfig param='log_destination'}
           </tbody>
+          {if paramExists('logging_collector')}
+            <tbody id="tb_logs_logging_collector">
+                {custom_tr_pgconfig param='logging_collector'}
+            </tbody>
+
+            <tbody id="tb_logs_logging_collector_on">
+              {if paramExists('log_directory')}
+                {custom_tr_pgconfig param='log_directory'}
+              {/if}
+              {if paramExists('log_filename')}
+                {custom_tr_pgconfig param='log_filename'}
+              {/if}
+              {if paramExists('log_file_mode')}
+                {custom_tr_pgconfig param='log_file_mode'}
+              {/if}
+              {if paramExists('log_rotation_age')}
+                {custom_tr_pgconfig param='log_rotation_age'}
+              {/if}
+              {if paramExists('log_rotation_size')}
+                {custom_tr_pgconfig param='log_rotation_size'}
+              {/if}
+              {if paramExists('log_truncate_on_rotation')}
+                {custom_tr_pgconfig param='log_truncate_on_rotation'}
+              {/if}
+            </tbody>
+          {/if}
 
           <tbody id="tb_logs_what">
             {* --------------------------------------------------------------------- *}
@@ -228,6 +260,9 @@
                 {custom_tr_pgconfig param='print_timestamp'}
             {/if}
             {custom_tr_pgconfig param='log_connections'}
+            {if paramExists('log_disconnections')}
+                {custom_tr_pgconfig param='log_disconnections'}
+            {/if}
             {custom_tr_pgconfig param='log_hostname'}
             {custom_tr_pgconfig param='log_statement'}
             {if paramExists('log_per_node_statement')}
@@ -301,39 +336,156 @@
       </tbody>
     </table>
 
-    {* ===================================================================== *}
-    <h3 id="replication_mode">Replication Mode</h3>
-    {* ===================================================================== *}
+    {if hasBackendClusteringMode()}
+      {* ===================================================================== *}
+      <h3 id="backend_clustering_mode">Backend Clustering Mode</h3>
+      {* ===================================================================== *}
 
-    <table>
-      {custom_table_pgconfig}
+      <table>
+        {custom_table_pgconfig}
+        <tbody id="tb_backend_clustering_mode">
+          {custom_tr_pgconfig param='backend_clustering_mode'}
+        </tbody>
+      </table>
 
-      <tbody id="tb_replication_mode">
-        {custom_tr_pgconfig param='replication_mode'}
-      </tbody>
+      {* ===================================================================== *}
+      <h3 id="native_replication_mode">Native Replication Mode</h3>
+      {* ===================================================================== *}
 
-      <tbody id="tb_replication_mode_on">
-        {custom_tr_pgconfig param='replicate_select'}
-        {custom_tr_pgconfig param='insert_lock'}
-        {if paramExists('lobj_lock_table')}
+      <table>
+        {custom_table_pgconfig}
+
+        <tbody id="tb_backend_clustering_mode_native_replication">
+          {custom_tr_pgconfig param='replicate_select'}
+          {custom_tr_pgconfig param='insert_lock'}
+          {if paramExists('lobj_lock_table')}
             {custom_tr_pgconfig param='lobj_lock_table'}
-        {/if}
-      </tbody>
-
-      <tbody id="tb_replication_mode_degnerate">
-        {* --------------------------------------------------------------------- *}
-        <tr><th class="category" colspan="2">Degenerate handling</th></tr>
-        {* --------------------------------------------------------------------- *}
-
-        {custom_tr_pgconfig param='replication_stop_on_mismatch'}
-        {if paramExists('failover_if_affected_tuples_mismatch')}
+          {/if}
+          {* --------------------------------------------------------------------- *}
+          <tr><th class="category" colspan="2">Degenerate handling</th></tr>
+          {* --------------------------------------------------------------------- *}
+          {custom_tr_pgconfig param='replication_stop_on_mismatch'}
+          {if paramExists('failover_if_affected_tuples_mismatch')}
             {custom_tr_pgconfig param='failover_if_affected_tuples_mismatch'}
-        {/if}
-        {if paramExists('replication_timeout')}
+          {/if}
+          {if paramExists('replication_timeout')}
             {custom_tr_pgconfig param='replication_timeout'}
+          {/if}
+        </tbody>
+      </table>
+
+      {* ===================================================================== *}
+      <h3 id="streaming_replication_mode">Streaming Replication Mode</h3>
+      {* ===================================================================== *}
+
+      <table>
+        {custom_table_pgconfig}
+
+        <tbody id="tb_backend_clustering_mode_streaming_replication">
+          {if paramExists('sr_check_period')}
+            {* --------------------------------------------------------------------- *}
+            <tr><th class="category" colspan="2">Streaming</th></tr>
+            {* --------------------------------------------------------------------- *}
+            {custom_tr_pgconfig param='sr_check_period'}
+            {custom_tr_pgconfig param='sr_check_user'}
+            {custom_tr_pgconfig param='sr_check_password'}
+            {if paramExists('sr_check_database')}
+              {custom_tr_pgconfig param='sr_check_database'}
+            {/if}
+          {/if}
+          {if paramExists('delay_threshold')}
+            {custom_tr_pgconfig param='delay_threshold'}
+          {/if}
+          {if paramExists('follow_primary_command')}
+            {* --------------------------------------------------------------------- *}
+            <tr><th class="category" colspan="2">Special commands</th></tr>
+            {* --------------------------------------------------------------------- *}
+            {custom_tr_pgconfig param='follow_primary_command'}
+          {/if}
+        </tbody>
+      </table>
+    {else}
+      {* ===================================================================== *}
+      <h3 id="replication_mode">Replication Mode</h3>
+      {* ===================================================================== *}
+
+      <table>
+        {custom_table_pgconfig}
+
+        <tbody id="tb_replication_mode">
+          {custom_tr_pgconfig param='replication_mode'}
+        </tbody>
+
+        <tbody id="tb_replication_mode_on">
+          {custom_tr_pgconfig param='replicate_select'}
+          {custom_tr_pgconfig param='insert_lock'}
+          {if paramExists('lobj_lock_table')}
+            {custom_tr_pgconfig param='lobj_lock_table'}
+          {/if}
+        </tbody>
+
+        <tbody id="tb_replication_mode_degnerate">
+          {* --------------------------------------------------------------------- *}
+          <tr><th class="category" colspan="2">Degenerate handling</th></tr>
+          {* --------------------------------------------------------------------- *}
+
+          {custom_tr_pgconfig param='replication_stop_on_mismatch'}
+          {if paramExists('failover_if_affected_tuples_mismatch')}
+            {custom_tr_pgconfig param='failover_if_affected_tuples_mismatch'}
+          {/if}
+          {if paramExists('replication_timeout')}
+            {custom_tr_pgconfig param='replication_timeout'}
+          {/if}
+        </tbody>
+      </table>
+
+      {* ===================================================================== *}
+      <h3 id="master_slave_mode">Master/Slave Mode</h3>
+      {* ===================================================================== *}
+
+      <table>
+        {custom_table_pgconfig}
+
+        <tbody id="tb_master_slave_mode">
+          {custom_tr_pgconfig param='master_slave_mode'}
+        </tbody>
+
+        {if paramExists('master_slave_sub_mode')}
+          <tbody id="tb_master_slave_mode_on_submode">
+            {custom_tr_pgconfig param='master_slave_sub_mode'}
+          </tbody>
+
+          {if paramExists('follow_master_command')}
+            <tbody id="tb_master_slave_mode_on_special_command">
+              {* --------------------------------------------------------------------- *}
+              <tr><th class="category" colspan="2">Special commands</th></tr>
+              {* --------------------------------------------------------------------- *}
+
+              {custom_tr_pgconfig param='follow_master_command'}
+            </tbody>
+          {/if}
         {/if}
-      </tbody>
-    </table>
+
+        <tbody id="tb_master_slave_sub_mode_stream">
+          {if paramExists('sr_check_period')}
+            {* --------------------------------------------------------------------- *}
+            <tr><th class="category" colspan="2">Streaming</th></tr>
+            {* --------------------------------------------------------------------- *}
+
+            {custom_tr_pgconfig param='sr_check_period'}
+            {custom_tr_pgconfig param='sr_check_user'}
+            {custom_tr_pgconfig param='sr_check_password'}
+            {if paramExists('sr_check_database')}
+                {custom_tr_pgconfig param='sr_check_database'}
+            {/if}
+          {/if}
+
+          {if paramExists('delay_threshold')}
+            {custom_tr_pgconfig param='delay_threshold'}
+          {/if}
+        </tbody>
+      </table>
+    {/if}
 
     {* ===================================================================== *}
     <h3 id="load_balancing_mode">Load Balancing Mode</h3>
@@ -351,11 +503,20 @@
         {if paramExists('white_function_list')}
             {custom_tr_pgconfig param='white_function_list'}
         {/if}
+        {if paramExists('read_only_function_list')}
+          {custom_tr_pgconfig param='read_only_function_list'}
+        {/if}
         {if paramExists('black_function_list')}
             {custom_tr_pgconfig param='black_function_list'}
         {/if}
+        {if paramExists('write_function_list')}
+          {custom_tr_pgconfig param='write_function_list'}
+        {/if}
         {if paramExists('black_query_pattern_list')}
             {custom_tr_pgconfig param='black_query_pattern_list'}
+        {/if}
+        {if paramExists('primary_routing_query_pattern_list')}
+          {custom_tr_pgconfig param='primary_routing_query_pattern_list'}
         {/if}
         {if paramExists('database_redirect_preference_list')}
             {custom_tr_pgconfig param='database_redirect_preference_list'}
@@ -369,55 +530,11 @@
         {if paramExists('disable_load_balance_on_write')}
             {custom_tr_pgconfig param='disable_load_balance_on_write'}
         {/if}
+        {if paramExists('dml_adaptive_object_relationship_list')}
+          {custom_tr_pgconfig param='dml_adaptive_object_relationship_list'}
+        {/if}
         {if paramExists('statement_level_load_balance')}
             {custom_tr_pgconfig param='statement_level_load_balance'}
-        {/if}
-      </tbody>
-    </table>
-
-    {* ===================================================================== *}
-    <h3 id="master_slave_mode">Master/Slave Mode</h3>
-    {* ===================================================================== *}
-
-    <table>
-      {custom_table_pgconfig}
-
-      <tbody id="tb_master_slave_mode">
-        {custom_tr_pgconfig param='master_slave_mode'}
-      </tbody>
-
-      {if paramExists('master_slave_sub_mode')}
-        <tbody id="tb_master_slave_mode_on_submode">
-          {custom_tr_pgconfig param='master_slave_sub_mode'}
-        </tbody>
-
-        {if paramExists('follow_master_command')}
-          <tbody id="tb_master_slave_mode_on_special_command">
-            {* --------------------------------------------------------------------- *}
-            <tr><th class="category" colspan="2">Special commands</th></tr>
-            {* --------------------------------------------------------------------- *}
-
-            {custom_tr_pgconfig param='follow_master_command'}
-          </tbody>
-        {/if}
-      {/if}
-
-      <tbody id="tb_master_slave_sub_mode_stream">
-        {if paramExists('sr_check_period')}
-            {* --------------------------------------------------------------------- *}
-            <tr><th class="category" colspan="2">Streaming</th></tr>
-            {* --------------------------------------------------------------------- *}
-
-            {custom_tr_pgconfig param='sr_check_period'}
-            {custom_tr_pgconfig param='sr_check_user'}
-            {custom_tr_pgconfig param='sr_check_password'}
-            {if paramExists('sr_check_database')}
-                {custom_tr_pgconfig param='sr_check_database'}
-            {/if}
-        {/if}
-
-        {if paramExists('delay_threshold')}
-            {custom_tr_pgconfig param='delay_threshold'}
         {/if}
       </tbody>
     </table>
@@ -605,21 +722,42 @@
             {custom_tr_pgconfig param='ping_path'}
           </tbody>
 
-          <tbody id="tb_watchdog_use_watchdog_on_communication">
-            {* --------------------------------------------------------------------- *}
-            <tr><th class="category" colspan="4">Watchdog communication Settings</th></tr>
-            {* --------------------------------------------------------------------- *}
+          {if paramExists('wd_hostname')}
+            <tbody id="tb_watchdog_use_watchdog_on_communication">
+              {* --------------------------------------------------------------------- *}
+              <tr><th class="category" colspan="4">Watchdog communication Settings</th></tr>
+              {* --------------------------------------------------------------------- *}
 
-            {custom_tr_pgconfig param='wd_hostname'}
-            {custom_tr_pgconfig param='wd_port'}
-            {if paramExists('wd_priority')}
-                {custom_tr_pgconfig param='wd_priority'}
-            {/if}
-            {custom_tr_pgconfig param='wd_authkey'}
-            {if paramExists('wd_ipc_socket_dir')}
-                {custom_tr_pgconfig param='wd_ipc_socket_dir'}
-            {/if}
-          </tbody>
+              {custom_tr_pgconfig param='wd_hostname'}
+              {custom_tr_pgconfig param='wd_port'}
+              {custom_tr_pgconfig param='wd_authkey'}
+            </tbody>
+          {/if}
+
+          {if paramExists('hostname')}
+            <tbody id="tb_watchdog_use_watchdog_on_communication">
+              {* --------------------------------------------------------------------- *}
+              <tr><th class="category" colspan="4">Watchdog communication Settings</th></tr>
+              {* --------------------------------------------------------------------- *}
+                {custom_tr_pgconfig param='wd_authkey'}
+            </tbody>
+            {* --------------------------------------------------------------------- *}
+            <tr><th class="category" colspan="4">Watchdog Node
+              <input id="add_watchdog_node" type="button" name="add" value="{$message.strAdd|escape}" />
+            </th></tr>
+            {* --------------------------------------------------------------------- *}
+            {foreach from=$params.hostname key=wdnode_num item=v}
+              <tbody id="tb_watchdog_use_watchdog_on_node_{$wdnode_num}">
+                <tr id="tr_wd_node_num_{$wdnode_num}" name="tr_wd_node_num"><th colspan="2">
+                  <span class="param_group">Watchog Node {$wdnode_num}</span>
+                  <input id="delete_watchdog_node_{$wdnode_num}" type="button" name="delete" value="{$message.strDelete|escape}">
+                </th></tr>
+                {custom_tr_pgconfig param='hostname' num=$wdnode_num}
+                {custom_tr_pgconfig param='wd_port' num=$wdnode_num}
+                {custom_tr_pgconfig param='pgpool_port' num=$wdnode_num}
+              </tbody>
+            {/foreach}
+          {/if}
 
           <tbody id="tb_watchdog_use_watchdog_on_vip">
             {* --------------------------------------------------------------------- *}
@@ -679,50 +817,70 @@
             {if paramExists('wd_lifecheck_method')}
                 {custom_tr_pgconfig param='wd_lifecheck_method'}
             {/if}
+            {if paramExists('wd_monitoring_interfaces_list')}
+                {custom_tr_pgconfig param='wd_monitoring_interfaces_list'}
+            {/if}
             {custom_tr_pgconfig param='wd_interval'}
+            {if paramExists('wd_priority')}
+                {custom_tr_pgconfig param='wd_priority'}
+            {/if}
+            {if paramExists('wd_ipc_socket_dir')}
+                {custom_tr_pgconfig param='wd_ipc_socket_dir'}
+            {/if}
           </tbody>
 
-            {if paramExists('wd_heartbeat_port')}
+            {if paramExists('wd_heartbeat_keepalive')}
               <tbody id="tb_watchdog_wd_lifecheck_method_heartbeat">
                 {* --------------------------------------------------------------------- *}
                 <tr><th class="category" colspan="4">Lifecheck Setting (heartbeat mode)</th></tr>
                 {* --------------------------------------------------------------------- *}
-
-                {custom_tr_pgconfig param='wd_heartbeat_port'}
+                {if paramExists('wd_heartbeat_port')}
+                    {custom_tr_pgconfig param='wd_heartbeat_port'}
+                {/if}
                 {custom_tr_pgconfig param='wd_heartbeat_keepalive'}
                 {custom_tr_pgconfig param='wd_heartbeat_deadtime'}
               </tbody>
 
-              <tbody id="tb_watchdog_wd_lifecheck_method_heartbeat_destinations">
-                {* --------------------------------------------------------------------- *}
-                <tr><th class="category" colspan="4">Heartbeat destinations
+              {if paramExists('heartbeat_destination')}
+                <tbody id="tb_watchdog_wd_lifecheck_method_heartbeat_destinations">
+                  {* --------------------------------------------------------------------- *}
+                  <tr><th class="category" colspan="4">Heartbeat destinations
                     <input type="button" name="add" value="{$message.strAdd|escape}"
                            onclick="sendForm('add_heartbeat_destination')" />
+                  </th></tr>
+                  {* --------------------------------------------------------------------- *}
+
+                  {foreach from=$params.heartbeat_destination key=dest_num item=v}
+                    <tr><th colspan="4"><span class="param_group">
+                      Heartbeat destination {$dest_num}</span>
+                    </th></tr>
+                    {custom_tr_pgconfig param='heartbeat_destination' num=$dest_num}
+                    {custom_tr_pgconfig param='heartbeat_destination_port' num=$dest_num}
+                    {custom_tr_pgconfig param='heartbeat_device' num=$dest_num}
+                  {/foreach}
+                </tbody>
+              {/if}
+
+              {if paramExists('heartbeat_hostname')}
+                {* --------------------------------------------------------------------- *}
+                <tr><th class="category" colspan="4">
+                  Heartbeat destinations
+                  <input id="add_watchdog_heartbeat_node" type="button" name="add" value="{$message.strAdd|escape}" />
                 </th></tr>
                 {* --------------------------------------------------------------------- *}
-
-                {if paramExists('heartbeat_destination')}
-                    {foreach from=$params.heartbeat_destination key=dest_num item=v}
-                        <tr><th colspan="4"><span class="param_group">
-                            Heartbeat destination {$dest_num}</span>
-                        </th></tr>
-                        {custom_tr_pgconfig param='heartbeat_destination' num=$dest_num}
-                        {custom_tr_pgconfig param='heartbeat_destination_port' num=$dest_num}
-                        {custom_tr_pgconfig param='heartbeat_device' num=$dest_num}
-                    {/foreach}
-
-                    {if isset($isAddHeartbeatDestination) && $isAddHeartbeatDestination == true}
-                        <tr><th colspan="4"><span class="param_group">
-                            Heartbeat destination {$dest_num+1}</span>
-                            <input type="button" name="delete" value="{$message.strDelete|escape}"
-                                   onclick="sendForm('delete_heartbeat_destination', {$dest_num+1})" />
-                        </th></tr>
-                        {custom_tr_pgconfig param='heartbeat_destination' num=$dest_num+1}
-                        {custom_tr_pgconfig param='heartbeat_destination_port' num=$dest_num+1}
-                        {custom_tr_pgconfig param='heartbeat_device' num=$dest_num+1}
-                    {/if}
-                {/if}
-              </tbody>
+                {foreach from=$params.heartbeat_hostname key=wdhb_num item=v}
+                  <tbody id="tb_watchdog_use_watchdog_on_wd_heartbeat_{$wdhb_num}">
+                    <tr id="tr_wd_hb_num_{$wdhb_num}" name="tr_wd_hb_num"><th colspan="2">
+                      <span class="param_group">Heartbeat destination {$wdhb_num}</span>
+                      <input id="delete_watchdog_heartbeat_node_{$wdhb_num}" type="button" name="delete"
+                       value="{$message.strDelete|escape}">
+                    </th></tr>
+                    {custom_tr_pgconfig param='heartbeat_hostname' num=$wdhb_num}
+                    {custom_tr_pgconfig param='heartbeat_port' num=$wdhb_num}
+                    {custom_tr_pgconfig param='heartbeat_device' num=$wdhb_num}
+                  </tbody>
+                {/foreach}
+              {/if}
             {/if}
 
           <tbody id="tb_watchdog_wd_lifecheck_method_query">
@@ -739,15 +897,16 @@
             {/if}
           </tbody>
 
-          <tbody id="tb_watchdog_use_watchdog_on_other">
-            {* --------------------------------------------------------------------- *}
-            <tr><th class="category" colspan="4">Other pgpool Connection Settings
-            <input type="button" name="add" value="{$message.strAdd|escape}"
+          {if paramExists('other_pgpool_hostname')}
+            <tbody id="tb_watchdog_use_watchdog_on_other">
+              {* --------------------------------------------------------------------- *}
+              <tr><th class="category" colspan="4">Other pgpool Connection Settings
+              <input type="button" name="add" value="{$message.strAdd|escape}"
                    onclick="sendForm('add_wd')" />
-            </th></tr>
-            {* --------------------------------------------------------------------- *}
+              </th></tr>
+              {* --------------------------------------------------------------------- *}
 
-              {foreach from=$params.other_pgpool_hostname key=host_num item=v}
+                {foreach from=$params.other_pgpool_hostname key=host_num item=v}
                   <tr>
                   <th colspan="2"><span class="param_group">other pgpool {$host_num}</span></th>
                   </tr>
@@ -755,17 +914,18 @@
                   {custom_tr_pgconfig param='other_pgpool_port' num=$host_num}
                   {custom_tr_pgconfig param='other_wd_port' num=$host_num}
 
-              {/foreach}
+                {/foreach}
 
-              {if isset($isAddWd) && $isAddWd == true}
+                {if isset($isAddWd) && $isAddWd == true}
                   <tr>
                   <th colspan="2"><span class="param_group">other pgpool {$host_num+1}</span></th>
                   </tr>
                   {custom_tr_pgconfig param='other_pgpool_hostname' num=$host_num+1}
                   {custom_tr_pgconfig param='other_pgpool_port' num=$host_num+1}
                   {custom_tr_pgconfig param='other_wd_port' num=$host_num+1}
-              {/if}
-          </tbody>
+                {/if}
+            </tbody>
+          {/if}
         </table>
     {/if}
 
@@ -792,8 +952,18 @@
         {custom_tr_pgconfig param='memqcache_auto_cache_invalidation'}
         {custom_tr_pgconfig param='memqcache_maxcache'}
         {custom_tr_pgconfig param='memqcache_oiddir'}
-        {custom_tr_pgconfig param='white_memqcache_table_list'}
-        {custom_tr_pgconfig param='black_memqcache_table_list'}
+        {if paramExists('white_memqcache_table_list')}
+            {custom_tr_pgconfig param='white_memqcache_table_list'}
+        {/if}
+        {if paramExists('cache_safe_memqcache_table_list')}
+            {custom_tr_pgconfig param='cache_safe_memqcache_table_list'}
+        {/if}
+        {if paramExists('black_memqcache_table_list')}
+            {custom_tr_pgconfig param='black_memqcache_table_list'}
+        {/if}
+        {if paramExists('cache_unsafe_memqcache_table_list')}
+            {custom_tr_pgconfig param='cache_unsafe_memqcache_table_list'}
+        {/if}
      </tbody>
 
       <tbody id="tb_memqcache_memqcache_method_memcached">

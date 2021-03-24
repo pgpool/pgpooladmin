@@ -9,10 +9,10 @@ $(window).load(function()
         toggleTbody($(this));
     });
 
-    /* ========================================================================= */ 
-    /* If no health check config of this node,                                   */ 
+    /* ========================================================================= */
+    /* If no health check config of this node,                                   */
     /* don't show the per node health check form.                                */
-    /* ========================================================================= */ 
+    /* ========================================================================= */
 
     $('[id^=tr_hc_node_num_]').each(function()
     {
@@ -23,20 +23,20 @@ $(window).load(function()
         }
     });
 
-    /* ========================================================================= */ 
+    /* ========================================================================= */
     /* In per node health check form,                                            */
     /* input "name" is like "health_check_period0", "health_check_period1"       */
-    /* ========================================================================= */ 
+    /* ========================================================================= */
     $('[id^=tb_per_node_healthcheck_]').find('input[name^=health_check], input[name=connect_timeout]').each(function()
     {
         var node_num = $(this).parents('tbody').attr('id').split('_')[4];
         var name = $(this).attr('name');
         $(this).attr('name', name + node_num)
-    }); 
+    });
 
-    /* ========================================================================= */ 
+    /* ========================================================================= */
     /* Click "add" button                                                        */
-    /* ========================================================================= */ 
+    /* ========================================================================= */
 
     /* Click "add" button to add backends form and add per node health_check row */
     $('#add_backends_node').click(function()
@@ -58,15 +58,34 @@ $(window).load(function()
         addPerNodeHealthCheckForm($(this));
     });
 
-    /* ========================================================================= */ 
+    /* Click "add" button to add watchdog form */
+    $('#add_watchdog_node').click(function()
+    {
+        var next_node_num = $('[id^=tr_wd_node_num_]').length;
+        addWatchdogNodeForm(next_node_num);
+    });
+
+    $('#add_watchdog_heartbeat_node').click(function()
+    {
+        var next_node_num = $('[id^=tr_wd_hb_num_]').length;
+        addWdHbForm(next_node_num);
+    });
+
+    /* ========================================================================= */
     /* Click "delete" button                                                     */
-    /* ========================================================================= */ 
+    /* ========================================================================= */
 
     /* Delete backends form */
     $('[id^=delete_backends_node_]').on({'click': deleteBackendForm});
 
     /* Delete per node health_check form. */
     $('[id^=delete_per_node_health_check_]').on({'click': deletePerNodeHealthCheckForm});
+
+    /* Delete watchdog form */
+    $('[id^=delete_watchdog_node_]').on({'click': deleteWatchdogForm});
+
+    /* Delete watchdog heartbeat destination form */
+    $('[id^=delete_watchdog_heartbeat_node_]').on({'click': deleteWdHbForm});
 
 });
 
@@ -120,8 +139,8 @@ function toggleTbody(item)
 function addBackendForm(next_node_num)
 {
 
-    var html = '<tbody id="tb_backends_node_' + next_node_num + '">' + 
-               '<tr id="tr_ba_node_num_' + next_node_num + 
+    var html = '<tbody id="tb_backends_node_' + next_node_num + '">' +
+               '<tr id="tr_ba_node_num_' + next_node_num +
                '" name="tr_ba_node_num"><th colspan="2">' +
                '<span class="param_group">Backend node ' + next_node_num + '</span>' +
                '</th></tr>';
@@ -143,10 +162,10 @@ function addBackendForm(next_node_num)
 function addPerNodeHealthCheck(next_node_num)
 {
     var html = '<tbody id="tb_per_node_healthcheck_' + next_node_num + '">' +
-               '<tr id="tr_hc_node_num_' + next_node_num + 
+               '<tr id="tr_hc_node_num_' + next_node_num +
                '" name="tr_hc_node_num"><th colspan="2">' +
                '<span class="param_group">Backend node ' + next_node_num + '</span>' +
-               '<input id="add_per_node_health_check_' + next_node_num + 
+               '<input id="add_per_node_health_check_' + next_node_num +
                '" type="button" name="add" value="Add" onclick="addPerNodeHealthCheckForm($(this))" />' +
                '</th></tr>';
 
@@ -164,7 +183,7 @@ function addPerNodeHealthCheck(next_node_num)
     {
         var name = $(this).attr('name');
         $(this).attr('name', name + next_node_num)
-    }); 
+    });
 }
 
 /*
@@ -176,6 +195,48 @@ function addPerNodeHealthCheckForm(obj)
 
     obj.parents('tbody').find('tr').show();
     $('#tr_hc_node_num_' + node_num).nextAll('tr').find('input').val('');
+}
+
+/*
+ * Add watchdog form by using "add" button
+ */
+function addWatchdogNodeForm(next_node_num)
+{
+    var html = '<tbody id="tb_watchdog_use_watchdog_on_node_' + next_node_num + '">' +
+               '<tr id="tr_wd_node_num_' + next_node_num +
+               '" name="tr_wd_node_num"><th colspan="2">' +
+               '<span class="param_group">Watchdog node ' + next_node_num + '</span>' +
+               '</th></tr>';
+    $('tr[name="tr_wd_node_num"]').last().nextAll('tr').each(function()
+    {
+        html += '<tr>' + $(this).html() + '</tr>';
+    });
+    html += '</tbody>';
+
+    $('#tb_watchdog_use_watchdog_on_node_' + (next_node_num - 1) ).after(html);
+    $('#tr_wd_node_num_' + next_node_num).nextAll('tr').find('input').val('');
+}
+
+/*
+ * Add watchdog form by using "add" button
+ */
+function addWdHbForm(next_node_num)
+{
+    var html = '<tbody id="tb_watchdog_use_watchdog_on_wd_heartbeat_' + next_node_num + '">' +
+               '<tr id="tr_wd_hb_num_' + next_node_num +
+               '" name="tr_wd_hb_num"><th colspan="2">' +
+               '<span class="param_group">Heartbeat destination ' + next_node_num + '</span>' +
+               '</th></tr>';
+
+    $('tr[name="tr_wd_hb_num"]').last().nextAll('tr').each(function()
+    {
+        html += '<tr>' + $(this).html() + '</tr>';
+    });
+
+    html += '</tbody>';
+
+    $('#tb_watchdog_use_watchdog_on_wd_heartbeat_' + (next_node_num - 1) ).after(html);
+    $('#tr_wd_hb_num_' + next_node_num).nextAll('tr').find('input').val('');
 }
 
 /*
@@ -196,4 +257,22 @@ var deletePerNodeHealthCheckForm = function()
 
     $('#tr_hc_node_num_' + node_num).nextAll('tr').find('input').val('');
     $(this).parents('tr').nextAll('tr').css('display', 'none');
+}
+
+/*
+ * Delete watchdog form
+ */
+var deleteWatchdogForm = function()
+{
+    var node_num = $(this).attr('id').split('_')[3];
+    $('#tb_watchdog_use_watchdog_on_node_' + node_num).remove();
+}
+
+/*
+ * Delete watchdog heartbeat form
+ */
+var deleteWdHbForm = function()
+{
+    var node_num = $(this).attr('id').split('_')[4];
+    $('#tb_watchdog_use_watchdog_on_wd_heartbeat_' + node_num).remove();
 }

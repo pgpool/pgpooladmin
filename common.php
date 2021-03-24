@@ -157,7 +157,7 @@ function NodeActive($nodeNum)
     $conn = openDBConnection(array(
         'host'     => $params['backend_hostname'][$nodeNum],
         'port'     => $params['backend_port'][$nodeNum],
-        'dbname'   => (paramExists('health_check_database')) ?
+        'dbname'   => (paramExists('health_check_database') && $params['health_check_database'] != '') ?
                        $params['health_check_database'] : 'template1',
         'user'     => $params['health_check_user'],
         'password' => $params['health_check_password'],
@@ -327,7 +327,8 @@ function readConfigParams($paramList = array())
 {
     $rtn = array();
     global $pgpoolConfigParam, $pgpoolConfigBackendParam,
-           $pgpoolConfigWdOtherParam, $pgpoolConfigHbDestinationParam;
+           $pgpoolConfigWdOtherParam, $pgpoolConfigHbDestinationParam,
+           $pgpoolConfigWdNodeParam, $pgpoolConfigWdHbNodeParam;
 
     // Try to read pgpool.conf
     $configFile = @file(_PGPOOL2_CONFIG_FILE);
@@ -339,7 +340,8 @@ function readConfigParams($paramList = array())
 
     // Defined array in definePgpoolConfParam.php
     $defines_arr = $pgpoolConfigParam + $pgpoolConfigBackendParam +
-                   $pgpoolConfigWdOtherParam + $pgpoolConfigHbDestinationParam;
+                   $pgpoolConfigWdOtherParam + $pgpoolConfigHbDestinationParam +
+                   $pgpoolConfigWdNodeParam + $pgpoolConfigWdHbNodeParam;
 
     $arr = array();
     // Convert lines in files to array
@@ -520,6 +522,31 @@ function paramExists($param)
 
     /* Add */
     switch ($param) {
+        // params added in 4.2
+        case 'backend_clustering_mode':
+        case 'ssl_crl_file':
+        case 'ssl_passphrase_command':
+        case 'log_disconnections':
+        case 'logging_collector':
+        case 'log_directory':
+        case 'log_filename':
+        case 'log_file_mode':
+        case 'log_truncate_on_rotation':
+        case 'log_rotation_age':
+        case 'log_rotation_size':
+        case 'read_only_function_list':
+        case 'write_function_list':
+        case 'primary_routing_query_pattern_list':
+        case 'dml_adaptive_object_relationship_list':
+        case 'hostname':
+        case 'pgpool_port':
+        case 'heartbeat_hostname':
+        case 'heartbeat_port':
+        case 'cache_safe_memqcache_table_list':
+        case 'cache_unsafe_memqcache_table_list':
+            $add_version = 4.2;
+            break;
+
         // params added in 4.1
         case 'reserved_connections':
         case 'backend_application_name':
@@ -689,6 +716,26 @@ function paramExists($param)
 
     /* Delete */
     switch ($param) {
+        // params deleted in 4.2
+        case 'replication_mode':
+        case 'master_slave_mode':
+        case 'master_slave_sub_mode':
+        case 'white_function_list':
+        case 'black_function_list':
+        case 'black_query_pattern_list':
+        case 'wd_hostname':
+        case 'wd_port':
+        case 'wd_heartbeat_port':
+        case 'heartbeat_destination':
+        case 'heartbeat_destination_port':
+        case 'white_memqcache_table_list':
+        case 'black_memqcache_table_list':
+        case 'other_pgpool_hostname':
+        case 'other_pgpool_port':
+        case 'other_wd_port':
+            $del_version = 4.2;
+            break;
+
         // params deleted in 4.0
         case 'fail_over_on_backend_error':
             $del_version = 4.0;
@@ -748,7 +795,7 @@ function paramExists($param)
 
 function versions()
 {
-    return array('4.1', '4.0', '3.7', '3.6', '3.5', '3.4', '3.3', '3.2', '3.1', '3.0',
+    return array('4.2', '4.1', '4.0', '3.7', '3.6', '3.5', '3.4', '3.3', '3.2', '3.1', '3.0',
                  '2.3', '2.2', '2.1', '2.0');
 }
 
@@ -825,6 +872,14 @@ function useSyslog()
 }
 
 /**
+ * Return if pgpool has Backend Clustering Mode
+ */
+function hasBackendClusteringMode()
+{
+    return (4.2 <= _PGPOOL2_VERSION);
+}
+
+/**
  * Return if pgpool has watchdog feature
  */
 function hasWatchdog()
@@ -859,10 +914,21 @@ function getMultiParams()
     if (paramExists('backend_flag')) {
         $rtn['backend'][] = 'backend_flag';
     }
+    if (paramExists('other_pgpool_hostname')) {
+        $rtn['other_pgpool'] = array('other_pgpool_hostname', 'other_pgpool_port', 'other_wd_port');
+    }
 
-    $rtn['other_pgpool'] = array('other_pgpool_hostname', 'other_pgpool_port', 'other_wd_port');
+    if (paramExists('heartbeat_destination')) {
+        $rtn['heartbeat'] = array('heartbeat_destination', 'heartbeat_destination_port', 'heartbeat_device');
+    }
 
-    $rtn['heartbeat'] = array('heartbeat_destination', 'heartbeat_destination_port', 'heartbeat_device');
+    if (paramExists('hostname')) {
+        $rtn['watchdog_node'] = array('hostname', 'wd_port', 'pgpool_port');
+    }
+
+    if (paramExists('heartbeat_hostname')){
+        $rtn['watchdog_heartbeat'] = array('heartbeat_hostname', 'heartbeat_port', 'heartbeat_device');
+    }
 
     return $rtn;
 }
@@ -881,13 +947,13 @@ function showPerNodeHC()
 function getPerNodeHealthCheckParams()
 {
     $rtn = array();
-    $rtn = array('health_check_period', 
-                 'health_check_timeout', 
-                 'health_check_user', 
-                 'health_check_password', 
-                 'health_check_database', 
-                 'health_check_max_retries', 
-                 'health_check_retry_delay', 
+    $rtn = array('health_check_period',
+                 'health_check_timeout',
+                 'health_check_user',
+                 'health_check_password',
+                 'health_check_database',
+                 'health_check_max_retries',
+                 'health_check_retry_delay',
                  'connect_timeout');
 
     return $rtn;

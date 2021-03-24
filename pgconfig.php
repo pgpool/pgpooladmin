@@ -46,7 +46,9 @@ if (isset($_POST['action'])) {
 
 // Get parameters' info
 $pgpoolConfigParamAll = $pgpoolConfigParam + $pgpoolConfigBackendParam +
-                        $pgpoolConfigWdOtherParam + $pgpoolConfigHbDestinationParam;
+                        $pgpoolConfigWdOtherParam + $pgpoolConfigHbDestinationParam +
+                        $pgpoolConfigWdNodeParam + $pgpoolConfigWdHbNodeParam;
+
 $tpl->assign('pgpoolConfigParamAll', $pgpoolConfigParamAll);
 
 $configValue = readConfigParams();
@@ -67,6 +69,8 @@ switch ($action) {
     case 'add':
     case 'add_wd':
     case 'add_heartbeat_destination':
+    case 'add_watchdog_node':
+    case 'add_watchdog_heartbeat_node':
         $configValue = arrangePostData();
         $configValue = doAdd($configValue);
 
@@ -75,6 +79,7 @@ switch ($action) {
         $tpl->assign('isAddWd', ($action == 'add_wd'));
         $tpl->assign('isAddHeartbeatDestination', ($action == 'add_heartbeat_destination'));
         $tpl->assign('isAddHealthcheckPerNode', ($action == 'add_healthcheck_per_node'));
+        $tpl->assign('isAddWdHeartbeatNode', ($action == 'add_watchdog_heartbeat_node'));
         $tpl->display('pgconfig.tpl');
 
         return;
@@ -82,6 +87,8 @@ switch ($action) {
     case 'cancel':
     case 'cancel_wd':
     case 'cancel_heartbeat_destination':
+    case 'cancel_watchdog_node':
+    case 'cancel_watchdog_heartbeat_node':
         $configValue = arrangePostData();
         $configValue = doCancel($configValue, $action);
 
@@ -89,6 +96,8 @@ switch ($action) {
         $tpl->assign('isAdd',  FALSE);
         $tpl->assign('isAddWd', FALSE);
         $tpl->assign('isAddHeartbeatDestination', FALSE);
+        $tpl->assign('isAddWdNode', FALSE);
+        $tpl->assign('isAddWdHeartbeatNode', FALSE);
         $tpl->display('pgconfig.tpl');
 
         return;
@@ -134,6 +143,8 @@ switch ($action) {
     case 'delete_wd':
     case 'delete_heartbeat_destination':
     case 'delete_healthcheck_per_node':
+    case 'delete_watchdog_node':
+    case 'delete_watchdog_heartbeat_node':
         $num = $_POST['num'];
 
         switch ($action) {
@@ -145,6 +156,10 @@ switch ($action) {
                 deleteHeartbeatDestination($num, $configValue); break;
             case 'delete_healthcheck_per_node':
                 deleteHealthcheckPerNode($num, $configValue); break;
+            case 'delete_watchdog_node':
+                deleteWdNode($num, $configValue); break;
+            case 'delete_watchdog_heartbeat_node':
+                deleteWdHeartbeatNode($num, $configValue); break;
         }
 
         break;
@@ -178,6 +193,18 @@ if (! isset($configValue['health_check_period'])) {
     $configValue['health_check_period0'][0] = NULL;
     $configValue['other_pgpool_port'][0]     = NULL;
     $configValue['other_wd_port'][0]         = NULL;
+}
+
+if (! isset($configValue['hostname'])) {
+    $configValue['hostname'][0]             = NULL;
+    $configValue['wd_port'][0]              = NULL;
+    $configValue['pgpool_port'][0]          = NULL;
+}
+
+if (! isset($configValue['heartbeat_hostname'])) {
+    $configValue['heartbeat_hostname'][0]   = NULL;
+    $configValue['heartbeat_port'][0]       = NULL;
+    $configValue['heartbeat_device'][0]     = NULL;
 }
 
 $tpl->assign('error', $error);
@@ -334,9 +361,11 @@ function checkLogical($configValue)
     $errors = array();
 
     // pgpool's mode
-    if ($configValue['replication_mode'] == 'on' && $configValue['master_slave_mode'] == 'on') {
-        $errors['replication_mode'] = TRUE;
-        $errors['master_slave_mode'] = TRUE;
+    if (!hasBackendClusteringMode()){
+        if ($configValue['replication_mode'] == 'on' && $configValue['master_slave_mode'] == 'on') {
+            $errors['replication_mode'] = TRUE;
+            $errors['master_slave_mode'] = TRUE;
+        }
     }
 
     // syslog
@@ -351,16 +380,27 @@ function checkLogical($configValue)
     }
 
     // streaming replication
-    if ($configValue['master_slave_mode'] == 'on' &&
-        $configValue['master_slave_sub_mode'] == 'stream')
-    {
-        if (empty($configValue['sr_check_user'])) { $errors['sr_check_user'] = TRUE; }
+    if (hasBackendClusteringMode()){
+        if ($configValue['backend_clustering_mode'] == 'streaming_replication')
+        {
+            if (empty($configValue['sr_check_user'])) { $errors['sr_check_user'] = TRUE; }
+        }
+    } else {
+        if ($configValue['master_slave_mode'] == 'on' &&
+            $configValue['master_slave_sub_mode'] == 'stream')
+        {
+            if (empty($configValue['sr_check_user'])) { $errors['sr_check_user'] = TRUE; }
+        }
     }
 
     // watchdog
     if ($configValue['use_watchdog'] == 'on') {
         if (empty($configValue['delegate_IP'])) { $errors['delegate_IP'] = TRUE; }
-        if (empty($configValue['wd_hostname'])) { $errors['wd_hostname'] = TRUE; }
+        if (_PGPOOL2_VERSION >= 4.2) {
+            if (empty($configValue['hostname'])) { $errors['hostname'] = TRUE; }
+        } else {
+            if (empty($configValue['wd_hostname'])) { $errors['wd_hostname'] = TRUE; }
+        }
     }
 
     // memqcache
@@ -407,7 +447,7 @@ function checkLogical($configValue)
 function writeConfigFile($configValue, $pgpoolConfigParamAll)
 {
     $configFile = array();
-    
+
     $originalConfigFile = @file(_PGPOOL2_CONFIG_FILE);
     foreach ($originalConfigFile as $line) {
         // Not-empty lines
@@ -419,7 +459,7 @@ function writeConfigFile($configValue, $pgpoolConfigParamAll)
 
             // Modify the parameter' value if posted.
             // (Ignore the params like "backend_hostname_0" and "health_check_*" which will be arranged in below)
-            if (! isset($pgpoolConfigParamAll[$key_wo_num]['multiple']) && 
+            if (! isset($pgpoolConfigParamAll[$key_wo_num]['multiple']) &&
                 ! isset($pgpoolConfigParamAll[$key_wo_num]['healthcheck'])) {
                 if (isset($configValue[$key_wo_num])) {
                     $value = $configValue[$key_wo_num];
@@ -584,6 +624,40 @@ function deleteHealthcheckPerNode($num, &$configValue)
 }
 
 /**
+ * Delete a watchdog node
+ */
+function deleteWdNode($num, &$configValue)
+{
+    if (!isset($configValue['hostname'])) { return; }
+
+    unset($configValue['hostname'][$num]);
+    $configValue['hostname'] = array_values($configValue['hostname']);
+
+    unset($configValue['wd_port'][$num]);
+    $configValue['wd_port'] = array_values($configValue['wd_port']);
+
+    unset($configValue['pgpool_port'][$num]);
+    $configValue['pgpool_port'] = array_values($configValue['pgpool_port']);
+}
+
+/**
+ * Delete a watchdog heartbeat setting
+ */
+function deleteWdHeartbeatNode($num, &$configValue)
+{
+    if (!isset($configValue['heartbeat_hostname'])) { return; }
+
+    unset($configValue['heartbeat_hostname'][$num]);
+    $configValue['heartbeat_hostname'] = array_values($configValue['heartbeat_hostname']);
+
+    unset($configValue['heartbeat_port'][$num]);
+    $configValue['heartbeat_port'] = array_values($configValue['heartbeat_port']);
+
+    unset($configValue['heartbeat_device'][$num]);
+    $configValue['heartbeat_device'] = array_values($configValue['heartbeat_device']);
+}
+
+/**
  * Arrange post data
  */
 function arrangePostData()
@@ -642,6 +716,22 @@ function doAdd($configValue)
     }
 
     // watchdog's heartbeat destination settings
+    if(paramExists('heartbeat_hostname')){
+        if (isset($_POST['heartbeat_hostname'])) {
+            $configValue['heartbeat_hostname'] = $_POST['heartbeat_hostname'];
+        } else {
+            $configValue['heartbeat_hostname'][0] = NULL;
+        }
+    }
+
+    if(paramExists('heartbeat_port')){
+        if (isset($_POST['heartbeat_port'])) {
+            $configValue['heartbeat_port'] = $_POST['heartbeat_port'];
+        } else {
+            $configValue['heartbeat_port'][0] = NULL;
+        }
+    }
+
     if (isset($_POST['heartbeat_device'])) {
         $configValue['heartbeat_device'] = $_POST['heartbeat_device'];
     } else {
@@ -677,6 +767,25 @@ function doAdd($configValue)
         $configValue['other_wd_port'] = $_POST['other_wd_port'];
     } else {
         $configValue['other_wd_port'][0] = NULL;
+    }
+
+    // watchdog's nodes settings
+    if (isset($_POST['hostname'])) {
+        $configValue['hostname'] = $_POST['hostname'];
+    } else {
+        $configValue['hostname'][0] = NULL;
+    }
+
+    if (isset($_POST['wd_port'])) {
+        $configValue['wd_port'] = $_POST['wd_port'];
+    } else {
+        $configValue['wd_port'][0] = NULL;
+    }
+
+    if (isset($_POST['pgpool_port'])) {
+        $configValue['pgpool_port'] = $_POST['pgpool_port'];
+    } else {
+        $configValue['pgpool_port'][0] = NULL;
     }
 
     return $configValue;
@@ -724,9 +833,21 @@ function doCancel($configValue, $action)
     if (isset($_POST['heartbeat_destination_port'])) {
         $configValue['heartbeat_destination_port'] = $_POST['heartbeat_destination_port'];
     }
+    if (isset($_POST['heartbeat_hostname'])) {
+        $configValue['heartbeat_hostname'] = $_POST['heartbeat_hostname'];
+    }
+    if (isset($_POST['heartbeat_port'])) {
+        $configValue['heartbeat_port'] = $_POST['heartbeat_port'];
+    }
+
     if ($action == 'cancel_heartbeat_destination') {
         array_pop($configValue['heartbeat_destination']);
         array_pop($configValue['heartbeat_destination_port']);
+        array_pop($configValue['heartbeat_device']);
+    }
+    if ($action == 'cancel_watchdog_heartbeat_node') {
+        array_pop($configValue['heartbeat_hostname']);
+        array_pop($configValue['heartbeat_port']);
         array_pop($configValue['heartbeat_device']);
     }
 
@@ -746,6 +867,22 @@ function doCancel($configValue, $action)
         array_pop($configValue['other_wd_port']);
     }
 
+    // watchdog nodes settings
+    if (isset($_POST['hostname'])) {
+        $configValue['hostname'] = $_POST['hostname'];
+    }
+    if (isset($_POST['wd_port'])) {
+        $configValue['wd_port'] = $_POST['wd_port'];
+    }
+    if (isset($_POST['pgpool_port'])) {
+        $configValue['pgpool_port'] = $_POST['pgpool_port'];
+    }
+    if ($action == 'cancel_watchdog_node') {
+        array_pop($configValue['hostname']);
+        array_pop($configValue['wd_port']);
+        array_pop($configValue['pgpool_port']);
+    }
+
     return $configValue;
 }
 
@@ -760,6 +897,8 @@ function doCheck()
     global $pgpoolConfigHbDestinationParam;
     global $pgpoolConfigWdOtherParam;
     global $pgpoolConfigHealthCheckParam;
+    global $pgpoolConfigWdNodeParam;
+    global $pgpoolConfigWdHbNodeParam;
     global $_POST;
 
     $error = array();
@@ -794,7 +933,7 @@ function doCheck()
             if ($key == 'backend_hostname') {
 
                 foreach ($_POST[$key] as $no => $str) {
-                    if (isset($_POST['health_check_period' . $no]) && 
+                    if (isset($_POST['health_check_period' . $no]) &&
                         $_POST['health_check_period' . $no] != '') {
                         $health_check_params = getPerNodeHealthCheckParams();
                         foreach ($health_check_params as $param) {
@@ -929,6 +1068,78 @@ function doCheck()
         }
     }
 
+    /*
+     * check watchdog heartbeat destination value
+     */
+    foreach ($pgpoolConfigWdHbNodeParam as $key => $value) {
+        if (isset($_POST[$key])) {
+            $configValue[$key] = $_POST[$key];
+        }
+    }
+    if (isset($configValue['heartbeat_hostname'])) {
+        for ($i = 0; $i < count($configValue['heartbeat_hostname']); $i++) {
+            $result = FALSE;
+
+            // heartbeat_hostname
+            $result = checkString($configValue['heartbeat_hostname'][$i],
+                                  $pgpoolConfigWdHbNodeParam['heartbeat_hostname']);
+            if (! $result) {
+                $error['heartbeat_hostname'][$i] = TRUE;
+            }
+
+            // heartbeat_port
+            $result = checkInteger($configValue['heartbeat_port'][$i],
+                                   $pgpoolConfigWdHbNodeParam['heartbeat_port']['min'],
+                                   $pgpoolConfigWdHbNodeParam['heartbeat_port']['max']);
+            if (! $result) {
+                $error['heartbeat_port'][$i] = TRUE;
+            }
+
+            // heartbeat_device
+            $result = checkString($configValue['heartbeat_device'][$i],
+                                  $pgpoolConfigWdHbNodeParam['heartbeat_device']);
+            if (! $result) {
+                $error['heartbeat_device'][$i] = TRUE;
+            }
+        }
+    }
+
+    /*
+     * check watchdog node value
+     */
+    foreach ($pgpoolConfigWdNodeParam as $key => $value) {
+        if (isset($_POST[$key])) {
+            $configValue[$key] = $_POST[$key];
+        }
+    }
+    if (isset($configValue['hostname'])) {
+        for ($i = 0; $i < count($configValue['hostname']); $i++) {
+            $result = FALSE;
+
+            // hostname
+            $result = checkString($configValue['hostname'][$i],
+                                  $pgpoolConfigWdNodeParam['hostname']);
+            if (! $result) {
+                $error['hostname'][$i] = TRUE;
+            }
+
+            // wd_port
+            $result = checkInteger($configValue['wd_port'][$i],
+                                   $pgpoolConfigWdNodeParam['wd_port']['min'],
+                                   $pgpoolConfigWdNodeParam['wd_port']['max']);
+            if (! $result) {
+                $error['wd_port'][$i] = TRUE;
+            }
+
+            // pgpool_port
+            $result = checkInteger($configValue['pgpool_port'][$i],
+                                   $pgpoolConfigWdNodeParam['pgpool_port']['min'],
+                                   $pgpoolConfigWdNodeParam['pgpool_port']['max']);
+            if (! $result) {
+                $error['pgpool_port'][$i] = TRUE;
+            }
+        }
+    }
     /*
      * check logically
      */

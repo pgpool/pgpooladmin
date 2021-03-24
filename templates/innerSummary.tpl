@@ -31,7 +31,7 @@ td > img {
     <td>
     {if $params.parallel_mode == 'on'}
     {$message.strInvalidation|escape}
-    {elseif $params.replication_mode == 'on'}
+    {elseif $params.replication_mode == 'on' || $params.backend_clustering_mode == 'native_replication'}
     <img src="images/check.png"> {$message.strOn|escape}
     {else}
     <img src="images/no.png"> {$message.strOff|escape}
@@ -40,7 +40,7 @@ td > img {
 
     <tr><td>{$message.strMasterSlaveMode|escape}</td>
     <td>
-    {if $params.master_slave_mode == 'on'}
+    {if $params.master_slave_mode == 'on' || $params.backend_clustering_mode == 'streaming_replication'}
     <img src="images/check.png"> {$message.strOn|escape} / {$params.master_slave_sub_mode|escape}
     {else}
     <img src="images/no.png"> {$message.strOff|escape}
