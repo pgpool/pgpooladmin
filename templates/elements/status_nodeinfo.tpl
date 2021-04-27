@@ -18,10 +18,11 @@
         <th></th>
         <th><label>{$message.strIPaddress|escape}</label></th>
         <th><label>{$message.strPort|escape}</label></th>
-        <th colspan="2"><label>{$message.strStatus|escape}</label></th>
+        <th><label>{$message.strStatus|escape}</label></th>
         {if $parallelMode == false}
         <th><label>{$message.strWeight|escape}</label></th>
         {/if}
+        <th colspan="2"><label>{$message.strHealthCheck|escape}</label></th>
         <th></th>
         <th></th>
       </tr>
@@ -60,16 +61,15 @@
             {elseif $nodeInfo.$node_num.is_standby === 0}
                 {$message.strPrimaryRunning|escape}
             {/if}
+            </br>
+            postgres:
+            {if $nodeInfo.$node_num.is_active}{$message.strUp|escape}
+            {else}{$message.strDown|escape}
+            {/if}
             </td>
         {else}
             <td align="center">-</td>
         {/if}
-
-        <td>postgres:
-            {if $nodeInfo.$node_num.is_active}{$message.strUp|escape}
-            {else}{$message.strDown|escape}
-            {/if}
-        </td>
 
         {* ---------------------------------------------------------------------- *}
         {* weight                                                                 *}
@@ -82,6 +82,22 @@
                 <td align="center">-</td>
             {/if}
         {/if}
+
+        {* ---------------------------------------------------------------------- *}
+        {* health check                                                           *}
+        {* ---------------------------------------------------------------------- *}
+        <td>
+        {$perHC = getPerNodeHealthCheck($node_num)}
+        database: {$perHC.health_check_database|escape}</br>
+        user: {$perHC.health_check_user|escape}</br>
+        period: {$perHC.health_check_period|escape}</br>
+        timeout: {$perHC.health_check_timeout|escape}
+        </td>
+        <td>
+        max retries: {$perHC.health_check_max_retries|escape}</br>
+        retry delay: {$perHC.health_check_retry_delay|escape}</br>
+        connect timeout: {$perHC.connect_timeout|escape}
+        </td>
 
         {* ---------------------------------------------------------------------- *}
         {* buttons (attch, recovery, etc.)                                        *}
@@ -114,10 +130,17 @@
         {/if}
 
         {if $nodeInfo.$node_num.promote && $nodeInfo.$node_num.is_standby == 1}
-          <input type="button" name="command"
-                 onclick="sendCommand('promote', {$node_num|escape},
+          {if hasBackendClusteringMode()}
+            <input type="button" name="command"
+                   onclick="sendCommand('promote', {$node_num|escape},
                                       '{$message.msgRPromoteConfirm|escape}')"
-                 value="{$message.strPromote|escape}" />
+                   value="{$message.strPromotePrimary|escape}" />
+          {else}
+            <input type="button" name="command"
+                   onclick="sendCommand('promote', {$node_num|escape},
+                                      '{$message.msgRPromoteConfirm|escape}')"
+                   value="{$message.strPromote|escape}" />
+          {/if}
         {/if}
         </td>
 
@@ -131,7 +154,7 @@
     </tbody>
 
       <tfoot>
-      <tr><th colspan="8" align="right">
+      <tr><th colspan="9" align="right">
           <input type="button" id="button_add_backend" onClick="addBackendButtonHandler()"
                  value="{$message.strAddBackend|escape}" />
           </th>
@@ -146,17 +169,28 @@
 
 
 <p>[ mode ]
-{if $params.replication_mode == 'on'}
-    {$message.strReplicationMode|escape}
-{elseif $params.master_slave_mode == 'on'}
-    {$message.strMasterSlaveMode|escape}
+{if hasBackendClusteringMode()}
+    {if $params.backend_clustering_mode == 'streaming_replication'}
+        {$message.strStreamingRepMode|escape}
+    {elseif $params.backend_clustering_mode == 'logical_replication'}
+        {$message.strLogocalRepMode|escape}
+    {elseif $params.backend_clustering_mode == 'slony'}
+        {$message.strSlonyMode|escape}
+    {elseif $params.backend_clustering_mode == 'native_replication'}
+        {$message.strNativeRepMode|escape}
+    {elseif $params.backend_clustering_mode == 'snapshot_isolation'}
+        {$message.strSnapshotIsolationMode|escape}
+    {elseif $params.backend_clustering_mode == 'raw'}
+        {$message.strRawMode|escape}
+    {/if}
+{else}
+    {if $params.replication_mode == 'on'}
+        {$message.strReplicationMode|escape}
+    {elseif $params.master_slave_mode == 'on'}
+        {$message.strMasterSlaveMode|escape}
+    {/if}
 {/if}
 {if $params.load_balance_mode == 'on'} / {$message.strLoadBalanceMode|escape}{/if}
 {if $params.memory_cache_enabled == 'on'} / {$message.strQueryCache|escape} {$message.strOn|escape}{/if}
 {if $params.use_watchdog == 'on'} / Watchdog {$message.strOn|escape}{/if}
-</p>
-<p>
-[ healthcheck ]
-every {$params.health_check_period} seconds /
-retry up to {$params.health_check_max_retries} counts
 </p>

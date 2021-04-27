@@ -149,18 +149,15 @@ function execQuery($conn, $sql)
  */
 function NodeActive($nodeNum)
 {
-    $params = readConfigParams(array(
-        'backend_hostname', 'backend_port', 'backend_weight',
-        'health_check_user', 'health_check_password', 'health_check_database'
-    ));
+    $params = readConfigParams();
+    $perNodeParams = getPerNodeHealthCheck($nodeNum);
 
     $conn = openDBConnection(array(
         'host'     => $params['backend_hostname'][$nodeNum],
         'port'     => $params['backend_port'][$nodeNum],
-        'dbname'   => (paramExists('health_check_database') && $params['health_check_database'] != '') ?
-                       $params['health_check_database'] : 'template1',
-        'user'     => $params['health_check_user'],
-        'password' => $params['health_check_password'],
+        'dbname'   => $perNodeParams['health_check_database'],
+        'user'     => $perNodeParams['health_check_user'],
+        'password' => $perNodeParams['health_check_password'],
         'connect_timeout' => _PGPOOL2_PG_CONNECT_TIMEOUT,
     ));
 
@@ -177,8 +174,15 @@ function NodeActive($nodeNum)
  */
 function NodeStandby($nodeNum)
 {
-    if (isMasterSlaveMode() == FALSE || useStreaming() == FALSE) {
-        return -1;
+    if (hasBackendClusteringMode()){
+        $params = readConfigParams(array('backend_clustering_mode'));
+        if ($params['backend_clustering_mode'] != 'streaming_replication') {
+            return -1;
+        }
+    } else {
+        if (isMasterSlaveMode() == FALSE || useStreaming() == FALSE) {
+            return -1;
+        }
     }
 
     $params = readConfigParams(array(
@@ -789,6 +793,82 @@ function paramExists($param)
     return $rtn;
 }
 
+function getPerNodeHealthCheck($nodeNum){
+    $rtn = array();
+    $params = readConfigParams();
+
+    $period = $params['health_check_period'];
+    if(isset($params['health_check_period' . $nodeNum])
+       && $params['health_check_period' . $nodeNum] != '')
+    {
+        $period = $params['health_check_period' . $nodeNum];
+    }
+
+    $timeout = $params['health_check_timeout'];
+    if(isset($params['health_check_timeout' . $nodeNum])
+       && $params['health_check_timeout' . $nodeNum] != '')
+    {
+        $timeout = $params['health_check_timeout' . $nodeNum];
+    }
+
+    $user = $params['health_check_user'];
+    if(isset($params['health_check_user' . $nodeNum])
+       && $params['health_check_user' . $nodeNum] != '')
+    {
+        $user = $params['health_check_user' . $nodeNum];
+    }
+
+    $password = $params['health_check_password'];
+    if(isset($params['health_check_password' . $nodeNum])
+       && $params['health_check_password' . $nodeNum] != '')
+    {
+        $password = $params['health_check_password' . $nodeNum];
+    }
+
+    $database = 'template1';
+    if(isset($params['health_check_database' . $nodeNum])
+       && $params['health_check_database' . $nodeNum] != '')
+    {
+        $database = $params['health_check_database' . $nodeNum];
+    }else{
+        $database = ($params['health_check_database'] != '') ?
+                     $params['health_check_database'] : 'template1';
+    }
+
+    $max_retries = $params['health_check_max_retries'];
+    if(isset($params['health_check_max_retries' . $nodeNum])
+       && $params['health_check_max_retries' . $nodeNum] != '')
+    {
+        $max_retries = $params['health_check_max_retries' . $nodeNum];
+    }
+
+    $retry_delay = $params['health_check_retry_delay'];
+    if(isset($params['health_check_retry_delay' . $nodeNum])
+       && $params['health_check_retry_delay' . $nodeNum] != '')
+    {
+        $retry_delay = $params['health_check_retry_delay' . $nodeNum];
+    }
+
+    $connect_timeout = $params['connect_timeout'];
+    if(isset($params['connect_timeout' . $nodeNum])
+       && $params['connect_timeout' . $nodeNum] != '')
+    {
+        $connect_timeout = $params['connect_timeout' . $nodeNum];
+    }
+
+    $rtn = array(
+        'health_check_period' => $period,
+        'health_check_timeout' => $timeout,
+        'health_check_user' => $user,
+        'health_check_password' => $password,
+        'health_check_database' => $database,
+        'health_check_max_retries' => $max_retries,
+        'connect_timeout' => $connect_timeout,
+        'health_check_retry_delay' => $retry_delay
+    );
+    return $rtn;
+}
+
 /* --------------------------------------------------------------------- */
 /* function (mode)                                                       */
 /* --------------------------------------------------------------------- */
@@ -804,26 +884,45 @@ function versions()
  */
 function isReplicationMode()
 {
-    $params = readConfigParams(array('replication_mode'));
-
-    if (isTrue($params['replication_mode'])) {
-        return TRUE;
+    if (hasBackendClusteringMode()){
+        $params = readConfigParams(array('backend_clustering_mode'));
+        if ($params['backend_clustering_mode'] == 'native_replication_mode'){
+            return TRUE;
+        } else {
+            return FALSE;
+        }
     } else {
-        return FALSE;
-    }
-}
+        $params = readConfigParams(array('replication_mode'));
 
+        if (isTrue($params['replication_mode'])) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+	}
+}
 /**
  * Whether pgpool is operating in the master slave mode or not?
  */
 function isMasterSlaveMode()
 {
-    $params = readConfigParams(array('master_slave_mode'));
-
-    if (isTrue($params['master_slave_mode'])) {
-        return TRUE;
+    if (hasBackendClusteringMode()){
+        $params = readConfigParams(array('backend_clustering_mode'));
+        if ($params['backend_clustering_mode'] == 'streaming_replication'
+            || $params['backend_clustering_mode'] == 'logical_replication'
+            || $params['backend_clustering_mode'] == 'slony') {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
     } else {
-        return FALSE;
+        $params = readConfigParams(array('master_slave_mode'));
+
+        if (isTrue($params['master_slave_mode'])) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
     }
 }
 
@@ -976,8 +1075,24 @@ function isTrue($value)
 
 function definedHealthCheckParam($params, $param_name, $backend_num)
 {
-    return isset($params[$param_name . $backend_num]) ? 
+    return isset($params[$param_name . $backend_num]) ?
             $param_name . $backend_num : null;
+}
+
+function isHealthCheckValid($params)
+{
+    if (isset($params["health_check_period"]) && $params["health_check_period"] != 0) {
+        return TRUE;
+    }
+
+    foreach ($params["backend_hostname"] as $backend_num => $value) {
+        if (isset($params["health_check_period" . $backend_num]) &&
+            $params["health_check_period" . $backend_num] != 0) {
+            return TRUE;
+        }
+    }
+
+    return FALSE;
 }
 
 function errorPage($errorCode)

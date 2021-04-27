@@ -102,6 +102,7 @@ $key = 'reserved_connections';
 $pgpoolConfigParam[$key]['type'] = 'N';
 $pgpoolConfigParam[$key]['default'] = '0';
 $pgpoolConfigParam[$key]['max'] = NUM_MAX;
+$pgpoolConfigParam[$key]['min'] = 0;
 $pgpoolConfigParam[$key]['restart'] = TRUE;
 
 # - pgpool Communication Manager Connection Settings -
@@ -1370,6 +1371,7 @@ $key = 'check_temp_table';
 if (_PGPOOL2_VERSION >= 4.1) {
     $pgpoolConfigParam[$key]['type'] = 'C';
     $pgpoolConfigParam[$key]['default'] = 'catalog';
+    $pgpoolConfigParam[$key]['regexp'] = $anyelse;
 } else {
     $pgpoolConfigParam[$key]['type'] = 'B';
     $pgpoolConfigParam[$key]['default'] = 'on';

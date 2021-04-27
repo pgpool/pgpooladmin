@@ -44,12 +44,20 @@ $params = readConfigParams(array('port',
                                  'wd_lifecheck_query',
                                  'other_pgpool_hostname',
                                  'other_pgpool_port',
-                                 'other_wd_port'));
+                                 'other_wd_port',
+                                 'hostname',
+                                 'pgpool_port'));
 
 
 // get watchdog information
 $watchdogInfo = array();
-if (3.5 <= _PGPOOL2_VERSION) {
+
+if (4.2 <= _PGPOOL2_VERSION) {
+    for ($i = 0; $i < count($params['hostname']); $i++) {
+        $watchdogInfo[] = getWatchdogInfo($i);
+    }
+
+} else if (3.5 <= _PGPOOL2_VERSION) {
     $watchdogInfo['local'] = getWatchdogInfo(0);
     for ($i = 0; $i < count($params['other_pgpool_hostname']); $i++) {
         $watchdogInfo[] = getWatchdogInfo($i + 1);

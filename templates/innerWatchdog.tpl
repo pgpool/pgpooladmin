@@ -34,22 +34,34 @@
 </tr>
 </thead>
 <tbody>
-<tr>
+{if $smarty.const._PGPOOL2_VERSION >= 4.2}
+  {section name=num loop=$params.hostname}
+  {if ($smarty.section.num.index) % 2 == 0}<tr class="even">{else}<tr class="odd">{/if}
+    <td>watchdog host {$smarty.section.num.index}</td>
+    <td>{$params.hostname[num]}</td>
+    <td>{$params.pgpool_port[num]}</td>
+    <td>{$params.wd_port[num]}</td>
+    <td>{$watchdogInfo[num]['status_str']|escape}</td>
+  </tr>
+  {/section}
+{else}
+  <tr>
     <td>local</td>
     <td>{$params.wd_hostname}</td>
     <td>{$params.port}</td>
     <td>{$params.wd_port}</td>
     <td>{$watchdogInfo['local']['status_str']|escape}</td>
-</tr>
-{section name=num loop=$params.other_pgpool_hostname}
-{if ($smarty.section.num.index) % 2 == 0}<tr class="even">{else}<tr class="odd">{/if}
+  </tr>
+  {section name=num loop=$params.other_pgpool_hostname}
+  {if ($smarty.section.num.index) % 2 == 0}<tr class="even">{else}<tr class="odd">{/if}
     <td>other {$smarty.section.num.index}</td>
     <td>{$params.other_pgpool_hostname[num]}</td>
     <td>{$params.other_pgpool_port[num]}</td>
     <td>{$params.other_wd_port[num]}</td>
     <td>{$watchdogInfo[num]['status_str']|escape}</td>
-</tr>
-{/section}
+  </tr>
+  {/section}
+{/if}
 </tbody>
 <tfoot>
 <tr><th colspan="5"></th></tr>

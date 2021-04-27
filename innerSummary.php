@@ -40,7 +40,8 @@ $params = readConfigParams(array('parallel_mode',
                                  'load_balance_mode',
                                  'use_watchdog',
                                  'wd_lifecheck_method',
-                                 'health_check_period'));
+                                 'health_check_period',
+                                 'backend_clustering_mode'));
 
 $tpl->assign('params', $params);
 $tpl->display('innerSummary.tpl');
