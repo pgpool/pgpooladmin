@@ -858,6 +858,17 @@
                     {custom_tr_pgconfig param='heartbeat_destination_port' num=$dest_num}
                     {custom_tr_pgconfig param='heartbeat_device' num=$dest_num}
                   {/foreach}
+
+                  {if isset($isAddHeartbeatDestination) && $isAddHeartbeatDestination == true}
+                    <tr><th colspan="4"><span class="param_group">
+                        Heartbeat destination {$dest_num+1}</span>
+                        <input type="button" name="delete" value="{$message.strDelete|escape}"
+                               onclick="sendForm('delete_heartbeat_destination', {$dest_num+1})" />
+                    </th></tr>
+                    {custom_tr_pgconfig param='heartbeat_destination' num=$dest_num+1}
+                    {custom_tr_pgconfig param='heartbeat_destination_port' num=$dest_num+1}
+                    {custom_tr_pgconfig param='heartbeat_device' num=$dest_num+1}
+                  {/if}
                 </tbody>
               {/if}
 
