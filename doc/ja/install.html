@@ -32,7 +32,7 @@ pgpool管理ツールのインストールを始める前に、pgpoolが正常�
 pgpool管理ツールをインストールする場合、少なくとも以下のソフトウェアがpgpoolが稼動するサーバにインストールされていて、正常に動く必要があります。
 <ul>
   <li>HTTPサーバ(Apache)</li>
-  <li>PHP4.4.2以上</li>
+  <li>PHP 5.6.0以上</li>
   <li>pgpool</li>
 </ul>
 インストールを始める前に次の準備をしてください。
@@ -341,15 +341,16 @@ Webブラウザからinstall/phpinfo.phpにアクセスします。php_mstring�
 <p>これらの項目が「enabled」になっていない場合には、PHPの設定を再度確認してください。</p>
 </li>
 <li>
-展開したディレクトリ内にある「templates_c」ディレクトリ、「conf/pgmgt.conf.php」ファイルに書き込みアクセス権を設定します。
+「templates_c」ディレクトリを作成し、アクセス権限を設定します。
 <div id="cmd_window"><table>
 <tr><td class="cmd_window">cd /var/www/html/admin-tool</td></tr>
+<tr><td class="cmd_window">mkdir templates_c</td></tr>
 <tr><td class="cmd_window">chmod 777 templates_c</td></tr>
 </table>
 </div>
     </li>
     <li>
-管理ツール設定ファイルにApacheプロセスのユーザに書き込み権限を与えます。
+管理ツール設定ファイル「conf/pgmgt.conf.php」にApacheプロセスのユーザに書き込み権限を与えます。
 <div id="cmd_window"><table>
 <tr><td class="cmd_window">cd /var/www/html/admin-tool/conf</td></tr>
 <tr><td class="cmd_window">chown apache pgmgt.conf.php</td></tr>

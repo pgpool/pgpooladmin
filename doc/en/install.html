@@ -33,7 +33,7 @@ The following software is at least installed in the server that operates pgpool 
 
 <ul>
   <li>HTTP Server(Apache)</li>
-  <li>PHP4.4.2 and higher</li>
+  <li>PHP 5.6.0 and higher</li>
   <li>pgpool</li>
 </ul>
 Before starting the install, be sure to have:
@@ -341,16 +341,17 @@ It accesses install/phpinfo.php from Web a browser. It is confirmed that the fun
 </li>
 </li>
 <li>
-The writing right of access is set to the "templates_c" directory in the progressing directory and the "conf/pgmgt.conf.php" file. 
+Create "templates_c" directory and set permissions to this directory.
 
 <div id="cmd_window"><table>
 <tr><td class="cmd_window">cd /var/www/html/admin-tool</td></tr>
+<tr><td class="cmd_window">mkdir templates_c</td></tr>
 <tr><td class="cmd_window">chmod 777 templates_c</td></tr>
 </table>
 </div>
     </li>
     <li>
-The writing authority to pgmgt.conf.php is set to apache process user.
+Give apache process user read and write permissions to "conf/pgmgt.conf.php".
 <div id="cmd_window"><table>
 <tr><td class="cmd_window">cd /var/www/html/admin-tool/conf</td></tr>
 <tr><td class="cmd_window">chown apache pgmgt.conf.php</td></tr>
