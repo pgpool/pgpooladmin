@@ -1,4 +1,55 @@
 ===============================================================================
+pgpoolAdmin 4.2
+===============================================================================
+
+* Version 4.2.0 2021/06/17
+
+  ** New features
+
+   - Add support for Pgpool-II 4.2. (Bo Peng)
+
+			Added parameters are:
+			- backend_clustering_mode
+			- ssl_crl_file
+			- ssl_passphrase_command
+			- log_disconnections
+			- logging_collector
+			- log_directory
+			- log_filename
+			- log_file_mode
+			- log_truncate_on_rotation
+			- log_rotation_age
+			- log_rotation_size
+			- read_only_function_list
+			- write_function_list
+			- primary_routing_query_pattern_list
+			- dml_adaptive_object_relationship_list
+			- hostname
+			- pgpool_port
+			- heartbeat_hostname
+			- heartbeat_port
+			- cache_safe_memqcache_table_list
+			- cache_unsafe_memqcache_table_list
+
+			Deleted parameters are:
+			- replication_mode
+			- master_slave_mode
+			- master_slave_sub_mode
+			- white_function_list
+			- black_function_list
+			- black_query_pattern_list
+			- wd_hostname
+			- wd_port
+			- wd_heartbeat_port
+			- heartbeat_destination
+			- heartbeat_destination_port
+			- white_memqcache_table_list
+			- black_memqcache_table_list
+			- other_pgpool_hostname
+			- other_pgpool_port
+			- other_wd_port
+
+===============================================================================
 pgpoolAdmin 4.1
 ===============================================================================
 
